@@ -1,0 +1,2 @@
+<?xml version="1.0" ?>
+<module name="text2" version="330" vertex="testVS.glsl" fragment="testFS.glsl"/>

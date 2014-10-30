@@ -1,0 +1,1140 @@
+﻿<#@ template debug="true" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+<#
+	var types = new string [] {"float", "double", "int", "uint", "bool"};
+	var GLtypes = new string [] {"GLfloat", "GLdouble", "GLint", "GLuint", "GLbool"};
+#>
+
+using System;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Runtime.Serialization;
+using System.Xml.Serialization;
+using System.Diagnostics;
+using Sxta.Math;
+using OpenTK.Graphics.OpenGL;
+
+namespace Sxta.Render
+{
+<#  
+	var unif1Types = new string [] {"Uniform1f", "Uniform1d", "Uniform1i", "Uniform1ui", "Uniform1b"};
+	var uniform1Types = new string [] {"VEC1F", "VEC1D", "VEC1I", "VEC1UI", "VEC1B"};
+ 
+
+ 
+	var value1Types = new string [] {"Value1f", "Value1d", "Value1i", "Value1ui", "Value1b"};
+	var value2Types = new string [] {"Value2f", "Value2d", "Value2i", "Value2ui", "Value2b"};
+	var value3Types = new string [] {"Value3f", "Value3d", "Value3i", "Value3ui", "Value3b"};
+	var value4Types = new string [] {"Value4f", "Value4d", "Value4i", "Value4ui", "Value4b"};
+
+
+
+	for  (int i = 0; i < types.Length; i++) 
+	{ 
+		var typeName = types[i];
+		var GLtypeName = GLtypes[i];
+		var uniform1Name = unif1Types[i];
+		var U1Name = uniform1Types[i];
+#>
+		/// <summary>
+		/// A uniform holding a single number.
+		/// </summary>
+		public class  <#= uniform1Name #> : Uniform
+		{
+			/*
+			 * Deletes this uniform.
+			 */
+			//~<#= uniform1Name #>() {}
+
+			public override UniformType getType()
+			{
+				return UniformType.<#= U1Name #>;
+			}
+
+			/*
+			 * Returns the current value of this uniform.
+			 */
+			public <#= typeName #> get()  
+			{
+				if (block == null || program  == null) {
+					return value;
+				} else {
+					//block.getValue<<#= typeName #>(location);
+					throw new NotImplementedException();
+				}
+			}
+
+			/*
+			 * Sets the value of this uniform.
+			 *
+			 * @param value the new value for this uniform.
+			 */
+			public void set(<#= typeName #> value)
+			{
+				this.value = value;
+				if (block == null || program  == null) {
+					if (program != null && Program.CURRENT == program) {
+						setValue();
+					}
+				} else {
+					block.setValue(location, sizeof(<#= typeName #>), value);
+				}
+			}
+
+			public override void setValue( Value  v)
+			{
+#if TODO
+				set(v);					
+#endif
+				throw new NotImplementedException();
+			}
+
+
+			/*
+			 * Creates a new uniform.
+			 *
+			 * @param program the Program to which this uniform belongs.
+			 * @param block UniformBlock to which this uniform belongs. Maybe null.
+			 * @param name the name of the uniform in the GLSL shader code.
+			 * @param location the location of this uniform. For an uniform inside a
+			 *      block, this location is an offset inside the uniform block buffer.
+			 */
+			internal <#= uniform1Name #>(Program program, UniformBlock block, string name, int location) :
+				base("<#= uniform1Name #>", program, block, name, location)
+			{
+			}
+
+			internal protected override void setValue()
+			{
+#if OPENTK
+<# if (typeName ==  "bool") { #>
+				GL.Uniform1(location, (value? 1 : 0));
+<# } else { #>
+				GL.Uniform1(location, value);
+				Debug.Assert(FrameBuffer.getError() == ErrorCode.NoError);
+<# } #>
+#else
+#if ORK_NO_GLPROGRAMUNIFORM
+				glUniform1f(location, value);
+#else
+				glProgramUniform1fEXT(program.getId(), location, value);
+#endif
+#endif
+			}
+
+
+			/*
+			 * The current value of this uniform.
+			 */
+			private <#= typeName #> value;
+		}
+
+<#
+	}
+	var unif2Types = new string [] {"Uniform2f", "Uniform2d", "Uniform2i", "Uniform2ui", "Uniform2b"};
+	var uniform2Types = new string [] {"VEC2F", "VEC2D", "VEC2I", "VEC2UI", "VEC2B"};
+	var vec2Types = new string [] {"Vector2f", "Vector2d", "Vector2i", "Vector2ui", "Vector2b"};
+	for  (int i = 0; i < types.Length; i++) 
+	{ 
+		var typeName = types[i];
+		var GLtypeName = GLtypes[i];
+		var uniform2Name = unif2Types[i];
+		var U2Name = uniform2Types[i];
+		var vec2Name = vec2Types[i];
+#>
+		/// <summary>
+		/// A uniform holding a two vector value.
+		/// </summary>
+		public class  <#= uniform2Name #> : Uniform
+		{
+			/*
+			 * Deletes this uniform.
+			 */
+			//~<#= uniform2Name #>() {}
+
+			public override UniformType getType()
+			{
+				return UniformType.<#= U2Name #>;
+			}
+
+			/*
+			 * Returns the current value of this uniform.
+			 */
+			public <#= vec2Name #> get()  
+			{
+				if (block == null || program  == null) {
+					return value;
+				} else {
+#if TODO
+				    <#= typeName #>[] buf = (<#= typeName #>[]) mapBuffer(location);
+					return new <#= vec2Name #>(buf[0], buf[1]);
+#endif
+				    throw new NotImplementedException();
+				}
+			}
+
+			/*
+			 * Sets the value of this uniform.
+			 *
+			 * @param value the new value for this uniform.
+			 */
+			public void set(<#= vec2Name #> value)
+			{
+				if (block == null || program  == null) {
+					this.value = value;
+					if (program != null && Program.CURRENT == program) {
+						setValue();
+					}
+				} else {
+					block.setValue(location, <#= vec2Name #>.SizeInBytes, value);
+				}
+			}
+
+			public override void setValue( Value  v)
+			{
+#if TODO
+				set(v);					
+#endif
+				throw new NotImplementedException();
+			}
+
+
+			/*
+			 * Creates a new uniform.
+			 *
+			 * @param program the Program to which this uniform belongs.
+			 * @param block UniformBlock to which this uniform belongs. Maybe null.
+			 * @param name the name of the uniform in the GLSL shader code.
+			 * @param location the location of this uniform. For an uniform inside a
+			 *      block, this location is an offset inside the uniform block buffer.
+			 */
+			internal <#= uniform2Name #>(Program program, UniformBlock block, string name, int location) :
+				base("<#= uniform2Name #>", program, block, name, location)
+			{
+			}
+
+			internal protected override void setValue()
+			{
+#if OPENTK
+<# if (typeName ==  "bool") { #>
+				GL.Uniform2(location, (value.X? 1 : 0), (value.Y? 1 : 0));
+<# } else { #>
+				GL.Uniform2(location, value.X, value.Y);
+<# } #>
+#else
+#if  ORK_NO_GLPROGRAMUNIFORM
+				glUniform2f(location, value.X, value.Y);
+#else
+				glProgramUniform2fEXT(program->getId(), location, value.X, value.Y);
+#endif
+#endif
+			}
+
+
+			/*
+			 * The current value of this uniform.
+			 */
+			private <#= vec2Name #> value;
+		}
+<#
+	}
+	var unif3Types = new string [] {"Uniform3f", "Uniform3d", "Uniform3i", "Uniform3ui", "Uniform3b"};
+	var uniform3Types = new string [] {"VEC3F", "VEC3D", "VEC3I", "VEC3UI", "VEC3B"};
+	var vec3Types = new string [] {"Vector3f", "Vector3d", "Vector3i", "Vector3ui", "Vector3b"};
+	for  (int i = 0; i < types.Length; i++) 
+	{ 
+		var typeName = types[i];
+		var GLtypeName = GLtypes[i];
+		var uniform3Name = unif3Types[i];
+		var U3Name = uniform3Types[i];
+		var vec3Name = vec3Types[i];
+#>
+		/// <summary>
+		/// A uniform holding a three vector value.
+		/// </summary>
+		public class  <#= uniform3Name #> : Uniform
+		{
+			/*
+			 * Deletes this uniform.
+			 */
+			//~<#= uniform3Name #>() {}
+
+			public override UniformType getType()
+			{
+				return UniformType.<#= U3Name #>;
+			}
+
+			/*
+			 * Returns the current value of this uniform.
+			 */
+			public <#= vec3Name #> get()  
+			{
+				if (block == null || program  == null) {
+					return value;
+				} else {
+#if TODO
+				    <#= typeName #>[] buf = (<#= typeName #>[]) mapBuffer(location);
+					return new <#= vec3Name #>(buf[0], buf[1], buf[2]);
+#endif
+				    throw new NotImplementedException();
+				}
+			}
+
+			/*
+			 * Sets the value of this uniform.
+			 *
+			 * @param value the new value for this uniform.
+			 */
+			public void set(<#= vec3Name #> value)
+			{
+				if (block == null || program  == null) {
+					this.value = value;
+					if (program != null && Program.CURRENT == program) {
+						setValue();
+					}
+				} else {
+					block.setValue(location,<#= vec3Name #>.SizeInBytes, value);
+				}
+			}
+
+			public override void setValue( Value  v)
+			{
+#if TODO
+				set(v);					
+#endif
+				throw new NotImplementedException();
+			}
+
+
+			/*
+			 * Creates a new uniform.
+			 *
+			 * @param program the Program to which this uniform belongs.
+			 * @param block UniformBlock to which this uniform belongs. Maybe null.
+			 * @param name the name of the uniform in the GLSL shader code.
+			 * @param location the location of this uniform. For an uniform inside a
+			 *      block, this location is an offset inside the uniform block buffer.
+			 */
+			internal <#= uniform3Name #>(Program program, UniformBlock block, string name, int location) :
+				base("<#= uniform3Name #>", program, block, name, location)
+			{
+			}
+
+			internal protected override void setValue()
+			{
+#if OPENTK
+<# if (typeName ==  "bool") { #>
+				GL.Uniform3(location, (value.X? 1 : 0), (value.Y? 1 : 0), (value.Z? 1 : 0));
+<# } else { #>
+				GL.Uniform3(location, value.X, value.Y, value.Z);
+<# } #>
+#else
+#if  ORK_NO_GLPROGRAMUNIFORM
+				glUniform3f(location, value.X, value.Y, value.Z);
+#else
+				glProgramUniform3fEXT(program->getId(), location, value.X, value.Y, value.Z);
+#endif
+#endif
+			}
+
+
+			/*
+			 * The current value of this uniform.
+			 */
+			private <#= vec3Name #> value;
+		}
+<#
+	}
+
+	var unif4Types = new string [] {"Uniform4f", "Uniform4d", "Uniform4i", "Uniform4ui", "Uniform4b"};
+	var uniform4Types = new string [] {"VEC4F", "VEC4D", "VEC4I", "VEC4UI", "VEC4B"};
+	var vec4Types = new string [] {"Vector4f", "Vector4d", "Vector4i", "Vector4ui", "Vector4b"};
+ 
+	for  (int i = 0; i < types.Length; i++) 
+	{ 
+		var typeName = types[i];
+		var GLtypeName = GLtypes[i];
+		var U4Name = uniform4Types[i];
+		var uniform4Name = unif4Types[i];
+		var vec4Name = vec4Types[i];
+#>
+
+		/// <summary>
+		/// A uniform holding a four vector value.
+		/// </summary>
+		public class  <#= uniform4Name #> : Uniform
+		{
+			/*
+			 * Deletes this uniform.
+			 */
+			//~<#= uniform4Name #>() {}
+
+			public override UniformType getType()
+			{
+				return UniformType.<#= U4Name #>;
+			}
+
+			/*
+			 * Returns the current value of this uniform.
+			 */
+			public <#= vec4Name #> get()  
+			{
+				if (block == null || program  == null) {
+					return value;
+				} else {
+#if TODO
+				    <#= typeName #>[] buf = (<#= typeName #>[]) mapBuffer(location);
+					return new <#= vec4Name #>(buf[0], buf[1], buf[2], buf[4]);
+#endif
+				    throw new NotImplementedException();
+				}
+			}
+
+			/*
+			 * Sets the value of this uniform.
+			 *
+			 * @param value the new value for this uniform.
+			 */
+			public void set(<#= vec4Name #> value)
+			{
+				if (block == null || program  == null) {
+					this.value = value;
+					if (program != null && Program.CURRENT == program) {
+						setValue();
+					}
+				} else {
+					block.setValue(location, <#= vec4Name #>.SizeInBytes, value);
+				}
+			}
+
+			public override void setValue( Value  v)
+			{
+#if TODO
+				set(v);					
+#endif
+				throw new NotImplementedException();
+			}
+
+
+			/*
+			 * Creates a new uniform.
+			 *
+			 * @param program the Program to which this uniform belongs.
+			 * @param block UniformBlock to which this uniform belongs. Maybe null.
+			 * @param name the name of the uniform in the GLSL shader code.
+			 * @param location the location of this uniform. For an uniform inside a
+			 *      block, this location is an offset inside the uniform block buffer.
+			 */
+			internal <#= uniform4Name #>(Program program, UniformBlock block, string name, int location) :
+				base("<#= uniform4Name #>", program, block, name, location)
+			{
+			}
+
+			internal protected override void setValue()
+			{
+#if OPENTK
+<# if (typeName ==  "bool") { #>
+				GL.Uniform4(location, (value.X? 1 : 0), (value.Y? 1 : 0), (value.Z? 1 : 0), (value.W? 1 : 0));
+<# } else { #>
+				GL.Uniform4(location, value.X, value.Y, value.Z, value.W);
+<# } #>
+#else
+#if  ORK_NO_GLPROGRAMUNIFORM
+				glUniform4f(location, value.X, value.Y, value.Z, value.W);
+#else
+				glProgramUniform4fEXT(program->getId(), location, value.X, value.Y, value.Z, value.W);
+#endif
+#endif
+			}
+
+
+			/*
+			 * The current value of this uniform.
+			 */
+			private <#= vec4Name #> value;
+		}
+<#
+	}
+	
+	var matTypes = new string [] {"float", "double"};
+
+	var unifmat2Types = new string [] {"UniformMatrix2f", "UniformMatrix2d"};
+	var uniformMat2Types = new string [] {"MAT2F", "MAT2D"};
+	var mat2Types = new string [] {"Matrix2f", "Matrix2d"};
+
+	for  (int i = 0; i < matTypes.Length; i++) 
+	{ 
+		var typeName = matTypes[i];
+		var GLtypeName = GLtypes[i];
+		var unifMat2Name = unifmat2Types[i];
+		var UMat2Name = uniformMat2Types[i];
+		var mat2Name = mat2Types[i];
+#>
+		public class  <#= unifMat2Name #> : Uniform
+		{
+			/*
+			 * Creates a new uniform.
+			 *
+			 * @param program the Program to which this uniform belongs.
+			 * @param block UniformBlock to which this uniform belongs. Maybe null.
+			 * @param name the name of the uniform in the GLSL shader code.
+			 * @param location the location of this uniform. For an uniform inside a
+			 *      block, this location is an offset inside the uniform block buffer.
+			 */
+			internal <#= unifMat2Name #>(Program program, UniformBlock block, string name, int location, int stride, bool isRowMajor) :
+				base("<#= unifMat2Name #>", program, block, name, location)
+			{
+				this.stride = stride; 
+				this.isRowMajor = isRowMajor;
+			}
+ 
+			public override UniformType getType()
+			{
+				return UniformType.<#= UMat2Name #>;
+			}
+			
+			public <#= mat2Name #> get()
+			{
+#if TODO
+				if (block != NULL && program != NULL) {
+					unsigned char *buf = (unsigned char*) mapBuffer(location);
+					if (isRowMajor) {
+						for (int r = 0; r < R; ++r) {
+							for (int c = 0; c < C; ++c) {
+								((T*) value)[r * C + c] = ((T*) (buf + r * stride))[c];
+							}
+						}
+					} else {
+						for (int r = 0; r < R; ++r) {
+							for (int c = 0; c < C; ++c) {
+								((T*) value)[r * C + c] = ((T*) (buf + c * stride))[r];
+							}
+						}
+					}
+				}
+#endif
+				return value;
+			}
+			
+			/*
+             * Sets the value of this uniform.
+             *
+             * @param value the matrix coefficients in row major order (i.e. first row,
+             *      second row, etc).
+             */
+            public void set(<#= mat2Name #> value)
+            {
+			   if (block == null || program  == null) {
+					this.value = value;
+					if (program != null && Program.CURRENT == program) {
+						setValue();
+					}
+				} else {
+					block.setValue(location, <#= mat2Name #>.SizeInBytes, value);
+#if TODO
+					unsigned char *buf = (unsigned char*) mapBuffer(location);
+					if (isRowMajor) {
+						for (int r = 0; r < R; ++r) {
+							for (int c = 0; c < C; ++c) {
+								((T*) (buf + r * stride))[c] = value[r * C + c];
+							}
+						}
+					} else {
+						for (int r = 0; r < R; ++r) {
+							for (int c = 0; c < C; ++c) {
+								((T*) (buf + c * stride))[r] = value[r * C + c];
+							}
+						}
+					}
+#endif
+			         throw new NotImplementedException();
+				} 
+			}
+
+			/*
+			 * Returns the current value of this uniform.
+			 */
+			public <#= mat2Name #> getMatrix()
+			{
+				return this.get();
+			}
+
+		   /*
+			 * Sets the value of this uniform.
+			 *
+			 * @param value the new value for this uniform.
+			 */
+			public void setMatrix(<#= mat2Name #> val)
+			{
+				this.set(val);
+			}
+
+			public override void setValue( Value  v)
+			{
+				throw new NotImplementedException();
+			}
+
+			internal protected override void setValue()
+			{
+#if OPENTK
+			Sxta.OpenGL.GL.UniformMatrix2(location, 1, isRowMajor, ref value);
+#else
+#if ORK_NO_GLPROGRAMUNIFORM
+			glUniformMatrix2fv(location, 1, true, value);
+#else
+			glProgramUniformMatrix2fvEXT(program.getId(), location, 1, true, value);
+#endif
+#endif
+			}
+
+			/*
+		     * The current value of this uniform.
+			 * The matrix coefficients are stored in column major order.
+			 */
+			<#= mat2Name #> value;
+
+			/*
+			* The stride between two consecutive rows or columns when this uniform is
+			* stored in an uniform block.
+			*/
+			private int stride;
+
+			/*
+			* True if this uniform is stored in row major order in an uniform block.
+			*/
+			private bool isRowMajor = false;
+
+			private const int R = 2;
+			private const int C = 2;
+		}
+<#
+	}
+
+	var unifmat3Types = new string [] {"UniformMatrix3f", "UniformMatrix3d"};
+	var uniformMat3Types = new string [] {"MAT3F", "MAT3D"};
+	var mat3Types = new string [] {"Matrix3f", "Matrix3d"};
+	for  (int i = 0; i < matTypes.Length; i++) 
+	{ 
+		var typeName = matTypes[i];
+		var GLtypeName = GLtypes[i];
+		var unifMat3Name = unifmat3Types[i];
+		var UMat3Name = uniformMat3Types[i];
+		var mat3Name = mat3Types[i];
+#>		
+		public class  <#= unifMat3Name #> : Uniform
+		{
+			/*
+			 * Creates a new uniform.
+			 *
+			 * @param program the Program to which this uniform belongs.
+			 * @param block UniformBlock to which this uniform belongs. Maybe null.
+			 * @param name the name of the uniform in the GLSL shader code.
+			 * @param location the location of this uniform. For an uniform inside a
+			 *      block, this location is an offset inside the uniform block buffer.
+			 */
+			internal <#= unifMat3Name #>(Program program, UniformBlock block, string name, int location, int stride, bool isRowMajor) :
+				base("<#= unifMat3Name #>", program, block, name, location)
+			{
+				this.stride = stride; 
+				this.isRowMajor = isRowMajor;
+			}
+
+			public override UniformType getType()
+			{
+				return UniformType.<#= UMat3Name #>;
+			}
+
+			public <#= mat3Name #> get()
+			{
+#if TODO
+				if (block != NULL && program != NULL) {
+					unsigned char *buf = (unsigned char*) mapBuffer(location);
+					if (isRowMajor) {
+						for (int r = 0; r < R; ++r) {
+							for (int c = 0; c < C; ++c) {
+								((T*) value)[r * C + c] = ((T*) (buf + r * stride))[c];
+							}
+						}
+					} else {
+						for (int r = 0; r < R; ++r) {
+							for (int c = 0; c < C; ++c) {
+								((T*) value)[r * C + c] = ((T*) (buf + c * stride))[r];
+							}
+						}
+					}
+				}
+#endif
+				return value;
+			}
+			
+			/*
+             * Sets the value of this uniform.
+             *
+             * @param value the matrix coefficients in row major order (i.e. first row,
+             *      second row, etc).
+             */
+            public void set(<#= mat3Name #> value)
+            {
+			   if (block == null || program  == null) {
+					this.value = value;
+					if (program != null && Program.CURRENT == program) {
+						setValue();
+					}
+				} else {
+					block.setValue(location, <#= mat3Name #>.SizeInBytes, value);
+#if TODO
+					unsigned char *buf = (unsigned char*) mapBuffer(location);
+					if (isRowMajor) {
+						for (int r = 0; r < R; ++r) {
+							for (int c = 0; c < C; ++c) {
+								((T*) (buf + r * stride))[c] = value[r * C + c];
+							}
+						}
+					} else {
+						for (int r = 0; r < R; ++r) {
+							for (int c = 0; c < C; ++c) {
+								((T*) (buf + c * stride))[r] = value[r * C + c];
+							}
+						}
+					}
+#endif
+				} 
+			}
+
+			/*
+			 * Returns the current value of this uniform.
+			 */
+			public <#= mat3Name #> getMatrix()
+			{
+				return this.get();
+			}
+
+		   /*
+			 * Sets the value of this uniform.
+			 *
+			 * @param value the new value for this uniform.
+			 */
+			public void setMatrix(<#= mat3Name #> val)
+			{
+				this.set(val);
+			}
+
+			public override void setValue( Value  v)
+			{
+#if TODO
+				set(v.cast< ValueMatrix<U, T, C, R, W> >()->get());
+#endif
+				throw new NotImplementedException();
+			}
+
+			internal protected override void setValue()
+			{
+#if OPENTK
+			Sxta.OpenGL.GL.UniformMatrix3(location, 1, isRowMajor, ref value);
+#else
+#if ORK_NO_GLPROGRAMUNIFORM
+			glUniformMatrix2fv(location, 1, true, value);
+#else
+			glProgramUniformMatrix2fvEXT(program.getId(), location, 1, true, value);
+#endif
+#endif
+			}
+
+			/*
+		     * The current value of this uniform.
+			 * The matrix coefficients are stored in row major order.
+			 */
+			<#= mat3Name #> value;
+
+			/*
+			* The stride between two consecutive rows or columns when this uniform is
+			* stored in an uniform block.
+			*/
+			private int stride;
+
+			/*
+			* True if this uniform is stored in row major order in an uniform block.
+			*/
+			private bool isRowMajor = false;
+
+			private const int R = 3;
+			private const int C = 3;
+		}
+		
+<#
+	}
+
+	var unifmat4Types = new string [] {"UniformMatrix4f", "UniformMatrix4d", "UniformMatrix4i", "UniformMatrix4ui", "UniformMatrix4b"};
+	var uniformMat4Types = new string [] {"MAT4F", "MAT4D"};
+	var mat4Types = new string [] {"Matrix4f", "Matrix4d"};
+	for  (int i = 0; i < matTypes.Length; i++) 
+	{ 
+		var typeName = matTypes[i];
+		var GLtypeName = GLtypes[i];
+		var unifMat4Name = unifmat4Types[i];
+		var UMat4Name = uniformMat4Types[i];
+		var mat4Name = mat4Types[i];
+#>		
+		public class  <#= unifMat4Name #> : Uniform
+		{
+			/*
+			 * Creates a new uniform.
+			 *
+			 * @param program the Program to which this uniform belongs.
+			 * @param block UniformBlock to which this uniform belongs. Maybe null.
+			 * @param name the name of the uniform in the GLSL shader code.
+			 * @param location the location of this uniform. For an uniform inside a
+			 *      block, this location is an offset inside the uniform block buffer.
+			 */
+			internal <#= unifMat4Name #>(Program program, UniformBlock block, string name, int location, int stride, bool isRowMajor) :
+				base("<#= unifMat4Name #>", program, block, name, location)
+			{
+				this.stride = stride; 
+				this.isRowMajor = isRowMajor;
+			}
+
+
+			public override UniformType getType()
+			{
+				return UniformType.<#= UMat4Name #>;
+			}
+
+			public <#= mat4Name #> get()
+			{
+#if TODO
+				if (block != NULL && program != NULL) {
+					unsigned char *buf = (unsigned char*) mapBuffer(location);
+					if (isRowMajor) {
+						for (int r = 0; r < R; ++r) {
+							for (int c = 0; c < C; ++c) {
+								((T*) value)[r * C + c] = ((T*) (buf + r * stride))[c];
+							}
+						}
+					} else {
+						for (int r = 0; r < R; ++r) {
+							for (int c = 0; c < C; ++c) {
+								((T*) value)[r * C + c] = ((T*) (buf + c * stride))[r];
+							}
+						}
+					}
+				}
+#endif
+				return value;
+			}
+			
+			/*
+             * Sets the value of this uniform.
+             *
+             * @param value the matrix coefficients in row major order (i.e. first row,
+             *      second row, etc).
+             */
+            public void set(<#= mat4Name #> value)
+            {
+			   if (block == null || program  == null) {
+					this.value = value;
+					if (program != null && Program.CURRENT == program) {
+						setValue();
+					}
+				} else {
+					block.setValue(location,  <#= mat4Name #>.SizeInBytes, value);
+#if TODO
+					unsigned char *buf = (unsigned char*) mapBuffer(location);
+					if (isRowMajor) {
+						for (int r = 0; r < R; ++r) {
+							for (int c = 0; c < C; ++c) {
+								((T*) (buf + r * stride))[c] = value[r * C + c];
+							}
+						}
+					} else {
+						for (int r = 0; r < R; ++r) {
+							for (int c = 0; c < C; ++c) {
+								((T*) (buf + c * stride))[r] = value[r * C + c];
+							}
+						}
+					}
+#endif
+				} 
+			}
+
+			/*
+			 * Returns the current value of this uniform.
+			 */
+			public <#= mat4Name #> getMatrix()
+			{
+				return this.get();
+			}
+
+		   /*
+			 * Sets the value of this uniform.
+			 *
+			 * @param value the new value for this uniform.
+			 */
+			public void setMatrix(<#= mat4Name #> val)
+			{
+				this.set(val);
+			}
+
+			public override void setValue( Value  v)
+			{
+				throw new NotImplementedException();
+			}
+
+			internal protected override void setValue()
+			{
+#if OPENTK
+			Sxta.OpenGL.GL.UniformMatrix4(location, 1, isRowMajor, ref value);
+#else
+#if ORK_NO_GLPROGRAMUNIFORM
+			glUniformMatrix4fv(location, 1, true, value);
+#else
+			glProgramUniformMatrix4fvEXT(program.getId(), location, 1, true, value);
+#endif
+#endif
+			}
+
+			/*
+		     * The current value of this uniform.
+			 * The matrix coefficients are stored in column major order.
+			 */
+			<#= mat4Name #> value;
+
+			/*
+			* The stride between two consecutive rows or columns when this uniform is
+			* stored in an uniform block.
+			*/
+			private int stride;
+
+			/*
+			* True if this uniform is stored in row major order in an uniform block.
+			*/
+			private bool isRowMajor = false;
+
+			private const int R = 4;
+			private const int C = 4;
+		}
+<#
+	}
+
+	var unifmat23Types = new string [] {"UniformMatrix2x3f", "UniformMatrix2x3d"};
+	var unifmat24Types = new string [] {"UniformMatrix2x4f", "UniformMatrix2x4d"};
+	var unifmat32Types = new string [] {"UniformMatrix3x2f", "UniformMatrix3x2d"};
+	var unifmat34Types = new string [] {"UniformMatrix3x4f", "UniformMatrix3x4d"};
+	var unifmat42Types = new string [] {"UniformMatrix4x2f", "UniformMatrix4x2d"};
+	var unifmat43Types = new string [] {"UniformMatrix4x3f", "UniformMatrix4x3d"};
+ 
+	for  (int i = 0; i < matTypes.Length; i++) 
+	{ 
+		var typeName = matTypes[i];
+		var GLtypeName = GLtypes[i];
+
+		var unifMat23Name = unifmat23Types[i];
+		var unifMat24Name = unifmat24Types[i];
+		var unifMat32Name = unifmat32Types[i];
+		var unifMat34Name = unifmat34Types[i];
+		var unifMat42Name = unifmat42Types[i];
+		var unifMat43Name = unifmat43Types[i];
+#>		
+
+		public class  <#= unifMat23Name #> : Uniform
+		{
+			/*
+			 * Creates a new uniform.
+			 *
+			 * @param program the Program to which this uniform belongs.
+			 * @param block UniformBlock to which this uniform belongs. Maybe null.
+			 * @param name the name of the uniform in the GLSL shader code.
+			 * @param location the location of this uniform. For an uniform inside a
+			 *      block, this location is an offset inside the uniform block buffer.
+			 */
+			internal <#= unifMat23Name #>(Program program, UniformBlock block, string name, int location, int stride, int isRowMajor) :
+				base("<#= unifMat23Name #>", program, block, name, location)
+			{
+				throw new NotImplementedException();
+			}
+
+			public override UniformType getType()
+			{
+				throw new NotImplementedException();
+			}
+			
+			public override void setValue( Value  v)
+			{
+				throw new NotImplementedException();
+			}
+
+			internal protected override void setValue()
+			{
+				throw new NotImplementedException();
+			}
+		}
+
+		public class  <#= unifMat24Name #> : Uniform
+		{
+			/*
+			 * Creates a new uniform.
+			 *
+			 * @param program the Program to which this uniform belongs.
+			 * @param block UniformBlock to which this uniform belongs. Maybe null.
+			 * @param name the name of the uniform in the GLSL shader code.
+			 * @param location the location of this uniform. For an uniform inside a
+			 *      block, this location is an offset inside the uniform block buffer.
+			 */
+			internal <#= unifMat24Name #>(Program program, UniformBlock block, string name, int location, int stride, int isRowMajor) :
+				base("<#= unifMat24Name #>", program, block, name, location)
+			{
+				throw new NotImplementedException();
+			}
+
+			public override UniformType getType()
+			{
+				throw new NotImplementedException();
+			}
+			
+			public override void setValue( Value  v)
+			{
+				throw new NotImplementedException();
+			}
+
+			internal protected override void setValue()
+			{
+				throw new NotImplementedException();
+			}
+		}
+
+		public class  <#= unifMat32Name #> : Uniform
+		{
+			/*
+			 * Creates a new uniform.
+			 *
+			 * @param program the Program to which this uniform belongs.
+			 * @param block UniformBlock to which this uniform belongs. Maybe null.
+			 * @param name the name of the uniform in the GLSL shader code.
+			 * @param location the location of this uniform. For an uniform inside a
+			 *      block, this location is an offset inside the uniform block buffer.
+			 */
+			internal <#= unifMat32Name #>(Program program, UniformBlock block, string name, int location, int stride, int isRowMajor) :
+				base("<#= unifMat32Name #>", program, block, name, location)
+			{
+				throw new NotImplementedException();
+			}
+
+			public override UniformType getType()
+			{
+				throw new NotImplementedException();
+			}
+			
+			public override void setValue( Value  v)
+			{
+				throw new NotImplementedException();
+			}
+
+			internal protected override void setValue()
+			{
+				throw new NotImplementedException();
+			}
+		}
+
+		public class  <#= unifMat34Name #> : Uniform
+		{
+			/*
+			 * Creates a new uniform.
+			 *
+			 * @param program the Program to which this uniform belongs.
+			 * @param block UniformBlock to which this uniform belongs. Maybe null.
+			 * @param name the name of the uniform in the GLSL shader code.
+			 * @param location the location of this uniform. For an uniform inside a
+			 *      block, this location is an offset inside the uniform block buffer.
+			 */
+			internal <#= unifMat34Name #>(Program program, UniformBlock block, string name, int location, int stride, int isRowMajor) :
+				base("<#= unifMat34Name #>", program, block, name, location)
+			{
+				throw new NotImplementedException();
+			}
+
+			public override UniformType getType()
+			{
+				throw new NotImplementedException();
+			}
+			
+			public override void setValue( Value  v)
+			{
+				throw new NotImplementedException();
+			}
+
+			internal protected override void setValue()
+			{
+				throw new NotImplementedException();
+			}
+		}
+
+		public class  <#= unifMat42Name #> : Uniform
+		{
+			/*
+			 * Creates a new uniform.
+			 *
+			 * @param program the Program to which this uniform belongs.
+			 * @param block UniformBlock to which this uniform belongs. Maybe null.
+			 * @param name the name of the uniform in the GLSL shader code.
+			 * @param location the location of this uniform. For an uniform inside a
+			 *      block, this location is an offset inside the uniform block buffer.
+			 */
+			internal <#= unifMat42Name #>(Program program, UniformBlock block, string name, int location, int stride, int isRowMajor) :
+				base("<#= unifMat42Name #>", program, block, name, location)
+			{
+				throw new NotImplementedException();
+			}
+
+			public override UniformType getType()
+			{
+				throw new NotImplementedException();
+			}
+			
+			public override void setValue( Value  v)
+			{
+				throw new NotImplementedException();
+			}
+
+			internal protected override void setValue()
+			{
+				throw new NotImplementedException();
+			}
+		}
+
+		public class  <#= unifMat43Name #> : Uniform
+		{
+			/*
+			 * Creates a new uniform.
+			 *
+			 * @param program the Program to which this uniform belongs.
+			 * @param block UniformBlock to which this uniform belongs. Maybe null.
+			 * @param name the name of the uniform in the GLSL shader code.
+			 * @param location the location of this uniform. For an uniform inside a
+			 *      block, this location is an offset inside the uniform block buffer.
+			 */
+			internal <#= unifMat43Name #>(Program program, UniformBlock block, string name, int location, int stride, int isRowMajor) :
+				base("<#= unifMat43Name #>", program, block, name, location)
+			{
+				throw new NotImplementedException();
+			}
+
+			public override UniformType getType()
+			{
+				throw new NotImplementedException();
+			}
+			
+			public override void setValue( Value  v)
+			{
+				throw new NotImplementedException();
+			}
+
+			internal protected override void setValue()
+			{
+				throw new NotImplementedException();
+			}
+		}
+ <# } #>
+}

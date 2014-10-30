@@ -1,0 +1,7 @@
+<?xml version="1.0" ?>
+<foreach var="o" flag="object">
+  <setProgram>
+    <module name="$o.material"/>
+  </setProgram>
+  <drawMesh name="$o.geometry"/>
+</foreach>

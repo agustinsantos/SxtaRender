@@ -1,0 +1,197 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--
+UI BMS4, created by Revientor and Naldo (2009)
+This window is the file where you can select
+the type of game, logbook, setup, acmi...
+-->
+<Window id = "UI_MAIN_SCREEN" title="Main Screen">
+  <!--<SETUP>UI_MAIN_SCREEN C_TYPE_NORMAL 1024 768</SETUP>
+  <XY x="0" y ="0"/>
+  <RANGES> 0 0 1024 768 1024 768 </RANGES>
+  <GROUP  Value="100"/>
+  <FLAGBITON  Value="C_BIT_CANTMOVE"/>
+  <DEPTH  Value="1"/>-->
+  <Ranges PosX="0" PosY="0" Width="1024" Height="768"/>
+  <Group  Value="100"/>
+  <FlagBitOn  Value="C_BIT_CANTMOVE"/>
+  <Depth  Value="1"/>
+  <Components>
+    <!-- Adds the main image screen -->
+    <!--<BITMAP>
+      <SETUP> NID C_STATE_DOWN MAIN_SCRN</SETUP>
+    </BITMAP>-->
+    <ImagePanel Name ="UI_MAIN_SCREEN" src= "Media/main_scrn.png" />
+  </Components>
+
+
+
+
+  <TILE>
+    <SETUP>	NID	0	KoreaKTO</SETUP>
+    <XYWH>404 43 221 21</XYWH>
+    <FLAGBITON 	value="C_BIT_ABSOLUTE"/>
+    <FLAGBITON 	value="C_BIT_HORIZONTAL"/>
+  </TILE>
+
+  <!--
+  #[ANIM]
+  #[SETUP] NID C_TYPE_LOOP FALCON40_ROTATE
+  #[XY] 34 30
+  #[DIRECTION] 1
+  -->
+
+  <!-- Adds the instant action button -->
+  <BUTTON>
+    <SETUP>IA_MAIN_CTRL C_TYPE_NORMAL 12 14</SETUP>
+    <!--[HOTSPOT]  -0 -0 0 0-->
+    <BUTTONIMAGE>
+      <STATE C_STATE_0="MAIN_IA" C_STATE_1="MAIN_IA" C_STATE_2="MAIN_IA" C_STATE_3="MAIN_IA" />
+    </BUTTONIMAGE>
+    <FLAGBITON 	value="C_BIT_VCENTER"/>
+    <GROUP  Value="1000"/>
+    <SOUNDBITE C_TYPE_MOUSEOVER="SND_RADIO" C_TYPE_LMOUSEDOWN ="SND_GAMES" />
+    <CURSOR Value="CRSR_F16_ON" />
+  </BUTTON>
+
+  <!-- Adds the dogfight button -->
+  <BUTTON>
+    <SETUP>DF_MAIN_CTRL C_TYPE_NORMAL 136 14</SETUP>
+    <!--[HOTSPOT] -0 -0 0 0-->
+    <BUTTONIMAGE>
+      <STATE C_STATE_0="MAIN_DGFT" C_STATE_1="MAIN_DGFT" C_STATE_2="MAIN_DGFT" C_STATE_3="MAIN_DGFT" />
+    </BUTTONIMAGE>
+    <FLAGBITON 	value="C_BIT_VCENTER"/>
+    <GROUP  Value="2000"/>
+    <SOUNDBITE C_TYPE_MOUSEOVER="SND_RADIO" C_TYPE_LMOUSEDOWN ="SND_GAMES" />
+    <CURSOR Value="CRSR_F16_ON" />
+  </BUTTON>
+
+  <!-- Adds the TE button -->
+  <BUTTON>
+    <SETUP>TE_MAIN_CTRL C_TYPE_NORMAL 221 14</SETUP>
+    <!--[HOTSPOT]-5 -5 5 5-->
+    <BUTTONIMAGE>
+      <STATE C_STATE_0="MAIN_TE" C_STATE_1="MAIN_TE" C_STATE_2="MAIN_TE" C_STATE_3="MAIN_TE" />
+    </BUTTONIMAGE>
+    <FLAGBITON 	value="C_BIT_VCENTER"/>
+    <GROUP  Value="3000"/>
+    <SOUNDBITE C_TYPE_MOUSEOVER="SND_RADIO" C_TYPE_LMOUSEDOWN ="SND_GAMES" />
+    <CURSOR Value="CRSR_F16_ON" />
+  </BUTTON>
+
+  <!-- Adds the campaign button -->
+  <BUTTON>
+    <SETUP>CP_MAIN_CTRL C_TYPE_NORMAL 390 14</SETUP>
+    <!--[HOTSPOT] -5 -5 5 5-->
+    <BUTTONIMAGE>
+      <STATE C_STATE_0="MAIN_CAMP" C_STATE_1="MAIN_CAMP" C_STATE_2="MAIN_CAMP" C_STATE_3="MAIN_CAMP" />
+    </BUTTONIMAGE>
+    <FLAGBITON 	value="C_BIT_VCENTER"/>
+    <GROUP  Value="4000"/>
+    <SOUNDBITE C_TYPE_MOUSEOVER="SND_RADIO" C_TYPE_LMOUSEDOWN ="SND_GAMES" />
+    <CURSOR Value="CRSR_F16_ON" />
+  </BUTTON>
+
+  <!-- Adds the Tac Ref button -->
+  <BUTTON>
+    <SETUP>TACREF_CTRL C_TYPE_NORMAL 481 14</SETUP>
+    <!--[HOTSPOT] -0 -0 0 0-->
+    <BUTTONIMAGE>
+      <STATE C_STATE_0="MAIN_TR" C_STATE_1="MAIN_TR" C_STATE_2="MAIN_TR" C_STATE_3="MAIN_TR" />
+    </BUTTONIMAGE>
+    <GROUP  Value="10000"/>
+    <FLAGBITON 	value="C_BIT_VCENTER"/>
+    <SOUNDBITE C_TYPE_MOUSEOVER="SND_RADIO" C_TYPE_LMOUSEDOWN ="SND_GAMES" />
+    <CURSOR Value="CRSR_F16_ON" />
+  </BUTTON>
+
+  <!-- Adds the Logbook button -->
+  <BUTTON>
+    <SETUP> LB_MAIN_CTRL C_TYPE_NORMAL 700 14</SETUP>
+    <!--[HOTSPOT] -0 -0 0 0-->
+    <BUTTONIMAGE>
+      <STATE C_STATE_0="MAIN_LOGBOOK" C_STATE_1="MAIN_LOGBOOK" C_STATE_2="MAIN_LOGBOOK" C_STATE_3="MAIN_LOGBOOK" />
+    </BUTTONIMAGE>
+    <FLAGBITON 	value="C_BIT_VCENTER"/>
+    <GROUP  Value="5000"/>
+    <SOUNDBITE C_TYPE_MOUSEOVER="SND_RADIO" C_TYPE_LMOUSEDOWN ="SND_GAMES" />
+    <CURSOR Value="CRSR_F16_ON" />
+  </BUTTON>
+
+  <!-- Adds the ACMI button -->
+  <BUTTON>
+    <SETUP>ACMI_CTRL C_TYPE_NORMAL 786 14</SETUP>
+    <!--[HOTSPOT] -0 -0 0 0-->
+    <BUTTONIMAGE>
+      <STATE C_STATE_0="MAIN_ACMI" C_STATE_1="MAIN_ACMI" C_STATE_2="MAIN_ACMI" C_STATE_3="MAIN_ACMI" />
+    </BUTTONIMAGE>
+    <FLAGBITON 	value="C_BIT_VCENTER"/>
+    <SOUNDBITE C_TYPE_MOUSEOVER="SND_RADIO" C_TYPE_LMOUSEDOWN ="SND_GAMES" />
+    <GROUP  Value="200000"/>
+    <CURSOR Value="CRSR_F16_ON" />
+  </BUTTON>
+
+  <!-- Adds the comms button -->
+  <BUTTON>
+    <SETUP> CO_MAIN_CTRL C_TYPE_NORMAL 630 14</SETUP>
+    <!--[HOTSPOT] -0 -0 0 0-->
+    <BUTTONIMAGE>
+      <STATE C_STATE_0="MAIN_COMMS" C_STATE_1="MAIN_COMMS" C_STATE_2="MAIN_COMMS" C_STATE_3="MAIN_COMMS" />
+    </BUTTONIMAGE>
+    <FLAGBITON 	value="C_BIT_VCENTER"/>
+    <GROUP  Value="6000"/>
+    <SOUNDBITE C_TYPE_MOUSEOVER="SND_RADIO" C_TYPE_LMOUSEDOWN ="SND_GAMES" />
+    <USERDATA  name="C_STATE_0" value="6000" />
+    <USERDATA name="C_STATE_1" value="6001"/>
+    <CURSOR Value="CRSR_F16_ON" />
+  </BUTTON>
+
+  <!-- Adds the theater button -->
+  <BUTTON>
+    <SETUP>UI_THEATER_BUTTON C_TYPE_NORMAL 839 14</SETUP>
+    <!--[HOTSPOT] -5 -5 5 5-->
+    <BUTTONIMAGE>
+      <STATE C_STATE_0="MAIN_THEATER" C_STATE_1="MAIN_THEATER" C_STATE_2="MAIN_THEATER" C_STATE_3="MAIN_THEATER" />
+    </BUTTONIMAGE>
+    <FLAGBITON 	value="C_BIT_VCENTER"/>
+    <GROUP  Value="8000"/>
+    <SOUNDBITE C_TYPE_MOUSEOVER="SND_RADIO" C_TYPE_LMOUSEDOWN ="SND_GAMES" />
+    <CURSOR Value="CRSR_F16_ON" />
+  </BUTTON>
+
+  <!-- Adds the setup button -->
+  <BUTTON>
+    <SETUP>SP_MAIN_CTRL C_TYPE_NORMAL 915 14</SETUP>
+    <!--[HOTSPOT] -5 -5 5 5-->
+    <BUTTONIMAGE>
+      <STATE C_STATE_0="MAIN_SETUP" C_STATE_1="MAIN_SETUP" C_STATE_2="MAIN_SETUP" C_STATE_3="MAIN_SETUP" />
+    </BUTTONIMAGE>
+    <FLAGBITON 	value="C_BIT_VCENTER"/>
+    <GROUP  Value="8000"/>
+    <SOUNDBITE C_TYPE_MOUSEOVER="SND_RADIO" C_TYPE_LMOUSEDOWN ="SND_GAMES" />
+    <CURSOR Value="CRSR_F16_ON" />
+  </BUTTON>
+
+  <!-- Adds the exit button -->
+  <BUTTON>
+    <SETUP> EXIT_CTRL C_TYPE_NORMAL 974 14</SETUP>
+    <!--[HOTSPOT] -0 -0 0 0-->
+    <BUTTONIMAGE>
+      <STATE C_STATE_0="MAIN_EXIT" C_STATE_1="MAIN_EXIT" C_STATE_2="MAIN_EXIT" C_STATE_3="MAIN_EXIT" />
+    </BUTTONIMAGE>
+    <FLAGBITON 	value="C_BIT_VCENTER"/>
+    <SOUNDBITE C_TYPE_MOUSEOVER="SND_RADIO" C_TYPE_LMOUSEDOWN ="SND_GAMES" />
+    <GROUP  Value="9000"/>
+    <CURSOR Value="CRSR_F16_ON" />
+  </BUTTON>
+
+  <!--
+#DONT DELETRE THIS BUTTON (DEV FUCTIONS)
+#[BUTTON]
+#[SETUP] SAVE_FONT_CTRL C_TYPE_NORMAL 17 46
+#[FONT] HAETTEN_16
+#[BUTTONTEXT] C_STATE_0 FONTED_TXT_SAVE_FONT
+#[UPCOLOR] 0 0 0
+#[FLAGBITON] C_BIT_ABSOLUTE
+-->
+</Window>

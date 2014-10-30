@@ -1,0 +1,4 @@
+<?xml version="1.0" ?>
+<module name="basic" version="330" source="basicModule.glsl">
+  <uniformSampler name="sampler" texture="checker"/>
+</module>

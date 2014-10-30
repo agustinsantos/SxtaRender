@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<guimanager skin="Skin2.png"  size ="1366, 768">
+  <guielement filename="MainPanel" active="true"/>
+  <guielement filename="LogbookWindow" active="false"/>
+
+  <statusbar name="statusbar"
+             dock="Bottom"/>
+  <window name="logWindow"
+             position="CenterH, Bottom"
+             size="1366, 192"
+             title="Log Window">
+    <listbox name ="textOutput"
+             dock="Fill"/>
+  </window>
+</guimanager>

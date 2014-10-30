@@ -1,0 +1,10 @@
+<?xml version="1.0" ?>
+<node>
+  <node flags="camera">
+    <method id="draw" value="Example01Camera"/>
+  </node>
+  <node flags="object">
+    <mesh id="geometry" value="quad.mesh"/>
+    <module id="material" value="basic"/>
+  </node>
+</node>

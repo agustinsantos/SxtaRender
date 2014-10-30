@@ -1,0 +1,504 @@
+﻿<#@ template debug="true" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+<#
+ 	 var types = new string [] {"float", "double", "int", "uint", "bool"};
+ 	 var GLtypes = new string [] {"GLfloat", "GLdouble", "GLint", "GLuint", "GLbool"};
+	 var uniform1Types = new string [] {"VEC1F", "VEC1D", "VEC1I", "VEC1UI", "VEC1B"};
+	 var uniform2Types = new string [] {"VEC2F", "VEC2D", "VEC2I", "VEC2UI", "VEC2B"};
+	 var uniform3Types = new string [] {"VEC3F", "VEC3D", "VEC3I", "VEC3UI", "VEC3B"};
+	 var uniform4Types = new string [] {"VEC4F", "VEC4D", "VEC4I", "VEC4UI", "VEC4B"};
+	 
+	 var vec1Types = new string [] {"Vector1f", "Vector1d", "Vector1i", "Vector1ui", "Vector1b"};
+	 var vec2Types = new string [] {"Vector2f", "Vector2d", "Vector2i", "Vector2ui", "Vector2b"};
+	 var vec3Types = new string [] {"Vector3f", "Vector3d", "Vector3i", "Vector3ui", "Vector3b"};
+	 var vec4Types = new string [] {"Vector4f", "Vector4d", "Vector4i", "Vector4ui", "Vector4b"};
+
+	 var value1Types = new string [] {"Value1f", "Value1d", "Value1i", "Value1ui", "Value1b"};
+	 var value2Types = new string [] {"Value2f", "Value2d", "Value2i", "Value2ui", "Value2b"};
+	 var value3Types = new string [] {"Value3f", "Value3d", "Value3i", "Value3ui", "Value3b"};
+	 var value4Types = new string [] {"Value4f", "Value4d", "Value4i", "Value4ui", "Value4b"};
+
+	 var valueMat2Types = new string [] {"ValueMatrix2f", "ValueMatrix2d", "ValueMatrix2i", "ValueMatrix2ui", "ValueMatrix2b"};
+	 var valueMat3Types = new string [] {"ValueMatrix3f", "ValueMatrix3d", "ValueMatrix3i", "ValueMatrix3ui", "ValueMatrix3b"};
+	 var valueMat4Types = new string [] {"ValueMatrix4f", "ValueMatrix4d", "ValueMatrix4i", "ValueMatrix4ui", "ValueMatrix4b"};
+	 
+	 var mat2Types = new string [] {"Matrix2f", "Matrix2d", "Matrix2i", "Matrix2ui", "Matrix2b"};
+	 var mat3Types = new string [] {"Matrix3f", "Matrix3d", "Matrix3i", "Matrix3ui", "Matrix3b"};
+	 var mat4Types = new string [] {"Matrix4f", "Matrix4d", "Matrix4i", "Matrix4ui", "Matrix4b"};
+
+	 var valueMat23Types = new string [] {"ValueMatrix2x3f", "ValueMatrix2x3d", "ValueMatrix2x3i", "ValueMatrix2x3ui", "ValueMatrix2x3b"};
+	 var valueMat24Types = new string [] {"ValueMatrix2x4f", "ValueMatrix2x4d", "ValueMatrix2x4i", "ValueMatrix2x4ui", "ValueMatrix2x4b"};
+	 var valueMat32Types = new string [] {"ValueMatrix3x2f", "ValueMatrix3x2d", "ValueMatrix3x2i", "ValueMatrix3x2ui", "ValueMatrix3x2b"};
+	 var valueMat34Types = new string [] {"ValueMatrix3x4f", "ValueMatrix3x4d", "ValueMatrix3x4i", "ValueMatrix3x4ui", "ValueMatrix3x4b"};
+	 var valueMat42Types = new string [] {"ValueMatrix4x2f", "ValueMatrix4x2d", "ValueMatrix4x2i", "ValueMatrix4x2ui", "ValueMatrix4x2b"};
+	 var valueMat43Types = new string [] {"ValueMatrix4x3f", "ValueMatrix4x3d", "ValueMatrix4x3i", "ValueMatrix4x3ui", "ValueMatrix4x3b"};
+
+ #>
+using System;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Runtime.Serialization;
+using System.Xml.Serialization;
+using Sxta.Math;
+
+namespace Sxta.Render
+{
+   /// <summary>
+    /// An abstract value.
+    /// </summary>
+    public abstract class Value
+    {
+        /*
+         * Deletes this value.
+         */
+        // ~Value();
+
+        /*
+         * Returns the type of this value.
+         */
+        public UniformType getType()
+        {
+            return type;
+        }
+        /*
+         * Returns the name of this value.
+         */
+        public string getName()
+        {
+            return name;
+        }
+
+
+        /*
+         * The name of this value.
+         */
+        protected string name;
+
+        /*
+         * Creates an uninitialized value.
+         */
+        protected Value(string type, string name)
+        {
+            this.name = name;
+        }
+
+        /*
+         * The type of this Value.
+         */
+        protected UniformType type;
+    }
+
+    /*
+     * A Value holding a Texture value.
+     * @ingroup render
+     */
+    public class ValueSampler : Value
+    {
+        /*
+         * Creates an uninitialized ValueSampler.
+         */
+        public ValueSampler(UniformType type, string name)
+            : base("UniformSampler", name)
+        {
+        }
+
+
+        /*
+         * Creates a ValueSampler.
+         */
+        public ValueSampler(UniformType type, string name, Texture value)
+            : this(type, name)
+        {
+            this.value = value;
+        }
+
+        /*
+         * Deletes this ValueSampler.
+         */
+        // ~ValueSampler();
+
+
+        /*
+         * Returns the current value of this ValueSampler.
+         */
+        public Texture get()
+        {
+            return value;
+        }
+
+        /*
+         * Sets the value of this uniform.
+         *
+         * @param value the new value for this ValueSampler.
+         */
+        public void set(Texture value)
+        {
+            this.value = value;
+        }
+
+
+        /*
+         * The current value of this ValueSampler.
+         */
+        private Texture value;
+    }
+
+<#  
+  for  (int i = 0; i < types.Length; i++) 
+  { 
+	var typeName = types[i];
+	var GLtypeName = GLtypes[i];
+
+	var uniform1Name = uniform1Types[i];
+	var uniform2Name = uniform2Types[i];
+	var uniform3Name = uniform3Types[i];
+	var uniform4Name = uniform4Types[i];
+
+	var vec4Name = vec4Types[i];
+	var vec3Name = vec3Types[i];
+	var vec2Name = vec2Types[i];
+	var vec1Name = vec1Types[i];
+
+	var val4Name = value4Types[i];
+	var val3Name = value3Types[i];
+	var val2Name = value2Types[i];
+	var val1Name = value1Types[i];
+
+	var valMat4Name = valueMat4Types[i];
+	var valMat3Name = valueMat3Types[i];
+	var valMat2Name = valueMat2Types[i];
+
+	var mat4Name = mat4Types[i];
+	var mat3Name = mat3Types[i];
+	var mat2Name = mat2Types[i];
+
+	var valMat43Name = valueMat43Types[i];
+	var valMat42Name = valueMat42Types[i];
+	var valMat34Name = valueMat34Types[i];
+	var valMat32Name = valueMat32Types[i];
+	var valMat24Name = valueMat24Types[i];
+	var valMat23Name = valueMat23Types[i];
+
+  #>
+   #region <#= val1Name #>
+
+   /*
+     * A Value holding a single <#= typeName #> value.
+     * @ingroup render
+     */
+   public class <#= val1Name #> : Value
+   {
+        /*
+         * Creates an uninitialized <#= val1Name #>.
+         */
+        public <#= val1Name #>(string name)
+            : base("<#= GLtypeName #>", name)
+        {
+			this.type = UniformType.<#= uniform1Name #>;
+        }
+
+        /*
+         * Creates a <#= val1Name #>.
+         */
+        public <#= val1Name #>(string name, <#= typeName #> value)
+            : base("<#= GLtypeName #>", name)
+        {
+            this.value = value;
+        }
+
+        /*
+         * Returns the current value of this <#= val1Name #>.
+         */
+        public <#= typeName #> get()
+        {
+            return value;
+        }
+
+        /*
+         * Sets the value of this <#= val1Name #>.
+         *
+         * @param value the new value for this <#= val1Name #>.
+         */
+        public void set(<#= typeName #> value)
+        {
+            this.value = value;
+        }
+
+        /*
+         * The current value of this <#= val1Name #>.
+         */
+        private <#= typeName #> value;
+    }
+
+	#endregion
+
+    #region <#= val2Name #>
+
+    /*
+     * A Value holding a two vector value.
+     * @ingroup render
+     */
+    public class <#= val2Name #> : Value
+    {
+        /*
+         * Creates an uninitialized <#= val2Name #>.
+         */
+        public <#= val2Name #>(string name)
+            : base("<#= GLtypeName #>", name)
+        {
+			this.type = UniformType.<#= uniform1Name #>;
+		}
+
+        /*
+         * Creates a <#= val2Name #>.
+         */
+        public <#= val2Name #>(string name, <#= vec2Name #> value)
+            : base("<#= GLtypeName #>", name)
+        {
+            this.value = value;
+        }
+
+        /*
+         * Returns the current value of this <#= val2Name #>.
+         */
+        public <#= vec2Name #> get()
+        {
+            return value;
+        }
+
+        /*
+         * Sets the value of this <#= val2Name #>.
+         *
+         * @param value the new value for this <#= val2Name #>.
+         */
+        public void set(<#= vec2Name #> value)
+        {
+            this.value = value;
+        }
+
+        /*
+         * The current value of this <#= val2Name #>.
+         */
+        private <#= vec2Name #> value;
+    }
+
+	#endregion
+
+	#region  <#= val3Name #>
+
+    /*
+     * A Value holding a three vector value.
+     * @ingroup render
+     */
+    public class <#= val3Name #> : Value
+    {
+        /*
+         * Creates an uninitialized <#= val3Name #>.
+         */
+        public <#= val3Name #>(string name)
+            : base("<#= GLtypeName #>", name)
+        {
+			value = new <#= vec3Name #>();
+			this.type = UniformType.<#= uniform1Name #>;
+		}
+
+        /*
+         * Creates a <#= val3Name #>.
+         */
+        public <#= val3Name #>(string name, <#= vec3Name #> value)
+            : base("<#= GLtypeName #>", name)
+        {
+            this.value = value;
+        }
+ 
+        /*
+         * Returns the current value of this <#= val3Name #>.
+         */
+        public <#= vec3Name #> get()
+        {
+            return value;
+        }
+
+        /*
+         * Sets the value of this <#= val3Name #>.
+         *
+         * @param value the new value for this <#= val3Name #>.
+         */
+        public void set(<#= vec3Name #> value)
+        {
+            this.value = value;
+        }
+
+        /*
+         * The current value of this <#= val3Name #>.
+         */
+        private <#= vec3Name #> value;
+    }
+
+	#endregion
+
+	#region  <#= val4Name #>
+
+    /*
+     * A Value holding a for vector value.
+     * @ingroup render
+     */
+    public class <#= val4Name #> : Value
+    {
+        /*
+         * Creates an uninitialized <#= val4Name #>.
+         */
+        public <#= val4Name #>(string name)
+            : base("<#= GLtypeName #>", name)
+        {
+			value = new <#= vec4Name #>();
+			this.type = UniformType.<#= uniform1Name #>;
+		}
+
+        /*
+         * Creates a <#= val4Name #>.
+         */
+        public <#= val4Name #>(string name, <#= vec4Name #> value)
+            : base("<#= GLtypeName #>", name)
+        {
+            this.value = value;
+        }
+
+         /*
+         * Returns the current value of this <#= val4Name #>.
+         */
+        public <#= vec4Name #> get()
+        {
+            return value;
+        }
+
+        /*
+         * Sets the value of this <#= val4Name #>.
+         *
+         * @param value the new value for this <#= val4Name #>.
+         */
+        public void set(<#= vec4Name #> value)
+        {
+            this.value = value;
+        }
+
+        /*
+         * The current value of this <#= val4Name #>.
+         */
+        private <#= vec4Name #> value;
+    }
+
+	#endregion
+	
+
+	<# if (typeName != "bool") 
+	{
+	#>
+	#region TODO NotImplemented
+
+	public class <#= valMat2Name #> : Value
+	{
+		public <#= valMat2Name #>(string name, <#= mat2Name #> value)
+            : base("<#= GLtypeName #>", name)
+        {
+            throw new NotImplementedException();
+        }
+
+		public <#= valMat2Name #>(string name, <#= typeName #>[] value)
+            : base("<#= GLtypeName #>", name)
+        {
+            throw new NotImplementedException();
+        }
+	}
+
+	public class <#= valMat3Name #> : Value
+	{
+		public <#= valMat3Name #>(string name, <#= mat3Name #> value)
+            : base("<#= GLtypeName #>", name)
+        {
+            throw new NotImplementedException();
+        }
+
+		public <#= valMat3Name #>(string name, <#= typeName #>[] value)
+            : base("<#= GLtypeName #>", name)
+        {
+            throw new NotImplementedException();
+        }
+	}
+
+	public class <#= valMat4Name #> : Value
+	{
+		public <#= valMat4Name #>(string name, <#= mat4Name #> value)
+            : base("<#= GLtypeName #>", name)
+        {
+            throw new NotImplementedException();
+        }
+
+		public <#= valMat4Name #>(string name, <#= typeName #>[] value)
+            : base("<#= GLtypeName #>", name)
+        {
+            throw new NotImplementedException();
+        }
+	}
+
+	public class <#= valMat23Name #> : Value
+	{
+		public <#= valMat23Name #>(string name, <#= typeName #>[] value)
+            : base("<#= GLtypeName #>", name)
+        {
+            throw new NotImplementedException();
+        }
+	}
+	
+	public class <#= valMat24Name #> : Value
+	{
+		public <#= valMat24Name #>(string name, <#= typeName #>[] value)
+            : base("<#= GLtypeName #>", name)
+        {
+            throw new NotImplementedException();
+        }
+	}
+
+	public class <#= valMat32Name #> : Value
+	{
+		public <#= valMat32Name #>(string name, <#= typeName #>[] value)
+            : base("<#= GLtypeName #>", name)
+        {
+            throw new NotImplementedException();
+        }
+	}
+	
+	public class <#= valMat34Name #> : Value
+	{
+		public <#= valMat34Name #>(string name, <#= typeName #>[] value)
+            : base("<#= GLtypeName #>", name)
+        {
+            throw new NotImplementedException();
+        }
+	}
+
+	public class <#= valMat42Name #> : Value
+	{
+		public <#= valMat42Name #>(string name, <#= typeName #>[] value)
+            : base("<#= GLtypeName #>", name)
+        {
+            throw new NotImplementedException();
+        }
+	}
+
+	public class <#= valMat43Name #> : Value
+	{
+		public <#= valMat43Name #>(string name, <#= typeName #>[] value)
+            : base("<#= GLtypeName #>", name)
+        {
+            throw new NotImplementedException();
+        }
+	}
+	#endregion
+	<# } #>
+ <# } #>
+}

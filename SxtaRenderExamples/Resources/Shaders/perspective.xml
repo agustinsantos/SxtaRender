@@ -1,0 +1,4 @@
+<?xml version="1.0" ?>
+<module name="perspective" version="330" source="perspective.glsl">
+  <uniformSampler name="sampler" texture="checker"/>
+</module>

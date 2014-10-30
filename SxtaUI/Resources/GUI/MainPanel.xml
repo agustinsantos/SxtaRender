@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<panel name="Main" size ="1366, 768">
+  <imagepanel texture="Media/140130-F-BR512-102.png"
+               dock="Fill"/>
+  <button text="INSTANT ACTION"
+          pressed="Sxta.UI.Sample.SimpleUIWindow.onButtonIA"
+          position="20, 100"
+          size="200, 25"/>
+  <button text="DOGFIGHT"
+          pressed="Sxta.UI.Sample.SimpleUIWindow.onButtonDF"
+          position="20, 130"
+          size="200, 25"/>
+  <button text="TACTICAL ENGAGEMENT"
+          pressed="Sxta.UI.Sample.SimpleUIWindow.onButtonTE"
+          position="20, 160"
+          size="200, 25"/>
+  <button text="CAMPAIGN"
+          pressed="Sxta.UI.Sample.SimpleUIWindow.onButtonCP"
+          position="20, 190"
+          size="200, 25"/>
+  <button text="TACTICAL REFERENCE"
+           pressed="Sxta.UI.Sample.SimpleUIWindow.onButtonTACREF"
+           position="20, 220"
+           size="200, 25"/>
+  <button text="LOGBOOK"
+          pressed="Sxta.UI.Sample.SimpleUIWindow.onButtonLB"
+          position="20, 250"
+          size="200, 25"/>
+  <button text="ACMI"
+          pressed="Sxta.UI.Sample.SimpleUIWindow.onButtonACMI"
+          position="20, 280"
+          size="200, 25"/>
+  <button text="COMMS"
+          pressed="Sxta.UI.Sample.SimpleUIWindow.onButtonCO"
+          position="20, 310"
+          size="200, 25"/>
+  <button text="THEATER"
+          pressed="Sxta.UI.Sample.SimpleUIWindow.onButtonTHEATER"
+          position="20, 340"
+          size="200, 25"/>
+  <button text="SETUP"
+           pressed="Sxta.UI.Sample.SimpleUIWindow.onButtonSTP"
+           position="20, 370"
+           size="200, 25"/>
+  <button text="EXIT"
+           pressed="Sxta.UI.Sample.SimpleUIWindow.onButtonEXIT"
+           position="20, 400"
+           size="200, 25"/>
+</panel>
+<!--window name="logWindow"
+           position="CenterH, Bottom"
+           size="1366, 192"
+           title="Log Window">
+  <listbox name ="textOutput"
+           dock="Fill"/>
+</window-->

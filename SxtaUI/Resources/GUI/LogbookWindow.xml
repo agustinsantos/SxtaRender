@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<window name="logbookWindow"
+        position="Center"
+        size="1366, 192"
+        title="Log Window">
+  <imagepanel texture="Media/logbook.png"
+               dock="Fill"/>
+  <groupbox name="gbCareer"
+            text="CAREER"
+            textcolor="WhiteSmoke"
+            position="5, 135">
+    <label name ="labelCommissioned"
+           text="Commissioned:"
+           textcolor="WhiteSmoke"/>
+    <label name ="labelFltHrs"
+           text="Flight Hours:"
+           textcolor="WhiteSmoke"/>
+    <label name ="labelAceFactor"
+          text="Ace Factor:"
+          textcolor="WhiteSmoke"/>
+    <label name ="labelTotalScore"
+            text="Total Score:"
+            textcolor="WhiteSmoke"/>
+    <label name ="labelLastMisPts"
+        text="Last Mis Points:"
+        textcolor="WhiteSmoke"/>
+
+  </groupbox>
+  <groupbox name="gbCampaign"
+            text="CAMPAIGN"
+            textcolor="WhiteSmoke"
+            position="5, 135">
+  </groupbox>
+  <groupbox name="gbDogfight"
+          text="DOGFIGHT"
+          textcolor="WhiteSmoke"
+          position="5, 135">
+  </groupbox>
+</window>
