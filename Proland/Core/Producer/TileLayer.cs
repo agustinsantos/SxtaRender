@@ -18,7 +18,7 @@ namespace Sxta.Proland.Core.Producer
     /// </summary>
     public class TileLayer
     {
-
+#if TODO
 
         /// <summary>
         /// Creates a new TileLayer.
@@ -235,5 +235,7 @@ namespace Sxta.Proland.Core.Producer
         private bool deform;
 
         private bool enabled;
+#endif
     }
+
 }

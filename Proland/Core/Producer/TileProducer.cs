@@ -19,6 +19,7 @@ namespace Sxta.Proland.Core.Producer
     /// </summary>
     public class TileProducer
     {
+#if
         /*
           * Creates a new TileProducer.
           *
@@ -1190,5 +1191,6 @@ namespace Sxta.Proland.Core.Producer
                 addDependency(root, dst);
             }
         }
+#endif
     }
 }

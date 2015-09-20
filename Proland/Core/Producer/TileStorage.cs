@@ -21,6 +21,7 @@ namespace Sxta.Proland.Core.Producer
     /// </summary>
     public class TileStorage
     {
+#if TODO
         /*
          * A slot managed by a TileStorage. Concrete sub classes of this class must
          * provide a reference to the actual tile data.
@@ -165,5 +166,7 @@ namespace Sxta.Proland.Core.Producer
          *      storage. This capacity is fixed and cannot change with time.
          */
         protected void init(int tileSize, int capacity);
+#endif 
     }
+
 }
