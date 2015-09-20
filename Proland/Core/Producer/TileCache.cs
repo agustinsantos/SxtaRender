@@ -28,7 +28,7 @@ namespace Sxta.Proland.Core.Producer
     /// </summary>
     public class TileCache
     {
-
+#if TODO
 
         /*
          * Creates a new TileCache.
@@ -716,5 +716,6 @@ namespace Sxta.Proland.Core.Producer
              */
             private int users;
         }
+#endif TODO
     }
 }
