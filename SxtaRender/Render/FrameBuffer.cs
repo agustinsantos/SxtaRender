@@ -3314,7 +3314,7 @@ namespace Sxta.Render
 #endif
             beginConditionalRender();
 #if OPENTK
-            GL.DrawTransformFeedbackStream(EnumConversion.getMeshMode(m), tfb.id, (uint)stream);
+            GL.DrawTransformFeedbackStream(EnumConversion.getMeshMode(m), tfb.id, (int)stream);
 #else
             glDrawTransformFeedbackStream(getMeshMode(m), tfb.id, stream);
 #endif

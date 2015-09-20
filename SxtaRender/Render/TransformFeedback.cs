@@ -25,7 +25,7 @@ namespace Sxta.Render
         public TransformFeedback()
         {
 #if OPENTK
-            GL.GenTransformFeedback(1, out id);
+            id=GL.GenTransformFeedback();
 #else
             glGenTransformFeedbacks(1, &id);
 #endif
@@ -43,7 +43,7 @@ namespace Sxta.Render
             if (id != 0)
             {
 #if OPENTK
-                GL.DeleteTransformFeedback(1, ref id);
+                GL.DeleteTransformFeedback(id);
 #else
                 glDeleteTransformFeedbacks(1, &id);
 #endif
@@ -298,7 +298,7 @@ namespace Sxta.Render
 		/// <param name='stream'>
 		/// Stream stream the stream to draw.
 		/// </param>
-        public void transformFeedback(TransformFeedback tfb, uint stream = 0)
+        public void transformFeedback(TransformFeedback tfb, int stream = 0)
         {
             TRANSFORMFEEDBACK_FRAMEBUFFER.set();
             TRANSFORM.set();
@@ -364,7 +364,7 @@ namespace Sxta.Render
 		/// <summary>
 		/// The id of this transform feedback object.
 		/// </summary>
-        internal uint id;
+        internal int id;
 
 		/// <summary>
 		/// The default transform feedback instance.
@@ -401,7 +401,7 @@ namespace Sxta.Render
             else
             {
 #if OPENTK
-                GL.GenTransformFeedback(1, out id);
+                id=GL.GenTransformFeedback();
 #else
                 glGenTransformFeedbacks(1, &id);
 #endif
@@ -415,7 +415,7 @@ namespace Sxta.Render
 		/// <param name='id'>
 		/// Identifier.
 		/// </param>
-        private static void bind(uint id)
+        private static void bind(int id)
         {
 #if OPENTK
             int v;

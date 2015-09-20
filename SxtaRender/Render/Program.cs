@@ -1136,6 +1136,7 @@ namespace Sxta.Render
                         case ActiveUniformType.FloatMat4x3:
                             u = new UniformMatrix4x3f(this, block, uname, uoffset, matrixStride, isRowMajor);
                             break;
+#if TODO //TODO Agustin
                         case ActiveUniformType.DoubleMat2:
                             u = new UniformMatrix2d(this, block, uname, uoffset, matrixStride, isRowMajor != 0);
                             break;
@@ -1163,6 +1164,7 @@ namespace Sxta.Render
                         case ActiveUniformType.DoubleMat4x3:
                             u = new UniformMatrix4x3d(this, block, uname, uoffset, matrixStride, isRowMajor);
                             break;
+#endif
                         case ActiveUniformType.Sampler1D:
                         case ActiveUniformType.Sampler1DShadow:
                             u = new UniformSampler(UniformType.SAMPLER_1D, this, block, uname, uoffset);
@@ -1703,7 +1705,7 @@ namespace Sxta.Render
             }
         }
 
-        #region Dispose
+#region Dispose
 
         // Track whether Dispose has been called. 
         private bool disposed = false;
@@ -1774,7 +1776,7 @@ namespace Sxta.Render
 
             }
         }
-        #endregion
+#endregion
 
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
     }
