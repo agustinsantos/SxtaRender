@@ -1,17 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{574F1BAA-61B0-4253-9EC5-B853346DD26D}</ProjectGuid>
+    <ProjectGuid>{37F92520-6B40-44C5-8294-D588F74683D7}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SxtaRenderOSG</RootNamespace>
-    <AssemblyName>SxtaRenderOSG</AssemblyName>
+    <RootNamespace>NanoVG</RootNamespace>
+    <AssemblyName>NanoVG</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,7 +20,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,18 +28,9 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="log4net">
-      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
-    </Reference>
-    <Reference Include="OpenTK, Version=1.1.1161.61462, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\OpenTK.1.1.1161.61462\lib\NET40\OpenTK.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -50,20 +39,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="OSGUtil\IncrementalCompileOperation.cs" />
-    <Compile Include="OSGUtil\UpdateVisitor.cs" />
-    <Compile Include="OSGViewer\Viewer.cs" />
-    <Compile Include="OSGViewer\ViewerBase.cs" />
-    <Compile Include="OSG\BoundingBox.cs" />
-    <Compile Include="OSG\BoundingSphere.cs" />
-    <Compile Include="OSG\DisplaySettings.cs" />
-    <Compile Include="OSG\GraphicsContext.cs" />
-    <Compile Include="OSG\GraphicsThread.cs" />
-    <Compile Include="OSG\Node.cs" />
-    <Compile Include="OSG\NodeVisitor.cs" />
-    <Compile Include="OSG\OperationThread.cs" />
-    <Compile Include="OSG\State.cs" />
-    <Compile Include="OSG\Stats.cs" />
+    <Compile Include="MiscTypes.cs" />
+    <Compile Include="NanoGL.cs" />
+    <Compile Include="Nvg.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -71,9 +49,6 @@
       <Project>{2b803a3e-cc40-477b-a9cf-b1f2abdce6f3}</Project>
       <Name>SxtaRender</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

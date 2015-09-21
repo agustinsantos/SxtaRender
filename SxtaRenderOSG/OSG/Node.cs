@@ -12,8 +12,52 @@ namespace Sxta.Render.OSG
     /// <param name="n"></param>
     /// <returns></returns>
     public delegate BoundingSphere ComputeBoundDelegate(Node n);
-   
-    public class Node { }
+
+    public class Node
+    {
+        public virtual void Ascend(NodeVisitor nv)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual void Traverse(NodeVisitor nv)
+        {
+            throw new NotImplementedException();
+        }
+        public virtual void Accept(NodeVisitor nv)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Get/Set the node Mask.
+        /// </summary>
+        public uint NodeMask
+        {
+            get { return _nodeMask; }
+            set { _nodeMask = value; }
+        }
+
+
+        /*
+        * This is a set of bits (flags) that represent the Node.
+        * The default value is 0xffffffff (all bits set).
+        *
+        * The most common use of these is during traversal of the scene graph.
+        * For instance, when traversing the scene graph the osg::NodeVisitor does a bitwise
+        * AND of its TraversalMask with the Node's NodeMask to
+        * determine if the Node should be processed/traversed.
+        *
+        * For example, if a Node has a NodeMask value of 0x02 (only 2nd bit set)
+        * and the osg::Camera has a CullMask of 0x4 (2nd bit not set) then during cull traversal,
+        * which takes it's TraversalMask from the Camera's CullMask, the node and any children
+        * would be ignored and thereby treated as "culled" and thus not rendered.
+        * Conversely, if the osg::Camera CullMask were 0x3 (2nd bit set) then the node
+        * would be processed and child Nodes would be examined.
+        */
+        //typedef unsigned int NodeMask;
+        protected uint _nodeMask = 0xffffffff;
+    }
 #if TODO
     /// <summary>
     /// Base class for all internal nodes in the scene graph.
@@ -49,20 +93,9 @@ namespace Sxta.Render.OSG
 
 
 
-        public virtual void Accept(NodeVisitor nv)
-        {
-            throw new NotImplementedException();
-        }
+       
 
-        public virtual void Ascend(NodeVisitor nv)
-        {
-            throw new NotImplementedException();
-        }
-
-        public virtual void Traverse(NodeVisitor nv)
-        {
-            throw new NotImplementedException();
-        }
+       
 
         internal void AddParent(Group node)
         {
@@ -145,14 +178,9 @@ namespace Sxta.Render.OSG
             set { _computeBoundCallback = value; }
         }
 
-        /** Get/Set the node Mask.*/
-        public uint NodeMask
-        {
-            get { return _nodeMask; }
-            set { _nodeMask = value; }
-        }
 
-        #region Protected
+
+    #region Protected
         protected BoundingSphere _initialBound;
         protected ComputeBoundDelegate _computeBoundCallback;
         protected BoundingSphere _boundingSphere;
@@ -160,25 +188,8 @@ namespace Sxta.Render.OSG
 
         protected List<Group> _parents;
 
-        /*
-        * This is a set of bits (flags) that represent the Node.
-        * The default value is 0xffffffff (all bits set).
-        *
-        * The most common use of these is during traversal of the scene graph.
-        * For instance, when traversing the scene graph the osg::NodeVisitor does a bitwise
-        * AND of its TraversalMask with the Node's NodeMask to
-        * determine if the Node should be processed/traversed.
-        *
-        * For example, if a Node has a NodeMask value of 0x02 (only 2nd bit set)
-        * and the osg::Camera has a CullMask of 0x4 (2nd bit not set) then during cull traversal,
-        * which takes it's TraversalMask from the Camera's CullMask, the node and any children
-        * would be ignored and thereby treated as "culled" and thus not rendered.
-        * Conversely, if the osg::Camera CullMask were 0x3 (2nd bit set) then the node
-        * would be processed and child Nodes would be examined.
-        */
-        //typedef unsigned int NodeMask;
-        protected uint _nodeMask = 0xffffffff;
-        #endregion
+        
+    #endregion
     }
 #endif
 }

@@ -131,7 +131,7 @@ namespace Sxta.Render.OSG
         /// </summary>
         public float Radius2
         {
-            get { return 0.25f * ((_max - _min).LengthSquared); }
+            get { return (float)(0.25 * ((_max - _min).LengthSquared)); }
         }
 
         /// <summary>

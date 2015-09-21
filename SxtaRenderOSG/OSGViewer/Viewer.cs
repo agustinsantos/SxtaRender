@@ -28,11 +28,55 @@ namespace Sxta.Render.OSGViewer
                 _sceneData = value;
             }
         }
+
+        public override Stats ViewerStats
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         public void UpdateSceneGraph(NodeVisitor updateVisitor)
         {
             if (_sceneData == null) return;
             else
                 _sceneData.Accept(updateVisitor);
+        }
+
+        public override bool ReadConfiguration(string filename)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool IsRealized()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Realize()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool CheckNeedToDoFrame()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool CheckEvents()
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void viewerInit()
+        {
+            throw new NotImplementedException();
         }
 
         Node _sceneData;

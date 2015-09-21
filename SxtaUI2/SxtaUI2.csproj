@@ -1,0 +1,120 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{C10E881A-14E4-418B-B83B-BA7B8EA2B543}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SxtaUI2</RootNamespace>
+    <AssemblyName>SxtaUI2</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ExCSS">
+      <HintPath>..\packages\ExCSS.2.0.5\lib\net45\ExCSS.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Core\BaseXMLParser.cs" />
+    <Compile Include="Core\Box.cs" />
+    <Compile Include="Core\Colour.cs" />
+    <Compile Include="Core\Context.cs" />
+    <Compile Include="Core\CoreEngine.cs" />
+    <Compile Include="Core\Decorator.cs" />
+    <Compile Include="Core\DecoratorDataHandle.cs" />
+    <Compile Include="Core\DecoratorInstancer.cs" />
+    <Compile Include="Core\DocumentHeader.cs" />
+    <Compile Include="Core\Dom\IAttributeCollection.cs" />
+    <Compile Include="Core\Dom\IDomContainer.cs" />
+    <Compile Include="Core\Dom\IDomDocument.cs" />
+    <Compile Include="Core\Dom\IDomElement.cs" />
+    <Compile Include="Core\Dom\IDomIndexedNode.cs" />
+    <Compile Include="Core\Dom\IDomNode.cs" />
+    <Compile Include="Core\Dom\IDomObject.cs" />
+    <Compile Include="Core\Dom\INodeList.cs" />
+    <Compile Include="Core\Dom\NodeEventArgs.cs" />
+    <Compile Include="Core\Dom\NodeType.cs" />
+    <Compile Include="Core\Element.cs" />
+    <Compile Include="Core\ElementDefinition.cs" />
+    <Compile Include="Core\ElementDocument.cs" />
+    <Compile Include="Core\Factory.cs" />
+    <Compile Include="Core\Plugin.cs" />
+    <Compile Include="Core\PluginRegistry.cs" />
+    <Compile Include="Core\Property.cs" />
+    <Compile Include="Core\PropertyDefinition.cs" />
+    <Compile Include="Core\PropertyDictionary.cs" />
+    <Compile Include="Core\PropertySpecification.cs" />
+    <Compile Include="Core\ScriptInterface.cs" />
+    <Compile Include="Core\StyleSheet.cs" />
+    <Compile Include="Core\StyleSheetFactory.cs" />
+    <Compile Include="Core\StyleSheetNode.cs" />
+    <Compile Include="Core\StyleSheetNodeSelector.cs" />
+    <Compile Include="Core\SystemInterface.cs" />
+    <Compile Include="Core\Template.cs" />
+    <Compile Include="Core\TemplateCache.cs" />
+    <Compile Include="Core\Variant.cs" />
+    <Compile Include="Core\XMLNodeHandler.cs" />
+    <Compile Include="Core\XMLNodeHandlerBody.cs" />
+    <Compile Include="Core\XMLNodeHandlerDefault.cs" />
+    <Compile Include="Core\XMLNodeHandlerHead.cs" />
+    <Compile Include="Core\XMLNodeHandlerTemplate.cs" />
+    <Compile Include="Core\XMLParser.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SxtaRender\SxtaRender.csproj">
+      <Project>{2b803a3e-cc40-477b-a9cf-b1f2abdce6f3}</Project>
+      <Name>SxtaRender</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
