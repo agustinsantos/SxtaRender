@@ -15,7 +15,7 @@ namespace Examples.Tutorials
     /// <summary>
     /// Demonstrates the GameWindow class.
     /// </summary>
-    [Example("Example 6.1: Basic Texture Mapping", ExampleCategory.Core, "6. Textures", 1, Source = "Tutorial06_1", Documentation = "Tutorial-TODO")]
+    [Example("Example 6.1: Basic Texture Mapping", ExampleCategory.CoreUsage, "6. Textures", 1, Source = "Tutorial06_1", Documentation = "Tutorial-TODO")]
     public class Tutorial06_1 : GameWindow
     {
         public Tutorial06_1()

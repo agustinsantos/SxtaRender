@@ -13,7 +13,7 @@ namespace Examples.Tutorials
     /// <summary>
     /// Demonstrates the GameWindow class.
     /// </summary>
-    [Example("Example 4.3: Scaling", ExampleCategory.Core, "4. Matrix Transformation", 1, Source = "Tutorial04_3", Documentation = "Tutorial-TODO")]
+    [Example("Example 4.3: Scaling", ExampleCategory.CoreUsage, "4. Matrix Transformation", 1, Source = "Tutorial04_3", Documentation = "Tutorial-TODO")]
     public class Tutorial04_3 : GameWindow
     {
         public Tutorial04_3()

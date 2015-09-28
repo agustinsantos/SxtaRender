@@ -82,7 +82,7 @@ namespace Examples
 
             // Add those by hand, because using the designer results in an empty
             // image list when cross-compiling on Mono.
-            imageListSampleCategories.Images.Add("Core", Resources.OpenGLWrapper);
+            imageListSampleCategories.Images.Add("CoreUsage", Resources.OpenGLWrapper);
 
             Trace.Listeners.Add(new TextBoxTraceListener(textBoxOutput));
             treeViewSamples.TreeViewNodeSorter = new SamplesTreeViewSorter();

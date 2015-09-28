@@ -51,7 +51,8 @@ namespace Examples
 
     public enum ExampleCategory
     {
-        Core = 0,
+        CoreUsage = 0,
+        Learning,
         Resource,
         SceneGraph,
         GUI,
