@@ -52,7 +52,7 @@ namespace Examples.Tutorials
         protected override void OnLoad(EventArgs e)
         {
             fb = new FrameBuffer(true);
-            fb.setClearColor(Color.Aquamarine);
+            fb.setClearColor(Color.White);
 
             p = new Program(new Module(330, TUTORIAL_SHADER));
 
@@ -60,9 +60,9 @@ namespace Examples.Tutorials
             triangle.addAttributeType(0, 2, AttributeType.A32F, false);
 
             // Load up a triangle
-            triangle.addVertex(new Vector2f(-0.5f, 0.0f));
-            triangle.addVertex(new Vector2f(0.5f, 0.0f));
-            triangle.addVertex(new Vector2f(0.0f, 0.5f));
+            triangle.addVertex(new Vector2f(0.0f,  0.5f));
+            triangle.addVertex(new Vector2f(0.5f, -0.5f));
+            triangle.addVertex(new Vector2f(-0.5f, -0.5f));
         }
 
         #endregion
@@ -75,7 +75,7 @@ namespace Examples.Tutorials
         /// <param name="e">Not used.</param>
         protected override void OnUnload(EventArgs e)
         {
-             if (fb != null)
+            if (fb != null)
                 fb.Dispose();
             if (p != null)
                 p.Dispose();
@@ -127,12 +127,12 @@ namespace Examples.Tutorials
 
         void main()
         {
-            FragColor = vec4 (1.0f, 0.0f, 0.0f, 1.0f);
+            FragColor = vec4 (183.0/255.0, 207.0/255.0, 228.0/255.0, 1.0f);
         }
 #endif";
 
 
- 
+
         #endregion
 
         #region public static void Main()
