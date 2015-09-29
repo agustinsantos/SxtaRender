@@ -377,7 +377,7 @@ namespace Sxta.Render
                 glCompileShader(vertexShaderId);
 #endif
                 error = !check(vertexShaderId);
-                printLog(vertexShaderId, lineCount, lines, error);
+                string shaderlog = printLog(vertexShaderId, lineCount, lines, error);
                 if (error)
                 {
 #if OPENTK
@@ -388,7 +388,7 @@ namespace Sxta.Render
 #endif
                     vertexShaderId = -1;
                     Debug.Assert(FrameBuffer.getError() == ErrorCode.NoError);
-                    throw new Exception();
+                    throw new Exception(shaderlog);
                 }
             }
             else
@@ -415,7 +415,7 @@ namespace Sxta.Render
                 glCompileShader(tessControlShaderId);
 #endif
                 error = !check(tessControlShaderId);
-                printLog(tessControlShaderId, lineCount, lines, error);
+                string shaderlog = printLog(tessControlShaderId, lineCount, lines, error);
                 if (error)
                 {
                     // deletes already allocated objects
@@ -436,7 +436,7 @@ namespace Sxta.Render
 #endif
                     tessControlShaderId = -1;
                     Debug.Assert(FrameBuffer.getError() == ErrorCode.NoError);
-                    throw new Exception();
+                    throw new Exception(shaderlog);
                 }
             }
             else
@@ -463,7 +463,7 @@ namespace Sxta.Render
                 glCompileShader(tessEvalShaderId);
 #endif
                 error = !check(tessEvalShaderId);
-                printLog(tessEvalShaderId, lineCount, lines, error);
+                string shaderlog = printLog(tessEvalShaderId, lineCount, lines, error);
                 if (error)
                 {
 #if OPENTK
@@ -495,7 +495,7 @@ namespace Sxta.Render
 #endif
                     tessEvalShaderId = -1;
                     Debug.Assert(FrameBuffer.getError() == ErrorCode.NoError);
-                    throw new Exception();
+                    throw new Exception(shaderlog);
                 }
             }
             else
@@ -522,7 +522,7 @@ namespace Sxta.Render
                 glCompileShader(geometryShaderId);
 #endif
                 error = !check(geometryShaderId);
-                printLog(geometryShaderId, lineCount, lines, error);
+                string shaderlog = printLog(geometryShaderId, lineCount, lines, error);
                 if (error)
                 {
 #if OPENTK
@@ -564,7 +564,7 @@ namespace Sxta.Render
 #endif
                     geometryShaderId = -1;
                     Debug.Assert(FrameBuffer.getError() == ErrorCode.NoError);
-                    throw new Exception();
+                    throw new Exception(shaderlog);
                 }
             }
             else
@@ -591,7 +591,7 @@ namespace Sxta.Render
                 glCompileShader(fragmentShaderId);
 #endif
                 error = !check(fragmentShaderId);
-                printLog(fragmentShaderId, lineCount, lines, error);
+                string shaderlog = printLog(fragmentShaderId, lineCount, lines, error);
                 if (error)
                 {
 #if OPENTK
@@ -643,7 +643,7 @@ namespace Sxta.Render
 #endif
                     fragmentShaderId = -1;
                     Debug.Assert(FrameBuffer.getError() == ErrorCode.NoError);
-                    throw new Exception();
+                    throw new Exception(shaderlog);
                 }
             }
             else
@@ -769,7 +769,7 @@ namespace Sxta.Render
 		/// <param name='error'>
 		/// Error true if the compiler found some errors.
 		/// </param>
-        private void printLog(int shaderId, int nlines, string[] lines, bool error)
+        private string printLog(int shaderId, int nlines, string[] lines, bool error)
         {
             string shaderlog;
 #if OPENTK
@@ -810,6 +810,8 @@ namespace Sxta.Render
                 else
                     log.Info(msg);
             }
+
+            return shaderlog;
         }
 
         #region Dispose

@@ -62,6 +62,7 @@
     <Compile Include="Tutorials\Core\Tutorial07_1.cs" />
     <Compile Include="Tutorials\Learning\Tutorial01_2.cs" />
     <Compile Include="Tutorials\Learning\Tutorial01_3.cs" />
+    <Compile Include="Tutorials\Learning\Tutorial01_5.cs" />
     <Compile Include="Tutorials\Learning\Tutorial01_4.cs" />
     <Compile Include="Tutorials\Learning\Tutorial01_1.cs" />
     <Compile Include="Tutorials\Resource\TutorialRes03_2.cs" />
@@ -225,6 +226,7 @@
     <None Include="Tutorials\Core\Tutorial01_1.rtf" />
     <None Include="Tutorials\Learning\Tutorial01_2.rtf" />
     <None Include="Tutorials\Learning\Tutorial01_3.rtf" />
+    <None Include="Tutorials\Learning\Tutorial01_5.rtf" />
     <None Include="Tutorials\Learning\Tutorial01_4.rtf" />
     <None Include="Tutorials\Learning\Tutorial01_1.rtf" />
   </ItemGroup>
