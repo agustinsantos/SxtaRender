@@ -62,6 +62,13 @@
     <Compile Include="Tutorials\Core\Tutorial07_1.cs" />
     <Compile Include="Tutorials\Learning\Tutorial01_2.cs" />
     <Compile Include="Tutorials\Learning\Tutorial01_3.cs" />
+    <Compile Include="Tutorials\Learning\Tutorial02_7.cs" />
+    <Compile Include="Tutorials\Learning\Tutorial02_6.cs" />
+    <Compile Include="Tutorials\Learning\Tutorial02_5.cs" />
+    <Compile Include="Tutorials\Learning\Tutorial02_4.cs" />
+    <Compile Include="Tutorials\Learning\Tutorial02_3.cs" />
+    <Compile Include="Tutorials\Learning\Tutorial02_2.cs" />
+    <Compile Include="Tutorials\Learning\Tutorial02_1.cs" />
     <Compile Include="Tutorials\Learning\Tutorial01_5.cs" />
     <Compile Include="Tutorials\Learning\Tutorial01_4.cs" />
     <Compile Include="Tutorials\Learning\Tutorial01_1.cs" />
@@ -226,6 +233,13 @@
     <None Include="Tutorials\Core\Tutorial01_1.rtf" />
     <None Include="Tutorials\Learning\Tutorial01_2.rtf" />
     <None Include="Tutorials\Learning\Tutorial01_3.rtf" />
+    <None Include="Tutorials\Learning\Tutorial02_3.rtf" />
+    <None Include="Tutorials\Learning\Tutorial02_2.rtf" />
+    <None Include="Tutorials\Learning\Tutorial02_1.rtf" />
+    <None Include="Tutorials\Learning\Tutorial02_7.rtf" />
+    <None Include="Tutorials\Learning\Tutorial02_6.rtf" />
+    <None Include="Tutorials\Learning\Tutorial02_5.rtf" />
+    <None Include="Tutorials\Learning\Tutorial02_4.rtf" />
     <None Include="Tutorials\Learning\Tutorial01_5.rtf" />
     <None Include="Tutorials\Learning\Tutorial01_4.rtf" />
     <None Include="Tutorials\Learning\Tutorial01_1.rtf" />

@@ -11,12 +11,12 @@ using System.Drawing;
 namespace Examples.Tutorials
 {
     /// <summary>
-    /// Demonstrates how to draw a single 2D figure.
+    /// Demonstrates how add information to attributes.
     /// </summary>
-    [Example("Learning 1.05: First triangle", ExampleCategory.Learning, "1. Getting Started", 1, Source = "Tutorial01_5", Documentation = "Tutorial01_5")]
-    public class TutorialLearning01_5 : GameWindow
+    [Example("Learning 2.05: Fragment Shaders", ExampleCategory.Learning, "2. Shaders", 1, Source = "Tutorial02_5", Documentation = "Tutorial02_5")]
+    public class TutorialLearning02_5 : GameWindow
     {
-        public TutorialLearning01_5()
+        public TutorialLearning02_5()
             : base(600, 600)
         {
             Keyboard.KeyDown += Keyboard_KeyDown;
@@ -56,13 +56,14 @@ namespace Examples.Tutorials
 
             p = new Program(new Module(330, TUTORIAL_SHADER));
 
-            triangle = new Mesh<Vector2f, uint>(Vector2f.SizeInBytes, MeshMode.TRIANGLES, MeshUsage.GPU_STATIC, 3);
+            triangle = new Mesh<Vertex_V2C3f, uint>(Vertex_V2C3f.SizeInBytes, MeshMode.TRIANGLES, MeshUsage.GPU_STATIC, 3);
             triangle.addAttributeType(0, 2, AttributeType.A32F, false);
+            triangle.addAttributeType(1, 3, AttributeType.A32F, false);
 
             // Load up a triangle
-            triangle.addVertex(new Vector2f(0.0f,  0.5f));
-            triangle.addVertex(new Vector2f(0.5f, -0.5f));
-            triangle.addVertex(new Vector2f(-0.5f, -0.5f));
+            triangle.addVertex(new Vertex_V2C3f() { Position = new Vector2f(0.0f, 0.5f), Color = new Vector3f(1.0f, 0.0f, 0.0f) });
+            triangle.addVertex(new Vertex_V2C3f() { Position = new Vector2f(0.5f, -0.5f), Color = new Vector3f(0.0f, 1.0f, 0.0f) });
+            triangle.addVertex(new Vertex_V2C3f() { Position = new Vector2f(-0.5f, -0.5f), Color = new Vector3f(0.0f, 0.0f, 1.0f) });
         }
 
         #endregion
@@ -82,6 +83,20 @@ namespace Examples.Tutorials
             if (triangle != null)
                 triangle.Dispose();
             base.OnUnload(e);
+        }
+
+        #endregion
+
+        #region OnResize
+
+        /// <summary>
+        /// Respond to resize events here.
+        /// </summary>
+        /// <param name="e">Contains information on the new GameWindow size.</param>
+        /// <remarks>There is no need to call the base implementation.</remarks>
+        protected override void OnResize(EventArgs e)
+        {
+            fb.setViewport(new Vector4i(0, 0, Width, Height));
         }
 
         #endregion
@@ -110,26 +125,40 @@ namespace Examples.Tutorials
         protected FrameBuffer fb;
 
         protected Program p;
-        protected Mesh<Vector2f, uint> triangle;
+        protected Mesh<Vertex_V2C3f, uint> triangle;
 
         private const string TUTORIAL_SHADER = @"
 #ifdef _VERTEX_
         layout (location = 0) in vec2 aPosition;
+        layout (location = 1) in vec3 aColor;
+        
+        out vec3 vs_color;
         
         void main()
         {
             gl_Position = vec4(aPosition, 0.0, 1.0);
+
+            // Output a value for vs_color
+            vs_color = aColor;
         }
 #endif
 
 #ifdef _FRAGMENT_
+        // Input from the vertex shader
+        in vec3 vs_color;
+        
         out vec4 FragColor;
 
         void main()
         {
-            FragColor = vec4 (183.0/255.0, 207.0/255.0, 228.0/255.0, 1.0f);
+            // Combining a fragment’s color from its position and color defined by its attribute
+            FragColor = vec4(sin(gl_FragCoord.x * 0.25) * 0.5 + vs_color.x/2.0,
+                             cos(gl_FragCoord.y * 0.25) * 0.5 + vs_color.y/2.0,
+                             sin(gl_FragCoord.x * 0.15) * cos(gl_FragCoord.y * 0.15) + vs_color.z/2.0,
+                             1.0);
         }
 #endif";
+
 
 
 
@@ -143,7 +172,7 @@ namespace Examples.Tutorials
         [STAThread]
         public static void Main()
         {
-            using (TutorialLearning01_5 example = new TutorialLearning01_5())
+            using (TutorialLearning02_5 example = new TutorialLearning02_5())
             {
                 // Enters the game loop of the GameWindow using the maximum update rate.
                 example.Run();
@@ -151,5 +180,15 @@ namespace Examples.Tutorials
         }
 
         #endregion
+
+        protected struct Vertex_V2C3f
+        {
+            public Vector2f Position;
+            public Vector3f Color;
+            public static int SizeInBytes
+            {
+                get { return Vector2f.SizeInBytes + Vector3f.SizeInBytes; }
+            }
+        }
     }
 }
