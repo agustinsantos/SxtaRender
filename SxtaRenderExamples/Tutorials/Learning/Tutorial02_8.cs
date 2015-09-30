@@ -13,10 +13,10 @@ namespace Examples.Tutorials
     /// <summary>
     /// Demonstrates how to work with uniform variables.
     /// </summary>
-    [Example("Learning 2.07: Uniform Variables (I)", ExampleCategory.Learning, "2. Shaders", 1, Source = "Tutorial02_7", Documentation = "Tutorial02_7")]
-    public class TutorialLearning02_7 : GameWindow
+    [Example("Learning 2.08: Uniform Variables (II)", ExampleCategory.Learning, "2. Shaders", 1, Source = "Tutorial02_8", Documentation = "Tutorial02_8")]
+    public class TutorialLearning02_8 : GameWindow
     {
-        public TutorialLearning02_7()
+        public TutorialLearning02_8()
             : base(600, 600)
         {
             Keyboard.KeyDown += Keyboard_KeyDown;
@@ -55,7 +55,7 @@ namespace Examples.Tutorials
             fb.setClearColor(Color.White);
 
             p = new Program(new Module(330, TUTORIAL_SHADER));
-            uScale = p.getUniform1f("uScale");
+            uChangeColor = p.getUniform1f("uChangeColor");
 
             triangle = new Mesh<Vertex_V2C3f, uint>(Vertex_V2C3f.SizeInBytes, MeshMode.TRIANGLES, MeshUsage.GPU_STATIC, 3);
             triangle.addAttributeType(0, 2, AttributeType.A32F, false);
@@ -111,9 +111,7 @@ namespace Examples.Tutorials
         /// <remarks>There is no need to call the base implementation.</remarks>
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
-            scale += 0.005f;
-            if (scale >= 1)
-                scale = 0;
+            factor += 0.005f;
         }
 
         #endregion
@@ -130,7 +128,7 @@ namespace Examples.Tutorials
             fb.clear(true, false, false);
 
             // Render our triangle
-            uScale.set(scale);
+            uChangeColor.set((float)(Math.Cos(factor)));
             fb.draw(p, triangle);
 
             this.SwapBuffers();
@@ -145,24 +143,24 @@ namespace Examples.Tutorials
         protected Program p;
         protected Mesh<Vertex_V2C3f, uint> triangle;
 
-        Uniform1f uScale;
-        float scale = 0.0f;
+        Uniform1f uChangeColor;
+        float factor = 0.0f;
 
         private const string TUTORIAL_SHADER = @"
 #ifdef _VERTEX_
         layout (location = 0) in vec2 aPosition;
         layout (location = 1) in vec3 aColor;
         
-        uniform float uScale;   
+        uniform float uChangeColor;   
 
         out vec3 vs_color;
         
         void main()
         {
-            gl_Position = vec4(uScale * aPosition.x, uScale * aPosition.y, 0.0, 1.0);
+            gl_Position = vec4(aPosition, 0.0, 1.0);
 
             // Output a value for vs_color
-            vs_color = aColor;
+            vs_color = vec3(aColor.rg, aColor.b+uChangeColor) ;
         }
 #endif
 
@@ -191,7 +189,7 @@ namespace Examples.Tutorials
         [STAThread]
         public static void Main()
         {
-            using (TutorialLearning02_7 example = new TutorialLearning02_7())
+            using (TutorialLearning02_8 example = new TutorialLearning02_8())
             {
                 // Enters the game loop of the GameWindow using the maximum render rate
                 // but updating 30 times per second.
