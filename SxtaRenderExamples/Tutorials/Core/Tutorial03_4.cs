@@ -13,7 +13,7 @@ namespace Examples.Tutorials
     /// <summary>
     /// Demonstrates the GameWindow class.
     /// </summary>
-    [Example("Example 3.4: Color using shaders", ExampleCategory.CoreUsage, "3. Shaders", 1, Source = "Tutorial03_4", Documentation = "Tutorial-TODO")]
+    [Example("Example 3.4: Color using shaders", ExampleCategory.Core, "3. Shaders", 1, Source = "Tutorial03_4", Documentation = "Tutorial-TODO")]
     public class Tutorial03_4 : GameWindow
     {
         public Tutorial03_4()

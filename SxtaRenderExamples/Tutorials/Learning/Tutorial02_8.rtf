@@ -1,5 +1,5 @@
 {\rtf1\ansi\ansicpg1252\deff0{\fonttbl{\f0\fswiss\fprq2\fcharset161{\*\fname Arial;}Arial Greek;}{\f1\fswiss\fprq2\fcharset0 Arial;}{\f2\fnil Consolas;}{\f3\fnil\fcharset0 Consolas;}{\f4\fnil\fcharset0 Calibri;}{\f5\fnil\fcharset2 Symbol;}}
-{\colortbl ;\red163\green21\blue21;\red128\green0\blue0;\red255\green255\blue255;\red0\green0\blue0;\red0\green0\blue255;\red43\green145\blue175;}
+{\colortbl ;\red163\green21\blue21;\red128\green0\blue0;\red0\green0\blue0;\red0\green0\blue255;\red43\green145\blue175;}
 {\*\generator Msftedit 5.41.21.2510;}\viewkind4\uc1\pard\nowidctlpar\cf1\lang1032\kerning1\b\f0\fs28 Introduction\cf0\lang3082\b0\f1\fs24\par
 \par
 \pard\nowidctlpar\sl240\slmult1\fs22 Uniform variables are used to communicate with your vertex or fragment shader from "outside". Uniform variables are read-only and have the same value among all processed vertices. You can only change them within your program.\par
@@ -10,24 +10,24 @@ In this example the vertex shader modify the blue channel color of every incomin
 \par
 \fs22 1. In your shader you use the uniform qualifier to declare the variable:\lang1033\par
 \par
-\cf2\kerning0\f2\fs19 uniform float \highlight3 uChangeColor\highlight0 ;   \par
+\cf2\kerning0\f2\fs19 uniform float uChangeColor;   \par
 \cf0\kerning1\f1\fs22\par
 2. Then use the uniform variable as needed.\par
 \par
 \cf2\kerning0\f2\fs19 void main()\par
 \{\par
 \lang3082\f3     \lang1033\f2 // \lang3082\f3 ...\par
-\highlight3     \f2 vs_color = vec3(aColor.rg, aColor.b+uChangeColor) ;\highlight0\lang1033\par
+    \f2 vs_color = vec3(aColor.rg, aColor.b+uChangeColor) ;\lang1033\f3\par
 \}\par
 \cf0\kerning1\f1\fs22\par
 3.  Access to uniform variables is available after linking the program. With getUniform you can retrieve the location of the uniform variable within the specified program object. \par
 \par
-\cf4\highlight3\kerning0\f2\fs19 uChangeColor\highlight0 = p.getUniform1f(\cf1 "u\lang3082\f3 ChangeColor\lang1033\f2 "\cf4 );\par
+\cf3\kerning0\f2\fs19 uChangeColor= p.getUniform1f(\cf1 "u\lang3082\f3 ChangeColor\lang1033\f2 "\cf3 );\par
 \cf0\kerning1\f1\fs22\par
 \par
 4. Once you have that location you can set the value.\par
 \par
-\cf4\highlight3\kerning0\f2\fs19 uChangeColor\highlight0 .set(\highlight3 (\cf5 float\cf4 )(\cf6 Math\cf4 .Cos(factor))\highlight0 );\par
+\cf3\kerning0\f2\fs19 uChangeColor.set((\cf4 float\cf3 )(\cf5 Math\cf3 .Cos(factor)));\par
 \par
 \par
 \cf1\lang1032\kerning1\b\f0\fs28 Expected Output\cf0\lang3082\b0\f1\fs24\par

@@ -59,9 +59,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Tutorials\Learning\Tutorial02_10.cs" />
+    <Compile Include="Tutorials\Learning\Tutorial03_2.cs" />
+    <Compile Include="Tutorials\Learning\Tutorial03_1.cs" />
+    <Compile Include="Tutorials\Learning\Tutorial04_2.cs" />
+    <Compile Include="Tutorials\Learning\Tutorial04_1.cs" />
     <Compile Include="Tutorials\Core\Tutorial07_1.cs" />
     <Compile Include="Tutorials\Learning\Tutorial01_2.cs" />
     <Compile Include="Tutorials\Learning\Tutorial01_3.cs" />
+    <Compile Include="Tutorials\Learning\Tutorial02_9.cs" />
     <Compile Include="Tutorials\Learning\Tutorial02_8.cs" />
     <Compile Include="Tutorials\Learning\Tutorial02_7.cs" />
     <Compile Include="Tutorials\Learning\Tutorial02_6.cs" />
@@ -73,6 +79,8 @@
     <Compile Include="Tutorials\Learning\Tutorial01_5.cs" />
     <Compile Include="Tutorials\Learning\Tutorial01_4.cs" />
     <Compile Include="Tutorials\Learning\Tutorial01_1.cs" />
+    <Compile Include="Tutorials\Learning\Tutorial03_3.cs" />
+    <Compile Include="Tutorials\Learning\Tutorial03_4.cs" />
     <Compile Include="Tutorials\Resource\TutorialRes03_2.cs" />
     <Compile Include="Tutorials\Resource\TutorialRes03_1.cs" />
     <Compile Include="Tutorials\Resource\TutorialRes02_2.cs" />
@@ -234,9 +242,16 @@
     <None Include="Tutorials\Core\Tutorial01_1.rtf" />
     <None Include="Tutorials\Learning\Tutorial01_2.rtf" />
     <None Include="Tutorials\Learning\Tutorial01_3.rtf" />
+    <None Include="Tutorials\Learning\Tutorial02_10.rtf" />
+    <None Include="Tutorials\Learning\Tutorial03_3.rtf" />
+    <None Include="Tutorials\Learning\Tutorial03_2.rtf" />
+    <None Include="Tutorials\Learning\Tutorial03_1.rtf" />
+    <None Include="Tutorials\Learning\Tutorial04_2.rtf" />
+    <None Include="Tutorials\Learning\Tutorial04_1.rtf" />
     <None Include="Tutorials\Learning\Tutorial02_3.rtf" />
     <None Include="Tutorials\Learning\Tutorial02_2.rtf" />
     <None Include="Tutorials\Learning\Tutorial02_1.rtf" />
+    <None Include="Tutorials\Learning\Tutorial02_9.rtf" />
     <None Include="Tutorials\Learning\Tutorial02_8.rtf" />
     <None Include="Tutorials\Learning\Tutorial02_7.rtf" />
     <None Include="Tutorials\Learning\Tutorial02_6.rtf" />

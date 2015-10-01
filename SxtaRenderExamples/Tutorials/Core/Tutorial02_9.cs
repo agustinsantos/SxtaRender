@@ -14,7 +14,7 @@ namespace Examples.Tutorials
     /// <summary>
     /// Demonstrates the GameWindow class.
     /// </summary>
-    [Example("Example 2.9: Antialiasing", ExampleCategory.CoreUsage, "2. Drawing", 1, Source = "Tutorial02_9", Documentation = "Tutorial-TODO")]
+    [Example("Example 2.9: Antialiasing", ExampleCategory.Core, "2. Drawing", 1, Source = "Tutorial02_9", Documentation = "Tutorial-TODO")]
     public class Tutorial02_9 : GameWindow
     {
         public Tutorial02_9()

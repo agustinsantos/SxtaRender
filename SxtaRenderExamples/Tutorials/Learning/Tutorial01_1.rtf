@@ -1,16 +1,16 @@
-{\rtf1\ansi\ansicpg1252\deff0{\fonttbl{\f0\fswiss\fprq2\fcharset161{\*\fname Arial;}Arial Greek;}{\f1\fswiss\fprq2\fcharset0 Arial;}{\f2\fnil Consolas;}{\f3\fnil\fcharset0 Consolas;}{\f4\fnil\fcharset0 Arial;}{\f5\fnil\fcharset2 Symbol;}}
+{\rtf1\ansi\ansicpg1252\deff0{\fonttbl{\f0\fswiss\fprq2\fcharset161{\*\fname Arial;}Arial Greek;}{\f1\fswiss\fprq2\fcharset0 Arial;}{\f2\fnil Consolas;}{\f3\fnil\fcharset0 Consolas;}{\f4\fnil\fcharset0 Arial;}{\f5\fnil\fcharset0 Calibri;}{\f6\fnil\fcharset2 Symbol;}}
 {\colortbl ;\red163\green21\blue21;\red0\green0\blue255;\red0\green0\blue0;\red43\green145\blue175;\red0\green128\blue0;\red255\green255\blue255;}
-{\*\generator Msftedit 5.41.21.2510;}\viewkind4\uc1\pard\nowidctlpar\cf1\lang1032\kerning1\b\f0\fs28 Introduction\cf0\lang3082\b0\fs24\par
+{\*\generator Msftedit 5.41.21.2510;}\viewkind4\uc1\pard\nowidctlpar\cf1\lang1032\kerning1\b\f0\fs28 Introduction\cf0\lang3082\b0\f1\fs24\par
 \par
-\lang1032\fs22 Before you can start drawing things, you need to initialize OpenGL. This is done by creating an OpenGL context, which is essentially a state machine that stores all data related to the rendering of your application. When your application closes, the OpenGL context is destroyed and everything is cleaned up.\lang3082\f1  \lang1032\f0 The problem is that creating a window and an OpenGL context is not part of the OpenGL specification.\par
+\lang1032\f0\fs22 Before you can start drawing things, you need to initialize OpenGL. This is done by creating an OpenGL context, which is essentially a state machine that stores all data related to the rendering of your application. When your application closes, the OpenGL context is destroyed and everything is cleaned up.\lang3082\f1  \lang1032\f0 The problem is that creating a window and an OpenGL context is not part of the OpenGL specification.\par
 \par
 \lang3082\f1 The simplest way to create a\lang1032\f0  window \lang3082\f1 (and a OpenGL context) is \lang1032\f0 by creating a new instance of\lang3082\f1  GameWindow. \lang1032\f0 This sample \lang1033\f1 explains how to use the \lang1032\f0 GameWindow\lang1033\f1  class. It creates a new GameWindow and hooks the RenderFrame event.\par
 \lang3082\f0\fs24\par
-\cf1\lang1032\b\fs28 Implementation\cf0\lang3082\b0\fs24\par
+\cf1\lang1032\b\fs28 Implementation\cf0\lang3082\b0\f1\fs24\par
 \par
-\lang1033\f1\fs22 This sample, as all examples, subclasses GameWindow and overrides RenderFrame event. Other events like Load, Unload, and Resize will be overrided in the next tutorial. \par
+\lang1033\fs22 This sample, as all examples, subclasses GameWindow and overrides RenderFrame event. Other events like Load, Unload, and Resize will be explained in the next tutorial. \par
 \par
-1. Every example is IDisposable (as is GameWindows). Please, note the statement "using" in the Main method. Remember that the primary use of IDisposable is to release unmanaged resources. The garbage collector automatically releases the memory allocated to a managed object when that object is no longer used. In our case, we want to release the OpenGL resources that our application has used.\lang3082\f0\fs24\par
+1. Every example class is IDisposable (as is GameWindows). Please, note the statement "using" in the Main method. Remember that the primary use of IDisposable is to release unmanaged resources. The garbage collector automatically releases the memory allocated to a managed object when that object is no longer used. In our case, we want to release the OpenGL resources that our application has used.\lang3082\f0\fs24\par
 \par
 \cf2\kerning0\f2\fs19 using\cf3  (\cf4 TutorialLearning01_1\cf3  example = \cf2 new\cf3  \cf4 TutorialLearning01_1\cf3 ())\par
 \{\par
@@ -35,12 +35,12 @@
 \par
 The only required functions in the loop is "SwapBuffers()" to swap the back buffer and front buffer after you've finished drawing.\lang1033\par
 \par
-\cf1\lang1032\kerning1\b\f0\fs28 Expected Output\cf0\lang3082\b0\fs24\par
+\cf1\lang1032\kerning1\b\f0\fs28 Expected Output\cf0\lang3082\b0\f1\fs24\par
 \par
-\lang1033\f1\fs22 You should see something like this screenshot.\lang3082\f0\fs24\par
+\lang1033\fs22 You should see something like this screenshot.\lang3082\f0\fs24\par
 \par
 \pard\nowidctlpar\sl240\slmult1\par
-{\pict\wmetafile8\picw16298\pich16880\picwgoal4620\pichgoal4785 
+\lang10\kerning0\f5\fs22{\pict\wmetafile8\picw16298\pich16880\picwgoal4620\pichgoal4785 
 01000900000312ff08000000e9fe080000000400000003010800050000000b0200000000050000
 000c027e026802030000001e0004000000070104000400000007010400e9fe0800410b2000cc00
 7e026802000000007e0268020000000028000000680200007e020000010018000000000090fd11
@@ -30277,16 +30277,17 @@ b5b5635a525a524a948c8cb5adadc6bdb55a6b63392118392918bd8c52ada5a55a4a4263524a5a
 525263524a63525263524a63525263524a63525263524a63525263524a63525263524a63525263
 524a63525263524a63525263524a635252948c8cc6b5b5bdb5adc6bdb5cebdbd040000002701ff
 ff030000000000
-}\par
+}\lang3082\kerning1\f0\fs24\par
 \par
 \pard\nowidctlpar\cf1\b\f1\fs28 Main Concepts\cf0\b0\fs24\par
 \par
 \lang1033\fs22 The main concepts introduced in this example are\par
 \par
-\pard{\pntext\f5\'B7\tab}{\*\pn\pnlvlblt\pnf5\pnindent0{\pntxtb\'B7}}\nowidctlpar\fi-360\li720\lang1032\f0 OpenGL \lang3082\f1 window and OpenGL \lang1032\f0 context\lang3082\fs24\par
-\lang1033\f1\fs22{\pntext\f5\'B7\tab}IDisposable interface\lang3082\f0\fs24\par
-\lang1033\f1\fs22{\pntext\f5\'B7\tab}GameWindow constructor\lang3082\f0\fs24\par
-\lang1033\f1\fs22{\pntext\f5\'B7\tab}Render loop\lang3082\f0\fs24\par
+\pard{\pntext\f6\'B7\tab}{\*\pn\pnlvlblt\pnf6\pnindent0{\pntxtb\'B7}}\nowidctlpar\fi-360\li720\lang1032\f0 OpenGL \lang3082\f1 window and OpenGL \lang1032\f0 context\lang3082\f1\fs24\par
+\lang1033\fs22{\pntext\f6\'B7\tab}IDisposable interface\lang3082\f0\fs24\par
+\lang1033\f1\fs22{\pntext\f6\'B7\tab}GameWindow constructor\lang3082\f0\fs24\par
+\lang1033\f1\fs22{\pntext\f6\'B7\tab}Render loop\lang3082\f0\fs24\par
+\lang1033\f1\fs22{\pntext\f6\'B7\tab}Swap Buffers (\cf3\lang3082\kerning0\f4 back buffer and front buffer)\cf0\kerning1\f0\fs24\par
 \pard\nowidctlpar\par
 }
  

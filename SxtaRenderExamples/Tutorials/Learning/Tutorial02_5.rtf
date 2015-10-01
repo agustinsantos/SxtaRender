@@ -1,19 +1,35 @@
-{\rtf1\ansi\ansicpg1252\deff0{\fonttbl{\f0\fswiss\fprq2\fcharset161{\*\fname Arial;}Arial Greek;}{\f1\fswiss\fprq2\fcharset0 Arial;}{\f2\fnil Consolas;}{\f3\fnil\fcharset0 Calibri;}{\f4\fnil\fcharset2 Symbol;}}
-{\colortbl ;\red163\green21\blue21;\red0\green0\blue0;}
+{\rtf1\ansi\ansicpg1252\deff0{\fonttbl{\f0\fswiss\fprq2\fcharset161{\*\fname Arial;}Arial Greek;}{\f1\fswiss\fprq2\fcharset0 Arial;}{\f2\fnil\fcharset0 Consolas;}{\f3\fnil Consolas;}{\f4\fnil\fcharset0 Calibri;}{\f5\fnil\fcharset2 Symbol;}}
+{\colortbl ;\red163\green21\blue21;\red128\green0\blue0;\red0\green0\blue0;}
 {\*\generator Msftedit 5.41.21.2510;}\viewkind4\uc1\pard\nowidctlpar\cf1\lang1032\kerning1\b\f0\fs28 Introduction\cf0\lang3082\b0\f1\fs24\par
 \par
-\pard\nowidctlpar\sl240\slmult1\fs22 TODO\par
+\pard\nowidctlpar\sl240\slmult1\fs22 A Fragment Shader is a user-supplied program that, when executed, will process a Fragment from the rasterization process into a set of colors and a single depth value.\par
+\par
+The fragment shader is the OpenGL pipeline stage after a primitive is rasterized. For each sample of the pixels covered by a primitive, a "fragment" is generated.\par
 \pard\nowidctlpar\lang1033  \par
 \lang3082\f0\fs24\par
 \cf1\lang1032\b\fs28 Implementation\cf0\lang3082\b0\f1\fs24\par
 \par
-\lang1033\fs22 TODO.\par
-\cf2\kerning0\f2\fs19\par
+\lang1033\fs22 In this example we play with the fragment shader in order to obtain a color based on position and original color. Maybe this example is not useful in real life, but it demostrates the potential of the frament shaders.\par
+\par
+\cf2\lang3082\kerning0\f2\fs19\tab\lang1033\f3 // Input from the vertex shader\par
+        in vec3 vs_color;\par
+        \par
+        out vec4 FragColor;\par
+\par
+        void main()\par
+        \{\par
+            // Combining a fragment\rquote s color from its position and color defined by its attribute\par
+            FragColor = vec4(sin(gl_FragCoord.x * 0.25) * 0.5 + vs_color.x/2.0,\par
+                             cos(gl_FragCoord.y * 0.25) * 0.5 + vs_color.y/2.0,\par
+                             sin(gl_FragCoord.x * 0.15) * cos(gl_FragCoord.y * 0.15) + vs_color.z/2.0,\par
+                             1.0);\par
+        \}\cf0\kerning1\f1\fs22\par
+\cf3\kerning0\f3\fs19\par
 \cf1\lang1032\kerning1\b\f0\fs28 Expected Output\cf0\lang3082\b0\f1\fs24\par
 \par
 \lang1033\fs22 You should see something like this screenshot.\lang3082\f0\fs24\par
 \par
-\pard\nowidctlpar\sl240\slmult1\lang10\kerning0\f3\fs22{\pict\wmetafile8\picw8148\pich8439\picwgoal4619\pichgoal4784 
+\pard\nowidctlpar\sl240\slmult1\lang10\kerning0\f4\fs22{\pict\wmetafile8\picw8148\pich8439\picwgoal4619\pichgoal4784 
 01000900000300ff08000000eafe08000000050000000b0200000000050000000c02f720d41fea
 fe0800430f2000cc0000007e02680200000000f720d41f0000000028000000680200007e020000
 010018000000000090fd1100c40e0000c40e00000000000000000000e9e9e9e4e4e4d5d5d5c1c1
@@ -30253,12 +30269,14 @@ bdcbb0a4030000000000
 \par
 \par
 \par
-\par
 \pard\nowidctlpar\cf1\lang3082\kerning1\b\f1\fs28 Main Concepts\cf0\b0\fs24\par
 \par
 \lang1033\fs22 The main concepts introduced in this example are\par
-\par
-\pard{\pntext\f4\'B7\tab}{\*\pn\pnlvlblt\pnf4\pnindent0{\pntxtb\'B7}}\nowidctlpar\fi-360\li720 TODO\lang3082\f0\fs24\par
+\lang3082\f0\fs24\par
+\pard{\pntext\f5\'B7\tab}{\*\pn\pnlvlblt\pnf5\pnindent0{\pntxtb\'B7}}\nowidctlpar\fi-360\li720\f1\fs22 Rasterization process \f0\fs24\par
+\f1\fs22{\pntext\f5\'B7\tab}Fragment\f0\fs24\par
+\f1\fs22{\pntext\f5\'B7\tab}Fragment Shader\f0\fs24\par
+\f1\fs22{\pntext\f5\'B7\tab}Interpolation values \f0\fs24\par
 \pard\nowidctlpar\sl240\slmult1\par
 \pard\nowidctlpar\par
 }

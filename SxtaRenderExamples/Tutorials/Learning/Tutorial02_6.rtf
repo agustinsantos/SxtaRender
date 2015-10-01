@@ -1,14 +1,27 @@
 {\rtf1\ansi\ansicpg1252\deff0{\fonttbl{\f0\fswiss\fprq2\fcharset161{\*\fname Arial;}Arial Greek;}{\f1\fswiss\fprq2\fcharset0 Arial;}{\f2\fnil Consolas;}{\f3\fnil\fcharset0 Calibri;}{\f4\fnil\fcharset2 Symbol;}}
-{\colortbl ;\red163\green21\blue21;\red0\green0\blue0;}
+{\colortbl ;\red163\green21\blue21;\red128\green0\blue0;\red0\green0\blue0;}
 {\*\generator Msftedit 5.41.21.2510;}\viewkind4\uc1\pard\nowidctlpar\cf1\lang1032\kerning1\b\f0\fs28 Introduction\cf0\lang3082\b0\f1\fs24\par
 \par
-\pard\nowidctlpar\sl240\slmult1\fs22 TODO\par
+\pard\nowidctlpar\sl240\slmult1\fs22 An Interface Block is a group of GLSL input, output, uniform, or storage buffer variables. These blocks have special syntax and semantics that can be applied to them.\par
 \pard\nowidctlpar\lang1033  \par
 \lang3082\f0\fs24\par
 \cf1\lang1032\b\fs28 Implementation\cf0\lang3082\b0\f1\fs24\par
 \par
-\lang1033\fs22 TODO.\par
+\lang1033\fs22 Interface blocks have different meanings in their various uses, but they have the same syntax regardless of how they are used. This looks like a struct definition, but it is not.\par
+\par
+1. In our example it is defined as\par
+\par
+\cf2\kerning0\f2\fs19         // Declare VS_OUT as an output interface block\par
+        out VS_OUT\par
+        \{\par
+            vec4 color; // Send color to the next stage\par
+        \} vs_out;\par
+\cf0\kerning1\f1\fs22\par
+2. And used as:\par
 \cf2\kerning0\f2\fs19\par
+            vs_out.color = vec4(aColor, 1.0);\par
+\cf0\kerning1\f1\fs22\par
+\cf3\kerning0\f2\fs19\par
 \cf1\lang1032\kerning1\b\f0\fs28 Expected Output\cf0\lang3082\b0\f1\fs24\par
 \par
 \lang1033\fs22 You should see something like this screenshot.\lang3082\f0\fs24\par
@@ -30258,7 +30271,7 @@ d2d9d9d9030000000000
 \par
 \lang1033\fs22 The main concepts introduced in this example are\par
 \par
-\pard{\pntext\f4\'B7\tab}{\*\pn\pnlvlblt\pnf4\pnindent0{\pntxtb\'B7}}\nowidctlpar\fi-360\li720 TODO\lang3082\f0\fs24\par
+\pard{\pntext\f4\'B7\tab}{\*\pn\pnlvlblt\pnf4\pnindent0{\pntxtb\'B7}}\nowidctlpar\fi-360\li720\lang3082 Interface Block\f0\fs24\par
 \pard\nowidctlpar\sl240\slmult1\par
 \pard\nowidctlpar\par
 }
