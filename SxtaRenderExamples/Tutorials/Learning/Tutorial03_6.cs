@@ -54,11 +54,6 @@ namespace Examples.Tutorials
         {
             fb = new FrameBuffer(true);
             fb.setDepthTest(true);
-            //GL.Enable(EnableCap.DepthTest);
-            //fb.setDepthTest(true, Function.GEQUAL);
-            //fb.setClearDepth(10);
-            //fb.setDepthRange(0.01f, 10.0f);
-            //fb.setFrontFaceCW(true);
 
             p = new Program(new Module(330, EXAMPLE_SHADER));
             uMVMatrix = p.getUniformMatrix4f("uMVMatrix");

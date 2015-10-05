@@ -96,7 +96,6 @@ namespace Examples.Tutorials
         {
             angle += 0.005f;
             mat = Matrix4f.Scale((float)Math.Sin(angle));
-
         }
 
         #endregion
