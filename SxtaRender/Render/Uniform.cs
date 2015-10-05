@@ -47,8 +47,12 @@ namespace Sxta.Render
 			{
 				this.value = value;
 				if (block == null || program  == null) {
-					if (program != null && Program.CURRENT == program) {
-						setValue();
+					if (program != null) {
+#if ORK_NO_GLPROGRAMUNIFORM
+						    setValueIfCurrent();
+#else
+						    setValue();
+#endif					
 					}
 				} else {
 					block.setValue(location, sizeof(float), value);
@@ -77,12 +81,16 @@ namespace Sxta.Render
 				base("Uniform1f", program, block, name, location)
 			{
 			}
-
+			
 			internal protected override void setValue()
 			{
 #if OPENTK
+#if ORK_NO_GLPROGRAMUNIFORM
 				GL.Uniform1(location, value);
 				Debug.Assert(FrameBuffer.getError() == ErrorCode.NoError);
+#else
+				GL.ProgramUniform1(program.getId(), location, value);
+#endif
 #else
 #if ORK_NO_GLPROGRAMUNIFORM
 				glUniform1f(location, value);
@@ -136,8 +144,12 @@ namespace Sxta.Render
 			{
 				this.value = value;
 				if (block == null || program  == null) {
-					if (program != null && Program.CURRENT == program) {
-						setValue();
+					if (program != null) {
+#if ORK_NO_GLPROGRAMUNIFORM
+						    setValueIfCurrent();
+#else
+						    setValue();
+#endif					
 					}
 				} else {
 					block.setValue(location, sizeof(double), value);
@@ -166,12 +178,16 @@ namespace Sxta.Render
 				base("Uniform1d", program, block, name, location)
 			{
 			}
-
+			
 			internal protected override void setValue()
 			{
 #if OPENTK
+#if ORK_NO_GLPROGRAMUNIFORM
 				GL.Uniform1(location, value);
 				Debug.Assert(FrameBuffer.getError() == ErrorCode.NoError);
+#else
+				GL.ProgramUniform1(program.getId(), location, value);
+#endif
 #else
 #if ORK_NO_GLPROGRAMUNIFORM
 				glUniform1f(location, value);
@@ -225,8 +241,12 @@ namespace Sxta.Render
 			{
 				this.value = value;
 				if (block == null || program  == null) {
-					if (program != null && Program.CURRENT == program) {
-						setValue();
+					if (program != null) {
+#if ORK_NO_GLPROGRAMUNIFORM
+						    setValueIfCurrent();
+#else
+						    setValue();
+#endif					
 					}
 				} else {
 					block.setValue(location, sizeof(int), value);
@@ -255,12 +275,16 @@ namespace Sxta.Render
 				base("Uniform1i", program, block, name, location)
 			{
 			}
-
+			
 			internal protected override void setValue()
 			{
 #if OPENTK
+#if ORK_NO_GLPROGRAMUNIFORM
 				GL.Uniform1(location, value);
 				Debug.Assert(FrameBuffer.getError() == ErrorCode.NoError);
+#else
+				GL.ProgramUniform1(program.getId(), location, value);
+#endif
 #else
 #if ORK_NO_GLPROGRAMUNIFORM
 				glUniform1f(location, value);
@@ -314,8 +338,12 @@ namespace Sxta.Render
 			{
 				this.value = value;
 				if (block == null || program  == null) {
-					if (program != null && Program.CURRENT == program) {
-						setValue();
+					if (program != null) {
+#if ORK_NO_GLPROGRAMUNIFORM
+						    setValueIfCurrent();
+#else
+						    setValue();
+#endif					
 					}
 				} else {
 					block.setValue(location, sizeof(uint), value);
@@ -344,12 +372,16 @@ namespace Sxta.Render
 				base("Uniform1ui", program, block, name, location)
 			{
 			}
-
+			
 			internal protected override void setValue()
 			{
 #if OPENTK
+#if ORK_NO_GLPROGRAMUNIFORM
 				GL.Uniform1(location, value);
 				Debug.Assert(FrameBuffer.getError() == ErrorCode.NoError);
+#else
+				GL.ProgramUniform1(program.getId(), location, value);
+#endif
 #else
 #if ORK_NO_GLPROGRAMUNIFORM
 				glUniform1f(location, value);
@@ -403,8 +435,12 @@ namespace Sxta.Render
 			{
 				this.value = value;
 				if (block == null || program  == null) {
-					if (program != null && Program.CURRENT == program) {
-						setValue();
+					if (program != null) {
+#if ORK_NO_GLPROGRAMUNIFORM
+						    setValueIfCurrent();
+#else
+						    setValue();
+#endif					
 					}
 				} else {
 					block.setValue(location, sizeof(bool), value);
@@ -433,11 +469,15 @@ namespace Sxta.Render
 				base("Uniform1b", program, block, name, location)
 			{
 			}
-
+			
 			internal protected override void setValue()
 			{
 #if OPENTK
+#if ORK_NO_GLPROGRAMUNIFORM
 				GL.Uniform1(location, (value? 1 : 0));
+#else
+				GL.ProgramUniform1(program.getId(), location, (value? 1 : 0));
+#endif
 #else
 #if ORK_NO_GLPROGRAMUNIFORM
 				glUniform1f(location, value);
@@ -494,8 +534,12 @@ namespace Sxta.Render
 			{
 				if (block == null || program  == null) {
 					this.value = value;
-					if (program != null && Program.CURRENT == program) {
-						setValue();
+					if (program != null) {
+#if ORK_NO_GLPROGRAMUNIFORM
+						    setValueIfCurrent();
+#else
+						    setValue();
+#endif					
 					}
 				} else {
 					block.setValue(location, Vector2f.SizeInBytes, value);
@@ -528,7 +572,11 @@ namespace Sxta.Render
 			internal protected override void setValue()
 			{
 #if OPENTK
+#if  ORK_NO_GLPROGRAMUNIFORM
 				GL.Uniform2(location, value.X, value.Y);
+#else
+				GL.ProgramUniform2(program.getId(),location, value.X, value.Y);
+#endif
 #else
 #if  ORK_NO_GLPROGRAMUNIFORM
 				glUniform2f(location, value.X, value.Y);
@@ -584,8 +632,12 @@ namespace Sxta.Render
 			{
 				if (block == null || program  == null) {
 					this.value = value;
-					if (program != null && Program.CURRENT == program) {
-						setValue();
+					if (program != null) {
+#if ORK_NO_GLPROGRAMUNIFORM
+						    setValueIfCurrent();
+#else
+						    setValue();
+#endif					
 					}
 				} else {
 					block.setValue(location, Vector2d.SizeInBytes, value);
@@ -618,7 +670,11 @@ namespace Sxta.Render
 			internal protected override void setValue()
 			{
 #if OPENTK
+#if  ORK_NO_GLPROGRAMUNIFORM
 				GL.Uniform2(location, value.X, value.Y);
+#else
+				GL.ProgramUniform2(program.getId(),location, value.X, value.Y);
+#endif
 #else
 #if  ORK_NO_GLPROGRAMUNIFORM
 				glUniform2f(location, value.X, value.Y);
@@ -674,8 +730,12 @@ namespace Sxta.Render
 			{
 				if (block == null || program  == null) {
 					this.value = value;
-					if (program != null && Program.CURRENT == program) {
-						setValue();
+					if (program != null) {
+#if ORK_NO_GLPROGRAMUNIFORM
+						    setValueIfCurrent();
+#else
+						    setValue();
+#endif					
 					}
 				} else {
 					block.setValue(location, Vector2i.SizeInBytes, value);
@@ -708,7 +768,11 @@ namespace Sxta.Render
 			internal protected override void setValue()
 			{
 #if OPENTK
+#if  ORK_NO_GLPROGRAMUNIFORM
 				GL.Uniform2(location, value.X, value.Y);
+#else
+				GL.ProgramUniform2(program.getId(),location, value.X, value.Y);
+#endif
 #else
 #if  ORK_NO_GLPROGRAMUNIFORM
 				glUniform2f(location, value.X, value.Y);
@@ -764,8 +828,12 @@ namespace Sxta.Render
 			{
 				if (block == null || program  == null) {
 					this.value = value;
-					if (program != null && Program.CURRENT == program) {
-						setValue();
+					if (program != null) {
+#if ORK_NO_GLPROGRAMUNIFORM
+						    setValueIfCurrent();
+#else
+						    setValue();
+#endif					
 					}
 				} else {
 					block.setValue(location, Vector2ui.SizeInBytes, value);
@@ -798,7 +866,11 @@ namespace Sxta.Render
 			internal protected override void setValue()
 			{
 #if OPENTK
+#if  ORK_NO_GLPROGRAMUNIFORM
 				GL.Uniform2(location, value.X, value.Y);
+#else
+				GL.ProgramUniform2(program.getId(),location, value.X, value.Y);
+#endif
 #else
 #if  ORK_NO_GLPROGRAMUNIFORM
 				glUniform2f(location, value.X, value.Y);
@@ -854,8 +926,12 @@ namespace Sxta.Render
 			{
 				if (block == null || program  == null) {
 					this.value = value;
-					if (program != null && Program.CURRENT == program) {
-						setValue();
+					if (program != null) {
+#if ORK_NO_GLPROGRAMUNIFORM
+						    setValueIfCurrent();
+#else
+						    setValue();
+#endif					
 					}
 				} else {
 					block.setValue(location, Vector2b.SizeInBytes, value);
@@ -888,7 +964,11 @@ namespace Sxta.Render
 			internal protected override void setValue()
 			{
 #if OPENTK
+#if  ORK_NO_GLPROGRAMUNIFORM
 				GL.Uniform2(location, (value.X? 1 : 0), (value.Y? 1 : 0));
+#else
+				GL.ProgramUniform2(program.getId(), location, (value.X? 1 : 0), (value.Y? 1 : 0));
+#endif
 #else
 #if  ORK_NO_GLPROGRAMUNIFORM
 				glUniform2f(location, value.X, value.Y);
@@ -944,8 +1024,12 @@ namespace Sxta.Render
 			{
 				if (block == null || program  == null) {
 					this.value = value;
-					if (program != null && Program.CURRENT == program) {
-						setValue();
+					if (program != null) {
+#if ORK_NO_GLPROGRAMUNIFORM
+						    setValueIfCurrent();
+#else
+						    setValue();
+#endif					
 					}
 				} else {
 					block.setValue(location,Vector3f.SizeInBytes, value);
@@ -978,7 +1062,11 @@ namespace Sxta.Render
 			internal protected override void setValue()
 			{
 #if OPENTK
+#if  ORK_NO_GLPROGRAMUNIFORM
 				GL.Uniform3(location, value.X, value.Y, value.Z);
+#else
+				GL.ProgramUniform3(program.getId(), location, value.X, value.Y, value.Z);
+#endif
 #else
 #if  ORK_NO_GLPROGRAMUNIFORM
 				glUniform3f(location, value.X, value.Y, value.Z);
@@ -1034,8 +1122,12 @@ namespace Sxta.Render
 			{
 				if (block == null || program  == null) {
 					this.value = value;
-					if (program != null && Program.CURRENT == program) {
-						setValue();
+					if (program != null) {
+#if ORK_NO_GLPROGRAMUNIFORM
+						    setValueIfCurrent();
+#else
+						    setValue();
+#endif					
 					}
 				} else {
 					block.setValue(location,Vector3d.SizeInBytes, value);
@@ -1068,7 +1160,11 @@ namespace Sxta.Render
 			internal protected override void setValue()
 			{
 #if OPENTK
+#if  ORK_NO_GLPROGRAMUNIFORM
 				GL.Uniform3(location, value.X, value.Y, value.Z);
+#else
+				GL.ProgramUniform3(program.getId(), location, value.X, value.Y, value.Z);
+#endif
 #else
 #if  ORK_NO_GLPROGRAMUNIFORM
 				glUniform3f(location, value.X, value.Y, value.Z);
@@ -1124,8 +1220,12 @@ namespace Sxta.Render
 			{
 				if (block == null || program  == null) {
 					this.value = value;
-					if (program != null && Program.CURRENT == program) {
-						setValue();
+					if (program != null) {
+#if ORK_NO_GLPROGRAMUNIFORM
+						    setValueIfCurrent();
+#else
+						    setValue();
+#endif					
 					}
 				} else {
 					block.setValue(location,Vector3i.SizeInBytes, value);
@@ -1158,7 +1258,11 @@ namespace Sxta.Render
 			internal protected override void setValue()
 			{
 #if OPENTK
+#if  ORK_NO_GLPROGRAMUNIFORM
 				GL.Uniform3(location, value.X, value.Y, value.Z);
+#else
+				GL.ProgramUniform3(program.getId(), location, value.X, value.Y, value.Z);
+#endif
 #else
 #if  ORK_NO_GLPROGRAMUNIFORM
 				glUniform3f(location, value.X, value.Y, value.Z);
@@ -1214,8 +1318,12 @@ namespace Sxta.Render
 			{
 				if (block == null || program  == null) {
 					this.value = value;
-					if (program != null && Program.CURRENT == program) {
-						setValue();
+					if (program != null) {
+#if ORK_NO_GLPROGRAMUNIFORM
+						    setValueIfCurrent();
+#else
+						    setValue();
+#endif					
 					}
 				} else {
 					block.setValue(location,Vector3ui.SizeInBytes, value);
@@ -1248,7 +1356,11 @@ namespace Sxta.Render
 			internal protected override void setValue()
 			{
 #if OPENTK
+#if  ORK_NO_GLPROGRAMUNIFORM
 				GL.Uniform3(location, value.X, value.Y, value.Z);
+#else
+				GL.ProgramUniform3(program.getId(), location, value.X, value.Y, value.Z);
+#endif
 #else
 #if  ORK_NO_GLPROGRAMUNIFORM
 				glUniform3f(location, value.X, value.Y, value.Z);
@@ -1304,8 +1416,12 @@ namespace Sxta.Render
 			{
 				if (block == null || program  == null) {
 					this.value = value;
-					if (program != null && Program.CURRENT == program) {
-						setValue();
+					if (program != null) {
+#if ORK_NO_GLPROGRAMUNIFORM
+						    setValueIfCurrent();
+#else
+						    setValue();
+#endif					
 					}
 				} else {
 					block.setValue(location,Vector3b.SizeInBytes, value);
@@ -1338,7 +1454,11 @@ namespace Sxta.Render
 			internal protected override void setValue()
 			{
 #if OPENTK
+#if  ORK_NO_GLPROGRAMUNIFORM
 				GL.Uniform3(location, (value.X? 1 : 0), (value.Y? 1 : 0), (value.Z? 1 : 0));
+#else
+				GL.Uniform3(location, (value.X? 1 : 0), (value.Y? 1 : 0), (value.Z? 1 : 0));
+#endif
 #else
 #if  ORK_NO_GLPROGRAMUNIFORM
 				glUniform3f(location, value.X, value.Y, value.Z);
@@ -1395,8 +1515,12 @@ namespace Sxta.Render
 			{
 				if (block == null || program  == null) {
 					this.value = value;
-					if (program != null && Program.CURRENT == program) {
-						setValue();
+					if (program != null) {
+#if ORK_NO_GLPROGRAMUNIFORM
+						    setValueIfCurrent();
+#else
+						    setValue();
+#endif					
 					}
 				} else {
 					block.setValue(location, Vector4f.SizeInBytes, value);
@@ -1429,7 +1553,11 @@ namespace Sxta.Render
 			internal protected override void setValue()
 			{
 #if OPENTK
+#if  ORK_NO_GLPROGRAMUNIFORM
 				GL.Uniform4(location, value.X, value.Y, value.Z, value.W);
+#else
+				GL.ProgramUniform4(program.getId(), location, value.X, value.Y, value.Z, value.W);
+#endif
 #else
 #if  ORK_NO_GLPROGRAMUNIFORM
 				glUniform4f(location, value.X, value.Y, value.Z, value.W);
@@ -1486,8 +1614,12 @@ namespace Sxta.Render
 			{
 				if (block == null || program  == null) {
 					this.value = value;
-					if (program != null && Program.CURRENT == program) {
-						setValue();
+					if (program != null) {
+#if ORK_NO_GLPROGRAMUNIFORM
+						    setValueIfCurrent();
+#else
+						    setValue();
+#endif					
 					}
 				} else {
 					block.setValue(location, Vector4d.SizeInBytes, value);
@@ -1520,7 +1652,11 @@ namespace Sxta.Render
 			internal protected override void setValue()
 			{
 #if OPENTK
+#if  ORK_NO_GLPROGRAMUNIFORM
 				GL.Uniform4(location, value.X, value.Y, value.Z, value.W);
+#else
+				GL.ProgramUniform4(program.getId(), location, value.X, value.Y, value.Z, value.W);
+#endif
 #else
 #if  ORK_NO_GLPROGRAMUNIFORM
 				glUniform4f(location, value.X, value.Y, value.Z, value.W);
@@ -1577,8 +1713,12 @@ namespace Sxta.Render
 			{
 				if (block == null || program  == null) {
 					this.value = value;
-					if (program != null && Program.CURRENT == program) {
-						setValue();
+					if (program != null) {
+#if ORK_NO_GLPROGRAMUNIFORM
+						    setValueIfCurrent();
+#else
+						    setValue();
+#endif					
 					}
 				} else {
 					block.setValue(location, Vector4i.SizeInBytes, value);
@@ -1611,7 +1751,11 @@ namespace Sxta.Render
 			internal protected override void setValue()
 			{
 #if OPENTK
+#if  ORK_NO_GLPROGRAMUNIFORM
 				GL.Uniform4(location, value.X, value.Y, value.Z, value.W);
+#else
+				GL.ProgramUniform4(program.getId(), location, value.X, value.Y, value.Z, value.W);
+#endif
 #else
 #if  ORK_NO_GLPROGRAMUNIFORM
 				glUniform4f(location, value.X, value.Y, value.Z, value.W);
@@ -1668,8 +1812,12 @@ namespace Sxta.Render
 			{
 				if (block == null || program  == null) {
 					this.value = value;
-					if (program != null && Program.CURRENT == program) {
-						setValue();
+					if (program != null) {
+#if ORK_NO_GLPROGRAMUNIFORM
+						    setValueIfCurrent();
+#else
+						    setValue();
+#endif					
 					}
 				} else {
 					block.setValue(location, Vector4ui.SizeInBytes, value);
@@ -1702,7 +1850,11 @@ namespace Sxta.Render
 			internal protected override void setValue()
 			{
 #if OPENTK
+#if  ORK_NO_GLPROGRAMUNIFORM
 				GL.Uniform4(location, value.X, value.Y, value.Z, value.W);
+#else
+				GL.ProgramUniform4(program.getId(), location, value.X, value.Y, value.Z, value.W);
+#endif
 #else
 #if  ORK_NO_GLPROGRAMUNIFORM
 				glUniform4f(location, value.X, value.Y, value.Z, value.W);
@@ -1759,8 +1911,12 @@ namespace Sxta.Render
 			{
 				if (block == null || program  == null) {
 					this.value = value;
-					if (program != null && Program.CURRENT == program) {
-						setValue();
+					if (program != null) {
+#if ORK_NO_GLPROGRAMUNIFORM
+						    setValueIfCurrent();
+#else
+						    setValue();
+#endif					
 					}
 				} else {
 					block.setValue(location, Vector4b.SizeInBytes, value);
@@ -1793,7 +1949,11 @@ namespace Sxta.Render
 			internal protected override void setValue()
 			{
 #if OPENTK
+#if  ORK_NO_GLPROGRAMUNIFORM
 				GL.Uniform4(location, (value.X? 1 : 0), (value.Y? 1 : 0), (value.Z? 1 : 0), (value.W? 1 : 0));
+#else
+				GL.ProgramUniform4(program.getId(), location, (value.X? 1 : 0), (value.Y? 1 : 0), (value.Z? 1 : 0), (value.W? 1 : 0));
+#endif
 #else
 #if  ORK_NO_GLPROGRAMUNIFORM
 				glUniform4f(location, value.X, value.Y, value.Z, value.W);
@@ -1865,8 +2025,12 @@ namespace Sxta.Render
             {
 			   if (block == null || program  == null) {
 					this.value = value;
-					if (program != null && Program.CURRENT == program) {
-						setValue();
+					if (program != null) {
+#if ORK_NO_GLPROGRAMUNIFORM
+						    setValueIfCurrent();
+#else
+						    setValue();
+#endif					
 					}
 				} else {
 					block.setValue(location, Matrix2f.SizeInBytes, value);
@@ -1916,7 +2080,11 @@ namespace Sxta.Render
 			internal protected override void setValue()
 			{
 #if OPENTK
+#if ORK_NO_GLPROGRAMUNIFORM
 			Sxta.OpenGL.GL.UniformMatrix2(location, 1, isRowMajor, ref value);
+#else
+			GL.ProgramUniformMatrix2(program.getId(), location, 1, isRowMajor, (float[])  value);
+#endif
 #else
 #if ORK_NO_GLPROGRAMUNIFORM
 			glUniformMatrix2fv(location, 1, true, value);
@@ -2002,8 +2170,12 @@ namespace Sxta.Render
             {
 			   if (block == null || program  == null) {
 					this.value = value;
-					if (program != null && Program.CURRENT == program) {
-						setValue();
+					if (program != null) {
+#if ORK_NO_GLPROGRAMUNIFORM
+						    setValueIfCurrent();
+#else
+						    setValue();
+#endif					
 					}
 				} else {
 					block.setValue(location, Matrix2d.SizeInBytes, value);
@@ -2053,7 +2225,11 @@ namespace Sxta.Render
 			internal protected override void setValue()
 			{
 #if OPENTK
+#if ORK_NO_GLPROGRAMUNIFORM
 			Sxta.OpenGL.GL.UniformMatrix2(location, 1, isRowMajor, ref value);
+#else
+			GL.ProgramUniformMatrix2(program.getId(), location, 1, isRowMajor, (double[])  value);
+#endif
 #else
 #if ORK_NO_GLPROGRAMUNIFORM
 			glUniformMatrix2fv(location, 1, true, value);
@@ -2140,8 +2316,12 @@ namespace Sxta.Render
             {
 			   if (block == null || program  == null) {
 					this.value = value;
-					if (program != null && Program.CURRENT == program) {
-						setValue();
+					if (program != null) {
+#if ORK_NO_GLPROGRAMUNIFORM
+						    setValueIfCurrent();
+#else
+						    setValue();
+#endif					
 					}
 				} else {
 					block.setValue(location, Matrix3f.SizeInBytes, value);
@@ -2193,7 +2373,11 @@ namespace Sxta.Render
 			internal protected override void setValue()
 			{
 #if OPENTK
+#if ORK_NO_GLPROGRAMUNIFORM
 			Sxta.OpenGL.GL.UniformMatrix3(location, 1, isRowMajor, ref value);
+#else
+			GL.ProgramUniformMatrix3(program.getId(), location, 1, isRowMajor, (float[])  value);
+#endif
 #else
 #if ORK_NO_GLPROGRAMUNIFORM
 			glUniformMatrix2fv(location, 1, true, value);
@@ -2281,8 +2465,12 @@ namespace Sxta.Render
             {
 			   if (block == null || program  == null) {
 					this.value = value;
-					if (program != null && Program.CURRENT == program) {
-						setValue();
+					if (program != null) {
+#if ORK_NO_GLPROGRAMUNIFORM
+						    setValueIfCurrent();
+#else
+						    setValue();
+#endif					
 					}
 				} else {
 					block.setValue(location, Matrix3d.SizeInBytes, value);
@@ -2334,7 +2522,11 @@ namespace Sxta.Render
 			internal protected override void setValue()
 			{
 #if OPENTK
+#if ORK_NO_GLPROGRAMUNIFORM
 			Sxta.OpenGL.GL.UniformMatrix3(location, 1, isRowMajor, ref value);
+#else
+			GL.ProgramUniformMatrix3(program.getId(), location, 1, isRowMajor, (double[])  value);
+#endif
 #else
 #if ORK_NO_GLPROGRAMUNIFORM
 			glUniformMatrix2fv(location, 1, true, value);
@@ -2423,8 +2615,12 @@ namespace Sxta.Render
             {
 			   if (block == null || program  == null) {
 					this.value = value;
-					if (program != null && Program.CURRENT == program) {
-						setValue();
+					if (program != null) {
+#if ORK_NO_GLPROGRAMUNIFORM
+						    setValueIfCurrent();
+#else
+						    setValue();
+#endif					
 					}
 				} else {
 					block.setValue(location,  Matrix4f.SizeInBytes, value);
@@ -2473,7 +2669,11 @@ namespace Sxta.Render
 			internal protected override void setValue()
 			{
 #if OPENTK
+#if ORK_NO_GLPROGRAMUNIFORM
 			Sxta.OpenGL.GL.UniformMatrix4(location, 1, isRowMajor, ref value);
+#else
+			GL.ProgramUniformMatrix4(program.getId(), location, 1, isRowMajor, (float[])  value);
+#endif
 #else
 #if ORK_NO_GLPROGRAMUNIFORM
 			glUniformMatrix4fv(location, 1, true, value);
@@ -2561,8 +2761,12 @@ namespace Sxta.Render
             {
 			   if (block == null || program  == null) {
 					this.value = value;
-					if (program != null && Program.CURRENT == program) {
-						setValue();
+					if (program != null) {
+#if ORK_NO_GLPROGRAMUNIFORM
+						    setValueIfCurrent();
+#else
+						    setValue();
+#endif					
 					}
 				} else {
 					block.setValue(location,  Matrix4d.SizeInBytes, value);
@@ -2611,7 +2815,11 @@ namespace Sxta.Render
 			internal protected override void setValue()
 			{
 #if OPENTK
+#if ORK_NO_GLPROGRAMUNIFORM
 			Sxta.OpenGL.GL.UniformMatrix4(location, 1, isRowMajor, ref value);
+#else
+			GL.ProgramUniformMatrix4(program.getId(), location, 1, isRowMajor, (double[])  value);
+#endif
 #else
 #if ORK_NO_GLPROGRAMUNIFORM
 			glUniformMatrix4fv(location, 1, true, value);

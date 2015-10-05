@@ -7,6 +7,7 @@ using OpenTK.Input;
 using Sxta.Math;
 using Sxta.Render;
 using System;
+using System.Drawing;
 
 namespace Examples.Tutorials
 {
@@ -54,6 +55,17 @@ namespace Examples.Tutorials
             fb = new FrameBuffer(true);
             p = new Program(new Module(330, EXAMPLE_SHADER));
             uMatrix = p.getUniformMatrix4f("uMatrix");
+            uColor = p.getUniform3f("uColor");
+
+
+            triangle = new Mesh<Vector2f, uint>(Vector2f.SizeInBytes, MeshMode.TRIANGLES, MeshUsage.GPU_STATIC, 3);
+            triangle.addAttributeType(0, 2, AttributeType.A32F, false);
+
+            // Load up a triangle
+            triangle.addVertex(new Vector2f(0.0f, 0.2f));
+            triangle.addVertex(new Vector2f(0.2f, -0.2f));
+            triangle.addVertex(new Vector2f(-0.2f, -0.2f));
+
         }
 
         #endregion
@@ -66,6 +78,9 @@ namespace Examples.Tutorials
                 p.Dispose();
             if (fb != null)
                 fb.Dispose();
+            if (triangle != null)
+                triangle.Dispose();
+
             base.OnUnload(e);
         }
 
@@ -85,40 +100,6 @@ namespace Examples.Tutorials
 
         #endregion
 
-        #region OnUpdateFrame
-
-        /// <summary>
-        /// Add your game logic here.
-        /// </summary>
-        /// <param name="e">Contains timing information.</param>
-        /// <remarks>There is no need to call the base implementation.</remarks>
-        protected override void OnUpdateFrame(FrameEventArgs e)
-        {
-            distX += xAmount;
-            distY += yAmount;
-
-            if (distX > 0.7f || distX < -0.7f)
-            {
-                xAmount = -xAmount;
-                if (distX > 0.7f) distX = 0.7f;
-                else distX = -0.7f;
-            }
-            if (distY > 0.7f || distY < -0.7f)
-            {
-                yAmount = -yAmount;
-                if (distY > 0.7f) distY = 0.7f;
-                else distY = -0.7f;
-            }
-            angle += 0.005f;
-
-            Matrix4f translation = Matrix4f.CreateTranslation(distX, distY, 0.0f);
-            Matrix4f rotation = Matrix4f.CreateRotationZ(2 * angle);
-            Matrix4f scale = Matrix4f.Scale((float)Math.Sin(angle));
-            mat = scale * rotation * translation;
-        }
-
-        #endregion
-
         #region OnRenderFrame
 
         /// <summary>
@@ -129,41 +110,99 @@ namespace Examples.Tutorials
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             fb.clear(true, false, false);
+
+            // Translate then scale (red)
+            uColor.set(new Vector3f(1.0f, 0.0f, 0.0f));
+            mat = Matrix4f.CreateTranslation(-0.6f, 0.8f, 0.0f);
             uMatrix.set(mat);
-            fb.drawQuad(p);
+            
+            // Render our triangle at the initial position
+            fb.draw(p, triangle);
+            // Render our triangle after a translation and a scale operation
+            mat = Matrix4f.Translate(mat, 1.0f, 0.0f, 0.0f);
+            mat = Matrix4f.Scale(mat, 0.5f);
+            //mat = Matrix4f.Scale(0.5f) * Matrix4f.CreateTranslation(1.0f, 0.0f, 0.0f) * mat;
+            uMatrix.set(mat);
+            fb.draw(p, triangle);
+
+            // Scale then translate (green)
+            uColor.set(new Vector3f(0.0f, 1.0f, 0.0f));
+            mat = Matrix4f.CreateTranslation(-0.6f, 0.4f, 0.0f);
+            uMatrix.set(mat);
+            // Render our triangle at the initial position
+            fb.draw(p, triangle);
+            mat =  Matrix4f.CreateTranslation(1.0f, 0.0f, 0.0f) * Matrix4f.Scale(0.5f) * mat;
+            uMatrix.set(mat);
+            // Render our triangle after a scale and translation operation
+            fb.draw(p, triangle);
+
+            // Scale then translate then rotate (blue)
+            uColor.set(new Vector3f(0.0f, 0.0f, 1.0f));
+            mat = Matrix4f.CreateTranslation(-0.6f, 0.0f, 0.0f);
+            uMatrix.set(mat);
+            // Render our triangle at the initial position
+            fb.draw(p, triangle);
+            mat = Matrix4f.CreateRotationZ(-75) * Matrix4f.CreateTranslation(1.0f, 0.0f, 0.0f) * Matrix4f.Scale(0.5f) * mat;
+            uMatrix.set(mat);
+            // Render our triangle after a scale and translation and rotate operation
+            fb.draw(p, triangle);
+
+            // Scale then rotate then translate (light blue)
+            uColor.set(new Vector3f(0.0f, 1.0f, 1.0f));
+            mat = Matrix4f.CreateTranslation(-0.6f, -0.4f, 0.0f);
+            uMatrix.set(mat);
+            // Render our triangle at the initial position
+            fb.draw(p, triangle);
+            mat =  Matrix4f.CreateTranslation(1.0f, 0.0f, 0.0f) * Matrix4f.CreateRotationZ(-75) * Matrix4f.Scale(0.5f) * mat;
+            uMatrix.set(mat);
+            // Render our triangle after a scale and and rotate translation operation
+            fb.draw(p, triangle);
+
+            // Rotate then translate then scale (yellow)
+            uColor.set(new Vector3f(1.0f, 1.0f, 0.0f));
+            mat = Matrix4f.CreateTranslation(-0.6f, -0.8f, 0.0f);
+            uMatrix.set(mat);
+            // Render our triangle at the initial position
+            fb.draw(p, triangle);
+            mat = Matrix4f.Scale(0.5f) * Matrix4f.CreateTranslation(1.0f, 0.0f, 0.0f) * Matrix4f.CreateRotationZ(-75) * mat;
+            uMatrix.set(mat);
+            // Render our triangle after a rotate, translation, scale operation
+            fb.draw(p, triangle);
+
             this.SwapBuffers();
         }
 
         #endregion
 
         #region Fields
-        float angle;
-        float xAmount = 0.004f;
-        float yAmount = 0.003f;
-        float distX = 0.0f;
-        float distY = 0.0f;
         Matrix4f mat = new Matrix4f(1.0f, 0.0f, 0.0f, 0.0f,
                                     0.0f, 1.0f, 0.0f, 0.0f,
                                     0.0f, 0.0f, 1.0f, 0.0f,
                                     0.0f, 0.0f, 0.0f, 1.0f);
         UniformMatrix4f uMatrix;
+        Uniform3f uColor;
+
         FrameBuffer fb;
         Program p;
+
+        Mesh<Vector2f, uint> triangle;
 
         const string EXAMPLE_SHADER = @"
 #ifdef _VERTEX_
         layout (location = 0) in vec3 aPosition; 
         uniform mat4 uMatrix;   
+   
         void main()
         {
             gl_Position = uMatrix * vec4(aPosition, 1.0);
         }
 #endif
 #ifdef _FRAGMENT_
+        uniform vec3 uColor;
         out vec4 FragColor;
         void main()
         {
-            FragColor = vec4(1.0, 0.0, 0.0, 1.0); 
+            FragColor = vec4(uColor, 1.0); 
         }
 #endif";
 

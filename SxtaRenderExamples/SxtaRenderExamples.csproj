@@ -62,6 +62,8 @@
     <Compile Include="Tutorials\Learning\Tutorial02_10.cs" />
     <Compile Include="Tutorials\Learning\Tutorial03_2.cs" />
     <Compile Include="Tutorials\Learning\Tutorial03_1.cs" />
+    <Compile Include="Tutorials\Learning\Tutorial03_4.cs" />
+    <Compile Include="Tutorials\Learning\Tutorial03_6.cs" />
     <Compile Include="Tutorials\Learning\Tutorial04_2.cs" />
     <Compile Include="Tutorials\Learning\Tutorial04_1.cs" />
     <Compile Include="Tutorials\Core\Tutorial07_1.cs" />
@@ -80,7 +82,7 @@
     <Compile Include="Tutorials\Learning\Tutorial01_4.cs" />
     <Compile Include="Tutorials\Learning\Tutorial01_1.cs" />
     <Compile Include="Tutorials\Learning\Tutorial03_3.cs" />
-    <Compile Include="Tutorials\Learning\Tutorial03_4.cs" />
+    <Compile Include="Tutorials\Learning\Tutorial03_5.cs" />
     <Compile Include="Tutorials\Resource\TutorialRes03_2.cs" />
     <Compile Include="Tutorials\Resource\TutorialRes03_1.cs" />
     <Compile Include="Tutorials\Resource\TutorialRes02_2.cs" />

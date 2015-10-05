@@ -1799,7 +1799,13 @@ namespace Sxta.Math
 
         /// <summary>
         /// Builds a rotation matrix for a rotation around the y-axis.
-        /// </summary>
+        ///
+		///   | cos  0.0 -sin 0.0 |
+		///   | 0.0  1.0  1.0 0.0 |
+		///   | sin  0.0  cos 0.0 |
+		///   | 0.0  0.0  0.0 1.0 |
+		///
+		/// </summary>
         /// <param name="angle">The counter-clockwise angle in radians.</param>
         /// <param name="result">The resulting <#= mat4Name #> instance.</param>
         public static void CreateRotationY(double angle, out <#= mat4Name #> result)
@@ -1815,6 +1821,12 @@ namespace Sxta.Math
 
         /// <summary>
         /// Builds a rotation matrix for a rotation around the y-axis.
+        ///
+		///   | cos  0.0 -sin 0.0 |
+		///   | 0.0  1.0  1.0 0.0 |
+		///   | sin  0.0  cos 0.0 |
+		///   | 0.0  0.0  0.0 1.0 |
+		///
         /// </summary>
         /// <param name="angle">The counter-clockwise angle in radians.</param>
         /// <returns>The resulting <#= mat4Name #> instance.</returns>
@@ -1827,6 +1839,12 @@ namespace Sxta.Math
 
         /// <summary>
         /// Builds a rotation matrix for a rotation around the z-axis.
+		///
+		///   | cos -sin 0.0 0.0 |
+		///   | sin  cos 0.0 0.0 |
+		///   | 0.0  0.0 1.0 0.0 |
+		///   | 0.0  0.0 0.0 1.0 |
+		///
         /// </summary>
         /// <param name="angle">The counter-clockwise angle in radians.</param>
         /// <param name="result">The resulting <#= mat4Name #> instance.</param>
@@ -1835,14 +1853,20 @@ namespace Sxta.Math
             double cos =  System.Math.Cos(angle);
             double sin =  System.Math.Sin(angle);
 
-            result.Row0 = new <#= vec4Name #>((<#= typeName #>)cos, (<#= typeName #>)sin, 0, 0);
-            result.Row1 = new <#= vec4Name #>((<#= typeName #>)-sin, (<#= typeName #>)cos, 0, 0);
+            result.Row0 = new <#= vec4Name #>((<#= typeName #>)cos, -(<#= typeName #>)sin, 0, 0);
+            result.Row1 = new <#= vec4Name #>((<#= typeName #>)sin, (<#= typeName #>)cos, 0, 0);
             result.Row2 = <#= vec4Name #>.UnitZ;
             result.Row3 = <#= vec4Name #>.UnitW;
         }
 
         /// <summary>
         /// Builds a rotation matrix for a rotation around the z-axis.
+		///
+		///   | cos -sin 0.0 0.0 |
+		///   | sin  cos 0.0 0.0 |
+		///   | 0.0  0.0 1.0 0.0 |
+		///   | 0.0  0.0 0.0 1.0 |
+		///
         /// </summary>
         /// <param name="angle">The counter-clockwise angle in radians.</param>
         /// <returns>The resulting <#= mat4Name #> instance.</returns>
@@ -1856,9 +1880,38 @@ namespace Sxta.Math
         #endregion
 
         #region CreateTranslation
+		
+		/// <summary>
+        /// Multiplay a matrix by a translation matrix.
+		///
+		///   | 1.0 0.0 0.0 tx  |
+		///   | 0.0 1.0 0.0 ty  |
+		///   | 0.0 0.0 1.0 tz  |
+		///   | 0.0 0.0 0.0 1.0 |
+		///
+        /// </summary>
+        /// <param name="mat">The original and resulting <#= mat4Name #> instance.</param>
+        /// <param name="x">X translation.</param>
+        /// <param name="y">Y translation.</param>
+        /// <param name="z">Z translation.</param>
+        public static <#= mat4Name #> Translate(<#= mat4Name #> mat, <#= typeName #> x, <#= typeName #> y, <#= typeName #> z)
+        {
+			mat.M14 = mat.M11 * x + mat.M12 * y + mat.M13 * z + mat.M14;
+		    mat.M24 = mat.M21 * x + mat.M22 * y + mat.M23 * z + mat.M24;
+            mat.M34 = mat.M31 * x + mat.M32 * y + mat.M33 * z + mat.M34;
+            mat.M44 = mat.M41 * x + mat.M42 * y + mat.M43 * z + mat.M44;
+			return mat;
+        }
+
 
         /// <summary>
         /// Creates a translation matrix.
+		///
+		///   | 1.0 0.0 0.0 tx  |
+		///   | 0.0 1.0 0.0 ty  |
+		///   | 0.0 0.0 1.0 tz  |
+		///   | 0.0 0.0 0.0 1.0 |
+		///
         /// </summary>
         /// <param name="x">X translation.</param>
         /// <param name="y">Y translation.</param>
@@ -1867,26 +1920,38 @@ namespace Sxta.Math
         public static void CreateTranslation(<#= typeName #> x, <#= typeName #> y, <#= typeName #> z, out <#= mat4Name #> result)
         {
             result = Identity;
-            result.Row3.X = x;
-            result.Row3.Y = y;
-            result.Row3.Z = z;
+            result.Row0.W = x;
+            result.Row1.W = y;
+            result.Row2.W = z;
         }
 
         /// <summary>
         /// Creates a translation matrix.
+		///
+		///   | 1.0 0.0 0.0 tx  |
+		///   | 0.0 1.0 0.0 ty  |
+		///   | 0.0 0.0 1.0 tz  |
+		///   | 0.0 0.0 0.0 1.0 |
+		///
         /// </summary>
         /// <param name="vector">The translation vector.</param>
         /// <param name="result">The resulting <#= mat4Name #> instance.</param>
         public static void CreateTranslation(ref <#= vec3Name #> vector, out <#= mat4Name #> result)
         {
             result = Identity;
-			result.Row3.X = vector.X;
-            result.Row3.Y = vector.Y;
-            result.Row3.Z = vector.Z;
+			result.Row0.W = vector.X;
+            result.Row1.W = vector.Y;
+            result.Row2.W = vector.Z;
         }
 
         /// <summary>
         /// Creates a translation matrix.
+		///
+		///   | 1.0 0.0 0.0 tx  |
+		///   | 0.0 1.0 0.0 ty  |
+		///   | 0.0 0.0 1.0 tz  |
+		///   | 0.0 0.0 0.0 1.0 |
+		///
         /// </summary>
         /// <param name="x">X translation.</param>
         /// <param name="y">Y translation.</param>
@@ -1901,6 +1966,12 @@ namespace Sxta.Math
 
         /// <summary>
         /// Creates a translation matrix.
+		///
+		///   | 1.0 0.0 0.0 tx  |
+		///   | 0.0 1.0 0.0 ty  |
+		///   | 0.0 0.0 1.0 tz  |
+		///   | 0.0 0.0 0.0 1.0 |
+		///
         /// </summary>
         /// <param name="vector">The translation vector.</param>
         /// <returns>The resulting <#= mat4Name #> instance.</returns>
@@ -1961,19 +2032,20 @@ namespace Sxta.Math
         {
             result = new <#= mat4Name #>();
 
-            <#= typeName #> invRL = 1 / (right - left);
-            <#= typeName #> invTB = 1 / (top - bottom);
-            <#= typeName #> invFN = 1 / (zFar - zNear);
+            <#= typeName #> invLR = 1 / (left - right);
+            <#= typeName #> invBT = 1 / (bottom - top);
+            <#= typeName #> invNF = 1 / (zNear - zFar);
 
-            result.M11 = 2 * invRL;
-            result.M22 = 2 * invTB;
-            result.M33 = -2 * invFN;
+            result.M11 = -2 * invLR;
+            result.M22 = -2 * invBT;
+            result.M33 =  2 * invNF;
 
-            result.M41 = -(right + left) * invRL;
-            result.M42 = -(top + bottom) * invTB;
-            result.M43 = -(zFar + zNear) * invFN;
+            result.M14 = (right + left) * invLR;
+            result.M24 = (top + bottom) * invBT;
+            result.M34 = (zFar + zNear) * invNF;
             result.M44 = 1;
-        }
+
+		}
 
         /// <summary>
         /// Creates an orthographic projection matrix.
@@ -2098,10 +2170,10 @@ namespace Sxta.Math
             <#= typeName #> c = (<#= typeName #>)((zFar + zNear) / (zNear - zFar ));
             <#= typeName #> d = (<#= typeName #>)((2  * zFar * zNear) / (zNear - zFar));
             
-            result = new <#= mat4Name #>(x, 0,  0, 0,
-										 0, y,  0, 0,
-										 a, b,  c, -1,
-										 0, 0, d, 0);
+            result = new <#= mat4Name #>(x, 0,  a, 0,
+								  0, y,  b, 0,
+								  0, b,  c, d,
+							 	  0, 0, -1, 0);
         }
         
         /// <summary>
@@ -2135,6 +2207,12 @@ namespace Sxta.Math
 
         /// <summary>
         /// Build a scaling matrix
+		///
+		///   | sx  0.0 0.0 0.0 |
+		///   | 0.0 sy  0.0 0.0 |
+		///   | 0.0 0.0 sz  0.0 |
+		///   | 0.0 0.0 0.0 1.0 |
+		///
         /// </summary>
         /// <param name="scale">Single scale factor for x,y and z axes</param>
         /// <returns>A scaling matrix</returns>
@@ -2145,6 +2223,12 @@ namespace Sxta.Math
 
         /// <summary>
         /// Build a scaling matrix
+		///
+		///   | sx  0.0 0.0 0.0 |
+		///   | 0.0 sy  0.0 0.0 |
+		///   | 0.0 0.0 sz  0.0 |
+		///   | 0.0 0.0 0.0 1.0 |
+		///
         /// </summary>
         /// <param name="scale">Scale factors for x,y and z axes</param>
         /// <returns>A scaling matrix</returns>
@@ -2155,6 +2239,12 @@ namespace Sxta.Math
 
         /// <summary>
         /// Build a scaling matrix
+		///
+		///   | sx  0.0 0.0 0.0 |
+		///   | 0.0 sy  0.0 0.0 |
+		///   | 0.0 0.0 sz  0.0 |
+		///   | 0.0 0.0 0.0 1.0 |
+		///
         /// </summary>
         /// <param name="x">Scale factor for x-axis</param>
         /// <param name="y">Scale factor for y-axis</param>
@@ -2169,8 +2259,59 @@ namespace Sxta.Math
             result.Row3 = <#= vec4Name #>.UnitW;
             return result;
         }
+        
 
-        #endregion
+		/// <summary>
+        /// Build a scaling matrix
+		///
+		///   | sx  0.0 0.0 0.0 |
+		///   | 0.0 sy  0.0 0.0 |
+		///   | 0.0 0.0 sz  0.0 |
+		///   | 0.0 0.0 0.0 1.0 |
+		///
+        /// </summary>
+        /// <param name="s">Scale factor for all axies</param>
+        /// <returns>A scaling matrix</returns>
+        public static <#= mat4Name #> Scale(<#= mat4Name #> matrix, <#= typeName #> s)
+        {
+			return Scale(matrix, s, s, s);
+        }
+
+		/// <summary>
+        /// Build a scaling matrix
+		///
+		///   | sx  0.0 0.0 0.0 |
+		///   | 0.0 sy  0.0 0.0 |
+		///   | 0.0 0.0 sz  0.0 |
+		///   | 0.0 0.0 0.0 1.0 |
+		///
+        /// </summary>
+        /// <param name="x">Scale factor for x-axis</param>
+        /// <param name="y">Scale factor for y-axis</param>
+        /// <param name="z">Scale factor for z-axis</param>
+        /// <returns>A scaling matrix</returns>
+        public static <#= mat4Name #> Scale(<#= mat4Name #> matrix, <#= typeName #> x, <#= typeName #> y, <#= typeName #> z)
+        {
+			matrix.M11 = matrix.M11 * x;
+			matrix.M21 = matrix.M21 * x;
+			matrix.M31 = matrix.M31 * x;
+			matrix.M41 = matrix.M41 * x;
+			matrix.M12 = matrix.M12 * y;
+			matrix.M22 = matrix.M22 * y;
+			matrix.M32 = matrix.M32 * y;
+			matrix.M42 = matrix.M42 * y;
+			matrix.M13 = matrix.M13 * z;
+			matrix.M23 = matrix.M23 * z;
+			matrix.M33 = matrix.M33 * z;
+			matrix.M43 = matrix.M43 * z;
+			matrix.M14 = matrix.M14;
+			matrix.M24 = matrix.M24;
+			matrix.M34 = matrix.M34;
+			matrix.M44 = matrix.M44;
+			return matrix;
+        }
+        
+		#endregion
 
         #region Rotation Function
 
@@ -2259,23 +2400,23 @@ namespace Sxta.Math
         public static void Mult(ref <#= mat4Name #> left, ref <#= mat4Name #> right, out <#= mat4Name #> result)
         {
             result = new <#= mat4Name #>(
-                left.M11 * right.M11 + left.M12 * right.M21 + left.M13 * right.M31 + left.M14 * right.M41,
-                left.M11 * right.M12 + left.M12 * right.M22 + left.M13 * right.M32 + left.M14 * right.M42,
-                left.M11 * right.M13 + left.M12 * right.M23 + left.M13 * right.M33 + left.M14 * right.M43,
-                left.M11 * right.M14 + left.M12 * right.M24 + left.M13 * right.M34 + left.M14 * right.M44,
-                left.M21 * right.M11 + left.M22 * right.M21 + left.M23 * right.M31 + left.M24 * right.M41,
-                left.M21 * right.M12 + left.M22 * right.M22 + left.M23 * right.M32 + left.M24 * right.M42,
-                left.M21 * right.M13 + left.M22 * right.M23 + left.M23 * right.M33 + left.M24 * right.M43,
-                left.M21 * right.M14 + left.M22 * right.M24 + left.M23 * right.M34 + left.M24 * right.M44,
-                left.M31 * right.M11 + left.M32 * right.M21 + left.M33 * right.M31 + left.M34 * right.M41,
-                left.M31 * right.M12 + left.M32 * right.M22 + left.M33 * right.M32 + left.M34 * right.M42,
-                left.M31 * right.M13 + left.M32 * right.M23 + left.M33 * right.M33 + left.M34 * right.M43,
-                left.M31 * right.M14 + left.M32 * right.M24 + left.M33 * right.M34 + left.M34 * right.M44,
-                left.M41 * right.M11 + left.M42 * right.M21 + left.M43 * right.M31 + left.M44 * right.M41,
-                left.M41 * right.M12 + left.M42 * right.M22 + left.M43 * right.M32 + left.M44 * right.M42,
-                left.M41 * right.M13 + left.M42 * right.M23 + left.M43 * right.M33 + left.M44 * right.M43,
-                left.M41 * right.M14 + left.M42 * right.M24 + left.M43 * right.M34 + left.M44 * right.M44);
-        }
+                right.M11 * left.M11 + right.M12 * left.M21 + right.M13 * left.M31 + right.M14 * left.M41,
+                right.M11 * left.M12 + right.M12 * left.M22 + right.M13 * left.M32 + right.M14 * left.M42,
+                right.M11 * left.M13 + right.M12 * left.M23 + right.M13 * left.M33 + right.M14 * left.M43,
+                right.M11 * left.M14 + right.M12 * left.M24 + right.M13 * left.M34 + right.M14 * left.M44,
+                right.M21 * left.M11 + right.M22 * left.M21 + right.M23 * left.M31 + right.M24 * left.M41,
+                right.M21 * left.M12 + right.M22 * left.M22 + right.M23 * left.M32 + right.M24 * left.M42,
+                right.M21 * left.M13 + right.M22 * left.M23 + right.M23 * left.M33 + right.M24 * left.M43,
+                right.M21 * left.M14 + right.M22 * left.M24 + right.M23 * left.M34 + right.M24 * left.M44,
+                right.M31 * left.M11 + right.M32 * left.M21 + right.M33 * left.M31 + right.M34 * left.M41,
+                right.M31 * left.M12 + right.M32 * left.M22 + right.M33 * left.M32 + right.M34 * left.M42,
+                right.M31 * left.M13 + right.M32 * left.M23 + right.M33 * left.M33 + right.M34 * left.M43,
+                right.M31 * left.M14 + right.M32 * left.M24 + right.M33 * left.M34 + right.M34 * left.M44,
+                right.M41 * left.M11 + right.M42 * left.M21 + right.M43 * left.M31 + right.M44 * left.M41,
+                right.M41 * left.M12 + right.M42 * left.M22 + right.M43 * left.M32 + right.M44 * left.M42,
+                right.M41 * left.M13 + right.M42 * left.M23 + right.M43 * left.M33 + right.M44 * left.M43,
+                right.M41 * left.M14 + right.M42 * left.M24 + right.M43 * left.M34 + right.M44 * left.M44);
+		}
 
         #endregion
 
