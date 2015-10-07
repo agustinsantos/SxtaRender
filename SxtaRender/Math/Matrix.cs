@@ -5795,6 +5795,45 @@ namespace Sxta.Math
             return result;
         }
 
+		/// <summary>
+        /// Creates a matrix from a given angle around a given axis
+        /// </summary>
+        /// <param name="rad">the angle to rotate the matrix by</param>
+        /// <param name="x">the x component of the axis to rotate around</param>
+        /// <param name="y">the y component of the axis to rotate around</param>
+        /// <param name="z">the z component of the axis to rotate around</param>
+        /// <returns></returns>
+        public static Matrix4f CreateRotation(float rad, float x, float y, float z)
+        {
+            Matrix4f result = new Matrix4f();
+            double len = System.Math.Sqrt(x * x + y * y + z * z);
+            if (System.Math.Abs(len) < 0.000001)
+                throw new ArgumentOutOfRangeException("Small length of vector.");
+
+            len = 1 / len;
+            x = (float)(x * len);
+            y = (float)(y * len);
+            z = (float)(z * len);
+
+            double s = System.Math.Sin(rad);
+            double c = System.Math.Cos(rad);
+            double t = 1 - c;
+
+            // Construct the elements of the rotation matrix
+            result.M11 = (float)(x * x * t + c);
+            result.M12 = (float)(y * x * t + z * s);
+            result.M13 = (float)(z * x * t - y * s);
+            result.M21 = (float)(x * y * t - z * s);
+            result.M22 = (float)(y * y * t + c);
+            result.M23 = (float)(z * y * t + x * s);
+            result.M31 = (float)(x * z * t + y * s);
+            result.M32 = (float)(y * z * t - x * s);
+            result.M33 = (float)(z * z * t + c);
+            result.M44 = 1;
+
+            return result;
+        }
+
         #endregion
 
         #region CreateTranslation
@@ -8415,6 +8454,45 @@ namespace Sxta.Math
         {
             Matrix4d result;
             CreateRotationZ(angle, out result);
+            return result;
+        }
+
+		/// <summary>
+        /// Creates a matrix from a given angle around a given axis
+        /// </summary>
+        /// <param name="rad">the angle to rotate the matrix by</param>
+        /// <param name="x">the x component of the axis to rotate around</param>
+        /// <param name="y">the y component of the axis to rotate around</param>
+        /// <param name="z">the z component of the axis to rotate around</param>
+        /// <returns></returns>
+        public static Matrix4d CreateRotation(double rad, double x, double y, double z)
+        {
+            Matrix4d result = new Matrix4d();
+            double len = System.Math.Sqrt(x * x + y * y + z * z);
+            if (System.Math.Abs(len) < 0.000001)
+                throw new ArgumentOutOfRangeException("Small length of vector.");
+
+            len = 1 / len;
+            x = (double)(x * len);
+            y = (double)(y * len);
+            z = (double)(z * len);
+
+            double s = System.Math.Sin(rad);
+            double c = System.Math.Cos(rad);
+            double t = 1 - c;
+
+            // Construct the elements of the rotation matrix
+            result.M11 = (double)(x * x * t + c);
+            result.M12 = (double)(y * x * t + z * s);
+            result.M13 = (double)(z * x * t - y * s);
+            result.M21 = (double)(x * y * t - z * s);
+            result.M22 = (double)(y * y * t + c);
+            result.M23 = (double)(z * y * t + x * s);
+            result.M31 = (double)(x * z * t + y * s);
+            result.M32 = (double)(y * z * t - x * s);
+            result.M33 = (double)(z * z * t + c);
+            result.M44 = 1;
+
             return result;
         }
 

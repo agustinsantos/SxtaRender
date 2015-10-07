@@ -31,18 +31,26 @@ namespace Sxta.Render
 			/// </summary>
             public Parameters()
             {
+                // --------------- parameters related with transform
+                transformId = 0;
                 viewport = new Vector4i(0, 0, 0, 0);
                 depthRange = new Vector2f(0.0f, 1.0f);
                 clipDistances = 0;
-                transformId = 0;
+
+                // --------------- parameters related with clear
+                clearId = 0;
                 clearColor = new Vector4f(0.0f, 0.0f, 0.0f, 0.0f);
                 clearDepth = 1.0f;
                 clearStencil = 0;
-                clearId = 0;
+
+                // --------------- parameters related with point
+                pointId = 0;
                 pointSize = 1.0f;
                 pointFadeThresholdSize = 1.0f;
                 pointLowerLeftOrigin = false;
-                pointId = 0;
+
+                // --------------- parameters related with polygon
+                polygonId = 0;
                 lineWidth = 1.0f;
                 lineSmooth = false;
                 frontFaceCW = false;
@@ -51,17 +59,27 @@ namespace Sxta.Render
                 polygonSmooth = false;
                 polygonOffset = new Vector2f(0.0f, 0.0f);
                 polygonOffsets = new Vector3b(false, false, false);
-                polygonId = 0;
+
+                // --------------- parameters related with sample
+                multiSampleId = 0;
                 multiSample = true;
                 sampleAlphaToCoverage = false;
                 sampleAlphaToOne = false;
                 sampleCoverage = 1.0f;
                 sampleMask = 0xFFFFFFFF;
-                multiSampleId = 0;
+                sampleShading = false;
+                samplesMin = 0;
+
+                // TODO Posible bug. No ID is associated with these parameters
                 occlusionQuery = null;
                 occlusionMode = QueryMode.WAIT;
+
+                // TODO Posible bug. No ID is associated with these parameters
                 enableScissor = false;
                 scissor = new Vector4i(0, 0, 0, 0);
+
+                // --------------- parameters related with stencil
+                stencilId = 0;
                 enableStencil = false;
                 ffunc = Function.ALWAYS;
                 fref = 0;
@@ -75,22 +93,16 @@ namespace Sxta.Render
                 bfail = StencilOperation.KEEP;
                 bdpfail = StencilOperation.KEEP;
                 bdppass = StencilOperation.KEEP;
-                stencilId = 0;
+
+                // --------------- parameters related with depth test
+                depthId = 0;
                 enableDepth = false;
                 depth = Function.LESS;
+
+                // --------------- parameters related with blend
+                blendId = 0;
                 multiBlendEnable = false;
                 multiBlendEq = false;
-                color = new Vector4f(0.0f, 0.0f, 0.0f, 0.0f);
-                blendId = 0;
-                enableDither = false;
-                enableLogic = false;
-                logicOp = LogicOperation.COPY;
-                multiColorMask = false;
-                depthMask = true;
-                stencilMaskFront = 0xFFFFFFFF;
-                stencilMaskBack = 0xFFFFFFFF;
-                maskId = 0;
-
                 for (int i = 0; i < 4; ++i)
                 {
                     enableBlend[i] = false;
@@ -102,15 +114,33 @@ namespace Sxta.Render
                     dalpha[i] = BlendArgument.ZERO;
                     colorMask[i] = new Vector4b(true, true, true, true);
                 }
+
+                // TODO Posible bug. No ID is associated with these parameters
+                color = new Vector4f(0.0f, 0.0f, 0.0f, 0.0f);
+                enableDither = false;
+                enableLogic = false;
+                logicOp = LogicOperation.COPY;
+
+                // --------------- parameters related with mask
+                maskId = 0;
+                multiColorMask = false;
+                for (int i = 0; i < 4; ++i)
+                {
+                    colorMask[i] = new Vector4b(true, true, true, true);
+                }
+                depthMask = true;
+                stencilMaskFront = 0xFFFFFFFF;
+                stencilMaskBack = 0xFFFFFFFF;
+
             }
 
-			/// <summary>
-			/// The viewport that defines the destination area for FrameBuffer#draw.
+            /// <summary>
+            /// The viewport that defines the destination area for FrameBuffer#draw.
             /// This valueC is specific to this framebuffer instance and is
             /// automatically updated when the framebuffer is activated with
             /// FrameBuffer##set.
             /// (This corresponds to up, down, left and right planes).
-			/// </summary>
+            /// </summary>
             internal Vector4i viewport;
 
 			/// <summary>
@@ -404,10 +434,15 @@ namespace Sxta.Render
 
             // -------------
 
-			/// <summary>
-			/// If enabled, the depth buffer test discards the incoming fragment
+            /// <summary>
+            /// A unique Id incremented each time enableDepth, or depth change.
+            /// </summary>/
+            internal int depthId;
+
+            /// <summary>
+            /// If enabled, the depth buffer test discards the incoming fragment
             /// if a depth comparison fails. The comparison is specified with #depth.
-			/// </summary>
+            /// </summary>
             internal bool enableDepth;
 
 			/// <summary>
@@ -601,8 +636,7 @@ namespace Sxta.Render
                 }
 
                 // LINES -------------
-                if (lineWidth != p.lineWidth ||
-                    lineSmooth != p.lineSmooth)
+                if (lineId != p.lineId)
                 {
 #if OPENTK
                     glEnable(EnableCap.LineSmooth, p.lineSmooth);
@@ -795,8 +829,7 @@ namespace Sxta.Render
 #endif
                 }
                 // DEPTH TEST -------------
-                if (enableDepth != p.enableDepth ||
-                    depth != p.depth)
+                if (depthId != p.depthId)
                 {
 #if OPENTK
                     glEnable(EnableCap.DepthTest, p.enableDepth);
@@ -806,6 +839,7 @@ namespace Sxta.Render
                     glDepthFunc(EnumConversion.getFunction(p.depth));
 #endif
                 }
+
                 // BLENDING --------------
                 if (blendId != p.blendId)
                 {
@@ -2686,6 +2720,7 @@ namespace Sxta.Render
         public void setDepthTest(bool enableDepth)
         {
             parameters.enableDepth = enableDepth;
+            parameters.depthId = ++PARAMETER_ID;
             parametersChanged = true;
         }
 
@@ -2706,6 +2741,7 @@ namespace Sxta.Render
         {
             parameters.enableDepth = enableDepth;
             parameters.depth = depth;
+            parameters.depthId = ++PARAMETER_ID;
             parametersChanged = true;
         }
 

@@ -1877,6 +1877,45 @@ namespace Sxta.Math
             return result;
         }
 
+		/// <summary>
+        /// Creates a matrix from a given angle around a given axis
+        /// </summary>
+        /// <param name="rad">the angle to rotate the matrix by</param>
+        /// <param name="x">the x component of the axis to rotate around</param>
+        /// <param name="y">the y component of the axis to rotate around</param>
+        /// <param name="z">the z component of the axis to rotate around</param>
+        /// <returns></returns>
+        public static <#= mat4Name #> CreateRotation(<#= typeName #> rad, <#= typeName #> x, <#= typeName #> y, <#= typeName #> z)
+        {
+            <#= mat4Name #> result = new <#= mat4Name #>();
+            double len = System.Math.Sqrt(x * x + y * y + z * z);
+            if (System.Math.Abs(len) < 0.000001)
+                throw new ArgumentOutOfRangeException("Small length of vector.");
+
+            len = 1 / len;
+            x = (<#= typeName #>)(x * len);
+            y = (<#= typeName #>)(y * len);
+            z = (<#= typeName #>)(z * len);
+
+            double s = System.Math.Sin(rad);
+            double c = System.Math.Cos(rad);
+            double t = 1 - c;
+
+            // Construct the elements of the rotation matrix
+            result.M11 = (<#= typeName #>)(x * x * t + c);
+            result.M12 = (<#= typeName #>)(y * x * t + z * s);
+            result.M13 = (<#= typeName #>)(z * x * t - y * s);
+            result.M21 = (<#= typeName #>)(x * y * t - z * s);
+            result.M22 = (<#= typeName #>)(y * y * t + c);
+            result.M23 = (<#= typeName #>)(z * y * t + x * s);
+            result.M31 = (<#= typeName #>)(x * z * t + y * s);
+            result.M32 = (<#= typeName #>)(y * z * t - x * s);
+            result.M33 = (<#= typeName #>)(z * z * t + c);
+            result.M44 = 1;
+
+            return result;
+        }
+
         #endregion
 
         #region CreateTranslation

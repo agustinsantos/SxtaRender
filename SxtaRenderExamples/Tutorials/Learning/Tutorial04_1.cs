@@ -165,7 +165,7 @@ namespace Examples.Tutorials
         /// <remarks>There is no need to call the base implementation.</remarks>
         protected override void OnRenderFrame(FrameEventArgs e)
         {
-            fb.clear(true, true, true);
+            fb.clear(true, false, false);
 
             fb.draw(p, primitivePoints);
             fb.draw(p, primitiveLines);

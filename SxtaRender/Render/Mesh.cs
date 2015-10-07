@@ -14,27 +14,27 @@ namespace Sxta.Render
         where vertex : struct
         where index : struct
     {
- 
 
-		/// <summary>
-		/// Creates a new mesh.
-		/// Initializes a new instance of the <see cref="Sxta.Render.Mesh`2"/> class.
-		/// </summary>
-		/// <param name='vertexsize'>
-		/// Vertexsize.
-		/// </param>
-		/// <param name='m'>
-		/// M how the list of vertices of this mesh must be interpreted.
-		/// </param>
-		/// <param name='usage'>
-		/// Usage how the data should be handled.
-		/// </param>
-		/// <param name='vertexCount'>
-		/// Vertex count the initial capacity of the vertex array.
-		/// </param>
-		/// <param name='indiceCount'>
-		/// Indice count the initial capacity of the indice array.
-		/// </param>
+
+        /// <summary>
+        /// Creates a new mesh.
+        /// Initializes a new instance of the <see cref="Sxta.Render.Mesh`2"/> class.
+        /// </summary>
+        /// <param name='vertexsize'>
+        /// Vertexsize.
+        /// </param>
+        /// <param name='m'>
+        /// M how the list of vertices of this mesh must be interpreted.
+        /// </param>
+        /// <param name='usage'>
+        /// Usage how the data should be handled.
+        /// </param>
+        /// <param name='vertexCount'>
+        /// Vertex count the initial capacity of the vertex array.
+        /// </param>
+        /// <param name='indiceCount'>
+        /// Indice count the initial capacity of the indice array.
+        /// </param>
         public Mesh(int vertexsize, MeshMode m, MeshUsage usage, int vertexCount = 4, int indiceCount = 4)
             : this(vertexsize, 0, m, usage, vertexCount, indiceCount)
         {
@@ -62,28 +62,28 @@ namespace Sxta.Render
         }
 
 
-		/// <summary>
-		/// Creates a new mesh.
-		/// Initializes a new instance of the <see cref="Sxta.Render.Mesh`2"/> class.
-		/// </summary>
-		/// <param name='vertexsize'>
-		/// Vertexsize.
-		/// </param>
-		/// <param name='target'>
-		/// Target the mesh buffers wrapped by this mesh.
-		/// </param>
-		/// <param name='m'>
-		/// M how the list of vertices of this mesh must be interpreted.
-		/// </param>
-		/// <param name='usage'>
-		/// Usage how the data should be handled.
-		/// </param>
-		/// <param name='vertexCount'>
-		/// Vertex count the initial capacity of the vertex array.
-		/// </param>
-		/// <param name='indiceCount'>
-		/// Indice count the initial capacity of the indice array.
-		/// </param>
+        /// <summary>
+        /// Creates a new mesh.
+        /// Initializes a new instance of the <see cref="Sxta.Render.Mesh`2"/> class.
+        /// </summary>
+        /// <param name='vertexsize'>
+        /// Vertexsize.
+        /// </param>
+        /// <param name='target'>
+        /// Target the mesh buffers wrapped by this mesh.
+        /// </param>
+        /// <param name='m'>
+        /// M how the list of vertices of this mesh must be interpreted.
+        /// </param>
+        /// <param name='usage'>
+        /// Usage how the data should be handled.
+        /// </param>
+        /// <param name='vertexCount'>
+        /// Vertex count the initial capacity of the vertex array.
+        /// </param>
+        /// <param name='indiceCount'>
+        /// Indice count the initial capacity of the indice array.
+        /// </param>
         public Mesh(int vertexsize, MeshBuffers target, MeshMode m, MeshUsage usage, int vertexCount = 4, int indiceCount = 4)
         {
             this.vertexSize = vertexsize;
@@ -94,21 +94,23 @@ namespace Sxta.Render
             vertices = new vertex[vertexCount];
             verticesLength = vertexCount;
             verticesCount = 0;
+
             indices = new index[indiceCount];
             indicesLength = indiceCount;
             indicesCount = 0;
+
             primitiveRestart = -1;
             patchVertices = 0;
             vertexDataHasChanged = true;
             indexDataHasChanged = true;
         }
 
-        
-		/// <summary>
-		/// Deletes this mesh.
-		/// Releases unmanaged resources and performs other cleanup operations before the <see cref="Sxta.Render.Mesh`2"/> is
-		/// reclaimed by garbage collection.
-		/// </summary>
+
+        /// <summary>
+        /// Deletes this mesh.
+        /// Releases unmanaged resources and performs other cleanup operations before the <see cref="Sxta.Render.Mesh`2"/> is
+        /// reclaimed by garbage collection.
+        /// </summary>
         ~Mesh()
         {
             // Do not re-create Dispose clean-up code here. 
@@ -117,90 +119,90 @@ namespace Sxta.Render
             Dispose(false);
         }
 
-		/// <summary>
-		/// Returns the interpretation mode of the vertices of this mesh.
-		/// Gets the mode.
-		/// </summary>
-		/// <returns>
-		/// The mode.
-		/// </returns>
+        /// <summary>
+        /// Returns the interpretation mode of the vertices of this mesh.
+        /// Gets the mode.
+        /// </summary>
+        /// <returns>
+        /// The mode.
+        /// </returns>
         public MeshMode getMode()
         {
             return m;
         }
 
-        
-		/// <summary>
-		/// Gets the vertex count.
-		/// </summary>
-		/// <returns>
-		/// Returns the number of vertices in this mesh.
-		/// The vertex count.
-		/// </returns>
+
+        /// <summary>
+        /// Gets the vertex count.
+        /// </summary>
+        /// <returns>
+        /// Returns the number of vertices in this mesh.
+        /// The vertex count.
+        /// </returns>
         public int getVertexCount()
         {
             return verticesCount;
         }
 
-		/// <summary>
-		/// eturns a vertex of this mesh.
-		/// </summary>
-		/// <returns>
-		/// The vertex.
-		/// </returns>
-		/// <param name='i'>
-		/// I a vertex index.
-		/// </param>
+        /// <summary>
+        /// eturns a vertex of this mesh.
+        /// </summary>
+        /// <returns>
+        /// The vertex.
+        /// </returns>
+        /// <param name='i'>
+        /// I a vertex index.
+        /// </param>
         public vertex getVertex(int i)
         {
             return vertices[i];
         }
 
-		/// <summary>
-		/// Returns the number of indices of this mesh.
-		/// Gets the indice count.
-		/// </summary>
-		/// <returns>
-		/// The indice count.
-		/// </returns>
+        /// <summary>
+        /// Returns the number of indices of this mesh.
+        /// Gets the indice count.
+        /// </summary>
+        /// <returns>
+        /// The indice count.
+        /// </returns>
         public int getIndiceCount()
         {
             return indicesCount;
         }
 
-        
-		/// <summary>
-		///  Returns the vertex index used for primitive restart. -1 means no restart.
-		/// Gets the primitive restart.
-		/// </summary>
-		/// <returns>
-		/// The primitive restart.
-		/// </returns>
+
+        /// <summary>
+        ///  Returns the vertex index used for primitive restart. -1 means no restart.
+        /// Gets the primitive restart.
+        /// </summary>
+        /// <returns>
+        /// The primitive restart.
+        /// </returns>
         public int getPrimitiveRestart()
         {
             return primitiveRestart;
         }
 
-		/// <summary> 
-		/// Returns the number of vertices per patch in this mesh, if #getMode() is PATCHES.
-		/// Gets the patch vertices.
-		/// </summary>
-		/// <returns>
-		/// The patch vertices.
-		/// </returns>
+        /// <summary> 
+        /// Returns the number of vertices per patch in this mesh, if #getMode() is PATCHES.
+        /// Gets the patch vertices.
+        /// </summary>
+        /// <returns>
+        /// The patch vertices.
+        /// </returns>
         public int getPatchVertices()
         {
             return patchVertices;
         }
 
-      
-		
-		/// <summary>
-		/// Returns the MeshBuffers wrapped by this Mesh instance.
-		/// </summary>
-		/// <returns>
-		/// The buffers.
-		/// </returns>
+
+
+        /// <summary>
+        /// Returns the MeshBuffers wrapped by this Mesh instance.
+        /// </summary>
+        /// <returns>
+        /// The buffers.
+        /// </returns>
         public MeshBuffers getBuffers()
         {
             if (!created)
@@ -228,24 +230,24 @@ namespace Sxta.Render
         }
 
 
-		/// <summary>
-		/// Declares an attribute of the vertices of this mesh.
-		/// </summary>
-		/// <returns>
-		/// The attribute type.
-		/// </returns>
-		/// <param name='id'>
-		/// Identifier  a vertex attribute index.
-		/// </param>
-		/// <param name='size'>
-		/// Size the number of components in attributes of this kind.
-		/// </param>
-		/// <param name='type'>
-		/// Type the type of each component in attributes of this kind.
-		/// </param>
-		/// <param name='norm'>
-		/// Norm if the attribute components must be normalized to 0..1.
-		/// </param>
+        /// <summary>
+        /// Declares an attribute of the vertices of this mesh.
+        /// </summary>
+        /// <returns>
+        /// The attribute type.
+        /// </returns>
+        /// <param name='id'>
+        /// Identifier  a vertex attribute index.
+        /// </param>
+        /// <param name='size'>
+        /// Size the number of components in attributes of this kind.
+        /// </param>
+        /// <param name='type'>
+        /// Type the type of each component in attributes of this kind.
+        /// </param>
+        /// <param name='norm'>
+        /// Norm if the attribute components must be normalized to 0..1.
+        /// </param>
         public void addAttributeType(int id, int size, AttributeType type, bool norm)
         {
             buffers.addAttributeBuffer(id, size, vertexSize, type, norm);
@@ -253,20 +255,20 @@ namespace Sxta.Render
 
 
 
-		/// <summary>
-		/// Sets the capacity of the vertex and indice array of this mesh. Does
+        /// <summary>
+        /// Sets the capacity of the vertex and indice array of this mesh. Does
         /// nothing if the provided sizes are smaller than the current ones.
-		/// Sets the capacity.
-		/// </summary>
-		/// <returns>
-		/// The capacity.
-		/// </returns>
-		/// <param name='vertexCount'>
-		/// Vertex count the new vertex array capacity.
-		/// </param>
-		/// <param name='indiceCount'>
-		/// Indice count the new indice array capacity.
-		/// </param>
+        /// Sets the capacity.
+        /// </summary>
+        /// <returns>
+        /// The capacity.
+        /// </returns>
+        /// <param name='vertexCount'>
+        /// Vertex count the new vertex array capacity.
+        /// </param>
+        /// <param name='indiceCount'>
+        /// Indice count the new indice array capacity.
+        /// </param>
         public void setCapacity(int vertexCount, int indiceCount)
         {
             if (verticesCount < vertexCount)
@@ -280,15 +282,15 @@ namespace Sxta.Render
         }
 
 
-		/// <summary>
-		/// Adds a vertex to this mesh.
-		/// </summary>
-		/// <returns>
-		/// The vertex.
-		/// </returns>
-		/// <param name='v'>
-		/// V v a vertex.
-		/// </param>
+        /// <summary>
+        /// Adds a vertex to this mesh.
+        /// </summary>
+        /// <returns>
+        /// The vertex.
+        /// </returns>
+        /// <param name='v'>
+        /// V v a vertex.
+        /// </param>
         public void addVertex(vertex v)
         {
             if (verticesCount == verticesLength)
@@ -300,18 +302,18 @@ namespace Sxta.Render
         }
 
 
-		/// <summary>
-		/// Adds vertices this mesh.
-		/// </summary>
-		/// <returns>
-		/// The vertices.
-		/// </returns>
-		/// <param name='v'>
-		/// V a pointer to a vertex array.
-		/// </param>
-		/// <param name='count'>
-		/// Count count number of vertices
-		/// </param>
+        /// <summary>
+        /// Adds vertices this mesh.
+        /// </summary>
+        /// <returns>
+        /// The vertices.
+        /// </returns>
+        /// <param name='v'>
+        /// V a pointer to a vertex array.
+        /// </param>
+        /// <param name='count'>
+        /// Count count number of vertices
+        /// </param>
         public void addVertices(vertex[] v, int count)
         {
             for (int i = 0; i < count; ++i)
@@ -320,16 +322,16 @@ namespace Sxta.Render
             }
         }
 
- 
-		/// <summary>
-		/// Adds an indice to this mesh.
-		/// </summary>
-		/// <returns>
-		/// The indice.
-		/// </returns>
-		/// <param name='i'>
-		/// I a vertex index.
-		/// </param>
+
+        /// <summary>
+        /// Adds an indice to this mesh.
+        /// </summary>
+        /// <returns>
+        /// The indice.
+        /// </returns>
+        /// <param name='i'>
+        /// I a vertex index.
+        /// </param>
         public void addIndice(index i)
         {
             if (indicesCount == indicesLength)
@@ -340,94 +342,113 @@ namespace Sxta.Render
             indexDataHasChanged = true;
         }
 
-     
-		/// <summary>
-		/// Sets the interpretation mode of the vertices of this mesh.
+        /// <summary>
+		/// Adds an indice to this mesh.
 		/// </summary>
 		/// <returns>
-		/// The mode.
+		/// The indice.
 		/// </returns>
-		/// <param name='mode'>
-		/// Mode.
+		/// <param name='i'>
+		/// I a vertex index.
 		/// </param>
+        public void addIndices(index[] arr)
+        {
+            while (indicesCount + arr.Length >= indicesLength)
+            {
+                resizeIndices(2 * indicesLength);
+            }
+            Array.Copy(arr, 0, indices, indicesCount, arr.Length);
+            indicesCount += arr.Length;
+            indexDataHasChanged = true;
+        }
+
+        /// <summary>
+        /// Sets the interpretation mode of the vertices of this mesh.
+        /// </summary>
+        /// <returns>
+        /// The mode.
+        /// </returns>
+        /// <param name='mode'>
+        /// Mode.
+        /// </param>
         public void setMode(MeshMode mode)
         {
             m = mode;
         }
 
-     
-		/// <summary>
-		/// Changes a vertex of this mesh.
-		/// </summary>
-		/// <returns>
-		/// The vertex.
-		/// </returns>
-		/// <param name='i'>
-		/// I.
-		/// </param>
-		/// <param name='v'>
-		/// V.
-		/// </param>
+
+        /// <summary>
+        /// Changes a vertex of this mesh.
+        /// </summary>
+        /// <returns>
+        /// The vertex.
+        /// </returns>
+        /// <param name='i'>
+        /// I.
+        /// </param>
+        /// <param name='v'>
+        /// V.
+        /// </param>
         public void setVertex(int i, vertex v)
         {
             vertices[i] = v;
             vertexDataHasChanged = true;
         }
 
-		/// <summary>
-		/// Changes an indice of this mesh.
-		/// </summary>
-		/// <returns>
-		/// The indice.
-		/// </returns>
-		/// <param name='i'>
-		/// I.
-		/// </param>
-		/// <param name='ind'>
-		/// Ind.
-		/// </param>
+        /// <summary>
+        /// Changes an indice of this mesh.
+        /// </summary>
+        /// <returns>
+        /// The indice.
+        /// </returns>
+        /// <param name='i'>
+        /// I.
+        /// </param>
+        /// <param name='ind'>
+        /// Ind.
+        /// </param>
         public void setIndice(int i, index ind)
         {
             indices[i] = ind;
             indexDataHasChanged = true;
         }
 
-        
-		/// <summary>
-		/// Sets the vertex index used for primitive restart. -1 means no restart.
-		/// </summary>
-		/// <returns>
-		/// The primitive restart.
-		/// </returns>
-		/// <param name='restart'>
-		/// Restart.
-		/// </param>
+
+        /// <summary>
+        /// Sets the vertex index used for primitive restart. -1 means no restart.
+        /// </summary>
+        /// <returns>
+        /// The primitive restart.
+        /// </returns>
+        /// <param name='restart'>
+        /// Restart.
+        /// </param>
         public void setPrimitiveRestart(int restart)
         {
             primitiveRestart = restart;
         }
 
 
-     
-		/// <summary>
-		/// Sets the number of vertices per patch in this mesh, if #getMode() is PATCHES.
-		/// </summary>
-		/// <returns>
-		/// The patch vertices.
-		/// </returns>
-		/// <param name='vertices'>
-		/// Vertices.
-		/// </param>
+
+        /// <summary>
+        /// Sets the number of vertices per patch in this mesh, if #getMode() is PATCHES.
+        /// </summary>
+        /// <returns>
+        /// The patch vertices.
+        /// </returns>
+        /// <param name='vertices'>
+        /// Vertices.
+        /// </param>
         public void setPatchVertices(int vertices)
         {
             patchVertices = vertices;
         }
 
-        
-		/// <summary>
-		/// Removes all the vertices and indices of this mesh.
-		/// Clear this instance.
-		/// </summary>
+
+        /// <summary>
+        /// Removes all the vertices and indices of this mesh.
+        /// Clear this instance.
+        /// </summary>
         public void clear()
         {
             verticesCount = 0;
@@ -442,13 +463,13 @@ namespace Sxta.Render
             }
         }
 
-    
-		/// <summary>
-		/// Clears the MeshBuffers.
-		/// </summary>
-		/// <returns>
-		/// The buffers.
-		/// </returns>
+
+        /// <summary>
+        /// Clears the MeshBuffers.
+        /// </summary>
+        /// <returns>
+        /// The buffers.
+        /// </returns>
         public void clearBuffers()
         {
             if (created)
@@ -459,110 +480,110 @@ namespace Sxta.Render
         }
 
 
-		/// <summary>
-		/// The usage of this mesh.
-		/// </summary>
+        /// <summary>
+        /// The usage of this mesh.
+        /// </summary>
         private MeshUsage usage;
 
-		/// <summary>
-		/// The Buffer containing the vertices data.
-		/// </summary>
+        /// <summary>
+        /// The Buffer containing the vertices data.
+        /// </summary>
         private Buffer vertexBuffer;
 
-     
-		/// <summary>
-		/// The Buffer containing the indices data.
-		/// </summary>
+
+        /// <summary>
+        /// The Buffer containing the indices data.
+        /// </summary>
         private Buffer indexBuffer;
 
-     
-		/// <summary>
-		/// True if the vertex data has changed since last call to #uploadVertexDataToGPU.
-		/// </summary>
+
+        /// <summary>
+        /// True if the vertex data has changed since last call to #uploadVertexDataToGPU.
+        /// </summary>
         private bool vertexDataHasChanged;
 
-     
-		/// <summary>
-		/// True if the index data has changed since last call to #uploadIndexDataToGPU.
-		/// </summary>
+
+        /// <summary>
+        /// True if the index data has changed since last call to #uploadIndexDataToGPU.
+        /// </summary>
         private bool indexDataHasChanged;
 
-		/// <summary>
-		///  True if the CPU or GPU mesh buffers have been created.
-		/// </summary>
+        /// <summary>
+        ///  True if the CPU or GPU mesh buffers have been created.
+        /// </summary>
         private bool created;
 
-     
-		/// <summary>
-		///  How the list of vertices of this mesh must be interpreted.
-		/// </summary>
+
+        /// <summary>
+        ///  How the list of vertices of this mesh must be interpreted.
+        /// </summary>
         private MeshMode m;
 
-      
-		/// <summary>
-		/// The vertices of this mesh.
-		/// </summary>
+
+        /// <summary>
+        /// The vertices of this mesh.
+        /// </summary>
         private vertex[] vertices;
 
-    
-		/// <summary>
-		///  The capacity of the vertex array.
-		/// </summary>
+
+        /// <summary>
+        ///  The capacity of the vertex array.
+        /// </summary>
         private int verticesLength;
 
-      
-		/// <summary>
-		/// The actual number of vertices.
-		/// </summary>
+
+        /// <summary>
+        /// The actual number of vertices.
+        /// </summary>
         private int verticesCount;
 
-		/// <summary>
-		/// The indices of this mesh.
-		/// </summary>
+        /// <summary>
+        /// The indices of this mesh.
+        /// </summary>
         private index[] indices;
 
-     
-		/// <summary>
-		/// The capacity of the indice array.
-		/// </summary>
+
+        /// <summary>
+        /// The capacity of the indice array.
+        /// </summary>
         private int indicesLength;
 
-		/// <summary>
-		/// The actual number of indices.
-		/// </summary>
+        /// <summary>
+        /// The actual number of indices.
+        /// </summary>
         private int indicesCount;
 
-      
-		/// <summary>
-		/// The vertex index used for primitive restart. -1 means no restart.
-		/// </summary>
+
+        /// <summary>
+        /// The vertex index used for primitive restart. -1 means no restart.
+        /// </summary>
         private int primitiveRestart;
 
-       
-		/// <summary>
-		/// The number of vertices per patch in this mesh, if #getMode() is PATCHES.
-		/// </summary>
+
+        /// <summary>
+        /// The number of vertices per patch in this mesh, if #getMode() is PATCHES.
+        /// </summary>
         private int patchVertices;
 
-      
-		/// <summary>
-		/// The MeshBuffers wrapped by this Mesh.
-		/// </summary>
+
+        /// <summary>
+        /// The MeshBuffers wrapped by this Mesh.
+        /// </summary>
         private MeshBuffers buffers;
 
         private readonly int vertexSize;
         private readonly int indexSize;
 
-     
-		/// <summary>
-		/// Resizes the vertex array to expand its capacity.
-		/// </summary>
-		/// <returns>
-		/// The vertices.
-		/// </returns>
-		/// <param name='newSize'>
-		/// New size.
-		/// </param>
+
+        /// <summary>
+        /// Resizes the vertex array to expand its capacity.
+        /// </summary>
+        /// <returns>
+        /// The vertices.
+        /// </returns>
+        /// <param name='newSize'>
+        /// New size.
+        /// </param>
         private void resizeVertices(int newSize)
         {
 #if DEBUG
@@ -579,16 +600,16 @@ namespace Sxta.Render
             }
         }
 
-      
-		/// <summary>
-		/// Resizes the indice array to expand its capacity.
-		/// </summary>
-		/// <returns>
-		/// The indices.
-		/// </returns>
-		/// <param name='newSize'>
-		/// New size.
-		/// </param>
+
+        /// <summary>
+        /// Resizes the indice array to expand its capacity.
+        /// </summary>
+        /// <returns>
+        /// The indices.
+        /// </returns>
+        /// <param name='newSize'>
+        /// New size.
+        /// </param>
         private void resizeIndices(int newSize)
         {
 #if DEBUG
@@ -606,14 +627,14 @@ namespace Sxta.Render
         }
 
 
-      
-		/// <summary>
-		/// Creates the CPU of GPU buffers based on the current content of the
+
+        /// <summary>
+        /// Creates the CPU of GPU buffers based on the current content of the
         /// vertex and indice arrays.
-		/// </summary>
-		/// <returns>
-		/// The buffers.
-		/// </returns>
+        /// </summary>
+        /// <returns>
+        /// The buffers.
+        /// </returns>
         private void createBuffers()
         {
             if (usage == MeshUsage.GPU_STATIC || usage == MeshUsage.GPU_DYNAMIC || usage == MeshUsage.GPU_STREAM)
@@ -674,15 +695,15 @@ namespace Sxta.Render
         }
 
 
-		/// <summary>
-		/// Send the vertices to the GPU.
-		/// </summary>
-		/// <returns>
-		/// The vertex data to GP.
-		/// </returns>
-		/// <param name='u'>
-		/// U.
-		/// </param>
+        /// <summary>
+        /// Send the vertices to the GPU.
+        /// </summary>
+        /// <returns>
+        /// The vertex data to GP.
+        /// </returns>
+        /// <param name='u'>
+        /// U.
+        /// </param>
         private void uploadVertexDataToGPU(BufferUsage u)
         {
             GPUBuffer vb = vertexBuffer as GPUBuffer;
@@ -692,15 +713,15 @@ namespace Sxta.Render
 
         }
 
-		/// <summary>
-		/// Send the indices to the GPU.
-		/// </summary>
-		/// <returns>
-		/// The index data to GP.
-		/// </returns>
-		/// <param name='u'>
-		/// U.
-		/// </param>
+        /// <summary>
+        /// Send the indices to the GPU.
+        /// </summary>
+        /// <returns>
+        /// The index data to GP.
+        /// </returns>
+        /// <param name='u'>
+        /// U.
+        /// </param>
         private void uploadIndexDataToGPU(BufferUsage u)
         {
             GPUBuffer ib = indexBuffer as GPUBuffer;
@@ -755,7 +776,7 @@ namespace Sxta.Render
                     ((GPUBuffer)vertexBuffer).Dispose();
                 if (indexBuffer != null && indexBuffer is GPUBuffer)
                     ((GPUBuffer)indexBuffer).Dispose();
-                
+
                 Debug.Assert(FrameBuffer.getError() == ErrorCode.NoError);
 
                 // Note disposing has been done.

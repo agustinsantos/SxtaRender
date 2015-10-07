@@ -12,7 +12,7 @@ using System.Drawing;
 namespace Examples.Tutorials
 {
     /// <summary>
-    /// Demonstrates the GameWindow class.
+    /// Demonstrates the several drawing primitives using the same data using color.
     /// </summary>
     [Example("Example 4.2: Drawing with color", ExampleCategory.Learning, "4. Drawing", 1, Source = "Tutorial04_2", Documentation = "Tutorial04_2")]
     public class TutorialLearning04_2 : GameWindow
@@ -171,7 +171,7 @@ namespace Examples.Tutorials
         /// <remarks>There is no need to call the base implementation.</remarks>
         protected override void OnRenderFrame(FrameEventArgs e)
         {
-            fb.clear(true, true, true);
+            fb.clear(true, false, false);
 
             fb.draw(p, primitivePoints);
             fb.draw(p, primitiveLines);
