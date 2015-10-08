@@ -64,6 +64,10 @@
     <Compile Include="Tutorials\Learning\Tutorial03_1.cs" />
     <Compile Include="Tutorials\Learning\Tutorial03_4.cs" />
     <Compile Include="Tutorials\Learning\Tutorial03_6.cs" />
+    <Compile Include="Tutorials\Learning\Tutorial05_2.cs" />
+    <Compile Include="Tutorials\Learning\Tutorial05_1.cs" />
+    <Compile Include="Tutorials\Learning\Tutorial04_9.cs" />
+    <Compile Include="Tutorials\Learning\Tutorial04_8.cs" />
     <Compile Include="Tutorials\Learning\Tutorial04_7.cs" />
     <Compile Include="Tutorials\Learning\Tutorial04_6.cs" />
     <Compile Include="Tutorials\Learning\Tutorial04_5.cs" />
@@ -256,6 +260,10 @@
     <None Include="Tutorials\Learning\Tutorial03_4.rtf" />
     <None Include="Tutorials\Learning\Tutorial03_5.rtf" />
     <None Include="Tutorials\Learning\Tutorial03_6.rtf" />
+    <None Include="Tutorials\Learning\Tutorial05_2.rtf" />
+    <None Include="Tutorials\Learning\Tutorial05_1.rtf" />
+    <None Include="Tutorials\Learning\Tutorial04_9.rtf" />
+    <None Include="Tutorials\Learning\Tutorial04_8.rtf" />
     <None Include="Tutorials\Learning\Tutorial04_7.rtf" />
     <None Include="Tutorials\Learning\Tutorial04_6.rtf" />
     <None Include="Tutorials\Learning\Tutorial04_5.rtf" />
@@ -359,6 +367,9 @@
     <Content Include="Resources\BmpSuite\rgb32bf.bmp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Resources\Textures\BrickWall.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\Methods\cameraMethod.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
@@ -459,6 +470,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\Texture-512x512-RGBA.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Textures\BrickWall2.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Textures\BrickWall2_Normal.JPG">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\Textures\checker.png">
