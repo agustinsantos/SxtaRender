@@ -64,6 +64,8 @@
     <Compile Include="Tutorials\Learning\Tutorial03_1.cs" />
     <Compile Include="Tutorials\Learning\Tutorial03_4.cs" />
     <Compile Include="Tutorials\Learning\Tutorial03_6.cs" />
+    <Compile Include="Tutorials\Learning\Tutorial04_7.cs" />
+    <Compile Include="Tutorials\Learning\Tutorial04_6.cs" />
     <Compile Include="Tutorials\Learning\Tutorial04_5.cs" />
     <Compile Include="Tutorials\Learning\Tutorial04_4.cs" />
     <Compile Include="Tutorials\Learning\Tutorial04_3.cs" />
@@ -254,6 +256,8 @@
     <None Include="Tutorials\Learning\Tutorial03_4.rtf" />
     <None Include="Tutorials\Learning\Tutorial03_5.rtf" />
     <None Include="Tutorials\Learning\Tutorial03_6.rtf" />
+    <None Include="Tutorials\Learning\Tutorial04_7.rtf" />
+    <None Include="Tutorials\Learning\Tutorial04_6.rtf" />
     <None Include="Tutorials\Learning\Tutorial04_5.rtf" />
     <None Include="Tutorials\Learning\Tutorial04_4.rtf" />
     <None Include="Tutorials\Learning\Tutorial04_3.rtf" />

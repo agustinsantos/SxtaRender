@@ -13,12 +13,12 @@ using MathHelper = Sxta.Math.MathHelper;
 namespace Examples.Tutorials
 {
     /// <summary>
-    /// Demonstrates how to draw a simple figure (cube) in 3D using multiple buffers
+    /// Demonstrates how to draw the same figure (cube) multiple time
     /// </summary>
-    [Example("Example 4.5: Drawing in 3D (Several Buffers)", ExampleCategory.Learning, "4. Drawing", 2, Source = "Tutorial04_5", Documentation = "Tutorial04_5")]
-    public class TutorialLearning04_5 : GameWindow
+    [Example("Example 4.6: Drawing multimples cubes", ExampleCategory.Learning, "4. Drawing", 1, Source = "Tutorial04_6", Documentation = "Tutorial04_6")]
+    public class TutorialLearning04_6 : GameWindow
     {
-        public TutorialLearning04_5()
+        public TutorialLearning04_6()
             : base(600, 600)
         {
             Keyboard.KeyDown += Keyboard_KeyDown;
@@ -64,84 +64,40 @@ namespace Examples.Tutorials
             Matrix4f projection = Matrix4f.CreatePerspectiveFieldOfView((float)MathHelper.ToRadians(60), (float)this.Width / (float)this.Height, 0.01f, 100.0f);
             uPMatrix.set(projection);
 
-            Vector3f[] positions = new Vector3f[] {
-                    new Vector3f(-1, -1, -1),
-                    new Vector3f(1, -1, -1),
-                    new Vector3f(1, 1, -1),
-                    new Vector3f(-1, 1, -1),
+            mesh = new Mesh<Vertex_V3C3f, uint>(Vertex_V3C3f.SizeInBytes, sizeof(uint), MeshMode.TRIANGLES, MeshUsage.GPU_STATIC);
+            mesh.addAttributeType(0, 3, AttributeType.A32F, false);
+            mesh.addAttributeType(1, 3, AttributeType.A32F, false);
 
-                    new Vector3f(-1, -1, 1),
-                    new Vector3f(1, -1, 1),
-                    new Vector3f(1, 1, 1),
-                    new Vector3f(-1, 1, 1),
+            mesh.addVertex(new Vertex_V3C3f() { Position = new Vector3f(-1, -1, -1), Color = new Vector3f(1, 1, 0) });
+            mesh.addVertex(new Vertex_V3C3f() { Position = new Vector3f(1, -1, -1), Color = new Vector3f(1, 1, 0) });
+            mesh.addVertex(new Vertex_V3C3f() { Position = new Vector3f(1, 1, -1), Color = new Vector3f(1, 1, 0) });
+            mesh.addVertex(new Vertex_V3C3f() { Position = new Vector3f(-1, 1, -1), Color = new Vector3f(1, 1, 0) });
 
-                    new Vector3f(-1, -1, -1),
-                    new Vector3f(-1, 1, -1),
-                    new Vector3f(-1, 1, 1),
-                    new Vector3f(-1, -1, 1),
+            mesh.addVertex(new Vertex_V3C3f() { Position = new Vector3f(-1, -1, 1), Color = new Vector3f(0, 0, 1) });
+            mesh.addVertex(new Vertex_V3C3f() { Position = new Vector3f(1, -1, 1), Color = new Vector3f(0, 0, 1) });
+            mesh.addVertex(new Vertex_V3C3f() { Position = new Vector3f(1, 1, 1), Color = new Vector3f(0, 0, 1) });
+            mesh.addVertex(new Vertex_V3C3f() { Position = new Vector3f(-1, 1, 1), Color = new Vector3f(0, 0, 1) });
 
-                    new Vector3f(1, -1, -1),
-                    new Vector3f(1, 1, -1),
-                    new Vector3f(1, 1, 1),
-                    new Vector3f(1, -1, 1),
+            mesh.addVertex(new Vertex_V3C3f() { Position = new Vector3f(-1, -1, -1), Color = new Vector3f(0, 1, 1) });
+            mesh.addVertex(new Vertex_V3C3f() { Position = new Vector3f(-1, 1, -1), Color = new Vector3f(0, 1, 1) });
+            mesh.addVertex(new Vertex_V3C3f() { Position = new Vector3f(-1, 1, 1), Color = new Vector3f(0, 1, 1) });
+            mesh.addVertex(new Vertex_V3C3f() { Position = new Vector3f(-1, -1, 1), Color = new Vector3f(0, 1, 1) });
 
-                    new Vector3f(-1, -1, -1),
-                    new Vector3f(-1, -1, 1),
-                    new Vector3f(1, -1, 1),
-                    new Vector3f(1, -1, -1),
+            mesh.addVertex(new Vertex_V3C3f() { Position = new Vector3f(1, -1, -1), Color = new Vector3f(1, 0, 0) });
+            mesh.addVertex(new Vertex_V3C3f() { Position = new Vector3f(1, 1, -1), Color = new Vector3f(1, 0, 0) });
+            mesh.addVertex(new Vertex_V3C3f() { Position = new Vector3f(1, 1, 1), Color = new Vector3f(1, 0, 0) });
+            mesh.addVertex(new Vertex_V3C3f() { Position = new Vector3f(1, -1, 1), Color = new Vector3f(1, 0, 0) });
 
-                    new Vector3f(-1, 1, -1),
-                    new Vector3f(-1, 1, 1),
-                    new Vector3f(1, 1, 1),
-                    new Vector3f(1, 1, -1),
-            };
-            meshBuff = new MeshBuffers();
-            meshBuff.addAttributeBuffer(0, 3, AttributeType.A32F, false);
-            AttributeBuffer positionBuff = meshBuff.getAttributeBuffer(0);
-            posbuff = new GPUBuffer();
-            posbuff.setData(sizeof(float) * 3 * positions.Length, positions, BufferUsage.STATIC_DRAW);
-            positionBuff.setBuffer(posbuff);
+            mesh.addVertex(new Vertex_V3C3f() { Position = new Vector3f(-1, -1, -1), Color = new Vector3f(1, 0, 1) });
+            mesh.addVertex(new Vertex_V3C3f() { Position = new Vector3f(-1, -1, 1), Color = new Vector3f(1, 0, 1) });
+            mesh.addVertex(new Vertex_V3C3f() { Position = new Vector3f(1, -1, 1), Color = new Vector3f(1, 0, 1) });
+            mesh.addVertex(new Vertex_V3C3f() { Position = new Vector3f(1, -1, -1), Color = new Vector3f(1, 0, 1) });
 
-            Vector3f[] colors = new Vector3f[] {
-                new Vector3f(1, 1, 0),
-                new Vector3f(1, 1, 0),
-                new Vector3f(1, 1, 0),
-                new Vector3f(1, 1, 0),
-
-                new Vector3f(0, 0, 1),
-                new Vector3f(0, 0, 1),
-                new Vector3f(0, 0, 1),
-                new Vector3f(0, 0, 1),
-
-                new Vector3f(0, 1, 1),
-                new Vector3f(0, 1, 1),
-                new Vector3f(0, 1, 1),
-                new Vector3f(0, 1, 1),
-
-                new Vector3f(1, 0, 0),
-                new Vector3f(1, 0, 0),
-                new Vector3f(1, 0, 0),
-                new Vector3f(1, 0, 0),
-
-                new Vector3f(1, 0, 1),
-                new Vector3f(1, 0, 1),
-                new Vector3f(1, 0, 1),
-                new Vector3f(1, 0, 1),
-
-                new Vector3f(0, 1, 0),
-                new Vector3f(0, 1, 0),
-                new Vector3f(0, 1, 0),
-                new Vector3f(0, 1, 0)
-                };
-            meshBuff.addAttributeBuffer(1, 3, AttributeType.A32F, false);
-            AttributeBuffer colorBuff = meshBuff.getAttributeBuffer(1);
-            colbuff = new GPUBuffer();
-            colbuff.setData(sizeof(float) * 3 * colors.Length, colors, BufferUsage.STATIC_DRAW);
-            colorBuff.setBuffer(colbuff);
-
-
-            elembuff = new GPUBuffer();
-            uint[] elements = new uint[] {
+            mesh.addVertex(new Vertex_V3C3f() { Position = new Vector3f(-1, 1, -1), Color = new Vector3f(0, 1, 0) });
+            mesh.addVertex(new Vertex_V3C3f() { Position = new Vector3f(-1, 1, 1), Color = new Vector3f(0, 1, 0) });
+            mesh.addVertex(new Vertex_V3C3f() { Position = new Vector3f(1, 1, 1), Color = new Vector3f(0, 1, 0) });
+            mesh.addVertex(new Vertex_V3C3f() { Position = new Vector3f(1, 1, -1), Color = new Vector3f(0, 1, 0) });
+            mesh.addIndices(new uint[] {
                                0,1,2,
                                0,2,3,
 
@@ -158,11 +114,7 @@ namespace Examples.Tutorials
                                16,18,19,
 
                                20,21,22,
-                               20,22,23 };
-
-            elembuff.setData(sizeof(uint) * 1 * elements.Length, elements, BufferUsage.STATIC_DRAW);
-            AttributeBuffer elemAttrBuf = new AttributeBuffer(0, elements.Length, AttributeType.A32UI, false, elembuff);
-            meshBuff.setIndicesBuffer(elemAttrBuf);
+                               20,22,23 });
 
             fb.setClearColor(Color.White);
         }
@@ -175,17 +127,10 @@ namespace Examples.Tutorials
         {
             if (p != null)
                 p.Dispose();
+            if (mesh != null)
+                mesh.Dispose();
             if (fb != null)
                 fb.Dispose();
-            if (posbuff != null)
-                posbuff.Dispose();
-            if (colbuff != null)
-                colbuff.Dispose();
-            if (elembuff != null)
-                elembuff.Dispose();
-            if (meshBuff != null)
-                meshBuff.Dispose();
-
             base.OnUnload(e);
         }
 
@@ -214,8 +159,6 @@ namespace Examples.Tutorials
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
             angle += 0.01f;
-            mat = Matrix4f.CreateRotation(angle, 0.0f, 1.0f, 0.5f) * Matrix4f.CreateTranslation(0.0f, 0.0f, -6.0f);
-            uMVMatrix.set(mat);
         }
 
         #endregion
@@ -230,7 +173,14 @@ namespace Examples.Tutorials
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             fb.clear(true, false, true);
-            fb.draw(p, meshBuff, MeshMode.TRIANGLES, 0, meshBuff.getIndiceBuffer().getSize());
+
+            for (int x = 0; x < 6; x++)
+                for (int y = 0; y < 6; y++)
+                {
+                    mat = Matrix4f.Scale(0.5f) * Matrix4f.CreateRotation(angle * 3, 0.0f, 1.0f, 0.5f) * Matrix4f.CreateTranslation(-5 + x * 2.0f, -5 + y * 2.0f, -10.0f);
+                    uMVMatrix.set(mat);
+                    fb.draw(p, mesh);
+                }
             this.SwapBuffers();
         }
 
@@ -239,13 +189,10 @@ namespace Examples.Tutorials
         #region Fields
         FrameBuffer fb;
         Program p;
+        Mesh<Vertex_V3C3f, uint> mesh;
         Matrix4f mat;
         UniformMatrix4f uMVMatrix;
         float angle = 0;
-        GPUBuffer posbuff;
-        GPUBuffer colbuff;
-        GPUBuffer elembuff;
-        MeshBuffers meshBuff;
 
         const string FRAGMENT_SHADER = @"
 #ifdef _VERTEX_
@@ -283,13 +230,23 @@ namespace Examples.Tutorials
         [STAThread]
         public static void Main()
         {
-            using (TutorialLearning04_5 example = new TutorialLearning04_5())
+            using (TutorialLearning04_6 example = new TutorialLearning04_6())
             {
                 example.Run(30.0, 10.0);
             }
         }
 
         #endregion
+
+        private struct Vertex_V3C3f
+        {
+            public Vector3f Position;
+            public Vector3f Color;
+            public static int SizeInBytes
+            {
+                get { return Vector3f.SizeInBytes + Vector3f.SizeInBytes; }
+            }
+        }
     }
 
 

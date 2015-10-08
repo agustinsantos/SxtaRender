@@ -51,9 +51,9 @@ namespace Examples
                 if (result == 0)
                     result = x_info.Attribute.Subcategory.CompareTo(y_info.Attribute.Subcategory);
                 if (result == 0)
-                    result = x_info.Attribute.Difficulty.CompareTo(y_info.Attribute.Difficulty);
-                if (result == 0)
                     result = x_info.Attribute.Title.CompareTo(y_info.Attribute.Title);
+                if (result == 0)
+                    result = x_info.Attribute.Difficulty.CompareTo(y_info.Attribute.Difficulty);
 
                 return result;
             }

@@ -1018,6 +1018,8 @@ namespace Sxta.Render
                 }
 
                 UniformBlock block = b;
+                if (name.EndsWith("[0]"))
+                    name = name.Substring(0, name.Length - 3);
 
                 for (int j = 0; j < size; ++j)
                 {

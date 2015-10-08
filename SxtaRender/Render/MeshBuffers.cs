@@ -610,7 +610,7 @@ namespace Sxta.Render
                     }
                     else
                     {
-                        GL.DrawElementsInstanced(EnumConversion.getMeshMode(m), count, EnumConversion.getDrawElementType(type), ref indices, primCount);
+                        GL.DrawElementsInstancedBaseInstance(EnumConversion.getPrimitiveType(m), count, EnumConversion.getDrawElementType(type), (IntPtr)indices, primCount,0);
                     }
                 }
                 else

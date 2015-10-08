@@ -685,7 +685,40 @@ namespace Sxta.Render
 			throw new Exception ();
 		}
 
-		public static TextureTarget getCubeFace (CubeFace f)
+        public static PrimitiveType getPrimitiveType(MeshMode m)
+        {
+            switch (m)
+            {
+                case MeshMode.POINTS:
+                    return PrimitiveType.Points;
+                case MeshMode.LINE_STRIP:
+                    return PrimitiveType.LineStrip;
+                case MeshMode.LINE_LOOP:
+                    return PrimitiveType.LineLoop;
+                case MeshMode.LINES:
+                    return PrimitiveType.Lines;
+                case MeshMode.TRIANGLE_STRIP:
+                    return PrimitiveType.TriangleStrip;
+                case MeshMode.TRIANGLE_FAN:
+                    return PrimitiveType.TriangleFan;
+                case MeshMode.TRIANGLES:
+                    return PrimitiveType.Triangles;
+                case MeshMode.LINES_ADJACENCY:
+                    return PrimitiveType.LinesAdjacency;
+                case MeshMode.LINE_STRIP_ADJACENCY:
+                    return PrimitiveType.LineStripAdjacency;
+                case MeshMode.TRIANGLES_ADJACENCY:
+                    return PrimitiveType.TrianglesAdjacency;
+                case MeshMode.TRIANGLE_STRIP_ADJACENCY:
+                    return PrimitiveType.TriangleStripAdjacency;
+                case MeshMode.PATCHES:
+                    return PrimitiveType.Patches;
+            }
+            Debug.Assert(false);
+            throw new Exception();
+        }
+
+        public static TextureTarget getCubeFace (CubeFace f)
 		{
 			switch (f) {
 			case CubeFace.POSITIVE_X:
