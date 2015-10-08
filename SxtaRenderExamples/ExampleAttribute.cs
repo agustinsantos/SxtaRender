@@ -51,11 +51,11 @@ namespace Examples
 
     public enum ExampleCategory
     {
-        Core = 0,
-        Learning,
+        Learning = 0,
         Resource,
         SceneGraph,
         GUI,
-        Custom
+        Custom,
+        Testing,
     }
 }

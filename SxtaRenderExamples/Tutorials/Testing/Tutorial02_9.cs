@@ -7,16 +7,17 @@ using OpenTK.Input;
 using Sxta.Math;
 using Sxta.Render;
 using System;
+using System.Drawing;
 
 namespace Examples.Tutorials
 {
     /// <summary>
     /// Demonstrates the GameWindow class.
     /// </summary>
-    [Example("Example 3.4: Color using shaders", ExampleCategory.Core, "3. Shaders", 1, Source = "Tutorial03_4", Documentation = "Tutorial-TODO")]
-    public class Tutorial03_4 : GameWindow
+    [Example("Example 2.9: Antialiasing", ExampleCategory.Testing, "2. Drawing", 1, Source = "Tutorial02_9", Documentation = "Tutorial-TODO")]
+    public class Tutorial02_9 : GameWindow
     {
-        public Tutorial03_4()
+        public Tutorial02_9()
             : base(600, 600)
         {
             Keyboard.KeyDown += Keyboard_KeyDown;
@@ -52,21 +53,32 @@ namespace Examples.Tutorials
         protected override void OnLoad(EventArgs e)
         {
             fb = new FrameBuffer(true);
-            p = new Program(new Module(330, EXAMPLE_SHADER));
+            fb.setClearColor(Color.Black);
+            fb.setLineWidth(6.0f);
 
-            quad = new Mesh<Vertex14_V3C3f, uint>(Vertex14_V3C3f.SizeInBytes, sizeof(uint), MeshMode.TRIANGLES, MeshUsage.GPU_STATIC, 4);
-            quad.addAttributeType(0, 3, AttributeType.A32F, false);
-            quad.addAttributeType(1, 3, AttributeType.A32F, false);
-            quad.addVertex(new Vertex14_V3C3f() { Position = new Vector3f(-1, -1, 0), Color = new Vector3f(0.0f, 0.2f, 0.9f) });
-            quad.addVertex(new Vertex14_V3C3f() { Position = new Vector3f(1, -1, 0), Color = new Vector3f(0.1f, 0.9f, 0.1f) });
-            quad.addVertex(new Vertex14_V3C3f() { Position = new Vector3f(-1, 1, 0), Color = new Vector3f(0.9f, 0.2f, 0.0f) });
-            quad.addVertex(new Vertex14_V3C3f() { Position = new Vector3f(1, 1, 0), Color = new Vector3f(0.5f, 0.6f, 0.5f) });
+            p = new Program(new Module(330, WHITE_SHADER_330));
+            quad = new Mesh<Vector4f, uint>(Vector4f.SizeInBytes, sizeof(uint), MeshMode.LINES, MeshUsage.GPU_STATIC, 6);
+            quad.addAttributeType(0, 4, AttributeType.A32F, false);
+            quad.addVertex(new Vector4f(-0.3f, -0.3f + 0.5f, 0, 1));
+            quad.addVertex(new Vector4f(0.3f, -0.3f + 0.5f, 0, 1));
+            quad.addVertex(new Vector4f(-0.3f, 0.3f + 0.5f, 0, 1));
+            quad.addVertex(new Vector4f(0.3f, 0.3f + 0.5f, 0, 1));
+            quad.addVertex(new Vector4f(-0.3f, -0.3f - 0.5f, 0, 1));
+            quad.addVertex(new Vector4f(0.3f, -0.3f - 0.5f, 0, 1));
+            quad.addVertex(new Vector4f(-0.3f, 0.3f - 0.5f, 0, 1));
+            quad.addVertex(new Vector4f(0.3f, 0.3f - 0.5f, 0, 1));
             quad.addIndice(0);
             quad.addIndice(1);
             quad.addIndice(2);
             quad.addIndice(2);
             quad.addIndice(1);
             quad.addIndice(3);
+            quad.addIndice(4 + 0);
+            quad.addIndice(4 + 1);
+            quad.addIndice(4 + 2);
+            quad.addIndice(4 + 2);
+            quad.addIndice(4 + 1);
+            quad.addIndice(4 + 3);
             m = quad.getBuffers();
         }
 
@@ -129,8 +141,20 @@ namespace Examples.Tutorials
         /// <remarks>There is no need to call the base implementation.</remarks>
         protected override void OnRenderFrame(FrameEventArgs e)
         {
-            fb.clear(true, true, true);
-            fb.draw(p, m, MeshMode.TRIANGLES, 0, 6);
+            fb.clear(true, false, false);
+
+            // Draw lines without antialing
+            fb.draw(p, m, MeshMode.LINE_STRIP, 0, 6);
+
+            // Draw lines antialiased
+            fb.setLineSmooth(true);
+            fb.setBlend(true, BlendEquation.ADD, BlendArgument.SRC_ALPHA, BlendArgument.ONE_MINUS_SRC_ALPHA);
+            fb.draw(p, m, MeshMode.LINE_STRIP, 6, 6);
+
+            // Put everything back the way we found it
+            fb.setBlend(false);
+            fb.setLineSmooth(false);
+
             this.SwapBuffers();
         }
 
@@ -139,32 +163,19 @@ namespace Examples.Tutorials
         #region Fields
         FrameBuffer fb;
         Program p;
-        Mesh<Vertex14_V3C3f, uint> quad;
+        Mesh<Vector4f, uint> quad;
         MeshBuffers m;
 
-        const string EXAMPLE_SHADER =
-@"#ifdef _VERTEX_
-        layout (location = 0) in vec3 Position;
-        layout (location = 1) in vec3 Color;
 
-        out vec3 VertexColor;
-
-        void main()
-        {
-            gl_Position = vec4(Position, 1.0);
-            VertexColor = Color;
-        }
-#endif
+        const string WHITE_SHADER_330 = @"
 #ifdef _FRAGMENT_
-        in vec3 VertexColor;
-        out vec3 FragColor;
- 
-        void main()
-        {
-            FragColor =  VertexColor; 
+        layout(location=0) out vec4 color;
+
+        void main() 
+        { 
+            color = vec4(1.0, 1.0, 1.0, 1); 
         }
 #endif";
-
 
         #endregion
 
@@ -176,24 +187,12 @@ namespace Examples.Tutorials
         [STAThread]
         public static void Main()
         {
-            using (Tutorial03_4 example = new Tutorial03_4())
+            using (Tutorial02_9 example = new Tutorial02_9())
             {
                 example.Run(30.0, 0.0);
             }
         }
 
         #endregion
-
-
-
-        private struct Vertex14_V3C3f
-        {
-            public Vector3f Position;
-            public Vector3f Color;
-            public static int SizeInBytes
-            {
-                get { return Vector3f.SizeInBytes + Vector3f.SizeInBytes; }
-            }
-        }
     }
 }

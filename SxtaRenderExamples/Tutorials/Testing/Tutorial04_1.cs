@@ -2,6 +2,7 @@
 // without express or implied warranty of any kind.
 
 using OpenTK;
+using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
 using Sxta.Math;
 using Sxta.Render;
@@ -12,10 +13,10 @@ namespace Examples.Tutorials
     /// <summary>
     /// Demonstrates the GameWindow class.
     /// </summary>
-    [Example("Example 4.5: Orthographic Matrix", ExampleCategory.Core, "4. Matrix Transformation", 1, Source = "Tutorial04_5", Documentation = "Tutorial-TODO")]
-    public class Tutorial04_5 : GameWindow
+    [Example("Example 4.1: Translation", ExampleCategory.Testing, "4. Matrix Transformation", 1, Source = "Tutorial04_1", Documentation = "Tutorial-TODO")]
+    public class Tutorial04_1 : GameWindow
     {
-        public Tutorial04_5()
+        public Tutorial04_1()
             : base(600, 600)
         {
             Keyboard.KeyDown += Keyboard_KeyDown;
@@ -79,8 +80,12 @@ namespace Examples.Tutorials
         /// <remarks>There is no need to call the base implementation.</remarks>
         protected override void OnResize(EventArgs e)
         {
+            // GL.Viewport(0, 0, Width, Height);
             fb.setViewport(new Vector4i(0, 0, Width, Height));
-            projection = Matrix4f.CreateOrthographic(-1.0f, 1.0f, -1.0f, 1.0f);
+
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadIdentity();
+            GL.Ortho(-1.0, 1.0, -1.0, 1.0, 0.0, 4.0);
         }
 
         #endregion
@@ -94,11 +99,22 @@ namespace Examples.Tutorials
         /// <remarks>There is no need to call the base implementation.</remarks>
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
-            angle += 0.005f;
+            distX += xAmount;
+            distY += yAmount;
 
-            Matrix4f rotation = Matrix4f.CreateRotationY(angle);
-            Matrix4f scale = Matrix4f.Scale(0.2f);
-            mat = projection * rotation * scale;
+            if (distX > 0.7f || distX < -0.7f)
+            {
+                xAmount = -xAmount;
+                if (distX > 0.7f) distX = 0.7f;
+                else distX = -0.7f;
+            }
+            if (distY > 0.7f || distY < -0.7f)
+            {
+                yAmount = -yAmount;
+                if (distY > 0.7f) distY = 0.7f;
+                else distY = -0.7f;
+            }
+            mat = Matrix4f.CreateTranslation(distX, distY, 0.0f);
         }
 
         #endregion
@@ -121,8 +137,10 @@ namespace Examples.Tutorials
         #endregion
 
         #region Fields
-        float angle;
-        Matrix4f projection;
+        float xAmount = 0.004f;
+        float yAmount = 0.003f; 
+        float distX = 0.0f;
+        float distY = 0.0f;
         Matrix4f mat = new Matrix4f(1.0f, 0.0f, 0.0f, 0.0f,
                                     0.0f, 1.0f, 0.0f, 0.0f,
                                     0.0f, 0.0f, 1.0f, 0.0f,
@@ -137,7 +155,7 @@ namespace Examples.Tutorials
         uniform mat4 gMatrix;   
         void main()
         {
-            gl_Position = gMatrix * vec4(Position, 1.0);
+            gl_Position = gMatrix * vec4(Position*0.3, 1.0);
         }
 #endif
 #ifdef _FRAGMENT_
@@ -158,7 +176,7 @@ namespace Examples.Tutorials
         [STAThread]
         public static void Main()
         {
-            using (Tutorial04_5 example = new Tutorial04_5())
+            using (Tutorial04_1 example = new Tutorial04_1())
             {
                 example.Run(60.0, 0.0);
             }

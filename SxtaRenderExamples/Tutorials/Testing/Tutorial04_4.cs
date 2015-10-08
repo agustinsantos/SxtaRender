@@ -7,17 +7,16 @@ using OpenTK.Input;
 using Sxta.Math;
 using Sxta.Render;
 using System;
-using System.Drawing;
 
 namespace Examples.Tutorials
 {
     /// <summary>
     /// Demonstrates the GameWindow class.
     /// </summary>
-    [Example("Example 2.5: Drawing Partial Direct", ExampleCategory.Core, "2. Drawing", 1, Source = "Tutorial02_5", Documentation = "Tutorial-TODO")]
-    public class Tutorial02_5 : GameWindow
+    [Example("Example 4.4: Concatenating", ExampleCategory.Testing, "4. Matrix Transformation", 1, Source = "Tutorial04_4", Documentation = "Tutorial-TODO")]
+    public class Tutorial04_4 : GameWindow
     {
-        public Tutorial02_5()
+        public Tutorial04_4()
             : base(600, 600)
         {
             Keyboard.KeyDown += Keyboard_KeyDown;
@@ -53,19 +52,8 @@ namespace Examples.Tutorials
         protected override void OnLoad(EventArgs e)
         {
             fb = new FrameBuffer(true);
-            p = new Program(new Module(330, FRAGMENT_SHADER));
-            quad = new Mesh<Vector4f, uint>(Vector4f.SizeInBytes, sizeof(uint), MeshMode.TRIANGLES, MeshUsage.GPU_STATIC, 6);
-            quad.addAttributeType(0, 4, AttributeType.A32F, false);
-            quad.addVertex(new Vector4f(-1, -1, 0, 1));
-            quad.addVertex(new Vector4f(1, -1, 0, 1));
-            quad.addVertex(new Vector4f(-1, 1, 0, 1));
-            quad.addVertex(new Vector4f(-1, 1, 0, 1));
-            quad.addVertex(new Vector4f(1, -1, 0, 1));
-            quad.addVertex(new Vector4f(1, 1, 0, 1));
-            m = quad.getBuffers();
-            fb.setClearColor(Color.MidnightBlue);
-
-            Console.WriteLine("Color Format" + this.Context.GraphicsMode.ColorFormat);
+            p = new Program(new Module(330, EXAMPLE_SHADER));
+            uniformMat = p.getUniformMatrix4f("gMatrix");
         }
 
         #endregion
@@ -76,8 +64,6 @@ namespace Examples.Tutorials
         {
             if (p != null)
                 p.Dispose();
-            if (quad != null)
-                quad.Dispose();
             if (fb != null)
                 fb.Dispose();
             base.OnUnload(e);
@@ -96,7 +82,7 @@ namespace Examples.Tutorials
         {
             // GL.Viewport(0, 0, Width, Height);
             fb.setViewport(new Vector4i(0, 0, Width, Height));
-              
+
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
             GL.Ortho(-1.0, 1.0, -1.0, 1.0, 0.0, 4.0);
@@ -113,7 +99,27 @@ namespace Examples.Tutorials
         /// <remarks>There is no need to call the base implementation.</remarks>
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
-            // Nothing to do!
+            distX += xAmount;
+            distY += yAmount;
+
+            if (distX > 0.7f || distX < -0.7f)
+            {
+                xAmount = -xAmount;
+                if (distX > 0.7f) distX = 0.7f;
+                else distX = -0.7f;
+            }
+            if (distY > 0.7f || distY < -0.7f)
+            {
+                yAmount = -yAmount;
+                if (distY > 0.7f) distY = 0.7f;
+                else distY = -0.7f;
+            }
+            angle += 0.005f;
+
+            Matrix4f translation = Matrix4f.CreateTranslation(distX, distY, 0.0f);
+            Matrix4f rotation = Matrix4f.CreateRotationZ(2 * angle);
+            Matrix4f scale = Matrix4f.Scale((float)Math.Sin(angle));
+            mat = scale * rotation * translation;
         }
 
         #endregion
@@ -127,24 +133,44 @@ namespace Examples.Tutorials
         /// <remarks>There is no need to call the base implementation.</remarks>
         protected override void OnRenderFrame(FrameEventArgs e)
         {
-            fb.clear(true, true, true);
-            fb.draw(p, m, MeshMode.TRIANGLES, 0, 3);
+            fb.clear(true, false, false);
+            uniformMat.set(mat);
+            fb.drawQuad(p);
             this.SwapBuffers();
         }
 
         #endregion
 
         #region Fields
+        float angle;
+        float xAmount = 0.004f;
+        float yAmount = 0.003f;
+        float distX = 0.0f;
+        float distY = 0.0f;
+        Matrix4f mat = new Matrix4f(1.0f, 0.0f, 0.0f, 0.0f,
+                                    0.0f, 1.0f, 0.0f, 0.0f,
+                                    0.0f, 0.0f, 1.0f, 0.0f,
+                                    0.0f, 0.0f, 0.0f, 1.0f);
+        UniformMatrix4f uniformMat;
         FrameBuffer fb;
         Program p;
-        Mesh<Vector4f, uint> quad;
-        MeshBuffers m;
 
-        const string FRAGMENT_SHADER =
-@"#ifdef _FRAGMENT_
-    layout(location=0) out vec4 color;
-    void main() { color = vec4(0.9, 0.3, 0.2, 1); }
-  #endif";
+        const string EXAMPLE_SHADER = @"
+#ifdef _VERTEX_
+        layout (location = 0) in vec3 Position; 
+        uniform mat4 gMatrix;   
+        void main()
+        {
+            gl_Position = gMatrix * vec4(Position, 1.0);
+        }
+#endif
+#ifdef _FRAGMENT_
+        out vec4 FragColor;
+        void main()
+        {
+            FragColor = vec4(1.0, 0.0, 0.0, 1.0); 
+        }
+#endif";
 
         #endregion
 
@@ -156,9 +182,9 @@ namespace Examples.Tutorials
         [STAThread]
         public static void Main()
         {
-            using (Tutorial02_5 example = new Tutorial02_5())
+            using (Tutorial04_4 example = new Tutorial04_4())
             {
-                example.Run(30.0, 0.0);
+                example.Run(60.0, 0.0);
             }
         }
 

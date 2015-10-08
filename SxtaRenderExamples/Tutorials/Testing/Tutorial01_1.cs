@@ -2,21 +2,21 @@
 // without express or implied warranty of any kind.
 
 using OpenTK;
-using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
 using Sxta.Math;
 using Sxta.Render;
 using System;
+using System.Drawing;
 
 namespace Examples.Tutorials
 {
     /// <summary>
     /// Demonstrates the GameWindow class.
     /// </summary>
-    [Example("Example 3.2: Using Uniform with Shaders", ExampleCategory.Core, "3. Shaders", 1, Source = "Tutorial03_2", Documentation = "Tutorial-TODO")]
-    public class Tutorial03_2 : GameWindow
+    [Example("Example 1.0: Open a Window", ExampleCategory.Testing, "1. Getting Started", 1, Source = "Tutorial01_1", Documentation = "Tutorial01_1")]
+    public class Tutorial01_1 : GameWindow
     {
-        public Tutorial03_2()
+        public Tutorial01_1()
             : base(600, 600)
         {
             Keyboard.KeyDown += Keyboard_KeyDown;
@@ -52,9 +52,8 @@ namespace Examples.Tutorials
         protected override void OnLoad(EventArgs e)
         {
             fb = new FrameBuffer(true);
-            p = new Program(new Module(330, EXAMPLE_SHADER));
-            gScale = p.getUniform1f("gScale");
-            gColor = p.getUniform4f("gColor");
+            fb.setClearColor(Color.MidnightBlue);
+            FrameBuffer.LogOpenGLInfo();
         }
 
         #endregion
@@ -63,11 +62,9 @@ namespace Examples.Tutorials
 
         protected override void OnUnload(EventArgs e)
         {
-            if (p != null)
-                p.Dispose();
-            if (fb != null)
+             if (fb != null)
                 fb.Dispose();
-            base.OnUnload(e);
+             base.OnUnload(e);
         }
 
         #endregion
@@ -81,12 +78,7 @@ namespace Examples.Tutorials
         /// <remarks>There is no need to call the base implementation.</remarks>
         protected override void OnResize(EventArgs e)
         {
-            // GL.Viewport(0, 0, Width, Height);
-            fb.setViewport(new Vector4i(0, 0, Width, Height));
-
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadIdentity();
-            GL.Ortho(-1.0, 1.0, -1.0, 1.0, 0.0, 4.0);
+             fb.setViewport(new Vector4i(0, 0, Width, Height));
         }
 
         #endregion
@@ -100,9 +92,7 @@ namespace Examples.Tutorials
         /// <remarks>There is no need to call the base implementation.</remarks>
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
-            Scale += 0.005f;
-            if (Scale >= 1)
-                Scale = 0;
+            // Nothing to do!
         }
 
         #endregion
@@ -116,40 +106,16 @@ namespace Examples.Tutorials
         /// <remarks>There is no need to call the base implementation.</remarks>
         protected override void OnRenderFrame(FrameEventArgs e)
         {
-            fb.clear(true, false, false);
-            gScale.set(Scale);
-            gColor.set(new Vector4f(Scale, 0.3f, Scale/2, 1.0f));
-            fb.drawQuad(p);
+            fb.clear(true, true, true);
+            // Nothing to do!
             this.SwapBuffers();
         }
 
         #endregion
 
         #region Fields
-        float Scale = 0.0f;
 
         FrameBuffer fb;
-        Program p;
-        Uniform1f gScale;
-        Uniform4f gColor;
-
-        const string EXAMPLE_SHADER = @"
-#ifdef _VERTEX_
-        layout (location = 0) in vec3 Position; 
-        uniform float gScale;   
-        void main()
-        {
-            gl_Position = vec4(gScale * Position.x, gScale * Position.y, Position.z, 1.0);
-        }
-#endif
-#ifdef _FRAGMENT_
-        out vec4 FragColor;
-        uniform vec4 gColor;
-        void main()
-        {
-            FragColor = gColor; 
-        }
-#endif";
 
         #endregion
 
@@ -161,9 +127,9 @@ namespace Examples.Tutorials
         [STAThread]
         public static void Main()
         {
-            using (Tutorial03_2 example = new Tutorial03_2())
+            using (Tutorial01_1 example = new Tutorial01_1())
             {
-                example.Run(30.0, 10.0);
+                example.Run(30.0, 0.0);
             }
         }
 

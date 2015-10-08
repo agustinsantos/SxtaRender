@@ -2,20 +2,22 @@
 // without express or implied warranty of any kind.
 
 using OpenTK;
+using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
 using Sxta.Math;
 using Sxta.Render;
 using System;
+using System.Drawing;
 
 namespace Examples.Tutorials
 {
     /// <summary>
     /// Demonstrates the GameWindow class.
     /// </summary>
-    [Example("Example 4.6: Perspective Matrix", ExampleCategory.Core, "4. Matrix Transformation", 1, Source = "Tutorial04_6", Documentation = "Tutorial-TODO")]
-    public class Tutorial04_6 : GameWindow
+    [Example("Example 2.4: Drawing multiple triangles", ExampleCategory.Testing, "2. Drawing", 1, Source = "Tutorial02_4", Documentation = "Tutorial-TODO")]
+    public class Tutorial02_4 : GameWindow
     {
-        public Tutorial04_6()
+        public Tutorial02_4()
             : base(600, 600)
         {
             Keyboard.KeyDown += Keyboard_KeyDown;
@@ -51,11 +53,35 @@ namespace Examples.Tutorials
         protected override void OnLoad(EventArgs e)
         {
             fb = new FrameBuffer(true);
-            fb.setDepthTest(true);
-            fb.setDepthRange(0.0001f, 100.0f);
-
-            p = new Program(new Module(330, EXAMPLE_SHADER));
-            uniformMat = p.getUniformMatrix4f("gMatrix");
+            p = new Program(new Module(330, FRAGMENT_SHADER_330));
+            quad = new Mesh<Vector4f, uint>(Vector4f.SizeInBytes, MeshMode.TRIANGLES, MeshUsage.GPU_STATIC, 24);
+            quad.addAttributeType(0, 4, AttributeType.A32F, false);
+            quad.addVertex(new Vector4f(-1, -1, 0, 1));
+            quad.addVertex(new Vector4f(0, -1, 0, 1));
+            quad.addVertex(new Vector4f(-1, 0, 0, 1));
+            quad.addVertex(new Vector4f(-1, 0, 0, 1));
+            quad.addVertex(new Vector4f(0, -1, 0, 1));
+            quad.addVertex(new Vector4f(0, 0, 0, 1));
+            quad.addVertex(new Vector4f(0, -1, 0, 1));
+            quad.addVertex(new Vector4f(1, -1, 0, 1));
+            quad.addVertex(new Vector4f(0, 0, 0, 1));
+            quad.addVertex(new Vector4f(0, 0, 0, 1));
+            quad.addVertex(new Vector4f(1, -1, 0, 1));
+            quad.addVertex(new Vector4f(1, 0, 0, 1));
+            quad.addVertex(new Vector4f(-1, 0, 0, 1));
+            quad.addVertex(new Vector4f(0, 0, 0, 1));
+            quad.addVertex(new Vector4f(-1, 1, 0, 1));
+            quad.addVertex(new Vector4f(-1, 1, 0, 1));
+            quad.addVertex(new Vector4f(0, 0, 0, 1));
+            quad.addVertex(new Vector4f(0, 1, 0, 1));
+            quad.addVertex(new Vector4f(0, 0, 0, 1));
+            quad.addVertex(new Vector4f(1, 0, 0, 1));
+            quad.addVertex(new Vector4f(0, 1, 0, 1));
+            quad.addVertex(new Vector4f(0, 1, 0, 1));
+            quad.addVertex(new Vector4f(1, 0, 0, 1));
+            quad.addVertex(new Vector4f(1, 1, 0, 1));
+            m = quad.getBuffers();
+            fb.setClearColor(Color.MidnightBlue);
         }
 
         #endregion
@@ -66,6 +92,8 @@ namespace Examples.Tutorials
         {
             if (p != null)
                 p.Dispose();
+            if (quad != null)
+                quad.Dispose();
             if (fb != null)
                 fb.Dispose();
             base.OnUnload(e);
@@ -82,10 +110,12 @@ namespace Examples.Tutorials
         /// <remarks>There is no need to call the base implementation.</remarks>
         protected override void OnResize(EventArgs e)
         {
+            // GL.Viewport(0, 0, Width, Height);
             fb.setViewport(new Vector4i(0, 0, Width, Height));
-            projection = Matrix4f.CreatePerspectiveFieldOfView((float)(60 * 2 * Math.PI / 360), (float)Width / (float)Height, 0.001f, 1000.0f);
-            Matrix4f translation = Matrix4f.CreateTranslation(0.0f, 0.0f, -5.0f);
-            projection = translation * projection;
+              
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadIdentity();
+            GL.Ortho(-1.0, 1.0, -1.0, 1.0, 0.0, 4.0);
         }
 
         #endregion
@@ -99,9 +129,7 @@ namespace Examples.Tutorials
         /// <remarks>There is no need to call the base implementation.</remarks>
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
-            angle += 0.005f;
-            Matrix4f rotation = Matrix4f.CreateRotationY(angle);
-            mat = rotation * projection;
+            // Nothing to do!
         }
 
         #endregion
@@ -115,36 +143,27 @@ namespace Examples.Tutorials
         /// <remarks>There is no need to call the base implementation.</remarks>
         protected override void OnRenderFrame(FrameEventArgs e)
         {
-            fb.clear(true, true, true);
-            uniformMat.set(mat);
-            fb.drawQuad(p);
+            fb.clear(true, false, false);
+            fb.draw(p, m, MeshMode.TRIANGLES, 3, 3);
+
             this.SwapBuffers();
         }
 
         #endregion
 
         #region Fields
-        float angle;
-        Matrix4f projection;
-        Matrix4f mat = Matrix4f.Identity;
-        UniformMatrix4f uniformMat;
         FrameBuffer fb;
         Program p;
+        Mesh<Vector4f, uint> quad;
+        MeshBuffers m;
 
-        const string EXAMPLE_SHADER = @"
-#ifdef _VERTEX_
-        layout (location = 0) in vec3 Position; 
-        uniform mat4 gMatrix;   
-        void main()
-        {
-            gl_Position = gMatrix * vec4(Position, 1.0);
-        }
-#endif
+        const string FRAGMENT_SHADER_330 = @"
 #ifdef _FRAGMENT_
-        out vec4 FragColor;
-        void main()
-        {
-            FragColor = vec4(1.0, 0.0, 0.0, 1.0); 
+        layout(location=0) out vec4 color;
+
+        void main() 
+        { 
+            color = vec4(1, 0.5f, 0, 1); 
         }
 #endif";
 
@@ -158,9 +177,9 @@ namespace Examples.Tutorials
         [STAThread]
         public static void Main()
         {
-            using (Tutorial04_6 example = new Tutorial04_6())
+            using (Tutorial02_4 example = new Tutorial02_4())
             {
-                example.Run(60.0, 0.0);
+                example.Run(30.0, 0.0);
             }
         }
 

@@ -2,6 +2,7 @@
 // without express or implied warranty of any kind.
 
 using OpenTK;
+using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
 using Sxta.Math;
 using Sxta.Render;
@@ -13,10 +14,10 @@ namespace Examples.Tutorials
     /// <summary>
     /// Demonstrates the GameWindow class.
     /// </summary>
-    [Example("Example 1.0: Open a Window", ExampleCategory.Core, "1. Getting Started", 1, Source = "Tutorial01_1", Documentation = "Tutorial01_1")]
-    public class Tutorial01_1 : GameWindow
+    [Example("Example 1.1: Simply Draw a Triangle", ExampleCategory.Testing, "1. Getting Started", 1, Source = "Tutorial01_2", Documentation = "Tutorial-TODO")]
+    public class Tutorial01_2 : GameWindow
     {
-        public Tutorial01_1()
+        public Tutorial01_2()
             : base(600, 600)
         {
             Keyboard.KeyDown += Keyboard_KeyDown;
@@ -52,8 +53,16 @@ namespace Examples.Tutorials
         protected override void OnLoad(EventArgs e)
         {
             fb = new FrameBuffer(true);
-            fb.setClearColor(Color.MidnightBlue);
-            FrameBuffer.LogOpenGLInfo();
+            p = new Program(new Module(120, FRAGMENT_SHADER));
+            quad = new Mesh<Vector4f, uint>(Vector4f.SizeInBytes, MeshMode.TRIANGLES, MeshUsage.GPU_STATIC, 3);
+            quad.addAttributeType(0, 4, AttributeType.A32F, false);
+
+            // Load up a triangle
+            quad.addVertex(new Vector4f(-0.5f, 0.0f, 0.0f, 1));
+            quad.addVertex(new Vector4f(0.5f, 0.0f, 0.0f, 1));
+            quad.addVertex(new Vector4f(0.0f, 0.5f, 0.0f, 1));
+
+            fb.setClearColor(Color.Blue);
         }
 
         #endregion
@@ -62,9 +71,13 @@ namespace Examples.Tutorials
 
         protected override void OnUnload(EventArgs e)
         {
-             if (fb != null)
+            if (p != null)
+                p.Dispose();
+            if (quad != null)
+                quad.Dispose();
+            if (fb != null)
                 fb.Dispose();
-             base.OnUnload(e);
+            base.OnUnload(e);
         }
 
         #endregion
@@ -78,7 +91,12 @@ namespace Examples.Tutorials
         /// <remarks>There is no need to call the base implementation.</remarks>
         protected override void OnResize(EventArgs e)
         {
-             fb.setViewport(new Vector4i(0, 0, Width, Height));
+            // GL.Viewport(0, 0, Width, Height);
+            fb.setViewport(new Vector4i(0, 0, Width, Height));
+
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadIdentity();
+            GL.Ortho(-1.0, 1.0, -1.0, 1.0, 0.0, 4.0);
         }
 
         #endregion
@@ -107,15 +125,25 @@ namespace Examples.Tutorials
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             fb.clear(true, true, true);
-            // Nothing to do!
+
+            fb.draw(p, quad);
             this.SwapBuffers();
         }
 
         #endregion
 
         #region Fields
-
         FrameBuffer fb;
+        Program p;
+        Mesh<Vector4f, uint> quad;
+
+        const string FRAGMENT_SHADER = @"
+#ifdef _FRAGMENT_
+        void main()
+        {
+            gl_FragColor = vec4 (1.0f, 0.0f, 0.0f, 1.0f);
+        }
+#endif";
 
         #endregion
 
@@ -127,9 +155,9 @@ namespace Examples.Tutorials
         [STAThread]
         public static void Main()
         {
-            using (Tutorial01_1 example = new Tutorial01_1())
+            using (Tutorial01_2 example = new Tutorial01_2())
             {
-                example.Run(30.0, 0.0);
+                example.Run(30.0, 10.0);
             }
         }
 

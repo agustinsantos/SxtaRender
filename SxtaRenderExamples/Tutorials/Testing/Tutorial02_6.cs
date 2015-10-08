@@ -14,10 +14,10 @@ namespace Examples.Tutorials
     /// <summary>
     /// Demonstrates the GameWindow class.
     /// </summary>
-    [Example("Example 1.1: Simply Draw a Triangle", ExampleCategory.Core, "1. Getting Started", 1, Source = "Tutorial01_2", Documentation = "Tutorial-TODO")]
-    public class Tutorial01_2 : GameWindow
+    [Example("Example 2.6: Draw Instancing", ExampleCategory.Testing, "2. Drawing", 1, Source = "Tutorial02_6", Documentation = "Tutorial-TODO")]
+    public class Tutorial02_6: GameWindow
     {
-        public Tutorial01_2()
+        public Tutorial02_6()
             : base(600, 600)
         {
             Keyboard.KeyDown += Keyboard_KeyDown;
@@ -53,16 +53,15 @@ namespace Examples.Tutorials
         protected override void OnLoad(EventArgs e)
         {
             fb = new FrameBuffer(true);
-            p = new Program(new Module(120, FRAGMENT_SHADER));
-            quad = new Mesh<Vector4f, uint>(Vector4f.SizeInBytes, MeshMode.TRIANGLES, MeshUsage.GPU_STATIC, 3);
+            p = new Program(new Module(330, DRAW_INSTANCING));
+            quad = new Mesh<Vector4f, uint>(Vector4f.SizeInBytes, MeshMode.TRIANGLE_STRIP, MeshUsage.GPU_STATIC, 3);
             quad.addAttributeType(0, 4, AttributeType.A32F, false);
-
-            // Load up a triangle
-            quad.addVertex(new Vector4f(-0.5f, 0.0f, 0.0f, 1));
-            quad.addVertex(new Vector4f(0.5f, 0.0f, 0.0f, 1));
-            quad.addVertex(new Vector4f(0.0f, 0.5f, 0.0f, 1));
-
-            fb.setClearColor(Color.Blue);
+            quad.addVertex(new Vector4f(-.7f, -.7f, 0, 1));
+            quad.addVertex(new Vector4f(.7f, -.7f, 0, 1));
+            quad.addVertex(new Vector4f(-.7f, .7f, 0, 1));
+            quad.addVertex(new Vector4f(.7f, .7f, 0, 1));
+ 
+            fb.setClearColor(Color.MidnightBlue);
         }
 
         #endregion
@@ -126,7 +125,7 @@ namespace Examples.Tutorials
         {
             fb.clear(true, true, true);
 
-            fb.draw(p, quad);
+            fb.draw(p, quad, 8);
             this.SwapBuffers();
         }
 
@@ -136,14 +135,33 @@ namespace Examples.Tutorials
         FrameBuffer fb;
         Program p;
         Mesh<Vector4f, uint> quad;
-
-        const string FRAGMENT_SHADER = @"
-#ifdef _FRAGMENT_
-        void main()
-        {
-            gl_FragColor = vec4 (1.0f, 0.0f, 0.0f, 1.0f);
-        }
-#endif";
+  
+        const string DRAW_INSTANCING = @"
+ #ifdef _VERTEX_
+    layout(location=0) in vec4 pos;
+    out int instance;
+    void main() { gl_Position = pos; instance = gl_InstanceID; }
+ #endif
+ #ifdef _GEOMETRY_
+    layout(triangles) in;
+    layout(triangle_strip, max_vertices = 3) out;
+    in vec4 pos[];
+    in int instance[];
+    void main() {
+        gl_Layer = instance[0];
+        gl_Position = gl_in[0].gl_Position;
+        EmitVertex();
+        gl_Position = gl_in[1].gl_Position;
+        EmitVertex();
+        gl_Position = gl_in[2].gl_Position;
+        EmitVertex();
+        EndPrimitive();
+    }
+ #endif
+ #ifdef _FRAGMENT_
+    layout(location=0) out vec4 color;
+    void main() { color = vec4(0.2, 0.5, 0.4, 1); }
+ #endif";
 
         #endregion
 
@@ -155,9 +173,9 @@ namespace Examples.Tutorials
         [STAThread]
         public static void Main()
         {
-            using (Tutorial01_2 example = new Tutorial01_2())
+            using (Tutorial02_6 example = new Tutorial02_6())
             {
-                example.Run(30.0, 10.0);
+                example.Run(30.0, 0.0);
             }
         }
 

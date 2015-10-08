@@ -14,10 +14,10 @@ namespace Examples.Tutorials
     /// <summary>
     /// Demonstrates the GameWindow class.
     /// </summary>
-    [Example("Example 2.4: Drawing multiple triangles", ExampleCategory.Core, "2. Drawing", 1, Source = "Tutorial02_4", Documentation = "Tutorial-TODO")]
-    public class Tutorial02_4 : GameWindow
+    [Example("Example 2.8: Blending Colors", ExampleCategory.Testing, "2. Drawing", 1, Source = "Tutorial02_8", Documentation = "Tutorial-TODO")]
+    public class Tutorial02_8 : GameWindow
     {
-        public Tutorial02_4()
+        public Tutorial02_8()
             : base(600, 600)
         {
             Keyboard.KeyDown += Keyboard_KeyDown;
@@ -53,35 +53,14 @@ namespace Examples.Tutorials
         protected override void OnLoad(EventArgs e)
         {
             fb = new FrameBuffer(true);
-            p = new Program(new Module(330, FRAGMENT_SHADER_330));
-            quad = new Mesh<Vector4f, uint>(Vector4f.SizeInBytes, MeshMode.TRIANGLES, MeshUsage.GPU_STATIC, 24);
-            quad.addAttributeType(0, 4, AttributeType.A32F, false);
-            quad.addVertex(new Vector4f(-1, -1, 0, 1));
-            quad.addVertex(new Vector4f(0, -1, 0, 1));
-            quad.addVertex(new Vector4f(-1, 0, 0, 1));
-            quad.addVertex(new Vector4f(-1, 0, 0, 1));
-            quad.addVertex(new Vector4f(0, -1, 0, 1));
-            quad.addVertex(new Vector4f(0, 0, 0, 1));
-            quad.addVertex(new Vector4f(0, -1, 0, 1));
-            quad.addVertex(new Vector4f(1, -1, 0, 1));
-            quad.addVertex(new Vector4f(0, 0, 0, 1));
-            quad.addVertex(new Vector4f(0, 0, 0, 1));
-            quad.addVertex(new Vector4f(1, -1, 0, 1));
-            quad.addVertex(new Vector4f(1, 0, 0, 1));
-            quad.addVertex(new Vector4f(-1, 0, 0, 1));
-            quad.addVertex(new Vector4f(0, 0, 0, 1));
-            quad.addVertex(new Vector4f(-1, 1, 0, 1));
-            quad.addVertex(new Vector4f(-1, 1, 0, 1));
-            quad.addVertex(new Vector4f(0, 0, 0, 1));
-            quad.addVertex(new Vector4f(0, 1, 0, 1));
-            quad.addVertex(new Vector4f(0, 0, 0, 1));
-            quad.addVertex(new Vector4f(1, 0, 0, 1));
-            quad.addVertex(new Vector4f(0, 1, 0, 1));
-            quad.addVertex(new Vector4f(0, 1, 0, 1));
-            quad.addVertex(new Vector4f(1, 0, 0, 1));
-            quad.addVertex(new Vector4f(1, 1, 0, 1));
-            m = quad.getBuffers();
-            fb.setClearColor(Color.MidnightBlue);
+            fb.setClearColor(Color.White);
+            fb.setBlend(true);
+            fb.setBlend(true, BlendEquation.ADD, BlendArgument.SRC_ALPHA, BlendArgument.ONE_MINUS_SRC_ALPHA);
+
+            p = new Program(new Module(330, SHADER_330));
+            gCenter = p.getUniform3f("gCenter");
+            gColor = p.getUniform4f("gColor");
+
         }
 
         #endregion
@@ -92,8 +71,6 @@ namespace Examples.Tutorials
         {
             if (p != null)
                 p.Dispose();
-            if (quad != null)
-                quad.Dispose();
             if (fb != null)
                 fb.Dispose();
             base.OnUnload(e);
@@ -112,7 +89,7 @@ namespace Examples.Tutorials
         {
             // GL.Viewport(0, 0, Width, Height);
             fb.setViewport(new Vector4i(0, 0, Width, Height));
-              
+
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
             GL.Ortho(-1.0, 1.0, -1.0, 1.0, 0.0, 4.0);
@@ -129,7 +106,7 @@ namespace Examples.Tutorials
         /// <remarks>There is no need to call the base implementation.</remarks>
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
-            // Nothing to do!
+            angle += 0.02f;
         }
 
         #endregion
@@ -144,26 +121,59 @@ namespace Examples.Tutorials
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             fb.clear(true, false, false);
-            fb.draw(p, m, MeshMode.TRIANGLES, 3, 3);
+
+            RenderQuads();
+
+            gCenter.set(new Vector3f((float)(0.3*Math.Cos(angle)), (float)(0.3*Math.Sin(angle)), 0.0f));
+            gColor.set(new Vector4f(1.0f, 0.0f, 0.0f, 0.5f));
+            fb.drawQuad(p);
 
             this.SwapBuffers();
+        }
+
+        private void RenderQuads()
+        {
+            gCenter.set(new Vector3f(-0.5f, 0.5f, 0.0f));
+            gColor.set(new Vector4f(1.0f, 0.0f, 0.0f, 1.0f));
+            fb.drawQuad(p);
+
+            gCenter.set(new Vector3f(-0.5f, -0.5f, 0.0f));
+            gColor.set(new Vector4f(0.0f, 0.0f, 1.0f, 1.0f));
+            fb.drawQuad(p);
+
+            gCenter.set(new Vector3f(0.5f, 0.5f, 0.0f));
+            gColor.set(new Vector4f(0.0f, 1.0f, 0.0f, 1.0f));
+            fb.drawQuad(p);
+
+            gCenter.set(new Vector3f(0.5f, -0.5f, 0.0f));
+            gColor.set(new Vector4f(0.0f, 0.0f, 0.0f, 1.0f));
+            fb.drawQuad(p);
         }
 
         #endregion
 
         #region Fields
         FrameBuffer fb;
+        float angle;
+        Uniform3f gCenter;
+        Uniform4f gColor;
         Program p;
-        Mesh<Vector4f, uint> quad;
-        MeshBuffers m;
 
-        const string FRAGMENT_SHADER_330 = @"
+        const string SHADER_330 = @"
+#ifdef _VERTEX_
+        layout (location = 0) in vec3 Position; 
+        uniform vec3 gCenter;   
+        void main()
+        {
+            gl_Position = vec4((Position*0.3+gCenter), 1.0);
+        }
+#endif
 #ifdef _FRAGMENT_
-        layout(location=0) out vec4 color;
-
-        void main() 
-        { 
-            color = vec4(1, 0.5f, 0, 1); 
+        out vec4 FragColor;
+        uniform vec4 gColor;
+        void main()
+        {
+            FragColor = gColor; 
         }
 #endif";
 
@@ -177,7 +187,7 @@ namespace Examples.Tutorials
         [STAThread]
         public static void Main()
         {
-            using (Tutorial02_4 example = new Tutorial02_4())
+            using (Tutorial02_8 example = new Tutorial02_8())
             {
                 example.Run(30.0, 0.0);
             }

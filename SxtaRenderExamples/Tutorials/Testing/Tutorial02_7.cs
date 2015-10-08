@@ -14,10 +14,10 @@ namespace Examples.Tutorials
     /// <summary>
     /// Demonstrates the GameWindow class.
     /// </summary>
-    [Example("Example 2.6: Draw Instancing", ExampleCategory.Core, "2. Drawing", 1, Source = "Tutorial02_6", Documentation = "Tutorial-TODO")]
-    public class Tutorial02_6: GameWindow
+    [Example("Example 2.7: Draw Wireframe", ExampleCategory.Testing, "2. Drawing", 1, Source = "Tutorial02_7", Documentation = "Tutorial-TODO")]
+    public class Tutorial02_7 : GameWindow
     {
-        public Tutorial02_6()
+        public Tutorial02_7()
             : base(600, 600)
         {
             Keyboard.KeyDown += Keyboard_KeyDown;
@@ -53,15 +53,23 @@ namespace Examples.Tutorials
         protected override void OnLoad(EventArgs e)
         {
             fb = new FrameBuffer(true);
-            p = new Program(new Module(330, DRAW_INSTANCING));
-            quad = new Mesh<Vector4f, uint>(Vector4f.SizeInBytes, MeshMode.TRIANGLE_STRIP, MeshUsage.GPU_STATIC, 3);
-            quad.addAttributeType(0, 4, AttributeType.A32F, false);
-            quad.addVertex(new Vector4f(-.7f, -.7f, 0, 1));
-            quad.addVertex(new Vector4f(.7f, -.7f, 0, 1));
-            quad.addVertex(new Vector4f(-.7f, .7f, 0, 1));
-            quad.addVertex(new Vector4f(.7f, .7f, 0, 1));
- 
             fb.setClearColor(Color.MidnightBlue);
+            p1 = new Program(new Module(330, GREEN_SHADER_330));
+            p2 = new Program(new Module(330, BLACK_SHADER_330));
+            quad = new Mesh<Vector4f, uint>(Vector4f.SizeInBytes, sizeof(uint), MeshMode.TRIANGLES, MeshUsage.GPU_STATIC, 6);
+            quad.addAttributeType(0, 4, AttributeType.A32F, false);
+            float scale = 0.5f;
+            quad.addVertex(new Vector4f(-1 * scale, -1 * scale, 0, 1));
+            quad.addVertex(new Vector4f(1 * scale, -1 * scale, 0, 1));
+            quad.addVertex(new Vector4f(-1 * scale, 1 * scale, 0, 1));
+            quad.addVertex(new Vector4f(1 * scale, 1 * scale, 0, 1));
+            quad.addIndice(0);
+            quad.addIndice(1);
+            quad.addIndice(2);
+            quad.addIndice(2);
+            quad.addIndice(1);
+            quad.addIndice(3);
+            m = quad.getBuffers();
         }
 
         #endregion
@@ -70,8 +78,10 @@ namespace Examples.Tutorials
 
         protected override void OnUnload(EventArgs e)
         {
-            if (p != null)
-                p.Dispose();
+            if (p1 != null)
+                p1.Dispose();
+            if (p2 != null)
+                p2.Dispose();
             if (quad != null)
                 quad.Dispose();
             if (fb != null)
@@ -123,9 +133,29 @@ namespace Examples.Tutorials
         /// <remarks>There is no need to call the base implementation.</remarks>
         protected override void OnRenderFrame(FrameEventArgs e)
         {
-            fb.clear(true, true, true);
+            fb.clear(true, false, false);
+            // Draw the batch solid green
+            fb.draw(p1, m, MeshMode.TRIANGLES, 0, 6);
 
-            fb.draw(p, quad, 8);
+            // Draw black outline
+            fb.setPolygonOffset(-1.0f, -1.0f);// Shift depth values
+            fb.setPolygonOffset(false, true, false);
+            // Draw lines antialiased
+            fb.setLineSmooth(true);
+            fb.setBlend(true);
+            fb.setBlend(true,BlendEquation.ADD, BlendArgument.SRC_ALPHA, BlendArgument.ONE_MINUS_SRC_ALPHA);
+ 
+            // Draw black wireframe version of geometry
+            fb.setPolygonMode(Sxta.Render.PolygonMode.LINE, Sxta.Render.PolygonMode.LINE);
+            fb.setLineWidth(2.5f);
+            fb.draw(p2, m, MeshMode.TRIANGLES, 0, 6);
+
+            // Put everything back the way we found it
+            fb.setPolygonMode(Sxta.Render.PolygonMode.FILL, Sxta.Render.PolygonMode.FILL);
+            fb.setPolygonOffset(false, false, true);
+            fb.setLineWidth(1.0f);
+            fb.setBlend(false);
+            fb.setLineSmooth(false);
             this.SwapBuffers();
         }
 
@@ -133,35 +163,28 @@ namespace Examples.Tutorials
 
         #region Fields
         FrameBuffer fb;
-        Program p;
+        Program p1, p2;
         Mesh<Vector4f, uint> quad;
-  
-        const string DRAW_INSTANCING = @"
- #ifdef _VERTEX_
-    layout(location=0) in vec4 pos;
-    out int instance;
-    void main() { gl_Position = pos; instance = gl_InstanceID; }
- #endif
- #ifdef _GEOMETRY_
-    layout(triangles) in;
-    layout(triangle_strip, max_vertices = 3) out;
-    in vec4 pos[];
-    in int instance[];
-    void main() {
-        gl_Layer = instance[0];
-        gl_Position = gl_in[0].gl_Position;
-        EmitVertex();
-        gl_Position = gl_in[1].gl_Position;
-        EmitVertex();
-        gl_Position = gl_in[2].gl_Position;
-        EmitVertex();
-        EndPrimitive();
-    }
- #endif
- #ifdef _FRAGMENT_
-    layout(location=0) out vec4 color;
-    void main() { color = vec4(0.2, 0.5, 0.4, 1); }
- #endif";
+        MeshBuffers m;
+
+        const string GREEN_SHADER_330 = @"
+#ifdef _FRAGMENT_
+        layout(location=0) out vec4 color;
+
+        void main() 
+        { 
+            color = vec4(0.3, 0.9, 0.0, 1); 
+        }
+#endif";
+        const string BLACK_SHADER_330 = @"
+#ifdef _FRAGMENT_
+        layout(location=0) out vec4 color;
+
+        void main() 
+        { 
+            color = vec4(0.0, 0.0, 0.0, 1); 
+        }
+#endif";
 
         #endregion
 
@@ -173,7 +196,7 @@ namespace Examples.Tutorials
         [STAThread]
         public static void Main()
         {
-            using (Tutorial02_6 example = new Tutorial02_6())
+            using (Tutorial02_7 example = new Tutorial02_7())
             {
                 example.Run(30.0, 0.0);
             }

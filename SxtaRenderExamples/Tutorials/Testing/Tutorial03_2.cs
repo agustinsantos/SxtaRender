@@ -7,17 +7,16 @@ using OpenTK.Input;
 using Sxta.Math;
 using Sxta.Render;
 using System;
-using System.Drawing;
 
 namespace Examples.Tutorials
 {
     /// <summary>
     /// Demonstrates the GameWindow class.
     /// </summary>
-    [Example("Example 2.9: Antialiasing", ExampleCategory.Core, "2. Drawing", 1, Source = "Tutorial02_9", Documentation = "Tutorial-TODO")]
-    public class Tutorial02_9 : GameWindow
+    [Example("Example 3.2: Using Uniform with Shaders", ExampleCategory.Testing, "3. Shaders", 1, Source = "Tutorial03_2", Documentation = "Tutorial-TODO")]
+    public class Tutorial03_2 : GameWindow
     {
-        public Tutorial02_9()
+        public Tutorial03_2()
             : base(600, 600)
         {
             Keyboard.KeyDown += Keyboard_KeyDown;
@@ -53,33 +52,9 @@ namespace Examples.Tutorials
         protected override void OnLoad(EventArgs e)
         {
             fb = new FrameBuffer(true);
-            fb.setClearColor(Color.Black);
-            fb.setLineWidth(6.0f);
-
-            p = new Program(new Module(330, WHITE_SHADER_330));
-            quad = new Mesh<Vector4f, uint>(Vector4f.SizeInBytes, sizeof(uint), MeshMode.LINES, MeshUsage.GPU_STATIC, 6);
-            quad.addAttributeType(0, 4, AttributeType.A32F, false);
-            quad.addVertex(new Vector4f(-0.3f, -0.3f + 0.5f, 0, 1));
-            quad.addVertex(new Vector4f(0.3f, -0.3f + 0.5f, 0, 1));
-            quad.addVertex(new Vector4f(-0.3f, 0.3f + 0.5f, 0, 1));
-            quad.addVertex(new Vector4f(0.3f, 0.3f + 0.5f, 0, 1));
-            quad.addVertex(new Vector4f(-0.3f, -0.3f - 0.5f, 0, 1));
-            quad.addVertex(new Vector4f(0.3f, -0.3f - 0.5f, 0, 1));
-            quad.addVertex(new Vector4f(-0.3f, 0.3f - 0.5f, 0, 1));
-            quad.addVertex(new Vector4f(0.3f, 0.3f - 0.5f, 0, 1));
-            quad.addIndice(0);
-            quad.addIndice(1);
-            quad.addIndice(2);
-            quad.addIndice(2);
-            quad.addIndice(1);
-            quad.addIndice(3);
-            quad.addIndice(4 + 0);
-            quad.addIndice(4 + 1);
-            quad.addIndice(4 + 2);
-            quad.addIndice(4 + 2);
-            quad.addIndice(4 + 1);
-            quad.addIndice(4 + 3);
-            m = quad.getBuffers();
+            p = new Program(new Module(330, EXAMPLE_SHADER));
+            gScale = p.getUniform1f("gScale");
+            gColor = p.getUniform4f("gColor");
         }
 
         #endregion
@@ -90,8 +65,6 @@ namespace Examples.Tutorials
         {
             if (p != null)
                 p.Dispose();
-            if (quad != null)
-                quad.Dispose();
             if (fb != null)
                 fb.Dispose();
             base.OnUnload(e);
@@ -127,7 +100,9 @@ namespace Examples.Tutorials
         /// <remarks>There is no need to call the base implementation.</remarks>
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
-            // Nothing to do!
+            Scale += 0.005f;
+            if (Scale >= 1)
+                Scale = 0;
         }
 
         #endregion
@@ -142,38 +117,37 @@ namespace Examples.Tutorials
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             fb.clear(true, false, false);
-
-            // Draw lines without antialing
-            fb.draw(p, m, MeshMode.LINE_STRIP, 0, 6);
-
-            // Draw lines antialiased
-            fb.setLineSmooth(true);
-            fb.setBlend(true, BlendEquation.ADD, BlendArgument.SRC_ALPHA, BlendArgument.ONE_MINUS_SRC_ALPHA);
-            fb.draw(p, m, MeshMode.LINE_STRIP, 6, 6);
-
-            // Put everything back the way we found it
-            fb.setBlend(false);
-            fb.setLineSmooth(false);
-
+            gScale.set(Scale);
+            gColor.set(new Vector4f(Scale, 0.3f, Scale/2, 1.0f));
+            fb.drawQuad(p);
             this.SwapBuffers();
         }
 
         #endregion
 
         #region Fields
+        float Scale = 0.0f;
+
         FrameBuffer fb;
         Program p;
-        Mesh<Vector4f, uint> quad;
-        MeshBuffers m;
+        Uniform1f gScale;
+        Uniform4f gColor;
 
-
-        const string WHITE_SHADER_330 = @"
+        const string EXAMPLE_SHADER = @"
+#ifdef _VERTEX_
+        layout (location = 0) in vec3 Position; 
+        uniform float gScale;   
+        void main()
+        {
+            gl_Position = vec4(gScale * Position.x, gScale * Position.y, Position.z, 1.0);
+        }
+#endif
 #ifdef _FRAGMENT_
-        layout(location=0) out vec4 color;
-
-        void main() 
-        { 
-            color = vec4(1.0, 1.0, 1.0, 1); 
+        out vec4 FragColor;
+        uniform vec4 gColor;
+        void main()
+        {
+            FragColor = gColor; 
         }
 #endif";
 
@@ -187,9 +161,9 @@ namespace Examples.Tutorials
         [STAThread]
         public static void Main()
         {
-            using (Tutorial02_9 example = new Tutorial02_9())
+            using (Tutorial03_2 example = new Tutorial03_2())
             {
-                example.Run(30.0, 0.0);
+                example.Run(30.0, 10.0);
             }
         }
 

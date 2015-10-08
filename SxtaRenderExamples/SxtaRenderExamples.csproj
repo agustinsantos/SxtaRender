@@ -75,7 +75,7 @@
     <Compile Include="Tutorials\Learning\Tutorial04_3.cs" />
     <Compile Include="Tutorials\Learning\Tutorial04_2.cs" />
     <Compile Include="Tutorials\Learning\Tutorial04_1.cs" />
-    <Compile Include="Tutorials\Core\Tutorial07_1.cs" />
+    <Compile Include="Tutorials\Testing\Tutorial07_1.cs" />
     <Compile Include="Tutorials\Learning\Tutorial01_2.cs" />
     <Compile Include="Tutorials\Learning\Tutorial01_3.cs" />
     <Compile Include="Tutorials\Learning\Tutorial02_9.cs" />
@@ -128,33 +128,33 @@
     </Compile>
     <Compile Include="SamplesTreeViewSorter.cs" />
     <Compile Include="TextBoxTraceListener.cs" />
-    <Compile Include="Tutorials\Core\Tutorial03_5.cs" />
-    <Compile Include="Tutorials\Core\Tutorial05_2.cs" />
-    <Compile Include="Tutorials\Core\Tutorial04_6.cs" />
-    <Compile Include="Tutorials\Core\Tutorial04_5.cs" />
-    <Compile Include="Tutorials\Core\Tutorial04_4.cs" />
-    <Compile Include="Tutorials\Core\Tutorial02_9.cs" />
-    <Compile Include="Tutorials\Core\Tutorial02_8.cs" />
-    <Compile Include="Tutorials\Core\Tutorial02_7.cs" />
-    <Compile Include="Tutorials\Core\Tutorial05_1.cs" />
-    <Compile Include="Tutorials\Core\Tutorial02_2.cs" />
-    <Compile Include="Tutorials\Core\Tutorial06_3.cs" />
-    <Compile Include="Tutorials\Core\Tutorial06_2.cs" />
-    <Compile Include="Tutorials\Core\Tutorial03_4.cs" />
-    <Compile Include="Tutorials\Core\Tutorial06_1.cs" />
-    <Compile Include="Tutorials\Core\Tutorial03_3.cs" />
-    <Compile Include="Tutorials\Core\Tutorial04_3.cs" />
-    <Compile Include="Tutorials\Core\Tutorial04_2.cs" />
-    <Compile Include="Tutorials\Core\Tutorial04_1.cs" />
-    <Compile Include="Tutorials\Core\Tutorial03_2.cs" />
-    <Compile Include="Tutorials\Core\Tutorial03_1.cs" />
-    <Compile Include="Tutorials\Core\Tutorial02_1.cs" />
-    <Compile Include="Tutorials\Core\Tutorial02_6.cs" />
-    <Compile Include="Tutorials\Core\Tutorial02_3.cs" />
-    <Compile Include="Tutorials\Core\Tutorial02_5.cs" />
-    <Compile Include="Tutorials\Core\Tutorial01_2.cs" />
-    <Compile Include="Tutorials\Core\Tutorial01_1.cs" />
-    <Compile Include="Tutorials\Core\Tutorial02_4.cs" />
+    <Compile Include="Tutorials\Testing\Tutorial03_5.cs" />
+    <Compile Include="Tutorials\Testing\Tutorial05_2.cs" />
+    <Compile Include="Tutorials\Testing\Tutorial04_6.cs" />
+    <Compile Include="Tutorials\Testing\Tutorial04_5.cs" />
+    <Compile Include="Tutorials\Testing\Tutorial04_4.cs" />
+    <Compile Include="Tutorials\Testing\Tutorial02_9.cs" />
+    <Compile Include="Tutorials\Testing\Tutorial02_8.cs" />
+    <Compile Include="Tutorials\Testing\Tutorial02_7.cs" />
+    <Compile Include="Tutorials\Testing\Tutorial05_1.cs" />
+    <Compile Include="Tutorials\Testing\Tutorial02_2.cs" />
+    <Compile Include="Tutorials\Testing\Tutorial06_3.cs" />
+    <Compile Include="Tutorials\Testing\Tutorial06_2.cs" />
+    <Compile Include="Tutorials\Testing\Tutorial03_4.cs" />
+    <Compile Include="Tutorials\Testing\Tutorial06_1.cs" />
+    <Compile Include="Tutorials\Testing\Tutorial03_3.cs" />
+    <Compile Include="Tutorials\Testing\Tutorial04_3.cs" />
+    <Compile Include="Tutorials\Testing\Tutorial04_2.cs" />
+    <Compile Include="Tutorials\Testing\Tutorial04_1.cs" />
+    <Compile Include="Tutorials\Testing\Tutorial03_2.cs" />
+    <Compile Include="Tutorials\Testing\Tutorial03_1.cs" />
+    <Compile Include="Tutorials\Testing\Tutorial02_1.cs" />
+    <Compile Include="Tutorials\Testing\Tutorial02_6.cs" />
+    <Compile Include="Tutorials\Testing\Tutorial02_3.cs" />
+    <Compile Include="Tutorials\Testing\Tutorial02_5.cs" />
+    <Compile Include="Tutorials\Testing\Tutorial01_2.cs" />
+    <Compile Include="Tutorials\Testing\Tutorial01_1.cs" />
+    <Compile Include="Tutorials\Testing\Tutorial02_4.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -249,8 +249,8 @@
     <None Include="Resources\Shaders\texturedPlastic.glsl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Tutorials\Core\Tutorial-TODO.rtf" />
-    <None Include="Tutorials\Core\Tutorial01_1.rtf" />
+    <None Include="Tutorials\Testing\Tutorial-TODO.rtf" />
+    <None Include="Tutorials\Testing\Tutorial01_1.rtf" />
     <None Include="Tutorials\Learning\Tutorial01_2.rtf" />
     <None Include="Tutorials\Learning\Tutorial01_3.rtf" />
     <None Include="Tutorials\Learning\Tutorial02_10.rtf" />

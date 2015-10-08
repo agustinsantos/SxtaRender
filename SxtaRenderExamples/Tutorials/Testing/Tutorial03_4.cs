@@ -13,10 +13,10 @@ namespace Examples.Tutorials
     /// <summary>
     /// Demonstrates the GameWindow class.
     /// </summary>
-    [Example("Example 3.3: Interpolation", ExampleCategory.Core, "3. Shaders", 1, Source = "Tutorial03_3", Documentation = "Tutorial-TODO")]
-    public class Tutorial03_3 : GameWindow
+    [Example("Example 3.4: Color using shaders", ExampleCategory.Testing, "3. Shaders", 1, Source = "Tutorial03_4", Documentation = "Tutorial-TODO")]
+    public class Tutorial03_4 : GameWindow
     {
-        public Tutorial03_3()
+        public Tutorial03_4()
             : base(600, 600)
         {
             Keyboard.KeyDown += Keyboard_KeyDown;
@@ -53,7 +53,22 @@ namespace Examples.Tutorials
         {
             fb = new FrameBuffer(true);
             p = new Program(new Module(330, EXAMPLE_SHADER));
-         }
+
+            quad = new Mesh<Vertex14_V3C3f, uint>(Vertex14_V3C3f.SizeInBytes, sizeof(uint), MeshMode.TRIANGLES, MeshUsage.GPU_STATIC, 4);
+            quad.addAttributeType(0, 3, AttributeType.A32F, false);
+            quad.addAttributeType(1, 3, AttributeType.A32F, false);
+            quad.addVertex(new Vertex14_V3C3f() { Position = new Vector3f(-1, -1, 0), Color = new Vector3f(0.0f, 0.2f, 0.9f) });
+            quad.addVertex(new Vertex14_V3C3f() { Position = new Vector3f(1, -1, 0), Color = new Vector3f(0.1f, 0.9f, 0.1f) });
+            quad.addVertex(new Vertex14_V3C3f() { Position = new Vector3f(-1, 1, 0), Color = new Vector3f(0.9f, 0.2f, 0.0f) });
+            quad.addVertex(new Vertex14_V3C3f() { Position = new Vector3f(1, 1, 0), Color = new Vector3f(0.5f, 0.6f, 0.5f) });
+            quad.addIndice(0);
+            quad.addIndice(1);
+            quad.addIndice(2);
+            quad.addIndice(2);
+            quad.addIndice(1);
+            quad.addIndice(3);
+            m = quad.getBuffers();
+        }
 
         #endregion
 
@@ -63,6 +78,8 @@ namespace Examples.Tutorials
         {
             if (p != null)
                 p.Dispose();
+            if (quad != null)
+                quad.Dispose();
             if (fb != null)
                 fb.Dispose();
             base.OnUnload(e);
@@ -98,7 +115,7 @@ namespace Examples.Tutorials
         /// <remarks>There is no need to call the base implementation.</remarks>
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
-            // nothing to do
+            // Nothing to do!
         }
 
         #endregion
@@ -112,8 +129,8 @@ namespace Examples.Tutorials
         /// <remarks>There is no need to call the base implementation.</remarks>
         protected override void OnRenderFrame(FrameEventArgs e)
         {
-            fb.clear(true, false, false);
-            fb.drawQuad(p);
+            fb.clear(true, true, true);
+            fb.draw(p, m, MeshMode.TRIANGLES, 0, 6);
             this.SwapBuffers();
         }
 
@@ -122,24 +139,32 @@ namespace Examples.Tutorials
         #region Fields
         FrameBuffer fb;
         Program p;
-        const string EXAMPLE_SHADER = @"
-#ifdef _VERTEX_
-        layout (location = 0) in vec3 Position; 
-         out vec4 Color;
+        Mesh<Vertex14_V3C3f, uint> quad;
+        MeshBuffers m;
+
+        const string EXAMPLE_SHADER =
+@"#ifdef _VERTEX_
+        layout (location = 0) in vec3 Position;
+        layout (location = 1) in vec3 Color;
+
+        out vec3 VertexColor;
+
         void main()
         {
             gl_Position = vec4(Position, 1.0);
-            Color = vec4(clamp(Position, 0.0, 1.0), 1.0);
+            VertexColor = Color;
         }
 #endif
 #ifdef _FRAGMENT_
-        in vec4 Color; 
-        out vec4 FragColor;
+        in vec3 VertexColor;
+        out vec3 FragColor;
+ 
         void main()
         {
-            FragColor = Color; 
+            FragColor =  VertexColor; 
         }
 #endif";
+
 
         #endregion
 
@@ -151,12 +176,24 @@ namespace Examples.Tutorials
         [STAThread]
         public static void Main()
         {
-            using (Tutorial03_3 example = new Tutorial03_3())
+            using (Tutorial03_4 example = new Tutorial03_4())
             {
-                example.Run(30.0, 10.0);
+                example.Run(30.0, 0.0);
             }
         }
 
         #endregion
+
+
+
+        private struct Vertex14_V3C3f
+        {
+            public Vector3f Position;
+            public Vector3f Color;
+            public static int SizeInBytes
+            {
+                get { return Vector3f.SizeInBytes + Vector3f.SizeInBytes; }
+            }
+        }
     }
 }

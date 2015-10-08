@@ -15,7 +15,7 @@ namespace Examples.Tutorials
     /// <summary>
     /// Demonstrates the GameWindow class.
     /// </summary>
-    [Example("Example 6.3: DDS Texture Formats", ExampleCategory.Core, "6. Textures", 1, Source = "Tutorial06_3", Documentation = "Tutorial-TODO")]
+    [Example("Example 6.3: DDS Texture Formats", ExampleCategory.Testing, "6. Textures", 1, Source = "Tutorial06_3", Documentation = "Tutorial-TODO")]
     public class Tutorial06_3 : GameWindow
     {
         public Tutorial06_3()

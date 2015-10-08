@@ -13,10 +13,10 @@ namespace Examples.Tutorials
     /// <summary>
     /// Demonstrates the GameWindow class.
     /// </summary>
-    [Example("Example 4.2: Rotation", ExampleCategory.Core, "4. Matrix Transformation", 1, Source = "Tutorial04_2", Documentation = "Tutorial-TODO")]
-    public class Tutorial04_2 : GameWindow
+    [Example("Example 3.3: Interpolation", ExampleCategory.Testing, "3. Shaders", 1, Source = "Tutorial03_3", Documentation = "Tutorial-TODO")]
+    public class Tutorial03_3 : GameWindow
     {
-        public Tutorial04_2()
+        public Tutorial03_3()
             : base(600, 600)
         {
             Keyboard.KeyDown += Keyboard_KeyDown;
@@ -53,8 +53,7 @@ namespace Examples.Tutorials
         {
             fb = new FrameBuffer(true);
             p = new Program(new Module(330, EXAMPLE_SHADER));
-            uniformMat = p.getUniformMatrix4f("gMatrix");
-        }
+         }
 
         #endregion
 
@@ -99,8 +98,7 @@ namespace Examples.Tutorials
         /// <remarks>There is no need to call the base implementation.</remarks>
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
-            angle += 0.05f;
-            mat = Matrix4f.CreateRotationZ(angle);
+            // nothing to do
         }
 
         #endregion
@@ -115,7 +113,6 @@ namespace Examples.Tutorials
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             fb.clear(true, false, false);
-            uniformMat.set(mat);
             fb.drawQuad(p);
             this.SwapBuffers();
         }
@@ -123,29 +120,24 @@ namespace Examples.Tutorials
         #endregion
 
         #region Fields
-        float angle = 0.0f;
-        Matrix4f mat = new Matrix4f(1.0f, 0.0f, 0.0f, 0.0f,
-                                    0.0f, 1.0f, 0.0f, 0.0f,
-                                    0.0f, 0.0f, 1.0f, 0.0f,
-                                    0.0f, 0.0f, 0.0f, 1.0f);
-        UniformMatrix4f uniformMat;
         FrameBuffer fb;
         Program p;
-
         const string EXAMPLE_SHADER = @"
 #ifdef _VERTEX_
         layout (location = 0) in vec3 Position; 
-        uniform mat4 gMatrix;   
+         out vec4 Color;
         void main()
         {
-            gl_Position = gMatrix * vec4(Position*0.5, 1.0);
+            gl_Position = vec4(Position, 1.0);
+            Color = vec4(clamp(Position, 0.0, 1.0), 1.0);
         }
 #endif
 #ifdef _FRAGMENT_
+        in vec4 Color; 
         out vec4 FragColor;
         void main()
         {
-            FragColor = vec4(1.0, 0.0, 0.0, 1.0); 
+            FragColor = Color; 
         }
 #endif";
 
@@ -159,9 +151,9 @@ namespace Examples.Tutorials
         [STAThread]
         public static void Main()
         {
-            using (Tutorial04_2 example = new Tutorial04_2())
+            using (Tutorial03_3 example = new Tutorial03_3())
             {
-                example.Run(60.0, 0.0);
+                example.Run(30.0, 10.0);
             }
         }
 
