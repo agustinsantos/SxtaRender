@@ -10,6 +10,7 @@
 	 var arr4Types = new string [] {"Vector4i", "Vector4ui", "Vector4f", "Vector4d"};
 	 var arr3Types = new string [] {"Vector3i", "Vector3ui", "Vector3f", "Vector3d"};
 	 var arr2Types = new string [] {"Vector2i", "Vector2ui", "Vector2f", "Vector2d"};
+	 var quatTypes = new string [] {"N/A", "N/A", "Quaternion", "Quaterniond"};
  #>
 #region --- License ---
 /*
@@ -34,6 +35,7 @@ namespace Sxta.Math
 	var vec4Name = arr4Types[i];
 	var vec3Name = arr3Types[i];
 	var vec2Name = arr2Types[i];
+	var quatName = quatTypes[i];
   #>
       /// <summary>Represents a 2D vector using two <#= typeName #>-precision floating-point numbers.</summary>
     [Serializable]
@@ -802,7 +804,7 @@ namespace Sxta.Math
         /// <param name="vec">The vector to transform.</param>
         /// <param name="quat">The quaternion to rotate the vector by.</param>
         /// <returns>The result of the operation.</returns>
-        public static <#= vec2Name #> Transform(<#= vec2Name #> vec, Quaterniond quat)
+        public static <#= vec2Name #> Transform(<#= vec2Name #> vec, <#= quatName #> quat)
         {
             <#= vec2Name #> result;
             Transform(ref vec, ref quat, out result);
@@ -815,12 +817,12 @@ namespace Sxta.Math
         /// <param name="vec">The vector to transform.</param>
         /// <param name="quat">The quaternion to rotate the vector by.</param>
         /// <param name="result">The result of the operation.</param>
-        public static void Transform(ref <#= vec2Name #> vec, ref Quaterniond quat, out <#= vec2Name #> result)
+        public static void Transform(ref <#= vec2Name #> vec, ref <#= quatName #> quat, out <#= vec2Name #> result)
         {
-            Quaterniond v = new Quaterniond(vec.X, vec.Y, 0, 0), i, t;
-            Quaterniond.Invert(ref quat, out i);
-            Quaterniond.Multiply(ref quat, ref v, out t);
-            Quaterniond.Multiply(ref t, ref i, out v);
+            <#= quatName #> v = new <#= quatName #>(vec.X, vec.Y, 0, 0), i, t;
+            <#= quatName #>.Invert(ref quat, out i);
+            <#= quatName #>.Multiply(ref quat, ref v, out t);
+            <#= quatName #>.Multiply(ref t, ref i, out v);
 
             result = new <#= vec2Name #>((<#= typeName #>)v.X, (<#= typeName #>)v.Y);
         }
@@ -2137,7 +2139,7 @@ namespace Sxta.Math
         /// <param name="vec">The vector to transform.</param>
         /// <param name="quat">The quaternion to rotate the vector by.</param>
         /// <returns>The result of the operation.</returns>
-        public static <#= vec3Name #> Transform(<#= vec3Name #> vec, Quaterniond quat)
+        public static <#= vec3Name #> Transform(<#= vec3Name #> vec, <#= quatName #> quat)
         {
             <#= vec3Name #> result;
             Transform(ref vec, ref quat, out result);
@@ -2150,7 +2152,7 @@ namespace Sxta.Math
         /// <param name="vec">The vector to transform.</param>
         /// <param name="quat">The quaternion to rotate the vector by.</param>
         /// <param name="result">The result of the operation.</param>
-        public static void Transform(ref <#= vec3Name #> vec, ref Quaterniond quat, out <#= vec3Name #> result)
+        public static void Transform(ref <#= vec3Name #> vec, ref <#= quatName #> quat, out <#= vec3Name #> result)
         {
             // Since vec.W == 0, we can optimize quat * vec * quat^-1 as follows:
             // vec + 2.0 * cross(quat.xyz, cross(quat.xyz, vec) + quat.w * vec)
@@ -3245,7 +3247,7 @@ namespace Sxta.Math
         /// <param name="vec">The vector to transform.</param>
         /// <param name="quat">The quaternion to rotate the vector by.</param>
         /// <returns>The result of the operation.</returns>
-        public static <#= vec4Name #> Transform(<#= vec4Name #> vec, Quaterniond quat)
+        public static <#= vec4Name #> Transform(<#= vec4Name #> vec, <#= quatName #> quat)
         {
             <#= vec4Name #> result;
             Transform(ref vec, ref quat, out result);
@@ -3258,12 +3260,12 @@ namespace Sxta.Math
         /// <param name="vec">The vector to transform.</param>
         /// <param name="quat">The quaternion to rotate the vector by.</param>
         /// <param name="result">The result of the operation.</param>
-        public static void Transform(ref <#= vec4Name #> vec, ref Quaterniond quat, out <#= vec4Name #> result)
+        public static void Transform(ref <#= vec4Name #> vec, ref <#= quatName #> quat, out <#= vec4Name #> result)
         {
-            Quaterniond v = new Quaterniond(vec.X, vec.Y, vec.Z, vec.W), i, t;
-            Quaterniond.Invert(ref quat, out i);
-            Quaterniond.Multiply(ref quat, ref v, out t);
-            Quaterniond.Multiply(ref t, ref i, out v);
+            <#= quatName #> v = new <#= quatName #>(vec.X, vec.Y, vec.Z, vec.W), i, t;
+            <#= quatName #>.Invert(ref quat, out i);
+            <#= quatName #>.Multiply(ref quat, ref v, out t);
+            <#= quatName #>.Multiply(ref t, ref i, out v);
 
             result = new <#= vec4Name #>((<#= typeName #>)v.X, (<#= typeName #>)v.Y, (<#= typeName #>)v.Z, (<#= typeName #>)v.W);
         }

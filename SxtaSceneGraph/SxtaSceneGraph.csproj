@@ -67,7 +67,7 @@
     <Compile Include="Scenegraph\DrawMeshTask.cs" />
     <Compile Include="Scenegraph\LoopTask.cs" />
     <Compile Include="Scenegraph\Method.cs" />
-    <Compile Include="Scenegraph\SceneManager .cs" />
+    <Compile Include="Scenegraph\SceneManager.cs" />
     <Compile Include="Scenegraph\SceneNode.cs" />
     <Compile Include="Scenegraph\SequenceTask.cs" />
     <Compile Include="Scenegraph\SetProgramTask.cs" />

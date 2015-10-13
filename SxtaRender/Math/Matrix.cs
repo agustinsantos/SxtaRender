@@ -5355,29 +5355,29 @@ namespace Sxta.Math
         /// <summary>
         /// Top row of the matrix
         /// </summary>
-        public Vector4 Row0;
+        public Vector4f Row0;
         /// <summary>
         /// 2nd row of the matrix
         /// </summary>
-        public Vector4 Row1;
+        public Vector4f Row1;
         /// <summary>
         /// 3rd row of the matrix
         /// </summary>
-        public Vector4 Row2;
+        public Vector4f Row2;
         /// <summary>
         /// Bottom row of the matrix
         /// </summary>
-        public Vector4 Row3;
+        public Vector4f Row3;
  
         /// <summary>
         /// The identity matrix
         /// </summary>
-        public static Matrix4f Identity = new Matrix4f(Vector4.UnitX, Vector4.UnitY, Vector4.UnitZ, Vector4.UnitW);
+        public static Matrix4f Identity = new Matrix4f(Vector4f.UnitX, Vector4f.UnitY, Vector4f.UnitZ, Vector4f.UnitW);
 
 		 /// <summary>
         /// The zero matrix
         /// </summary>
-		public static Matrix4f Zero = new Matrix4f(Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero);
+		public static Matrix4f Zero = new Matrix4f(Vector4f.Zero, Vector4f.Zero, Vector4f.Zero, Vector4f.Zero);
 
 
 		/// <summary>
@@ -5396,7 +5396,7 @@ namespace Sxta.Math
         /// <param name="row1">Second row of the matrix</param>
         /// <param name="row2">Third row of the matrix</param>
         /// <param name="row3">Bottom row of the matrix</param>
-        public Matrix4f(Vector4 row0, Vector4 row1, Vector4 row2, Vector4 row3)
+        public Matrix4f(Vector4f row0, Vector4f row1, Vector4f row2, Vector4f row3)
         {
             Row0 = row0;
             Row1 = row1;
@@ -5429,10 +5429,10 @@ namespace Sxta.Math
             float m20, float m21, float m22, float m23,
             float m30, float m31, float m32, float m33)
         {
-            Row0 = new Vector4(m00, m01, m02, m03);
-            Row1 = new Vector4(m10, m11, m12, m13);
-            Row2 = new Vector4(m20, m21, m22, m23);
-            Row3 = new Vector4(m30, m31, m32, m33);
+            Row0 = new Vector4f(m00, m01, m02, m03);
+            Row1 = new Vector4f(m10, m11, m12, m13);
+            Row2 = new Vector4f(m20, m21, m22, m23);
+            Row3 = new Vector4f(m30, m31, m32, m33);
         }
 		
 		/// <summary>Constructs left matrix from the given array of float-precision floating-point numbers.</summary>
@@ -5440,10 +5440,10 @@ namespace Sxta.Math
         public Matrix4f(float[] floatArray)
         {
             if (floatArray == null || floatArray.GetLength(0) < 16) throw new MissingFieldException();
-			Row0 = new Vector4(floatArray[0], floatArray[1], floatArray[2], floatArray[3]);
-            Row1 = new Vector4(floatArray[4], floatArray[5], floatArray[6], floatArray[7]);
-            Row2 = new Vector4(floatArray[8], floatArray[9], floatArray[10], floatArray[11]);
-            Row3 = new Vector4(floatArray[12], floatArray[13], floatArray[14], floatArray[15]);
+			Row0 = new Vector4f(floatArray[0], floatArray[1], floatArray[2], floatArray[3]);
+            Row1 = new Vector4f(floatArray[4], floatArray[5], floatArray[6], floatArray[7]);
+            Row2 = new Vector4f(floatArray[8], floatArray[9], floatArray[10], floatArray[11]);
+            Row3 = new Vector4f(floatArray[12], floatArray[13], floatArray[14], floatArray[15]);
         }
         
 		/// <summary>Converts the matrix into an array of floats.</summary>
@@ -5498,33 +5498,33 @@ namespace Sxta.Math
         /// <summary>
         /// The first column of this matrix
         /// </summary>
-        public Vector4 Column0
+        public Vector4f Column0
         {
-            get { return new Vector4(Row0.X, Row1.X, Row2.X, Row3.X); }
+            get { return new Vector4f(Row0.X, Row1.X, Row2.X, Row3.X); }
         }
 
         /// <summary>
         /// The second column of this matrix
         /// </summary>
-        public Vector4 Column1
+        public Vector4f Column1
         {
-            get { return new Vector4(Row0.Y, Row1.Y, Row2.Y, Row3.Y); }
+            get { return new Vector4f(Row0.Y, Row1.Y, Row2.Y, Row3.Y); }
         }
 
         /// <summary>
         /// The third column of this matrix
         /// </summary>
-        public Vector4 Column2
+        public Vector4f Column2
         {
-            get { return new Vector4(Row0.Z, Row1.Z, Row2.Z, Row3.Z); }
+            get { return new Vector4f(Row0.Z, Row1.Z, Row2.Z, Row3.Z); }
         }
 
         /// <summary>
         /// The fourth column of this matrix
         /// </summary>
-        public Vector4 Column3
+        public Vector4f Column3
         {
-            get { return new Vector4(Row0.W, Row1.W, Row2.W, Row3.W); }
+            get { return new Vector4f(Row0.W, Row1.W, Row2.W, Row3.W); }
         }
 
         /// <summary>
@@ -5656,7 +5656,7 @@ namespace Sxta.Math
         /// <param name="axis">The axis to rotate about.</param>
         /// <param name="angle">Angle in radians to rotate counter-clockwise (looking in the direction of the given axis).</param>
         /// <param name="result">A matrix instance.</param>
-        public static void CreateFromAxisAngle(OpenTK.Vector3 axis, float angle, out Matrix4f result)
+        public static void CreateFromAxisAngle(Vector3f axis, float angle, out Matrix4f result)
         {
             double cos =  System.Math.Cos(-angle);
             double sin =  System.Math.Sin(-angle);
@@ -5676,7 +5676,7 @@ namespace Sxta.Math
         /// <param name="axis">The axis to rotate about.</param>
         /// <param name="angle">Angle in radians to rotate counter-clockwise (looking in the direction of the given axis).</param>
         /// <returns>A matrix instance.</returns>
-        public static Matrix4f CreateFromAxisAngle(OpenTK.Vector3 axis, float angle)
+        public static Matrix4f CreateFromAxisAngle(Vector3f axis, float angle)
         {
             Matrix4f result;
             CreateFromAxisAngle(axis, angle, out result);
@@ -5697,10 +5697,10 @@ namespace Sxta.Math
             double cos =  System.Math.Cos(angle);
             double sin =  System.Math.Sin(angle);
 
-            result.Row0 = Vector4.UnitX;
-            result.Row1 = new Vector4(0, (float)(cos), (float)(sin), 0);
-            result.Row2 = new Vector4(0, (float)(-sin), (float)(cos), 0);
-            result.Row3 = Vector4.UnitW;
+            result.Row0 = Vector4f.UnitX;
+            result.Row1 = new Vector4f(0, (float)(cos), (float)(sin), 0);
+            result.Row2 = new Vector4f(0, (float)(-sin), (float)(cos), 0);
+            result.Row3 = Vector4f.UnitW;
         }
 
         /// <summary>
@@ -5731,10 +5731,10 @@ namespace Sxta.Math
             double cos = (float)System.Math.Cos(angle);
             double sin = (float)System.Math.Sin(angle);
 
-            result.Row0 = new Vector4((float)cos, 0, (float)-sin, 0);
-            result.Row1 = Vector4.UnitY;
-            result.Row2 = new Vector4((float)sin, 0, (float)cos, 0);
-            result.Row3 = Vector4.UnitW;
+            result.Row0 = new Vector4f((float)cos, 0, (float)-sin, 0);
+            result.Row1 = Vector4f.UnitY;
+            result.Row2 = new Vector4f((float)sin, 0, (float)cos, 0);
+            result.Row3 = Vector4f.UnitW;
         }
 
         /// <summary>
@@ -5771,10 +5771,10 @@ namespace Sxta.Math
             double cos =  System.Math.Cos(angle);
             double sin =  System.Math.Sin(angle);
 
-            result.Row0 = new Vector4((float)cos, -(float)sin, 0, 0);
-            result.Row1 = new Vector4((float)sin, (float)cos, 0, 0);
-            result.Row2 = Vector4.UnitZ;
-            result.Row3 = Vector4.UnitW;
+            result.Row0 = new Vector4f((float)cos, -(float)sin, 0, 0);
+            result.Row1 = new Vector4f((float)sin, (float)cos, 0, 0);
+            result.Row2 = Vector4f.UnitZ;
+            result.Row3 = Vector4f.UnitW;
         }
 
         /// <summary>
@@ -5893,7 +5893,7 @@ namespace Sxta.Math
         /// </summary>
         /// <param name="vector">The translation vector.</param>
         /// <param name="result">The resulting Matrix4f instance.</param>
-        public static void CreateTranslation(ref Vector3 vector, out Matrix4f result)
+        public static void CreateTranslation(ref Vector3f vector, out Matrix4f result)
         {
             result = Identity;
 			result.Row0.W = vector.X;
@@ -5932,7 +5932,7 @@ namespace Sxta.Math
         /// </summary>
         /// <param name="vector">The translation vector.</param>
         /// <returns>The resulting Matrix4f instance.</returns>
-        public static Matrix4f CreateTranslation(Vector3 vector)
+        public static Matrix4f CreateTranslation(Vector3f vector)
         {
             Matrix4f result;
             CreateTranslation(vector.X, vector.Y, vector.Z, out result);
@@ -6189,7 +6189,7 @@ namespace Sxta.Math
         /// </summary>
         /// <param name="scale">Scale factors for x,y and z axes</param>
         /// <returns>A scaling matrix</returns>
-        public static Matrix4f Scale(Vector3 scale)
+        public static Matrix4f Scale(Vector3f scale)
         {
             return Scale(scale.X, scale.Y, scale.Z);
         }
@@ -6210,10 +6210,10 @@ namespace Sxta.Math
         public static Matrix4f Scale(float x, float y, float z)
         {
             Matrix4f result;
-            result.Row0 = Vector4.UnitX * x;
-            result.Row1 = Vector4.UnitY * y;
-            result.Row2 = Vector4.UnitZ * z;
-            result.Row3 = Vector4.UnitW;
+            result.Row0 = Vector4f.UnitX * x;
+            result.Row1 = Vector4f.UnitY * y;
+            result.Row2 = Vector4f.UnitZ * z;
+            result.Row3 = Vector4f.UnitW;
             return result;
         }
         
@@ -6279,7 +6279,7 @@ namespace Sxta.Math
         /// <returns>A rotation matrix</returns>
         public static Matrix4f Rotate(Quaternion q)
         {
-            OpenTK.Vector3 axis;
+            Vector3f axis;
             float angle;
             q.ToAxisAngle(out axis, out angle);
             return CreateFromAxisAngle(axis, angle);
@@ -6296,16 +6296,16 @@ namespace Sxta.Math
         /// <param name="target">Target position in world space</param>
         /// <param name="up">Up vector in world space (should not be parallel to the camera direction, that is target - eye)</param>
         /// <returns>A Matrix4f that transforms world space to camera space</returns>
-        public static Matrix4f LookAt(Vector3 eye, Vector3 target, Vector3 up)
+        public static Matrix4f LookAt(Vector3f eye, Vector3f target, Vector3f up)
         {
-            Vector3 z = Vector3.Normalize(eye - target);
-            Vector3 x = Vector3.Normalize(Vector3.Cross(up, z));
-            Vector3 y = Vector3.Normalize(Vector3.Cross(z, x));
+            Vector3f z = Vector3f.Normalize(eye - target);
+            Vector3f x = Vector3f.Normalize(Vector3f.Cross(up, z));
+            Vector3f y = Vector3f.Normalize(Vector3f.Cross(z, x));
 
-            Matrix4f rot = new Matrix4f(new Vector4(x.X, y.X, z.X, 0),
-                                        new Vector4(x.Y, y.Y, z.Y, 0),
-                                        new Vector4(x.Z, y.Z, z.Z, 0),
-                                        Vector4.UnitW);
+            Matrix4f rot = new Matrix4f(new Vector4f(x.X, y.X, z.X, 0),
+                                        new Vector4f(x.Y, y.Y, z.Y, 0),
+                                        new Vector4f(x.Z, y.Z, z.Z, 0),
+                                        Vector4f.UnitW);
 
             Matrix4f trans = Matrix4f.CreateTranslation(-eye);
 
@@ -6327,7 +6327,7 @@ namespace Sxta.Math
         /// <returns>A Matrix4f that transforms world space to camera space</returns>
         public static Matrix4f LookAt(float eyeX, float eyeY, float eyeZ, float targetX, float targetY, float targetZ, float upX, float upY, float upZ)
         {
-            return LookAt(new Vector3(eyeX, eyeY, eyeZ), new Vector3(targetX, targetY, targetZ), new Vector3(upX, upY, upZ));
+            return LookAt(new Vector3f(eyeX, eyeY, eyeZ), new Vector3f(targetX, targetY, targetZ), new Vector3f(upX, upY, upZ));
         }
 
 		
@@ -6481,10 +6481,10 @@ namespace Sxta.Math
                 }
             }
 
-            mat.Row0 = new Vector4((float)inverse[0, 0], (float)inverse[0, 1], (float)inverse[0, 2], (float)inverse[0, 3]);
-            mat.Row1 = new Vector4((float)inverse[1, 0], (float)inverse[1, 1], (float)inverse[1, 2], (float)inverse[1, 3]);
-            mat.Row2 = new Vector4((float)inverse[2, 0], (float)inverse[2, 1], (float)inverse[2, 2], (float)inverse[2, 3]);
-            mat.Row3 = new Vector4((float)inverse[3, 0], (float)inverse[3, 1], (float)inverse[3, 2], (float)inverse[3, 3]);
+            mat.Row0 = new Vector4f((float)inverse[0, 0], (float)inverse[0, 1], (float)inverse[0, 2], (float)inverse[0, 3]);
+            mat.Row1 = new Vector4f((float)inverse[1, 0], (float)inverse[1, 1], (float)inverse[1, 2], (float)inverse[1, 3]);
+            mat.Row2 = new Vector4f((float)inverse[2, 0], (float)inverse[2, 1], (float)inverse[2, 2], (float)inverse[2, 3]);
+            mat.Row3 = new Vector4f((float)inverse[3, 0], (float)inverse[3, 1], (float)inverse[3, 2], (float)inverse[3, 3]);
             return mat;
         }
 
@@ -6538,10 +6538,10 @@ namespace Sxta.Math
         /// </summary>
         /// <param name="left">left-hand operand</param>
         /// <param name="right">right-hand operand</param>
-        /// <returns>A new Vector3 which holds the result of the multiplication</returns>
-        public static Vector3 operator *(Matrix4f left, Vector3 right)
+        /// <returns>A new Vector3f which holds the result of the multiplication</returns>
+        public static Vector3f operator *(Matrix4f left, Vector3f right)
 		{
-			Vector3 r;
+			Vector3f r;
 
 			double fInvW = 1.0 / (left.Row3.X * right.X + left.Row3.Y * right.Y + left.Row3.Z * right.Z + left.Row3.W);
 
@@ -6557,10 +6557,10 @@ namespace Sxta.Math
         /// </summary>
         /// <param name="left">left-hand operand</param>
         /// <param name="right">right-hand operand</param>
-        /// <returns>A new Vector3 which holds the result of the multiplication</returns>
-        public static Vector4 operator *(Matrix4f left, Vector4 right)
+        /// <returns>A new Vector3f which holds the result of the multiplication</returns>
+        public static Vector4f operator *(Matrix4f left, Vector4f right)
 		{
-			Vector4 r;
+			Vector4f r;
 
 			double fInvW = 1.0 / (left.Row3.X * right.X + left.Row3.Y * right.Y + left.Row3.Z * right.Z + left.Row3.W);
 
@@ -8318,7 +8318,7 @@ namespace Sxta.Math
         /// <param name="axis">The axis to rotate about.</param>
         /// <param name="angle">Angle in radians to rotate counter-clockwise (looking in the direction of the given axis).</param>
         /// <param name="result">A matrix instance.</param>
-        public static void CreateFromAxisAngle(OpenTK.Vector3 axis, float angle, out Matrix4d result)
+        public static void CreateFromAxisAngle(Vector3d axis, double angle, out Matrix4d result)
         {
             double cos =  System.Math.Cos(-angle);
             double sin =  System.Math.Sin(-angle);
@@ -8338,7 +8338,7 @@ namespace Sxta.Math
         /// <param name="axis">The axis to rotate about.</param>
         /// <param name="angle">Angle in radians to rotate counter-clockwise (looking in the direction of the given axis).</param>
         /// <returns>A matrix instance.</returns>
-        public static Matrix4d CreateFromAxisAngle(OpenTK.Vector3 axis, float angle)
+        public static Matrix4d CreateFromAxisAngle(Vector3d axis, double angle)
         {
             Matrix4d result;
             CreateFromAxisAngle(axis, angle, out result);
@@ -8939,10 +8939,10 @@ namespace Sxta.Math
         /// </summary>
         /// <param name="q">the quaternion</param>
         /// <returns>A rotation matrix</returns>
-        public static Matrix4d Rotate(Quaternion q)
+        public static Matrix4d Rotate(Quaterniond q)
         {
-            OpenTK.Vector3 axis;
-            float angle;
+            Vector3d axis;
+            double angle;
             q.ToAxisAngle(out axis, out angle);
             return CreateFromAxisAngle(axis, angle);
         }

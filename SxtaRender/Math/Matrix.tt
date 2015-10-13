@@ -7,13 +7,13 @@
 <#
 	 var hasDecimals = new bool [] {false, false, true, true};
  	 var types = new string [] {"int", "uint", "float", "double"};
-	 var arr4Types = new string [] {"Vector4i", "Vector4ui", "Vector4", "Vector4d"};
-	 var arr3Types = new string [] {"Vector3i", "Vector3ui", "Vector3", "Vector3d"};
+	 var arr4Types = new string [] {"Vector4i", "Vector4ui", "Vector4f", "Vector4d"};
+	 var arr3Types = new string [] {"Vector3i", "Vector3ui", "Vector3f", "Vector3d"};
 	 var arr2Types = new string [] {"Vector2i", "Vector2ui", "Vector2f", "Vector2d"};
 	 var mat4Types = new string [] {"Matrix4i", "Matrix4ui", "Matrix4f", "Matrix4d"};
 	 var mat3Types = new string [] {"Matrix3i", "Matrix3ui", "Matrix3f", "Matrix3d"};
 	 var mat2Types = new string [] {"Matrix2i", "Matrix2ui", "Matrix2f", "Matrix2d"};
-
+	 var quatTypes = new string [] {"N/A", "N/A", "Quaternion", "Quaterniond"};
  #>
 #region --- License ---
 /*
@@ -60,7 +60,8 @@ namespace Sxta.Math
 	var mat4Name = mat4Types[i];
 	var mat3Name = mat3Types[i];
 	var mat2Name = mat2Types[i];
-  #>
+ 	var quatName = quatTypes[i];
+ #>
 
 	[Serializable]
     [StructLayout(LayoutKind.Sequential)]
@@ -1738,7 +1739,7 @@ namespace Sxta.Math
         /// <param name="axis">The axis to rotate about.</param>
         /// <param name="angle">Angle in radians to rotate counter-clockwise (looking in the direction of the given axis).</param>
         /// <param name="result">A matrix instance.</param>
-        public static void CreateFromAxisAngle(OpenTK.Vector3 axis, float angle, out <#= mat4Name #> result)
+        public static void CreateFromAxisAngle(<#= vec3Name #> axis, <#= typeName #> angle, out <#= mat4Name #> result)
         {
             double cos =  System.Math.Cos(-angle);
             double sin =  System.Math.Sin(-angle);
@@ -1758,7 +1759,7 @@ namespace Sxta.Math
         /// <param name="axis">The axis to rotate about.</param>
         /// <param name="angle">Angle in radians to rotate counter-clockwise (looking in the direction of the given axis).</param>
         /// <returns>A matrix instance.</returns>
-        public static <#= mat4Name #> CreateFromAxisAngle(OpenTK.Vector3 axis, float angle)
+        public static <#= mat4Name #> CreateFromAxisAngle(<#= vec3Name #> axis, <#= typeName #> angle)
         {
             <#= mat4Name #> result;
             CreateFromAxisAngle(axis, angle, out result);
@@ -2359,10 +2360,10 @@ namespace Sxta.Math
         /// </summary>
         /// <param name="q">the quaternion</param>
         /// <returns>A rotation matrix</returns>
-        public static <#= mat4Name #> Rotate(Quaternion q)
+        public static <#= mat4Name #> Rotate(<#= quatName #> q)
         {
-            OpenTK.Vector3 axis;
-            float angle;
+            <#= vec3Name #> axis;
+            <#= typeName #> angle;
             q.ToAxisAngle(out axis, out angle);
             return CreateFromAxisAngle(axis, angle);
         }

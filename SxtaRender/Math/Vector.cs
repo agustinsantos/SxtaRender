@@ -7104,7 +7104,7 @@ namespace Sxta.Math
         /// <param name="vec">The vector to transform.</param>
         /// <param name="quat">The quaternion to rotate the vector by.</param>
         /// <returns>The result of the operation.</returns>
-        public static Vector2f Transform(Vector2f vec, Quaterniond quat)
+        public static Vector2f Transform(Vector2f vec, Quaternion quat)
         {
             Vector2f result;
             Transform(ref vec, ref quat, out result);
@@ -7117,12 +7117,12 @@ namespace Sxta.Math
         /// <param name="vec">The vector to transform.</param>
         /// <param name="quat">The quaternion to rotate the vector by.</param>
         /// <param name="result">The result of the operation.</param>
-        public static void Transform(ref Vector2f vec, ref Quaterniond quat, out Vector2f result)
+        public static void Transform(ref Vector2f vec, ref Quaternion quat, out Vector2f result)
         {
-            Quaterniond v = new Quaterniond(vec.X, vec.Y, 0, 0), i, t;
-            Quaterniond.Invert(ref quat, out i);
-            Quaterniond.Multiply(ref quat, ref v, out t);
-            Quaterniond.Multiply(ref t, ref i, out v);
+            Quaternion v = new Quaternion(vec.X, vec.Y, 0, 0), i, t;
+            Quaternion.Invert(ref quat, out i);
+            Quaternion.Multiply(ref quat, ref v, out t);
+            Quaternion.Multiply(ref t, ref i, out v);
 
             result = new Vector2f((float)v.X, (float)v.Y);
         }
@@ -8431,7 +8431,7 @@ namespace Sxta.Math
         /// <param name="vec">The vector to transform.</param>
         /// <param name="quat">The quaternion to rotate the vector by.</param>
         /// <returns>The result of the operation.</returns>
-        public static Vector3f Transform(Vector3f vec, Quaterniond quat)
+        public static Vector3f Transform(Vector3f vec, Quaternion quat)
         {
             Vector3f result;
             Transform(ref vec, ref quat, out result);
@@ -8444,7 +8444,7 @@ namespace Sxta.Math
         /// <param name="vec">The vector to transform.</param>
         /// <param name="quat">The quaternion to rotate the vector by.</param>
         /// <param name="result">The result of the operation.</param>
-        public static void Transform(ref Vector3f vec, ref Quaterniond quat, out Vector3f result)
+        public static void Transform(ref Vector3f vec, ref Quaternion quat, out Vector3f result)
         {
             // Since vec.W == 0, we can optimize quat * vec * quat^-1 as follows:
             // vec + 2.0 * cross(quat.xyz, cross(quat.xyz, vec) + quat.w * vec)
@@ -9533,7 +9533,7 @@ namespace Sxta.Math
         /// <param name="vec">The vector to transform.</param>
         /// <param name="quat">The quaternion to rotate the vector by.</param>
         /// <returns>The result of the operation.</returns>
-        public static Vector4f Transform(Vector4f vec, Quaterniond quat)
+        public static Vector4f Transform(Vector4f vec, Quaternion quat)
         {
             Vector4f result;
             Transform(ref vec, ref quat, out result);
@@ -9546,12 +9546,12 @@ namespace Sxta.Math
         /// <param name="vec">The vector to transform.</param>
         /// <param name="quat">The quaternion to rotate the vector by.</param>
         /// <param name="result">The result of the operation.</param>
-        public static void Transform(ref Vector4f vec, ref Quaterniond quat, out Vector4f result)
+        public static void Transform(ref Vector4f vec, ref Quaternion quat, out Vector4f result)
         {
-            Quaterniond v = new Quaterniond(vec.X, vec.Y, vec.Z, vec.W), i, t;
-            Quaterniond.Invert(ref quat, out i);
-            Quaterniond.Multiply(ref quat, ref v, out t);
-            Quaterniond.Multiply(ref t, ref i, out v);
+            Quaternion v = new Quaternion(vec.X, vec.Y, vec.Z, vec.W), i, t;
+            Quaternion.Invert(ref quat, out i);
+            Quaternion.Multiply(ref quat, ref v, out t);
+            Quaternion.Multiply(ref t, ref i, out v);
 
             result = new Vector4f((float)v.X, (float)v.Y, (float)v.Z, (float)v.W);
         }

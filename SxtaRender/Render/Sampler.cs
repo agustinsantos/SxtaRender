@@ -258,7 +258,7 @@ namespace Sxta.Render
 			/// </param>
             public virtual Parameters wrapT(TextureWrap wrapT)
             {
-                _wrapS = wrapT;
+                _wrapT = wrapT;
                 return this;
             }
 

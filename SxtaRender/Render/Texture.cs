@@ -73,31 +73,31 @@ namespace Sxta.Render
                 return _maxLevel;
             }
 
-            public virtual Parameters wrapS(TextureWrap wrapS)
+            public new Parameters wrapS(TextureWrap wrapS)
             {
                 base.wrapS(wrapS);
                 return this;
             }
 
-            public virtual Parameters wrapT(TextureWrap wrapT)
+            public new Parameters wrapT(TextureWrap wrapT)
             {
                 base.wrapT(wrapT);
                 return this;
             }
 
-            public virtual Parameters wrapR(TextureWrap wrapR)
+            public new Parameters wrapR(TextureWrap wrapR)
             {
                 base.wrapR(wrapR);
                 return this;
             }
 
-            public virtual Parameters min(TextureFilter min)
+            public new Parameters min(TextureFilter min)
             {
                 base.min(min);
                 return this;
             }
 
-            public virtual Parameters mag(TextureFilter mag)
+            public new Parameters mag(TextureFilter mag)
             {
                 base.mag(mag);
                 return this;
@@ -157,24 +157,24 @@ namespace Sxta.Render
                 return this;
             }
 
-       
-			/// <summary>
-			/// Sets the swizzling order for this Texture.
+
+            /// <summary>
+            /// Sets the swizzling order for this Texture.
             /// Enables the user to reorder the components of a texture before it is sent to the GPU.
             /// Each parameter can be either 'r', 'g', 'b', or 'a'.
-			/// </summary>
-			/// <param name='r'>
-			/// R. new component for red channel.
-			/// </param>
-			/// <param name='g'>
-			/// G.new component for green channel.
-			/// </param>
-			/// <param name='b'>
-			/// B. new component for blue channel.
-			/// </param>
-			/// <param name='a'>
-			/// A. new component for alpha channel.
-			/// </param>
+            /// </summary>
+            /// <param name='r'>
+            /// R. new component for red channel.
+            /// </param>
+            /// <param name='g'>
+            /// G.new component for green channel.
+            /// </param>
+            /// <param name='b'>
+            /// B. new component for blue channel.
+            /// </param>
+            /// <param name='a'>
+            /// A. new component for alpha channel.
+            /// </param>
             public virtual Parameters swizzle(char r, char g, char b, char a)
             {
                 // Combine chars into array

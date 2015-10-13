@@ -59,11 +59,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FirstPersonCamera.cs" />
     <Compile Include="Tutorials\Learning\Tutorial02_10.cs" />
     <Compile Include="Tutorials\Learning\Tutorial03_2.cs" />
     <Compile Include="Tutorials\Learning\Tutorial03_1.cs" />
     <Compile Include="Tutorials\Learning\Tutorial03_4.cs" />
+    <Compile Include="Tutorials\Learning\Tutorial03_7.cs" />
     <Compile Include="Tutorials\Learning\Tutorial03_6.cs" />
+    <Compile Include="Tutorials\Learning\Tutorial05_5.cs" />
+    <Compile Include="Tutorials\Learning\Tutorial05_4.cs" />
+    <Compile Include="Tutorials\Learning\Tutorial05_3.cs" />
     <Compile Include="Tutorials\Learning\Tutorial05_2.cs" />
     <Compile Include="Tutorials\Learning\Tutorial05_1.cs" />
     <Compile Include="Tutorials\Learning\Tutorial04_9.cs" />
@@ -365,6 +370,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\BmpSuite\rgb32bf.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Textures\Grass.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\Textures\BrickWall.jpg">

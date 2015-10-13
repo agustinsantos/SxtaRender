@@ -68,6 +68,8 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="Math\Quaternion.cs" />
+    <Compile Include="Math\Quaterniond.cs" />
     <Compile Include="Math\Vec2.cs" />
     <Compile Include="Math\Vector.cs">
       <AutoGen>True</AutoGen>

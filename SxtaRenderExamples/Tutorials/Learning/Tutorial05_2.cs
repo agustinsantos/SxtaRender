@@ -16,7 +16,7 @@ namespace Examples.Tutorials
     /// <summary>
     /// Demonstrates how to draw with multiple textures
     /// </summary>
-    [Example("Example 5.1: Drawing with multiple textures (I)", ExampleCategory.Learning, "5. Textures", 1, Source = "Tutorial05_2", Documentation = "Tutorial05_2")]
+    [Example("Example 5.2: Drawing with multiple textures (I)", ExampleCategory.Learning, "5. Textures", 1, Source = "Tutorial05_2", Documentation = "Tutorial05_2")]
     public class TutorialLearning05_2 : GameWindow
     {
         public TutorialLearning05_2()
@@ -69,7 +69,7 @@ namespace Examples.Tutorials
             t1 = CreateTexture(texture1);
             Bitmap texture2 = new Bitmap("Resources/Textures/BrickWall2.jpg");
             t2 = CreateTexture(texture2);
-            uSampler = p.getUniformSampler("uSampler"); //.set(t);
+            uSampler = p.getUniformSampler("uSampler");
 
 
             mesh1 = new Mesh<Vertex_V3T2f, uint>(Vertex_V3T2f.SizeInBytes, sizeof(uint), MeshMode.TRIANGLE_STRIP, MeshUsage.GPU_STATIC);
@@ -185,23 +185,23 @@ namespace Examples.Tutorials
         uniform mat4 uMVMatrix;
         uniform mat4 uPMatrix;
 
-        out vec2 TexCoord0;
+        out vec2 TexCoord;
 
         void main()
         {
             gl_Position = uPMatrix * uMVMatrix * vec4(aPosition, 1.0);
-            TexCoord0 = aTexCoord;
+            TexCoord = aTexCoord;
         }
 #endif
 #ifdef _FRAGMENT_
-        in vec2 TexCoord0;
+        in vec2 TexCoord;
         uniform sampler2D uSampler;
 
         out vec4 FragColor;
 
         void main()
         {
-            FragColor =  texture2D(uSampler, TexCoord0.xy); 
+            FragColor =  texture2D(uSampler, TexCoord); 
         }
 #endif";
 

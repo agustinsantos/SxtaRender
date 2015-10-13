@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Sxta.Math
 {
@@ -22,5 +19,9 @@ namespace Sxta.Math
         {
             return radians * 180 / System.Math.PI;
         }
+
+        public const float PiOver4 = (float)(System.Math.PI / 4);
+        public const float PiOver2 = (float)(System.Math.PI / 2);
+        public const float TwoPi = (float)(2 * System.Math.PI);
     }
 }

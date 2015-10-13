@@ -14,12 +14,12 @@ using MathHelper = Sxta.Math.MathHelper;
 namespace Examples.Tutorials
 {
     /// <summary>
-    /// Demonstrates how to draw with texture
+    /// Demonstrates how to draw with multiple textures
     /// </summary>
-    [Example("Example 5.1: Basic Texture Mapping", ExampleCategory.Learning, "5. Textures", 1, Source = "Tutorial05_1", Documentation = "Tutorial05_1")]
-    public class TutorialLearning05_1 : GameWindow
+    [Example("Example 5.3: Drawing with multiple textures (II)", ExampleCategory.Learning, "5. Textures", 1, Source = "Tutorial05_3", Documentation = "Tutorial05_3")]
+    public class TutorialLearning05_3 : GameWindow
     {
-        public TutorialLearning05_1()
+        public TutorialLearning05_3()
             : base(600, 600)
         {
             Keyboard.KeyDown += Keyboard_KeyDown;
@@ -65,9 +65,14 @@ namespace Examples.Tutorials
             Matrix4f projection = Matrix4f.CreatePerspectiveFieldOfView((float)MathHelper.ToRadians(60), (float)this.Width / (float)this.Height, 0.01f, 100.0f);
             uPMatrix.set(projection);
 
-            Bitmap texture = new Bitmap("Resources/Textures/BrickWall2.jpg");
-            t = CreateTexture(texture);
-            p.getUniformSampler("uSampler").set(t);
+            Bitmap texture1 = new Bitmap("Resources/Textures/BrickWall2.jpg");
+            t1 = CreateTexture(texture1);
+            uSampler1 = p.getUniformSampler("uSampler1");
+            uSampler1.set(t1);
+            Bitmap texture2 = new Bitmap("Resources/Textures/Grass.jpg");
+            t2 = CreateTexture(texture2);
+            uSampler2 = p.getUniformSampler("uSampler2");
+            uSampler2.set(t2);
 
 
             mesh1 = new Mesh<Vertex_V3T2f, uint>(Vertex_V3T2f.SizeInBytes, sizeof(uint), MeshMode.TRIANGLE_STRIP, MeshUsage.GPU_STATIC);
@@ -94,8 +99,10 @@ namespace Examples.Tutorials
                 p.Dispose();
             if (mesh1 != null)
                 mesh1.Dispose();
-            if (t != null)
-                t.Dispose();
+            if (t1 != null)
+                t1.Dispose();
+            if (t2 != null)
+                t2.Dispose();
             if (fb != null)
                 fb.Dispose();
             base.OnUnload(e);
@@ -127,12 +134,12 @@ namespace Examples.Tutorials
         {
             fb.clear(true, false, true);
 
-            Matrix4f camera = Matrix4f.CreateTranslation(0.0f, 0.0f, -5.0f);
+            Matrix4f camera = Matrix4f.CreateTranslation(0.0f, 0.0f, -4.0f);
 
             mat = camera;
             uMVMatrix.set(mat);
             fb.draw(p, mesh1);
-            
+
             this.SwapBuffers();
         }
 
@@ -164,7 +171,8 @@ namespace Examples.Tutorials
         Mesh<Vertex_V3T2f, uint> mesh1;
         Matrix4f mat;
         UniformMatrix4f uMVMatrix;
-        Texture t;
+        Texture t1, t2;
+        UniformSampler uSampler1, uSampler2;
 
         const string FRAGMENT_SHADER = @"
 #ifdef _VERTEX_
@@ -184,13 +192,16 @@ namespace Examples.Tutorials
 #endif
 #ifdef _FRAGMENT_
         in vec2 TexCoord;
-        uniform sampler2D uSampler;
+        uniform sampler2D uSampler1;
+        uniform sampler2D uSampler2;
 
         out vec4 FragColor;
 
         void main()
         {
-            FragColor =  texture2D(uSampler, TexCoord); 
+            vec4 color1 = texture(uSampler1, TexCoord);
+            vec4 color2 = texture(uSampler2, TexCoord);
+            FragColor = mix(color1, color2, 0.5);
         }
 #endif";
 
@@ -204,7 +215,7 @@ namespace Examples.Tutorials
         [STAThread]
         public static void Main()
         {
-            using (TutorialLearning05_1 example = new TutorialLearning05_1())
+            using (TutorialLearning05_3 example = new TutorialLearning05_3())
             {
                 example.Run(30.0, 10.0);
             }

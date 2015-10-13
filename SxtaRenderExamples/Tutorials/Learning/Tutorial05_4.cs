@@ -14,12 +14,12 @@ using MathHelper = Sxta.Math.MathHelper;
 namespace Examples.Tutorials
 {
     /// <summary>
-    /// Demonstrates how to draw with texture
+    /// Demonstrates how to use Texture parameters (Wrapping)
     /// </summary>
-    [Example("Example 5.1: Basic Texture Mapping", ExampleCategory.Learning, "5. Textures", 1, Source = "Tutorial05_1", Documentation = "Tutorial05_1")]
-    public class TutorialLearning05_1 : GameWindow
+    [Example("Example 5.4: Wrapping Texture", ExampleCategory.Learning, "5. Textures", 1, Source = "Tutorial05_4", Documentation = "Tutorial05_4")]
+    public class TutorialLearning05_4 : GameWindow
     {
-        public TutorialLearning05_1()
+        public TutorialLearning05_4()
             : base(600, 600)
         {
             Keyboard.KeyDown += Keyboard_KeyDown;
@@ -65,9 +65,15 @@ namespace Examples.Tutorials
             Matrix4f projection = Matrix4f.CreatePerspectiveFieldOfView((float)MathHelper.ToRadians(60), (float)this.Width / (float)this.Height, 0.01f, 100.0f);
             uPMatrix.set(projection);
 
-            Bitmap texture = new Bitmap("Resources/Textures/BrickWall2.jpg");
-            t = CreateTexture(texture);
-            p.getUniformSampler("uSampler").set(t);
+            Bitmap texture1 = new Bitmap("Resources/Textures/BrickWall2.jpg");
+            t1 = CreateTexture(texture1, TextureWrap.REPEAT);
+            Bitmap texture2 = new Bitmap("Resources/Textures/BrickWall2.jpg");
+            t2 = CreateTexture(texture2, TextureWrap.CLAMP_TO_BORDER);
+            Bitmap texture3 = new Bitmap("Resources/Textures/BrickWall2.jpg");
+            t3 = CreateTexture(texture3, TextureWrap.CLAMP_TO_EDGE);
+            Bitmap texture4 = new Bitmap("Resources/Textures/BrickWall2.jpg");
+            t4 = CreateTexture(texture4, TextureWrap.MIRRORED_REPEAT);
+            uSampler = p.getUniformSampler("uSampler");
 
 
             mesh1 = new Mesh<Vertex_V3T2f, uint>(Vertex_V3T2f.SizeInBytes, sizeof(uint), MeshMode.TRIANGLE_STRIP, MeshUsage.GPU_STATIC);
@@ -76,11 +82,11 @@ namespace Examples.Tutorials
 
             // Front
             mesh1.addVertex(new Vertex_V3T2f() { Position = new Vector3f(-1, -1, 0), TexCoord = new Vector2f(0, 0) });
-            mesh1.addVertex(new Vertex_V3T2f() { Position = new Vector3f(1, -1, 0), TexCoord = new Vector2f(1, 0) });
-            mesh1.addVertex(new Vertex_V3T2f() { Position = new Vector3f(-1, 1, 0), TexCoord = new Vector2f(0, 1) });
-            mesh1.addVertex(new Vertex_V3T2f() { Position = new Vector3f(1, 1, 0), TexCoord = new Vector2f(1, 1) });
+            mesh1.addVertex(new Vertex_V3T2f() { Position = new Vector3f(1, -1, 0), TexCoord = new Vector2f(3, 0) });
+            mesh1.addVertex(new Vertex_V3T2f() { Position = new Vector3f(-1, 1, 0), TexCoord = new Vector2f(0, 3) });
+            mesh1.addVertex(new Vertex_V3T2f() { Position = new Vector3f(1, 1, 0), TexCoord = new Vector2f(3, 3) });
             //mesh1.addIndices(new uint[] {0, 1, 2, 2, 1, 3 });
-            
+
             fb.setClearColor(Color.White);
         }
 
@@ -94,8 +100,14 @@ namespace Examples.Tutorials
                 p.Dispose();
             if (mesh1 != null)
                 mesh1.Dispose();
-            if (t != null)
-                t.Dispose();
+            if (t1 != null)
+                t1.Dispose();
+            if (t2 != null)
+                t2.Dispose();
+            if (t3 != null)
+                t3.Dispose();
+            if (t4 != null)
+                t4.Dispose();
             if (fb != null)
                 fb.Dispose();
             base.OnUnload(e);
@@ -127,18 +139,34 @@ namespace Examples.Tutorials
         {
             fb.clear(true, false, true);
 
-            Matrix4f camera = Matrix4f.CreateTranslation(0.0f, 0.0f, -5.0f);
+            Matrix4f camera = Matrix4f.CreateTranslation(0.0f, 0.0f, -6.0f);
 
-            mat = camera;
+            mat = Matrix4f.CreateTranslation(-1.5f, 1.5f, 0.0f) * camera;
             uMVMatrix.set(mat);
+            uSampler.set(t1);
             fb.draw(p, mesh1);
-            
+
+            mat = Matrix4f.CreateTranslation(1.5f, 1.5f, 0.0f) * camera;
+            uMVMatrix.set(mat);
+            uSampler.set(t2);
+            fb.draw(p, mesh1);
+
+            mat = Matrix4f.CreateTranslation(-1.5f, -1.5f, 0.0f) * camera;
+            uMVMatrix.set(mat);
+            uSampler.set(t3);
+            fb.draw(p, mesh1);
+
+            mat = Matrix4f.CreateTranslation(1.5f, -1.5f, 0.0f) * camera;
+            uMVMatrix.set(mat);
+            uSampler.set(t4);
+            fb.draw(p, mesh1);
+
             this.SwapBuffers();
         }
 
         #endregion
 
-        public Texture CreateTexture(Bitmap img)
+        public Texture CreateTexture(Bitmap img, TextureWrap wrapMode)
         {
             TextureInternalFormat pif;
             TextureFormat pf;
@@ -151,9 +179,11 @@ namespace Examples.Tutorials
             {
                 texbuff.setData(Data.Width * Data.Height * size, Data.Scan0, BufferUsage.STATIC_DRAW);
                 img.UnlockBits(Data);
-                Texture.Parameters @params = new Texture.Parameters();
+                Texture.Parameters texParams = new Texture.Parameters();
+                texParams.wrapT(wrapMode);
+                texParams.wrapS(wrapMode);
                 Sxta.Render.Buffer.Parameters s = new Sxta.Render.Buffer.Parameters();
-                Texture texture = new Texture2D(img.Width, img.Height, pif, pf, pt, @params, s, texbuff);
+                Texture texture = new Texture2D(img.Width, img.Height, pif, pf, pt, texParams, s, texbuff);
                 return texture;
             }
         }
@@ -164,7 +194,8 @@ namespace Examples.Tutorials
         Mesh<Vertex_V3T2f, uint> mesh1;
         Matrix4f mat;
         UniformMatrix4f uMVMatrix;
-        Texture t;
+        Texture t1, t2, t3, t4;
+        UniformSampler uSampler;
 
         const string FRAGMENT_SHADER = @"
 #ifdef _VERTEX_
@@ -204,7 +235,7 @@ namespace Examples.Tutorials
         [STAThread]
         public static void Main()
         {
-            using (TutorialLearning05_1 example = new TutorialLearning05_1())
+            using (TutorialLearning05_4 example = new TutorialLearning05_4())
             {
                 example.Run(30.0, 10.0);
             }
