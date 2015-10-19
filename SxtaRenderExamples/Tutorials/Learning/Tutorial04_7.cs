@@ -15,7 +15,7 @@ namespace Examples.Tutorials
     /// <summary>
     /// Demonstrates how to draw the same figure (cube) multiple time
     /// </summary>
-    [Example("Example 4.7: Drawing multimples cubes (Instancing)", ExampleCategory.Learning, "4. Drawing", 2, Source = "Tutorial04_7", Documentation = "Tutorial04_7")]
+    [Example("Example 4.07: Drawing multimples cubes (Instancing)", ExampleCategory.Learning, "4. Drawing", 2, Source = "Tutorial04_7", Documentation = "Tutorial04_7")]
     public class TutorialLearning04_7 : GameWindow
     {
         public TutorialLearning04_7()
@@ -157,21 +157,6 @@ namespace Examples.Tutorials
         }
 
         #endregion
-        #region OnUpdateFrame
-
-        /// <summary>
-        /// Add your game logic here.
-        /// </summary>
-        /// <param name="e">Contains timing information.</param>
-        /// <remarks>There is no need to call the base implementation.</remarks>
-        protected override void OnUpdateFrame(FrameEventArgs e)
-        {
-            angle += 0.01f;
-            mat = Matrix4f.Scale(0.5f);
-            uMVMatrix.set(mat);
-        }
-
-        #endregion
 
         #region OnRenderFrame
 
@@ -183,6 +168,8 @@ namespace Examples.Tutorials
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             fb.clear(true, false, true);
+            mat = Matrix4f.Scale(0.5f);
+            uMVMatrix.set(mat);
             fb.draw(p, mesh, 36);
             this.SwapBuffers();
         }

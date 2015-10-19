@@ -15,7 +15,7 @@ namespace Examples.Tutorials
     /// <summary>
     /// Demonstrates how to draw multiple models
     /// </summary>
-    [Example("Example 4.9: Drawing multiple models", ExampleCategory.Learning, "4. Drawing", 1, Source = "Tutorial04_9", Documentation = "Tutorial04_9")]
+    [Example("Example 4.09: Drawing multiple models", ExampleCategory.Learning, "4. Drawing", 1, Source = "Tutorial04_9", Documentation = "Tutorial04_9")]
     public class TutorialLearning04_9 : GameWindow
     {
         public TutorialLearning04_9()
@@ -183,19 +183,6 @@ namespace Examples.Tutorials
         }
 
         #endregion
-        #region OnUpdateFrame
-
-        /// <summary>
-        /// Add your game logic here.
-        /// </summary>
-        /// <param name="e">Contains timing information.</param>
-        /// <remarks>There is no need to call the base implementation.</remarks>
-        protected override void OnUpdateFrame(FrameEventArgs e)
-        {
-            angle += 0.01f;
-        }
-
-        #endregion
 
         #region OnRenderFrame
 
@@ -248,7 +235,6 @@ namespace Examples.Tutorials
         Mesh<Vertex_V3C3f, uint> mesh1, mesh2;
         Matrix4f mat;
         UniformMatrix4f uMVMatrix;
-        float angle = 0;
 
         const string FRAGMENT_SHADER = @"
 #ifdef _VERTEX_

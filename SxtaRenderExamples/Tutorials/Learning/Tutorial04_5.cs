@@ -15,7 +15,7 @@ namespace Examples.Tutorials
     /// <summary>
     /// Demonstrates how to draw a simple figure (cube) in 3D using multiple buffers
     /// </summary>
-    [Example("Example 4.5: Drawing in 3D (Several Buffers)", ExampleCategory.Learning, "4. Drawing", 2, Source = "Tutorial04_5", Documentation = "Tutorial04_5")]
+    [Example("Example 4.05: Drawing in 3D (Several Buffers)", ExampleCategory.Learning, "4. Drawing", 2, Source = "Tutorial04_5", Documentation = "Tutorial04_5")]
     public class TutorialLearning04_5 : GameWindow
     {
         public TutorialLearning04_5()

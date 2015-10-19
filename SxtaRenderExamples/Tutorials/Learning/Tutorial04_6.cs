@@ -15,7 +15,7 @@ namespace Examples.Tutorials
     /// <summary>
     /// Demonstrates how to draw the same figure (cube) multiple time
     /// </summary>
-    [Example("Example 4.6: Drawing multimples cubes", ExampleCategory.Learning, "4. Drawing", 1, Source = "Tutorial04_6", Documentation = "Tutorial04_6")]
+    [Example("Example 4.06: Drawing multimples cubes", ExampleCategory.Learning, "4. Drawing", 1, Source = "Tutorial04_6", Documentation = "Tutorial04_6")]
     public class TutorialLearning04_6 : GameWindow
     {
         public TutorialLearning04_6()

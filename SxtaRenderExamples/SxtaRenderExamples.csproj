@@ -66,6 +66,9 @@
     <Compile Include="Tutorials\Learning\Tutorial03_4.cs" />
     <Compile Include="Tutorials\Learning\Tutorial03_7.cs" />
     <Compile Include="Tutorials\Learning\Tutorial03_6.cs" />
+    <Compile Include="Tutorials\Learning\Tutorial04_12.cs" />
+    <Compile Include="Tutorials\Learning\Tutorial04_11.cs" />
+    <Compile Include="Tutorials\Learning\Tutorial04_10.cs" />
     <Compile Include="Tutorials\Learning\Tutorial05_5.cs" />
     <Compile Include="Tutorials\Learning\Tutorial05_4.cs" />
     <Compile Include="Tutorials\Learning\Tutorial05_3.cs" />
@@ -206,6 +209,46 @@
     <None Include="Resources\Meshes\sphere.mesh">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Resources\ObjModels\cessna.obj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\ObjModels\cow-nonormals.obj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\ObjModels\cube.obj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\ObjModels\diamond.obj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\ObjModels\dodecahedron.obj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\ObjModels\humanoid_quad.obj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\ObjModels\humanoid_tri.obj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\ObjModels\icosahedron.obj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\ObjModels\octahedron.obj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\ObjModels\teapot.obj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\ObjModels\teddy.obj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\ObjModels\test.mtl" />
+    <None Include="Resources\ObjModels\test.obj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\ObjModels\cessna.mtl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Resources\Shaders\camera.glsl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -290,6 +333,10 @@
     <None Include="Tutorials\Learning\Tutorial01_1.rtf" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ObjLoader\ObjLoader.csproj">
+      <Project>{9b86ebeb-4d3a-4136-a90b-5c26e88b4656}</Project>
+      <Name>ObjLoader</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SxtaRender\SxtaRender.csproj">
       <Project>{2b803a3e-cc40-477b-a9cf-b1f2abdce6f3}</Project>
       <Name>SxtaRender</Name>
@@ -370,6 +417,18 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\BmpSuite\rgb32bf.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\ObjModels\cessna.png" />
+    <Content Include="Resources\ObjModels\cube.png" />
+    <Content Include="Resources\ObjModels\diamond.png" />
+    <Content Include="Resources\ObjModels\dodecahedron.png" />
+    <Content Include="Resources\ObjModels\humanoid_quad.png" />
+    <Content Include="Resources\ObjModels\humanoid_tri.png" />
+    <Content Include="Resources\ObjModels\icosahedron.png" />
+    <Content Include="Resources\ObjModels\octahedron.png" />
+    <Content Include="Resources\ObjModels\README.txt" />
+    <Content Include="Resources\Textures\Crate.bmp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\Textures\Grass.jpg">

@@ -14,7 +14,7 @@ namespace Examples.Tutorials
     /// <summary>
     /// Demonstrates the several drawing primitives using the same data.
     /// </summary>
-    [Example("Example 4.1: Drawing primitives", ExampleCategory.Learning, "4. Drawing", 1, Source = "Tutorial04_1", Documentation = "Tutorial04_1")]
+    [Example("Example 4.01: Drawing primitives", ExampleCategory.Learning, "4. Drawing", 1, Source = "Tutorial04_1", Documentation = "Tutorial04_1")]
     public class TutorialLearning04_1 : GameWindow
     {
         public TutorialLearning04_1()

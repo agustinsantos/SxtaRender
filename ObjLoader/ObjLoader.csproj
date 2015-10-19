@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{9B86EBEB-4D3A-4136-A90B-5C26E88B4656}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ObjLoader</RootNamespace>
+    <AssemblyName>ObjLoader</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Common\StringExtensions.cs" />
+    <Compile Include="Data\DataStore\DataStore.cs" />
+    <Compile Include="Data\DataStore\IDataStore.cs" />
+    <Compile Include="Data\DataStore\IElementGroup.cs" />
+    <Compile Include="Data\DataStore\IFaceGroup.cs" />
+    <Compile Include="Data\DataStore\IGroupDataStore.cs" />
+    <Compile Include="Data\DataStore\IMaterialLibrary.cs" />
+    <Compile Include="Data\DataStore\INormalDataStore.cs" />
+    <Compile Include="Data\DataStore\ITextureDataStore.cs" />
+    <Compile Include="Data\DataStore\IVertexDataStore.cs" />
+    <Compile Include="Data\Elements\Face.cs" />
+    <Compile Include="Data\Elements\Group.cs" />
+    <Compile Include="Data\Material.cs" />
+    <Compile Include="Data\VertexData\Normal.cs" />
+    <Compile Include="Data\VertexData\Texture.cs" />
+    <Compile Include="Data\VertexData\Vertex.cs" />
+    <Compile Include="Loaders\IMaterialLibraryLoader.cs" />
+    <Compile Include="Loaders\IMaterialLibraryLoaderFacade.cs" />
+    <Compile Include="Loaders\IObjLoader.cs" />
+    <Compile Include="Loaders\IObjLoaderFactory.cs" />
+    <Compile Include="Loaders\LoaderBase.cs" />
+    <Compile Include="Loaders\LoadResult.cs" />
+    <Compile Include="Loaders\MaterialLibraryLoader.cs" />
+    <Compile Include="Loaders\MaterialLibraryLoaderFacade.cs" />
+    <Compile Include="Loaders\MaterialStreamProvider.cs" />
+    <Compile Include="Loaders\ObjLoader.cs" />
+    <Compile Include="Loaders\ObjLoaderFactory.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TypeParsers\FaceParser.cs" />
+    <Compile Include="TypeParsers\GroupParser.cs" />
+    <Compile Include="TypeParsers\Interfaces\IFaceParser.cs" />
+    <Compile Include="TypeParsers\Interfaces\IGroupParser.cs" />
+    <Compile Include="TypeParsers\Interfaces\IMaterialLibraryParser.cs" />
+    <Compile Include="TypeParsers\Interfaces\INormalParser.cs" />
+    <Compile Include="TypeParsers\Interfaces\ITextureParser.cs" />
+    <Compile Include="TypeParsers\Interfaces\ITypeParser.cs" />
+    <Compile Include="TypeParsers\Interfaces\IUseMaterialParser.cs" />
+    <Compile Include="TypeParsers\Interfaces\IVertexParser.cs" />
+    <Compile Include="TypeParsers\MaterialLibraryParser.cs" />
+    <Compile Include="TypeParsers\NormalParser.cs" />
+    <Compile Include="TypeParsers\TextureParser.cs" />
+    <Compile Include="TypeParsers\TypeParserBase.cs" />
+    <Compile Include="TypeParsers\UseMaterialParser.cs" />
+    <Compile Include="TypeParsers\VertexParser.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SxtaRender\SxtaRender.csproj">
+      <Project>{2b803a3e-cc40-477b-a9cf-b1f2abdce6f3}</Project>
+      <Name>SxtaRender</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="LICENSE.md" />
+    <None Include="README.md" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

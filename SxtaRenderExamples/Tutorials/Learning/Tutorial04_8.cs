@@ -15,7 +15,7 @@ namespace Examples.Tutorials
     /// <summary>
     /// Demonstrates how to draw axes
     /// </summary>
-    [Example("Example 4.8: Drawing axes", ExampleCategory.Learning, "4. Drawing", 1, Source = "Tutorial04_8", Documentation = "Tutorial04_8")]
+    [Example("Example 4.08: Drawing axes", ExampleCategory.Learning, "4. Drawing", 1, Source = "Tutorial04_8", Documentation = "Tutorial04_8")]
     public class TutorialLearning04_8 : GameWindow
     {
         public TutorialLearning04_8()
@@ -149,19 +149,6 @@ namespace Examples.Tutorials
         }
 
         #endregion
-        #region OnUpdateFrame
-
-        /// <summary>
-        /// Add your game logic here.
-        /// </summary>
-        /// <param name="e">Contains timing information.</param>
-        /// <remarks>There is no need to call the base implementation.</remarks>
-        protected override void OnUpdateFrame(FrameEventArgs e)
-        {
-            angle += 0.01f;
-        }
-
-        #endregion
 
         #region OnRenderFrame
 
@@ -209,7 +196,6 @@ namespace Examples.Tutorials
         Mesh<Vertex_V3C3f, uint> mesh;
         Matrix4f mat;
         UniformMatrix4f uMVMatrix;
-        float angle = 0;
 
         const string FRAGMENT_SHADER = @"
 #ifdef _VERTEX_

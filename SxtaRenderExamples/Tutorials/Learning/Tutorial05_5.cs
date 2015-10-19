@@ -65,9 +65,9 @@ namespace Examples.Tutorials
             Matrix4f projection = Matrix4f.CreatePerspectiveFieldOfView((float)MathHelper.ToRadians(60), (float)this.Width / (float)this.Height, 0.01f, 100.0f);
             uPMatrix.set(projection);
 
-            Bitmap texture1 = new Bitmap("Resources/Textures/BrickWall2.jpg");
+            Bitmap texture1 = new Bitmap("Resources/Textures/Crate.bmp");
             t1 = CreateTexture(texture1, TextureFilter.LINEAR);
-            Bitmap texture2 = new Bitmap("Resources/Textures/BrickWall2.jpg");
+            Bitmap texture2 = new Bitmap("Resources/Textures/Crate.bmp");
             t2 = CreateTexture(texture2, TextureFilter.NEAREST);
             uSampler = p.getUniformSampler("uSampler");
 
