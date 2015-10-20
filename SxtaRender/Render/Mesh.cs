@@ -353,12 +353,10 @@ namespace Sxta.Render
 		/// </param>
         public void addIndices(index[] arr)
         {
-            while (indicesCount + arr.Length >= indicesLength)
-            {
-                resizeIndices(2 * indicesLength);
-            }
-            Array.Copy(arr, 0, indices, indicesCount, arr.Length);
-            indicesCount += arr.Length;
+            int intitialCnt = indicesCount;
+            resizeIndices(indicesCount + arr.Length);
+            Array.Copy(arr, 0, indices, intitialCnt, arr.Length);
+            indicesCount = intitialCnt + arr.Length;
             indexDataHasChanged = true;
         }
 

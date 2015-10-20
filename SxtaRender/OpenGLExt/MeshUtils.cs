@@ -601,7 +601,7 @@ namespace Sxta.Render.OpenGLExt
 
         #region MeshGenereration
 
-        private static Mesh<Vertex_V3N3f, ushort> MeshGeometryWire(float[] vertices, float[] normals, int numVertices,
+        public static Mesh<Vertex_V3N3f, ushort> MeshGeometryWire(float[] vertices, float[] normals, int numVertices,
                                                           ushort[] vertIdxs, int numParts, int numVertPerPart, MeshMode vertexMode,
                                                           ushort[] vertIdxs2, int numParts2, int numVertPerPart2)
         {
@@ -622,7 +622,7 @@ namespace Sxta.Render.OpenGLExt
             return mesh;
         }
 
-        private static Mesh<Vertex_V3N3T2f, ushort> MeshGeometrySolid(float[] vertices, float[] normals, float[] textcs, int numVertices,
+        public static Mesh<Vertex_V3N3T2f, ushort> MeshGeometrySolid(float[] vertices, float[] normals, float[] textcs, int numVertices,
                                                                       ushort[] vertIdxs, int numParts, int numVertIdxsPerPart, MeshMode meshMode = MeshMode.TRIANGLES)
         {
             Mesh<Vertex_V3N3T2f, ushort> mesh = new Mesh<Vertex_V3N3T2f, ushort>(Vertex_V3N3T2f.SizeInBytes, sizeof(ushort), meshMode, MeshUsage.GPU_STATIC);

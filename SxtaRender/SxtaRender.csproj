@@ -84,6 +84,7 @@
     <Compile Include="OpenGLExt\KTXfile.cs" />
     <Compile Include="OpenGLExt\MeshUtils.cs" />
     <Compile Include="OpenGLExt\ScreenShot.cs" />
+    <Compile Include="OpenGLExt\Teapot.cs" />
     <Compile Include="Render\AttributeBuffer.cs" />
     <Compile Include="Render\Buffer.cs" />
     <Compile Include="Math\Box3d.cs" />
