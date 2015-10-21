@@ -14,12 +14,12 @@ using MathHelper = Sxta.Math.MathHelper;
 namespace Examples.Tutorials
 {
     /// <summary>
-    /// Demonstrates how to use Texture parameters (Filtering)
+    /// Demonstrates how to mix several textures
     /// </summary>
-    [Example("Example 5.5: Filtering Texture", ExampleCategory.Learning, "5. Textures", 1, Source = "Tutorial05_5", Documentation = "Tutorial05_5")]
-    public class TutorialLearning05_5 : GameWindow
+    [Example("Example 5.6: Mix Textures", ExampleCategory.Learning, "5. Textures", 1, Source = "Tutorial05_6", Documentation = "Tutorial05_6")]
+    public class TutorialLearning05_6 : GameWindow
     {
-        public TutorialLearning05_5()
+        public TutorialLearning05_6()
             : base(600, 600)
         {
             Keyboard.KeyDown += Keyboard_KeyDown;
@@ -65,11 +65,18 @@ namespace Examples.Tutorials
             Matrix4f projection = Matrix4f.CreatePerspectiveFieldOfView((float)MathHelper.ToRadians(60), (float)this.Width / (float)this.Height, 0.01f, 100.0f);
             uPMatrix.set(projection);
 
-            Bitmap texture1 = new Bitmap("Resources/Textures/Crate.bmp");
-            t1 = CreateTexture(texture1, TextureFilter.LINEAR);
-            Bitmap texture2 = new Bitmap("Resources/Textures/Crate.bmp");
-            t2 = CreateTexture(texture2, TextureFilter.NEAREST);
-            uSampler = p.getUniformSampler("uSampler");
+            Bitmap texture1 = new Bitmap("Resources/Textures/baserock.jpg");
+            t1 = CreateTexture(texture1);
+            Bitmap texture2 = new Bitmap("Resources/Textures/nicegrass.jpg");
+            t2 = CreateTexture(texture2);
+            Bitmap texture3 = new Bitmap("Resources/Textures/darkrockalpha.png");
+            t3 = CreateTexture(texture3);
+            uSampler1 = p.getUniformSampler("uSampler1");
+            uSampler2 = p.getUniformSampler("uSampler2");
+            uSampler3 = p.getUniformSampler("uSampler3");
+            uSampler1.set(t1);
+            uSampler2.set(t2);
+            uSampler3.set(t3);
 
 
             mesh1 = new Mesh<Vertex_V3T2f, uint>(Vertex_V3T2f.SizeInBytes, sizeof(uint), MeshMode.TRIANGLE_STRIP, MeshUsage.GPU_STATIC);
@@ -100,6 +107,8 @@ namespace Examples.Tutorials
                 t1.Dispose();
             if (t2 != null)
                 t2.Dispose();
+            if (t3 != null)
+                t3.Dispose();
             if (fb != null)
                 fb.Dispose();
             base.OnUnload(e);
@@ -131,16 +140,10 @@ namespace Examples.Tutorials
         {
             fb.clear(true, false, true);
 
-            Matrix4f camera = Matrix4f.CreateTranslation(0.0f, 0.0f, -0.5f);
+            Matrix4f camera = Matrix4f.CreateTranslation(0.0f, 0.0f, -3.0f);
 
-            mat = Matrix4f.CreateTranslation(-1.05f, 0.0f, 0.0f) * camera;
+            mat = /*Matrix4f.CreateTranslation(0.0f, 0.0f, 0.0f) */ camera;
             uMVMatrix.set(mat);
-            uSampler.set(t1);
-            fb.draw(p, mesh1);
-
-            mat = Matrix4f.CreateTranslation(1.05f, 0.0f, 0.0f) * camera;
-            uMVMatrix.set(mat);
-            uSampler.set(t2);
             fb.draw(p, mesh1);
 
             this.SwapBuffers();
@@ -148,7 +151,7 @@ namespace Examples.Tutorials
 
         #endregion
 
-        public Texture CreateTexture(Bitmap img, TextureFilter texFilter)
+        public Texture CreateTexture(Bitmap img, TextureFilter texFilter = TextureFilter.LINEAR)
         {
             TextureInternalFormat pif;
             TextureFormat pf;
@@ -176,8 +179,8 @@ namespace Examples.Tutorials
         Mesh<Vertex_V3T2f, uint> mesh1;
         Matrix4f mat;
         UniformMatrix4f uMVMatrix;
-        Texture t1, t2;
-        UniformSampler uSampler;
+        Texture t1, t2, t3;
+        UniformSampler uSampler1, uSampler2, uSampler3;
 
         const string FRAGMENT_SHADER = @"
 #ifdef _VERTEX_
@@ -197,13 +200,18 @@ namespace Examples.Tutorials
 #endif
 #ifdef _FRAGMENT_
         in vec2 TexCoord;
-        uniform sampler2D uSampler;
+        uniform sampler2D uSampler1;
+        uniform sampler2D uSampler2;
+        uniform sampler2D uSampler3;
 
         out vec4 FragColor;
 
         void main()
         {
-            FragColor =  texture2D(uSampler, TexCoord); 
+            vec4 texColor1 = texture(uSampler1, TexCoord);
+            vec4 texColor2 = texture(uSampler2, TexCoord);
+            vec4 texColor3 = texture(uSampler3, TexCoord);
+            FragColor = mix(texColor1, texColor2, 1.0 - texColor3.r);
         }
 #endif";
 
@@ -217,7 +225,7 @@ namespace Examples.Tutorials
         [STAThread]
         public static void Main()
         {
-            using (TutorialLearning05_5 example = new TutorialLearning05_5())
+            using (TutorialLearning05_6 example = new TutorialLearning05_6())
             {
                 example.Run(30.0, 10.0);
             }

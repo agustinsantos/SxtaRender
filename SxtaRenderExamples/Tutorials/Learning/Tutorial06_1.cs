@@ -6,6 +6,7 @@ using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
 using Sxta.Math;
 using Sxta.Render;
+using Sxta.Render.OpenGLExt;
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -14,12 +15,12 @@ using MathHelper = Sxta.Math.MathHelper;
 namespace Examples.Tutorials
 {
     /// <summary>
-    /// Demonstrates how to use Texture parameters (Filtering)
+    /// Demonstrates how Debuging Normals
     /// </summary>
-    [Example("Example 5.5: Filtering Texture", ExampleCategory.Learning, "5. Textures", 1, Source = "Tutorial05_5", Documentation = "Tutorial05_5")]
-    public class TutorialLearning05_5 : GameWindow
+    [Example("Example 6.1: Debuging Normals", ExampleCategory.Learning, "6. Lighting", 1, Source = "Tutorial06_1", Documentation = "Tutorial06_1")]
+    public class TutorialLearning06_1 : GameWindow
     {
-        public TutorialLearning05_5()
+        public TutorialLearning06_1()
             : base(600, 600)
         {
             Keyboard.KeyDown += Keyboard_KeyDown;
@@ -61,27 +62,15 @@ namespace Examples.Tutorials
             uMVMatrix = p.getUniformMatrix4f("uMVMatrix");
 
             UniformMatrix4f uPMatrix = p.getUniformMatrix4f("uPMatrix");
+            // position the camera 
+            camera = new FirstPersonCamera(this);
+            camera.Position = new Vector3f(0, 0, -5);
+
             // fovy, aspect, zNear, zFar
             Matrix4f projection = Matrix4f.CreatePerspectiveFieldOfView((float)MathHelper.ToRadians(60), (float)this.Width / (float)this.Height, 0.01f, 100.0f);
             uPMatrix.set(projection);
 
-            Bitmap texture1 = new Bitmap("Resources/Textures/Crate.bmp");
-            t1 = CreateTexture(texture1, TextureFilter.LINEAR);
-            Bitmap texture2 = new Bitmap("Resources/Textures/Crate.bmp");
-            t2 = CreateTexture(texture2, TextureFilter.NEAREST);
-            uSampler = p.getUniformSampler("uSampler");
-
-
-            mesh1 = new Mesh<Vertex_V3T2f, uint>(Vertex_V3T2f.SizeInBytes, sizeof(uint), MeshMode.TRIANGLE_STRIP, MeshUsage.GPU_STATIC);
-            mesh1.addAttributeType(0, 3, AttributeType.A32F, false);
-            mesh1.addAttributeType(1, 2, AttributeType.A32F, false);
-
-            // Front
-            mesh1.addVertex(new Vertex_V3T2f() { Position = new Vector3f(-1, -1, 0), TexCoord = new Vector2f(0, 0) });
-            mesh1.addVertex(new Vertex_V3T2f() { Position = new Vector3f(1, -1, 0), TexCoord = new Vector2f(1, 0) });
-            mesh1.addVertex(new Vertex_V3T2f() { Position = new Vector3f(-1, 1, 0), TexCoord = new Vector2f(0, 1) });
-            mesh1.addVertex(new Vertex_V3T2f() { Position = new Vector3f(1, 1, 0), TexCoord = new Vector2f(1, 1) });
-            //mesh1.addIndices(new uint[] {0, 1, 2, 2, 1, 3 });
+            mesh1 = MeshUtils.GenerateSolidSphere(1.0f, 40, 40);
 
             fb.setClearColor(Color.White);
         }
@@ -98,8 +87,6 @@ namespace Examples.Tutorials
                 mesh1.Dispose();
             if (t1 != null)
                 t1.Dispose();
-            if (t2 != null)
-                t2.Dispose();
             if (fb != null)
                 fb.Dispose();
             base.OnUnload(e);
@@ -120,6 +107,22 @@ namespace Examples.Tutorials
         }
         #endregion
 
+        #region OnUpdateFrame
+
+        /// <summary>
+        /// Add your game logic here.
+        /// </summary>
+        /// <param name="e">Contains timing information.</param>
+        /// <remarks>There is no need to call the base implementation.</remarks>
+        protected override void OnUpdateFrame(FrameEventArgs e)
+        {
+            camera.Update((float)e.Time);
+            angle += 0.01f;
+            mat = Matrix4f.CreateRotationZ(-angle) * camera.Matrix;
+            uMVMatrix.set(mat);
+        }
+
+        #endregion
         #region OnRenderFrame
 
         /// <summary>
@@ -131,16 +134,6 @@ namespace Examples.Tutorials
         {
             fb.clear(true, false, true);
 
-            Matrix4f camera = Matrix4f.CreateTranslation(0.0f, 0.0f, -0.5f);
-
-            mat = Matrix4f.CreateTranslation(-1.05f, 0.0f, 0.0f) * camera;
-            uMVMatrix.set(mat);
-            uSampler.set(t1);
-            fb.draw(p, mesh1);
-
-            mat = Matrix4f.CreateTranslation(1.05f, 0.0f, 0.0f) * camera;
-            uMVMatrix.set(mat);
-            uSampler.set(t2);
             fb.draw(p, mesh1);
 
             this.SwapBuffers();
@@ -148,7 +141,7 @@ namespace Examples.Tutorials
 
         #endregion
 
-        public Texture CreateTexture(Bitmap img, TextureFilter texFilter)
+        public Texture CreateTexture(Bitmap img, TextureFilter texFilter = TextureFilter.LINEAR)
         {
             TextureInternalFormat pif;
             TextureFormat pf;
@@ -173,37 +166,39 @@ namespace Examples.Tutorials
         #region Fields
         FrameBuffer fb;
         Program p;
-        Mesh<Vertex_V3T2f, uint> mesh1;
+        Mesh<Vertex_V3N3T2f, ushort> mesh1;
         Matrix4f mat;
         UniformMatrix4f uMVMatrix;
-        Texture t1, t2;
-        UniformSampler uSampler;
+        Texture t1;
+        private FirstPersonCamera camera;
+        float angle = 0;
 
         const string FRAGMENT_SHADER = @"
 #ifdef _VERTEX_
         layout (location = 0) in vec3 aPosition;
-        layout (location = 1) in vec2 aTexCoord;
+        layout (location = 1) in vec3 aNormal;
 
         uniform mat4 uMVMatrix;
         uniform mat4 uPMatrix;
 
-        out vec2 TexCoord;
+        out vec3 vColor;
 
         void main()
         {
             gl_Position = uPMatrix * uMVMatrix * vec4(aPosition, 1.0);
-            TexCoord = aTexCoord;
+
+            // We use normal vectors as (fake) color.
+            // in later examples we will use normals for proper ilumination
+            vColor = normalize(aNormal);
         }
 #endif
 #ifdef _FRAGMENT_
-        in vec2 TexCoord;
-        uniform sampler2D uSampler;
-
-        out vec4 FragColor;
-
+        in vec3 vColor;
+        out vec3 FragColor;
+ 
         void main()
         {
-            FragColor =  texture2D(uSampler, TexCoord); 
+            FragColor =  vColor; 
         }
 #endif";
 
@@ -217,23 +212,13 @@ namespace Examples.Tutorials
         [STAThread]
         public static void Main()
         {
-            using (TutorialLearning05_5 example = new TutorialLearning05_5())
+            using (TutorialLearning06_1 example = new TutorialLearning06_1())
             {
                 example.Run(30.0, 10.0);
             }
         }
 
         #endregion
-
-        private struct Vertex_V3T2f
-        {
-            public Vector3f Position;
-            public Vector2f TexCoord;
-            public static int SizeInBytes
-            {
-                get { return Vector3f.SizeInBytes + Vector2f.SizeInBytes; }
-            }
-        }
     }
 
 

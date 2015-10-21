@@ -6,6 +6,7 @@ using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
 using Sxta.Math;
 using Sxta.Render;
+using Sxta.Render.OpenGLExt;
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -14,12 +15,12 @@ using MathHelper = Sxta.Math.MathHelper;
 namespace Examples.Tutorials
 {
     /// <summary>
-    /// Demonstrates how to use Texture parameters (Filtering)
+    /// Demonstrates how to texture a Sphere
     /// </summary>
-    [Example("Example 5.5: Filtering Texture", ExampleCategory.Learning, "5. Textures", 1, Source = "Tutorial05_5", Documentation = "Tutorial05_5")]
-    public class TutorialLearning05_5 : GameWindow
+    [Example("Example 5.6: Texturing a Sphere", ExampleCategory.Learning, "5. Textures", 1, Source = "Tutorial05_7", Documentation = "Tutorial05_7")]
+    public class TutorialLearning05_7 : GameWindow
     {
-        public TutorialLearning05_5()
+        public TutorialLearning05_7()
             : base(600, 600)
         {
             Keyboard.KeyDown += Keyboard_KeyDown;
@@ -65,23 +66,13 @@ namespace Examples.Tutorials
             Matrix4f projection = Matrix4f.CreatePerspectiveFieldOfView((float)MathHelper.ToRadians(60), (float)this.Width / (float)this.Height, 0.01f, 100.0f);
             uPMatrix.set(projection);
 
-            Bitmap texture1 = new Bitmap("Resources/Textures/Crate.bmp");
-            t1 = CreateTexture(texture1, TextureFilter.LINEAR);
-            Bitmap texture2 = new Bitmap("Resources/Textures/Crate.bmp");
-            t2 = CreateTexture(texture2, TextureFilter.NEAREST);
+            Bitmap texture1 = new Bitmap("Resources/Textures/Earthmap720x360_grid.jpg");
+            t1 = CreateTexture(texture1);
             uSampler = p.getUniformSampler("uSampler");
+            uSampler.set(t1);
 
 
-            mesh1 = new Mesh<Vertex_V3T2f, uint>(Vertex_V3T2f.SizeInBytes, sizeof(uint), MeshMode.TRIANGLE_STRIP, MeshUsage.GPU_STATIC);
-            mesh1.addAttributeType(0, 3, AttributeType.A32F, false);
-            mesh1.addAttributeType(1, 2, AttributeType.A32F, false);
-
-            // Front
-            mesh1.addVertex(new Vertex_V3T2f() { Position = new Vector3f(-1, -1, 0), TexCoord = new Vector2f(0, 0) });
-            mesh1.addVertex(new Vertex_V3T2f() { Position = new Vector3f(1, -1, 0), TexCoord = new Vector2f(1, 0) });
-            mesh1.addVertex(new Vertex_V3T2f() { Position = new Vector3f(-1, 1, 0), TexCoord = new Vector2f(0, 1) });
-            mesh1.addVertex(new Vertex_V3T2f() { Position = new Vector3f(1, 1, 0), TexCoord = new Vector2f(1, 1) });
-            //mesh1.addIndices(new uint[] {0, 1, 2, 2, 1, 3 });
+            mesh1 = MeshUtils.GenerateSolidSphere(1.0f, 40, 40);
 
             fb.setClearColor(Color.White);
         }
@@ -98,8 +89,6 @@ namespace Examples.Tutorials
                 mesh1.Dispose();
             if (t1 != null)
                 t1.Dispose();
-            if (t2 != null)
-                t2.Dispose();
             if (fb != null)
                 fb.Dispose();
             base.OnUnload(e);
@@ -120,6 +109,24 @@ namespace Examples.Tutorials
         }
         #endregion
 
+        #region OnUpdateFrame
+
+        Matrix4f MV = Matrix4f.CreateRotationX(Math.PI / 2) * Matrix4f.CreateTranslation(0.0f, -0.3f, -3.0f);
+
+        /// <summary>
+        /// Add your game logic here.
+        /// </summary>
+        /// <param name="e">Contains timing information.</param>
+        /// <remarks>There is no need to call the base implementation.</remarks>
+        protected override void OnUpdateFrame(FrameEventArgs e)
+        {
+            angle += 0.01f;
+
+            mat = Matrix4f.CreateRotationZ(-angle) * MV;
+            uMVMatrix.set(mat);
+        }
+
+        #endregion
         #region OnRenderFrame
 
         /// <summary>
@@ -131,16 +138,6 @@ namespace Examples.Tutorials
         {
             fb.clear(true, false, true);
 
-            Matrix4f camera = Matrix4f.CreateTranslation(0.0f, 0.0f, -0.5f);
-
-            mat = Matrix4f.CreateTranslation(-1.05f, 0.0f, 0.0f) * camera;
-            uMVMatrix.set(mat);
-            uSampler.set(t1);
-            fb.draw(p, mesh1);
-
-            mat = Matrix4f.CreateTranslation(1.05f, 0.0f, 0.0f) * camera;
-            uMVMatrix.set(mat);
-            uSampler.set(t2);
             fb.draw(p, mesh1);
 
             this.SwapBuffers();
@@ -148,7 +145,7 @@ namespace Examples.Tutorials
 
         #endregion
 
-        public Texture CreateTexture(Bitmap img, TextureFilter texFilter)
+        public Texture CreateTexture(Bitmap img, TextureFilter texFilter = TextureFilter.LINEAR)
         {
             TextureInternalFormat pif;
             TextureFormat pf;
@@ -173,37 +170,45 @@ namespace Examples.Tutorials
         #region Fields
         FrameBuffer fb;
         Program p;
-        Mesh<Vertex_V3T2f, uint> mesh1;
+        Mesh<Vertex_V3N3T2f, ushort> mesh1;
         Matrix4f mat;
         UniformMatrix4f uMVMatrix;
-        Texture t1, t2;
+        Texture t1;
         UniformSampler uSampler;
+        float angle = 0;
 
         const string FRAGMENT_SHADER = @"
 #ifdef _VERTEX_
         layout (location = 0) in vec3 aPosition;
-        layout (location = 1) in vec2 aTexCoord;
 
         uniform mat4 uMVMatrix;
         uniform mat4 uPMatrix;
 
-        out vec2 TexCoord;
+        out vec4 TexCoord;
 
         void main()
         {
             gl_Position = uPMatrix * uMVMatrix * vec4(aPosition, 1.0);
-            TexCoord = aTexCoord;
+            TexCoord = vec4(aPosition, 1.0);
         }
 #endif
 #ifdef _FRAGMENT_
-        in vec2 TexCoord;
+        in vec4 TexCoord;
         uniform sampler2D uSampler;
 
         out vec4 FragColor;
 
         void main()
         {
-            FragColor =  texture2D(uSampler, TexCoord); 
+            // processing of the texture coordinates;
+            // this is unnecessary if correct texture coordinates are specified by the application
+            vec2 longitudeLatitude = vec2((atan(TexCoord.y, TexCoord.x) / 3.1415926 + 1.0) * 0.5,
+                                          (asin(TexCoord.z) / 3.1415926 + 0.5));
+
+            // look up the color of the texture image specified by the uniform uSampler
+            // at the position specified by longitudeLatitude.x and
+            // longitudeLatitude.y and return it in FragColor
+            FragColor = texture(uSampler, longitudeLatitude);
         }
 #endif";
 
@@ -217,23 +222,13 @@ namespace Examples.Tutorials
         [STAThread]
         public static void Main()
         {
-            using (TutorialLearning05_5 example = new TutorialLearning05_5())
+            using (TutorialLearning05_7 example = new TutorialLearning05_7())
             {
                 example.Run(30.0, 10.0);
             }
         }
 
         #endregion
-
-        private struct Vertex_V3T2f
-        {
-            public Vector3f Position;
-            public Vector2f TexCoord;
-            public static int SizeInBytes
-            {
-                get { return Vector3f.SizeInBytes + Vector2f.SizeInBytes; }
-            }
-        }
     }
 
 
