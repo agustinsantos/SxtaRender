@@ -6,12 +6,11 @@ using OpenTK.Input;
 using Sxta.Math;
 using Sxta.Render;
 using System;
-using MathHelper = Sxta.Math.MathHelper;
 
 namespace Examples.Tutorials
 {
     /// <summary>
-    /// Demonstrates how to use Perspective Projection Matrix.
+    /// Demonstrates how to use Camera.
     /// </summary>
     [Example("Example 3.7: Camera", ExampleCategory.Learning, "3. Math: Matrix operations", 1, Source = "Tutorial03_7", Documentation = "Tutorial03_7")]
     public class TutorialLearning03_7 : GameWindow
@@ -70,7 +69,6 @@ namespace Examples.Tutorials
             triangle.addVertex(new Vector2f(0.0f, 0.2f));
             triangle.addVertex(new Vector2f(0.2f, -0.2f));
             triangle.addVertex(new Vector2f(-0.2f, -0.2f));
-
         }
 
         #endregion
@@ -102,11 +100,11 @@ namespace Examples.Tutorials
         {
             fb.setViewport(new Vector4i(0, 0, Width, Height));
             camera.Resize(Width, Height);
-            camera.Update();
+            //camera.Update();
 
             // fovy, aspect, zNear, zFar
             //Matrix4f projection = Matrix4f.CreatePerspectiveFieldOfView((float)MathHelper.ToRadians(60), (float)this.Width / (float)this.Height, 0.01f, 100.0f);
-            uPMatrix.set(camera.Projection);
+            uPMatrix.set(camera.ProjectionMatrix);
 
         }
 
@@ -129,7 +127,7 @@ namespace Examples.Tutorials
         {
             fb.clear(true, false, true);
 
-            Matrix4f cam = camera.Matrix;
+            Matrix4f cam = camera.ViewMatrix;
             // Red
             uColor.set(new Vector3f(1.0f, 0.0f, 0.0f));
             mat = Matrix4f.CreateTranslation(-0.6f, -0.4f, -1.0f) * cam;

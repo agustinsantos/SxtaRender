@@ -17,7 +17,7 @@
  #>
 #region --- License ---
 /*
-Copyright (c) 2006 - 2008 The Open Toolkit library.
+Copyright (c) 2008 - 2016 The Sxta Render library.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -1604,82 +1604,114 @@ namespace Sxta.Math
         /// <summary>
         /// Gets or sets the value at row 1, column 1 of this instance.
         /// </summary>
+		[Obsolete("Use instead Row-Column (RxCy) Notation")]
         public <#= typeName #> M11 { get { return Row0.X; } set { Row0.X = value; } }
+        public <#= typeName #> R0C0 { get { return Row0.X; } set { Row0.X = value; } }
 
         /// <summary>
         /// Gets or sets the value at row 1, column 2 of this instance.
         /// </summary>
+		[Obsolete("Use instead Row-Column (RxCy) Notation")]
         public <#= typeName #> M12 { get { return Row0.Y; } set { Row0.Y = value; } }
+        public <#= typeName #> R0C1 { get { return Row0.Y; } set { Row0.Y = value; } }
 
         /// <summary>
         /// Gets or sets the value at row 1, column 3 of this instance.
         /// </summary>
+		[Obsolete("Use instead Row-Column (RxCy) Notation")]
         public <#= typeName #> M13 { get { return Row0.Z; } set { Row0.Z = value; } }
+        public <#= typeName #> R0C2 { get { return Row0.Z; } set { Row0.Z = value; } }
 
         /// <summary>
         /// Gets or sets the value at row 1, column 4 of this instance.
         /// </summary>
+		[Obsolete("Use instead Row-Column (RxCy) Notation")]
         public <#= typeName #> M14 { get { return Row0.W; } set { Row0.W = value; } }
+        public <#= typeName #> R0C3 { get { return Row0.W; } set { Row0.W = value; } }
 
         /// <summary>
         /// Gets or sets the value at row 2, column 1 of this instance.
         /// </summary>
+		[Obsolete("Use instead Row-Column (RxCy) Notation")]
         public <#= typeName #> M21 { get { return Row1.X; } set { Row1.X = value; } }
+        public <#= typeName #> R1C0 { get { return Row1.X; } set { Row1.X = value; } }
 
         /// <summary>
         /// Gets or sets the value at row 2, column 2 of this instance.
         /// </summary>
+		[Obsolete("Use instead Row-Column (RxCy) Notation")]
         public <#= typeName #> M22 { get { return Row1.Y; } set { Row1.Y = value; } }
+        public <#= typeName #> R1C1 { get { return Row1.Y; } set { Row1.Y = value; } }
 
         /// <summary>
         /// Gets or sets the value at row 2, column 3 of this instance.
         /// </summary>
+		[Obsolete("Use instead Row-Column (RxCy) Notation")]
         public <#= typeName #> M23 { get { return Row1.Z; } set { Row1.Z = value; } }
+        public <#= typeName #> R1C2 { get { return Row1.Z; } set { Row1.Z = value; } }
 
         /// <summary>
         /// Gets or sets the value at row 2, column 4 of this instance.
         /// </summary>
+		[Obsolete("Use instead Row-Column (RxCy) Notation")]
         public <#= typeName #> M24 { get { return Row1.W; } set { Row1.W = value; } }
+        public <#= typeName #> R1C3 { get { return Row1.W; } set { Row1.W = value; } }
 
         /// <summary>
         /// Gets or sets the value at row 3, column 1 of this instance.
         /// </summary>
+		[Obsolete("Use instead Row-Column (RxCy) Notation")]
         public <#= typeName #> M31 { get { return Row2.X; } set { Row2.X = value; } }
+        public <#= typeName #> R2C0 { get { return Row2.X; } set { Row2.X = value; } }
 
         /// <summary>
         /// Gets or sets the value at row 3, column 2 of this instance.
         /// </summary>
+		[Obsolete("Use instead Row-Column (RxCy) Notation")]
         public <#= typeName #> M32 { get { return Row2.Y; } set { Row2.Y = value; } }
+        public <#= typeName #> R2C1 { get { return Row2.Y; } set { Row2.Y = value; } }
 
         /// <summary>
         /// Gets or sets the value at row 3, column 3 of this instance.
         /// </summary>
+		[Obsolete("Use instead Row-Column (RxCy) Notation")]
         public <#= typeName #> M33 { get { return Row2.Z; } set { Row2.Z = value; } }
+        public <#= typeName #> R2C2 { get { return Row2.Z; } set { Row2.Z = value; } }
 
         /// <summary>
         /// Gets or sets the value at row 3, column 4 of this instance.
         /// </summary>
+		[Obsolete("Use instead Row-Column (RxCy) Notation")]
         public <#= typeName #> M34 { get { return Row2.W; } set { Row2.W = value; } }
+        public <#= typeName #> R2C3 { get { return Row2.W; } set { Row2.W = value; } }
 
         /// <summary>
         /// Gets or sets the value at row 4, column 1 of this instance.
         /// </summary>
+		[Obsolete("Use instead Row-Column (RxCy) Notation")]
         public <#= typeName #> M41 { get { return Row3.X; } set { Row3.X = value; } }
+        public <#= typeName #> R3C0 { get { return Row3.X; } set { Row3.X = value; } }
 
         /// <summary>
         /// Gets or sets the value at row 4, column 2 of this instance.
         /// </summary>
+		[Obsolete("Use instead Row-Column (RxCy) Notation")]
         public <#= typeName #> M42 { get { return Row3.Y; } set { Row3.Y = value; } }
+        public <#= typeName #> R3C1 { get { return Row3.Y; } set { Row3.Y = value; } }
 
         /// <summary>
         /// Gets or sets the value at row 4, column 3 of this instance.
         /// </summary>
+		[Obsolete("Use instead Row-Column (RxCy) Notation")]
         public <#= typeName #> M43 { get { return Row3.Z; } set { Row3.Z = value; } }
+        public <#= typeName #> R3C2 { get { return Row3.Z; } set { Row3.Z = value; } }
 
         /// <summary>
         /// Gets or sets the value at row 4, column 4 of this instance.
         /// </summary>
+		[Obsolete("Use instead Row-Column (RxCy) Notation")]
         public <#= typeName #> M44 { get { return Row3.W; } set { Row3.W = value; } }
+        public <#= typeName #> R3C3 { get { return Row3.W; } set { Row3.W = value; } }
 
         #endregion
 
@@ -2381,18 +2413,27 @@ namespace Sxta.Math
         /// <returns>A <#= mat4Name #> that transforms world space to camera space</returns>
         public static <#= mat4Name #> LookAt(<#= vec3Name #> eye, <#= vec3Name #> target, <#= vec3Name #> up)
         {
-            <#= vec3Name #> z = <#= vec3Name #>.Normalize(eye - target);
-            <#= vec3Name #> x = <#= vec3Name #>.Normalize(<#= vec3Name #>.Cross(up, z));
-            <#= vec3Name #> y = <#= vec3Name #>.Normalize(<#= vec3Name #>.Cross(z, x));
+            <#= vec3Name #> z = <#= vec3Name #>.Normalize(eye - target); // The "forward" vector.
+            <#= vec3Name #> x = <#= vec3Name #>.Normalize(<#= vec3Name #>.Cross(up, z)); // The "right" vector.
+            <#= vec3Name #> y = <#= vec3Name #>.Normalize(<#= vec3Name #>.Cross(z, x)); // The "up" vector.
 
-            <#= mat4Name #> rot = new <#= mat4Name #>(new <#= vec4Name #>(x.X, y.X, z.X, 0),
-                                        new <#= vec4Name #>(x.Y, y.Y, z.Y, 0),
-                                        new <#= vec4Name #>(x.Z, y.Z, z.Z, 0),
+			// Create a 4x4 orientation matrix from the right, up, and forward vectors
+            // This is transposed which is equivalent to performing an inverse 
+            // if the matrix is orthonormalized (in this case, it is).
+            <#= mat4Name #> rot = new <#= mat4Name #>(new <#= vec4Name #>(x.X, x.Y, x.Z, 0),
+                                        new <#= vec4Name #>(y.X, y.Y, y.Z, 0),
+                                        new <#= vec4Name #>(z.X, z.Y, z.Z, 0),
                                         <#= vec4Name #>.UnitW);
 
+		    // Create a 4x4 translation matrix.
+			// The eye position is negated which is equivalent
+			// to the inverse of the translation matrix. 
+			// T(v)^-1 == T(-v)
             <#= mat4Name #> trans = <#= mat4Name #>.CreateTranslation(-eye);
-
-            return trans * rot;
+			
+			// Combine the orientation and translation to compute 
+			// the final view matrix
+            return rot * trans;
         }
 
         /// <summary>

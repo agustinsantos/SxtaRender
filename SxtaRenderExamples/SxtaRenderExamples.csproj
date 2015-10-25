@@ -59,6 +59,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FirstPersonCamera2.cs" />
     <Compile Include="FirstPersonCamera.cs" />
     <Compile Include="Tutorials\Learning\Tutorial02_10.cs" />
     <Compile Include="Tutorials\Learning\Tutorial03_2.cs" />
@@ -309,6 +310,7 @@
     <None Include="Tutorials\Learning\Tutorial05_5.rtf" />
     <None Include="Tutorials\Learning\Tutorial05_4.rtf" />
     <None Include="Tutorials\Learning\Tutorial05_3.rtf" />
+    <None Include="Tutorials\Learning\Tutorial06_2.rtf" />
     <None Include="Tutorials\Learning\Tutorial06_1.rtf" />
     <None Include="Tutorials\Learning\Tutorial05_7.rtf" />
     <None Include="Tutorials\Learning\Tutorial05_6.rtf" />

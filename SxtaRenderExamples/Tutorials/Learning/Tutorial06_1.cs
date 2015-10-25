@@ -64,13 +64,21 @@ namespace Examples.Tutorials
             UniformMatrix4f uPMatrix = p.getUniformMatrix4f("uPMatrix");
             // position the camera 
             camera = new FirstPersonCamera(this);
-            camera.Position = new Vector3f(0, 0, -5);
+            camera.LookAt(new Vector3f(2, 2, 7), new Vector3f(0, 0, 0), new Vector3f(0, 1, 0));
 
             // fovy, aspect, zNear, zFar
             Matrix4f projection = Matrix4f.CreatePerspectiveFieldOfView((float)MathHelper.ToRadians(60), (float)this.Width / (float)this.Height, 0.01f, 100.0f);
             uPMatrix.set(projection);
 
+            // Model 1. Sphere 
             mesh1 = MeshUtils.GenerateSolidSphere(1.0f, 40, 40);
+            // Model 2. Cone 
+            mesh2 = MeshUtils.GenerateSolidCone(1.0, 2.0, 20, 20);
+            // Model 3. Cylinder 
+            mesh3 = MeshUtils.GenerateSolidCylinder(1.0, 1.0, 20, 20);
+            // Model 4. Torus 
+            mesh4 = MeshUtils.GenerateSolidTorus(0.5, 1.0, 20, 20);
+
 
             fb.setClearColor(Color.White);
         }
@@ -85,8 +93,12 @@ namespace Examples.Tutorials
                 p.Dispose();
             if (mesh1 != null)
                 mesh1.Dispose();
-            if (t1 != null)
-                t1.Dispose();
+            if (mesh2 != null)
+                mesh2.Dispose();
+            if (mesh3 != null)
+                mesh3.Dispose();
+            if (mesh4 != null)
+                mesh4.Dispose();
             if (fb != null)
                 fb.Dispose();
             base.OnUnload(e);
@@ -118,8 +130,7 @@ namespace Examples.Tutorials
         {
             camera.Update((float)e.Time);
             angle += 0.01f;
-            mat = Matrix4f.CreateRotationZ(-angle) * camera.Matrix;
-            uMVMatrix.set(mat);
+            //mat = Matrix4f.CreateRotationZ(-angle) * camera.Matrix;
         }
 
         #endregion
@@ -134,42 +145,33 @@ namespace Examples.Tutorials
         {
             fb.clear(true, false, true);
 
+            mat = Matrix4f.CreateRotation(angle * 3, 0.0f, 1.0f, 0.5f) * Matrix4f.CreateTranslation(0.5f, 3.0f, 0.0f) * camera.ViewMatrix;
+            uMVMatrix.set(mat);
             fb.draw(p, mesh1);
+
+            mat = Matrix4f.CreateRotation(angle * 3, 0.0f, 1.0f, 0.5f) * Matrix4f.CreateTranslation(5.0f, 3.0f, 0.0f) * camera.ViewMatrix;
+            uMVMatrix.set(mat);
+            fb.draw(p, mesh2);
+
+            mat = Matrix4f.CreateRotation(angle * 3, 0.0f, 1.0f, 0.5f) * Matrix4f.CreateTranslation(0.5f, 0.0f, 0.0f) * camera.ViewMatrix;
+            uMVMatrix.set(mat);
+            fb.draw(p, mesh3);
+
+            mat = Matrix4f.CreateRotation(angle * 3, 0.0f, 1.0f, 0.5f) * Matrix4f.CreateTranslation(5.0f, 0.0f, 0.0f) * camera.ViewMatrix;
+            uMVMatrix.set(mat);
+            fb.draw(p, mesh4);
 
             this.SwapBuffers();
         }
 
         #endregion
 
-        public Texture CreateTexture(Bitmap img, TextureFilter texFilter = TextureFilter.LINEAR)
-        {
-            TextureInternalFormat pif;
-            TextureFormat pf;
-            Sxta.Render.PixelType pt;
-            int size;
-            EnumConversion.ConvertPixelFormat(img.PixelFormat, out pif, out pf, out pt, out size);
-            img.RotateFlip(RotateFlipType.RotateNoneFlipY);
-            BitmapData Data = img.LockBits(new System.Drawing.Rectangle(0, 0, img.Width, img.Height), ImageLockMode.ReadOnly, img.PixelFormat);
-            using (GPUBuffer texbuff = new GPUBuffer())
-            {
-                texbuff.setData(Data.Width * Data.Height * size, Data.Scan0, BufferUsage.STATIC_DRAW);
-                img.UnlockBits(Data);
-                Texture.Parameters texParams = new Texture.Parameters();
-                texParams.min(texFilter);
-                texParams.mag(texFilter);
-                Sxta.Render.Buffer.Parameters s = new Sxta.Render.Buffer.Parameters();
-                Texture texture = new Texture2D(img.Width, img.Height, pif, pf, pt, texParams, s, texbuff);
-                return texture;
-            }
-        }
-
         #region Fields
         FrameBuffer fb;
         Program p;
-        Mesh<Vertex_V3N3T2f, ushort> mesh1;
+        Mesh<Vertex_V3N3T2f, ushort> mesh1, mesh2, mesh3, mesh4;
         Matrix4f mat;
         UniformMatrix4f uMVMatrix;
-        Texture t1;
         private FirstPersonCamera camera;
         float angle = 0;
 

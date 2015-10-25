@@ -1,6 +1,6 @@
 ﻿#region --- License ---
 /*
-Copyright (c) 2006 - 2008 The Open Toolkit library.
+Copyright (c) 2008 - 2016 The Sxta Render library.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -24,13 +24,19 @@ SOFTWARE.
 
 using System;
 using System.Runtime.InteropServices;
-using System.ComponentModel;
 using System.Xml.Serialization;
 
 namespace Sxta.Math
 {
     /// <summary>
-    /// Represents a Quaternion.
+    ///  A quaternion class. It can be used to represent an orientation in 3D space.
+    /// Good introductions to Quaternions at:
+    /// http://www.gamasutra.com/features/programming/19980703/quaternions_01.htm
+    /// http://mathworld.wolfram.com/Quaternion.html
+    /// 
+    /// Note:
+    /// Quaternion is a struct and the default value is (0, 0, 0, 0) instead of (0, 0, 0, 1);
+    /// Structs cannot contain explicit parameterless constructors. Struct members are automatically initialized to their default values.
     /// </summary>
     [Serializable]
     [StructLayout(LayoutKind.Sequential)]
@@ -38,15 +44,25 @@ namespace Sxta.Math
     {
         #region Fields
 
-        Vector3f xyz;
-        float w;
+        private Vector3f xyz;
+        private float w;
 
         #endregion
 
         #region Constructors
 
         /// <summary>
+        /// Construct a new Quaternion from another quaternion. Copy method 
+        /// </summary>
+        /// <param name="q">The quaternion to be copied</param>
+        public Quaternion(Quaternion q)
+          : this(new Vector3f(q.X, q.Y, q.Z), q.W)
+        {
+        }
+
+        /// <summary>
         /// Construct a new Quaternion from vector and w components
+        /// This constructor just only copy the elements.
         /// </summary>
         /// <param name="v">The vector part</param>
         /// <param name="w">The w part</param>
@@ -54,6 +70,16 @@ namespace Sxta.Math
         {
             this.xyz = v;
             this.w = w;
+        }
+
+        /// <summary>
+        /// Construct a new Quaternion from vector and w components
+        /// </summary>
+        /// <param name="v">The vector part</param>
+        /// <param name="w">The w part</param>
+        public Quaternion(Vector4f v)
+           : this(v.X, v.Y, v.Z, v.W)
+        {
         }
 
         /// <summary>
@@ -67,6 +93,29 @@ namespace Sxta.Math
             : this(new Vector3f(x, y, z), w)
         { }
 
+        /// <summary>
+        /// Build a quaternion from the given axis and angle
+        /// </summary>
+        /// <param name="axis">The axis to rotate about</param>
+        /// <param name="angle">The rotation angle in radians</param>
+        /// <returns></returns>
+        public Quaternion(double angle, Vector3f axis)
+        {
+            this = Identity;
+            MakeRotate(axis, angle);
+        }
+
+        /// <summary>
+        /// Build a quaternion from the given axis and angle
+        /// </summary>
+        /// <param name="axis">The axis to rotate about</param>
+        /// <param name="angle">The rotation angle in radians</param>
+        /// <returns></returns>
+        public Quaternion(double angle, Vector3d axis)
+            : this(angle, (Vector3f)axis)
+        {
+        }
+
         #endregion
 
         #region Public Members
@@ -74,16 +123,7 @@ namespace Sxta.Math
         #region Properties
 
         /// <summary>
-        /// Gets or sets an OpenTK.Vector3 with the X, Y and Z components of this instance.
-        /// </summary>
-        [Obsolete("Use Xyz property instead.")]
-        [CLSCompliant(false)]
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        [XmlIgnore]
-        public Vector3f XYZ { get { return Xyz; } set { Xyz = value; } }
-
-        /// <summary>
-        /// Gets or sets an OpenTK.Vector3 with the X, Y and Z components of this instance.
+        /// Gets or sets a Vector3f with the X, Y and Z components of this instance.
         /// </summary>
         public Vector3f Xyz { get { return xyz; } set { xyz = value; } }
 
@@ -114,6 +154,32 @@ namespace Sxta.Math
 
         #region Instance
 
+        #region Set
+        public void Set(float x, float y, float z, float w)
+        {
+            this.X = x;
+            this.Y = y;
+            this.Z = z;
+            this.W = w;
+        }
+
+        public void Set(Vector4f v)
+        {
+            this.X = v.X;
+            this.Y = v.Y;
+            this.Z = v.Z;
+            this.W = v.W;
+        }
+
+        public void Set(Vector4d v)
+        {
+            this.X = (float)v.X;
+            this.Y = (float)v.Y;
+            this.Z = (float)v.Z;
+            this.W = (float)v.W;
+        }
+        #endregion
+
         #region ToAxisAngle
 
         /// <summary>
@@ -130,6 +196,7 @@ namespace Sxta.Math
 
         /// <summary>
         /// Convert this instance to an axis-angle representation.
+        /// Return the angle and vector components represented by the quaternion.
         /// </summary>
         /// <returns>A Vector4 that is the axis-angle representation of this quaternion.</returns>
         public Vector4f ToAxisAngle()
@@ -164,11 +231,11 @@ namespace Sxta.Math
         /// Gets the length (magnitude) of the quaternion.
         /// </summary>
         /// <seealso cref="LengthSquared"/>
-        public float Length
+        public double Length
         {
             get
             {
-                return (float)System.Math.Sqrt(W * W + Xyz.LengthSquared);
+                return System.Math.Sqrt(W * W + Xyz.LengthSquared);
             }
         }
 
@@ -179,11 +246,11 @@ namespace Sxta.Math
         /// <summary>
         /// Gets the square of the quaternion length (magnitude).
         /// </summary>
-        public float LengthSquared
+        public double LengthSquared
         {
             get
             {
-                return (float)(W * W + Xyz.LengthSquared);
+                return (W * W + Xyz.LengthSquared);
             }
         }
 
@@ -196,7 +263,7 @@ namespace Sxta.Math
         /// </summary>
         public void Normalize()
         {
-            float scale = 1.0f / this.Length;
+            float scale = (float)(1.0 / this.Length);
             Xyz *= scale;
             W *= scale;
         }
@@ -215,6 +282,18 @@ namespace Sxta.Math
 
         #endregion
 
+        #region ZeroRotation
+        /// <summary>
+        /// return true if the Quaternion represents a zero rotation,
+        /// and therefore can be ignored in computations.
+        /// </summary>
+        public bool IsZeroRotation
+        {
+            get { return this.X == 0.0 && this.Y == 0.0 && this.Z == 0.0 && this.W == 1.0; }
+        }
+
+        #endregion
+
         #endregion
 
         #region Static
@@ -229,6 +308,18 @@ namespace Sxta.Math
         #endregion
 
         #region Add
+        /// <summary>
+        /// Add two quaternions
+        /// </summary>
+        /// <param name="right">The second operand</param>
+        /// <returns>The result of the addition</returns>
+        public Quaternion Add(Quaternion right)
+        {
+            this.Xyz += right.Xyz;
+            this.W += right.W;
+
+            return this;
+        }
 
         /// <summary>
         /// Add two quaternions
@@ -238,9 +329,7 @@ namespace Sxta.Math
         /// <returns>The result of the addition</returns>
         public static Quaternion Add(Quaternion left, Quaternion right)
         {
-            return new Quaternion(
-                left.Xyz + right.Xyz,
-                left.W + right.W);
+            return new Quaternion(left.Xyz + right.Xyz, left.W + right.W);
         }
 
         /// <summary>
@@ -251,9 +340,7 @@ namespace Sxta.Math
         /// <param name="result">The result of the addition</param>
         public static void Add(ref Quaternion left, ref Quaternion right, out Quaternion result)
         {
-            result = new Quaternion(
-                left.Xyz + right.Xyz,
-                left.W + right.W);
+            result = new Quaternion(left.Xyz + right.Xyz, left.W + right.W);
         }
 
         #endregion
@@ -266,11 +353,24 @@ namespace Sxta.Math
         /// <param name="left">The left instance.</param>
         /// <param name="right">The right instance.</param>
         /// <returns>The result of the operation.</returns>
+        public Quaternion Sub(Quaternion right)
+        {
+            this.Xyz -= right.Xyz;
+            this.W -= right.W;
+
+            return this;
+        }
+
+
+        /// <summary>
+        /// Subtracts two instances.
+        /// </summary>
+        /// <param name="left">The left instance.</param>
+        /// <param name="right">The right instance.</param>
+        /// <returns>The result of the operation.</returns>
         public static Quaternion Sub(Quaternion left, Quaternion right)
         {
-            return new Quaternion(
-                left.Xyz - right.Xyz,
-                left.W - right.W);
+            return new Quaternion(left.Xyz - right.Xyz, left.W - right.W);
         }
 
         /// <summary>
@@ -281,41 +381,24 @@ namespace Sxta.Math
         /// <param name="result">The result of the operation.</param>
         public static void Sub(ref Quaternion left, ref Quaternion right, out Quaternion result)
         {
-            result = new Quaternion(
-                left.Xyz - right.Xyz,
-                left.W - right.W);
+            result = new Quaternion(left.Xyz - right.Xyz, left.W - right.W);
         }
 
         #endregion
 
         #region Mult
-
         /// <summary>
         /// Multiplies two instances.
         /// </summary>
         /// <param name="left">The first instance.</param>
         /// <param name="right">The second instance.</param>
         /// <returns>A new instance containing the result of the calculation.</returns>
-        [Obsolete("Use Multiply instead.")]
-        public static Quaternion Mult(Quaternion left, Quaternion right)
+        public Quaternion Multiply(Quaternion right)
         {
-            return new Quaternion(
-                right.W * left.Xyz + left.W * right.Xyz + Vector3f.Cross(left.Xyz, right.Xyz),
-                left.W * right.W - Vector3f.Dot(left.Xyz, right.Xyz));
-        }
+            this.Xyz = right.W * this.Xyz + this.W * right.Xyz + Vector3f.Cross(this.Xyz, right.Xyz);
+            this.W = this.W * right.W - Vector3f.Dot(this.Xyz, right.Xyz);
 
-        /// <summary>
-        /// Multiplies two instances.
-        /// </summary>
-        /// <param name="left">The first instance.</param>
-        /// <param name="right">The second instance.</param>
-        /// <param name="result">A new instance containing the result of the calculation.</param>
-        [Obsolete("Use Multiply instead.")]
-        public static void Mult(ref Quaternion left, ref Quaternion right, out Quaternion result)
-        {
-            result = new Quaternion(
-                right.W * left.Xyz + left.W * right.Xyz + Vector3f.Cross(left.Xyz, right.Xyz),
-                left.W * right.W - Vector3f.Dot(left.Xyz, right.Xyz));
+            return this;
         }
 
         /// <summary>
@@ -344,6 +427,7 @@ namespace Sxta.Math
                 left.W * right.W - Vector3f.Dot(left.Xyz, right.Xyz));
         }
 
+
         /// <summary>
         /// Multiplies an instance by a scalar.
         /// </summary>
@@ -366,6 +450,17 @@ namespace Sxta.Math
             return new Quaternion(quaternion.X * scale, quaternion.Y * scale, quaternion.Z * scale, quaternion.W * scale);
         }
 
+        /// <summary>
+        /// Multiplies an instance by a scalar.
+        /// </summary>
+        /// <param name="scale">The scalar.</param>
+        /// <returns>A new instance containing the result of the calculation.</returns>
+        public Quaternion Multiply(float scale)
+        {
+            this.Xyz *= scale;
+            this.W *= scale;
+            return this;
+        }
         #endregion
 
         #region Conjugate
@@ -393,6 +488,22 @@ namespace Sxta.Math
         #endregion
 
         #region Invert
+        /// <summary>
+        /// Get the inverse of the given quaternion
+        /// </summary>
+        /// <param name="q">The quaternion to invert</param>
+        /// <returns>The inverse of the given quaternion</returns>
+        public Quaternion Invert()
+        {
+            float lengthSq = (float)this.LengthSquared;
+            if (lengthSq != 0.0)
+            {
+                float i = 1.0f / lengthSq;
+                this.Xyz = this.Xyz * -i;
+                this.W = this.W * i;
+            }
+            return this;
+        }
 
         /// <summary>
         /// Get the inverse of the given quaternion
@@ -413,7 +524,7 @@ namespace Sxta.Math
         /// <param name="result">The inverse of the given quaternion</param>
         public static void Invert(ref Quaternion q, out Quaternion result)
         {
-            float lengthSq = q.LengthSquared;
+            float lengthSq = (float)q.LengthSquared;
             if (lengthSq != 0.0)
             {
                 float i = 1.0f / lengthSq;
@@ -448,13 +559,14 @@ namespace Sxta.Math
         /// <param name="result">The normalized quaternion</param>
         public static void Normalize(ref Quaternion q, out Quaternion result)
         {
-            float scale = 1.0f / q.Length;
+            float scale = (float)(1.0 / q.Length);
             result = new Quaternion(q.Xyz * scale, q.W * scale);
         }
 
         #endregion
 
         #region FromAxisAngle
+        private const float epsilon = 0.0000001f;
 
         /// <summary>
         /// Build a quaternion from the given axis and angle
@@ -462,27 +574,54 @@ namespace Sxta.Math
         /// <param name="axis">The axis to rotate about</param>
         /// <param name="angle">The rotation angle in radians</param>
         /// <returns></returns>
-        public static Quaternion FromAxisAngle(Vector3f axis, float angle)
+        public static Quaternion FromAxisAngle(Vector3f axis, double angle)
         {
-            if (axis.LengthSquared == 0.0f)
-                return Identity;
-
             Quaternion result = Identity;
-
-            angle *= 0.5f;
-            axis.Normalize();
-            result.Xyz = axis * (float)System.Math.Sin(angle);
-            result.W = (float)System.Math.Cos(angle);
-
-            return Normalize(result);
+            result.MakeRotate(axis, angle);
+            return result;
         }
 
+        /// <summary>
+        /// Build a quaternion from the given axis and angle
+        /// qx = ax * sin(angle/2)
+        /// qy = ay* sin(angle/2)
+        /// qz = az* sin(angle/2)
+        /// qw = cos(angle/2)
+        /// where
+        /// the axis is normalised so: ax*ax + ay*ay + az*az = 1
+        /// the quaternion is also normalised
+        /// </summary>
+        /// <param name="axis">The axis to rotate about</param>
+        /// <param name="angle">The rotation angle in radians</param>
+        /// <returns></returns>
+        public void MakeRotate(Vector3f axis, double angle)
+        {
+            double length = axis.Length;
+            if (length < epsilon)
+            {
+                this = Identity;
+                return;
+            }
+
+            double inversenorm = 1.0f / length;
+            double coshalfangle = System.Math.Cos(0.5 * angle);
+            double sinhalfangle = System.Math.Sin(0.5 * angle);
+
+            this.X = (float)(axis.X * sinhalfangle * inversenorm);
+            this.Y = (float)(axis.Y * sinhalfangle * inversenorm);
+            this.Z = (float)(axis.Z * sinhalfangle * inversenorm);
+            this.W = (float)(coshalfangle);
+        }
         #endregion
 
         #region Slerp
 
         /// <summary>
         /// Do Spherical linear interpolation between two quaternions 
+        /// As t goes from 0 to 1, the Quat object goes from "from" to "to"
+        /// Reference: Shoemake at SIGGRAPH 89
+        /// See also
+        /// http://www.gamasutra.com/features/programming/19980703/quaternions_01.htm
         /// </summary>
         /// <param name="q1">The first quaternion</param>
         /// <param name="q2">The second quaternion</param>
@@ -558,10 +697,9 @@ namespace Sxta.Math
         /// <returns>The result of the calculation.</returns>
         public static Quaternion operator +(Quaternion left, Quaternion right)
         {
-            left.Xyz += right.Xyz;
-            left.W += right.W;
-            return left;
+            return new Quaternion(left.Xyz + right.Xyz, left.W + right.W);
         }
+
 
         /// <summary>
         /// Subtracts two instances.
@@ -571,9 +709,7 @@ namespace Sxta.Math
         /// <returns>The result of the calculation.</returns>
         public static Quaternion operator -(Quaternion left, Quaternion right)
         {
-            left.Xyz -= right.Xyz;
-            left.W -= right.W;
-            return left;
+            return new Quaternion(left.Xyz - right.Xyz, left.W - right.W);
         }
 
         /// <summary>
@@ -584,8 +720,9 @@ namespace Sxta.Math
         /// <returns>The result of the calculation.</returns>
         public static Quaternion operator *(Quaternion left, Quaternion right)
         {
-            Multiply(ref left, ref right, out left);
-            return left;
+            Quaternion rst = new Quaternion();
+            Multiply(ref left, ref right, out rst);
+            return rst;
         }
 
         /// <summary>
@@ -596,8 +733,7 @@ namespace Sxta.Math
         /// <returns>A new instance containing the result of the calculation.</returns>
         public static Quaternion operator *(Quaternion quaternion, float scale)
         {
-            Multiply(ref quaternion, scale, out quaternion);
-            return quaternion;
+            return new Quaternion(quaternion.X * scale, quaternion.Y * scale, quaternion.Z * scale, quaternion.W * scale);
         }
 
         /// <summary>
@@ -609,6 +745,24 @@ namespace Sxta.Math
         public static Quaternion operator *(float scale, Quaternion quaternion)
         {
             return new Quaternion(quaternion.X * scale, quaternion.Y * scale, quaternion.Z * scale, quaternion.W * scale);
+        }
+
+
+        /// <summary>
+        /// Rotate a vector by this quaternion.
+        /// </summary>
+        /// <param name="quaternion"></param>
+        /// <param name="vec"></param>
+        /// <returns></returns>
+        public static Vector3f operator *(Quaternion quaternion, Vector3f vec)
+        {
+            Vector3f uv, uuv;
+            Vector3f qvec = quaternion.xyz;
+            Vector3f.Cross(ref qvec, ref vec, out uv);
+            Vector3f.Cross(ref qvec, ref uv, out uuv);
+            uv *= (float)(2.0f * quaternion.W);
+            uuv *= 2.0f;
+            return vec + uv + uuv;
         }
 
         /// <summary>
@@ -631,6 +785,169 @@ namespace Sxta.Math
         public static bool operator !=(Quaternion left, Quaternion right)
         {
             return !left.Equals(right);
+        }
+
+        public static bool operator <(Quaternion l, Quaternion v)
+        {
+            if (l.X < v.X) return true;
+            else if (l.X > v.X) return false;
+            else if (l.Y < v.Y) return true;
+            else if (l.Y > v.Y) return false;
+            else if (l.Z < v.Z) return true;
+            else if (l.Z > v.Z) return false;
+            else return (l.W < v.W);
+        }
+
+        public static bool operator >(Quaternion l, Quaternion v)
+        {
+            if (l.X > v.X) return true;
+            else if (l.X < v.X) return false;
+            else if (l.Y > v.Y) return true;
+            else if (l.Y < v.Y) return false;
+            else if (l.Z > v.Z) return true;
+            else if (l.Z < v.Z) return false;
+            else return (l.W > v.W);
+        }
+        public static bool operator <=(Quaternion l, Quaternion v)
+        {
+            if (l.X < v.X) return true;
+            else if (l.X > v.X) return false;
+            else if (l.Y < v.Y) return true;
+            else if (l.Y > v.Y) return false;
+            else if (l.Z < v.Z) return true;
+            else if (l.Z > v.Z) return false;
+            else if (l.W <= v.W) return true;
+            else return false;
+        }
+
+        public static bool operator >=(Quaternion l, Quaternion v)
+        {
+            if (l.X > v.X) return true;
+            else if (l.X < v.X) return false;
+            else if (l.Y > v.Y) return true;
+            else if (l.Y < v.Y) return false;
+            else if (l.Z > v.Z) return true;
+            else if (l.W < v.W) return false;
+            else return true;
+        }
+        #endregion
+
+        #region FromMatrix
+        /// <summary>
+        /// Get the matrix rotation as a Quat. Note that this function
+        /// assumes a non-scaled matrix and will return incorrect results
+        /// for scaled matrixces.Consider decompose() instead.
+        /// Algorithm in: 
+        /// http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/
+        /// </summary>
+        /// <param name="m"></param>
+        /// <returns></returns>
+        public static Quaternion FromRotateMatrix(Matrix3f m)
+        {
+            Quaternion q = new Quaternion();
+            float tr = m.R0C0 + m.R1C1 + m.R2C2;
+
+            if (tr > 0)
+            {
+                float S = (float)System.Math.Sqrt(tr + 1.0) * 2; // S=4*qw 
+                q.W = 0.25f * S;
+                q.X = (m.R2C1 - m.R1C2) / S;
+                q.Y = (m.R0C2 - m.R2C0) / S;
+                q.Z = (m.R1C0 - m.R0C1) / S;
+            }
+            else if ((m.R0C0 > m.R1C1) & (m.R0C0 > m.R2C2))
+            {
+                float S = (float)System.Math.Sqrt(1.0 + m.R0C0 - m.R1C1 - m.R2C2) * 2; // S=4*qx 
+                q.W = (m.R2C1 - m.R1C2) / S;
+                q.X = 0.25f * S;
+                q.Y = (m.R0C1 + m.R1C0) / S;
+                q.Z = (m.R0C2 + m.R2C0) / S;
+            }
+            else if (m.R1C1 > m.R2C2)
+            {
+                float S = (float)System.Math.Sqrt(1.0 + m.R1C1 - m.R0C0 - m.R2C2) * 2; // S=4*qy
+                q.W = (m.R0C2 - m.R2C0) / S;
+                q.X = (m.R0C1 + m.R1C0) / S;
+                q.Y = 0.25f * S;
+                q.Z = (m.R1C2 + m.R2C1) / S;
+            }
+            else
+            {
+                float S = (float)System.Math.Sqrt(1.0 + m.R2C2 - m.R0C0 - m.R1C1) * 2; // S=4*qz
+                q.W = (m.R1C0 - m.R0C1) / S;
+                q.X = (m.R0C2 + m.R2C0) / S;
+                q.Y = (m.R1C2 + m.R2C1) / S;
+                q.Z = 0.25f * S;
+            }
+            return q;
+        }
+
+        /// <summary>Constructs left matrix from the given quaternion.</summary>
+        /// <param name="quaternion">The quaternion to use to construct the martix.</param>
+        //public Matrix3f ToMatrix3f()
+        //{
+        //    return new Matrix3f(this);
+        //}
+        public static Matrix3f ToMatrix3f(Quaternion quaternion)
+        {
+            quaternion.Normalize();
+
+            double xx = quaternion.X * quaternion.X;
+            double yy = quaternion.Y * quaternion.Y;
+            double zz = quaternion.Z * quaternion.Z;
+            double xy = quaternion.X * quaternion.Y;
+            double xz = quaternion.X * quaternion.Z;
+            double yz = quaternion.Y * quaternion.Z;
+            double wx = quaternion.W * quaternion.X;
+            double wy = quaternion.W * quaternion.Y;
+            double wz = quaternion.W * quaternion.Z;
+
+            Matrix3f rst = new Matrix3f();
+            rst.R0C0 = (float)(1 - 2 * (yy + zz));
+            rst.R0C1 = (float)(2 * (xy - wz));
+            rst.R0C2 = (float)(2 * (xz + wy));
+
+            rst.R1C0 = (float)(2 * (xy + wz));
+            rst.R1C1 = (float)(1 - 2 * (xx + zz));
+            rst.R1C2 = (float)(2 * (yz - wx));
+
+            rst.R2C0 = (float)(2 * (xz - wy));
+            rst.R2C1 = (float)(2 * (yz + wx));
+            rst.R2C2 = (float)(1 - 2 * (xx + yy));
+
+            return rst;
+        }
+        public static Matrix4f ToMatrix4f(Quaternion quaternion)
+        {
+            quaternion.Normalize();
+
+            double xx = quaternion.X * quaternion.X;
+            double yy = quaternion.Y * quaternion.Y;
+            double zz = quaternion.Z * quaternion.Z;
+            double xy = quaternion.X * quaternion.Y;
+            double xz = quaternion.X * quaternion.Z;
+            double yz = quaternion.Y * quaternion.Z;
+            double wx = quaternion.W * quaternion.X;
+            double wy = quaternion.W * quaternion.Y;
+            double wz = quaternion.W * quaternion.Z;
+
+            Matrix4f rst = new Matrix4f();
+            rst.R0C0 = (float)(1 - 2 * (yy + zz));
+            rst.R0C1 = (float)(2 * (xy - wz));
+            rst.R0C2 = (float)(2 * (xz + wy));
+
+            rst.R1C0 = (float)(2 * (xy + wz));
+            rst.R1C1 = (float)(1 - 2 * (xx + zz));
+            rst.R1C2 = (float)(2 * (yz - wx));
+
+            rst.R2C0 = (float)(2 * (xz - wy));
+            rst.R2C1 = (float)(2 * (yz + wx));
+            rst.R2C2 = (float)(1 - 2 * (xx + yy));
+
+            rst.R0C3 = rst.R1C3 = rst.R2C3 = rst.R3C0 = rst.R3C1 = rst.R3C2 = 0;
+            rst.R3C3 = 1;
+
+            return rst;
         }
 
         #endregion
