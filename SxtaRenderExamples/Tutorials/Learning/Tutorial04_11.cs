@@ -195,19 +195,19 @@ namespace Examples.Tutorials
 
             Matrix4f camera = Matrix4f.CreateTranslation(-3.0f, -1.0f, -7.0f);
 
-            mat = Matrix4f.CreateRotation(angle * 3, 0.0f, 1.0f, 0.5f) * Matrix4f.CreateTranslation(0.5f, 3.0f, 0.0f) * camera;
+            mat = camera * Matrix4f.CreateTranslation(0.5f, 3.0f, 0.0f) * Matrix4f.CreateRotation(angle * 3, 0.0f, 1.0f, 0.5f)  ;
             uMVMatrix.set(mat);
             fb.draw(p, mesh2);
 
-            mat = Matrix4f.CreateRotation(angle * 3, 0.0f, 1.0f, 0.5f) * Matrix4f.CreateTranslation(5.0f, 3.0f, 0.0f) * camera;
+            mat = camera * Matrix4f.CreateTranslation(5.0f, 3.0f, 0.0f) * Matrix4f.CreateRotation(angle * 3, 0.0f, 1.0f, 0.5f)  ;
             uMVMatrix.set(mat);
             fb.draw(p, mesh3);
 
-            mat = Matrix4f.CreateRotation(angle * 3, 0.0f, 1.0f, 0.5f) * Matrix4f.CreateTranslation(0.5f, 0.0f, 0.0f) * camera;
+            mat = camera * Matrix4f.CreateTranslation(0.5f, 0.0f, 0.0f) * Matrix4f.CreateRotation(angle * 3, 0.0f, 1.0f, 0.5f) ;
             uMVMatrix.set(mat);
             fb.draw(p, mesh4);
 
-            mat = Matrix4f.CreateRotation(angle * 3, 0.0f, 1.0f, 0.5f) * Matrix4f.CreateTranslation(5.0f, 0.0f, 0.0f) * camera;
+            mat = camera * Matrix4f.CreateTranslation(5.0f, 0.0f, 0.0f) * Matrix4f.CreateRotation(angle * 3, 0.0f, 1.0f, 0.5f)  ;
             uMVMatrix.set(mat);
             fb.draw(p, mesh5);
 
@@ -220,19 +220,19 @@ namespace Examples.Tutorials
         {
             for (int i = 0; i < num; i++)
             {
-                mat = Matrix4f.Scale(0.25f, 0.1f, 0.1f) * Matrix4f.CreateTranslation(i, 0.0f, 0.0f) * camera;
+                mat = camera * Matrix4f.CreateTranslation(i, 0.0f, 0.0f) * Matrix4f.Scale(0.25f, 0.1f, 0.1f);
                 uMVMatrix.set(mat);
                 fb.draw(p, mesh1);
             }
             for (int i = 0; i < num; i++)
             {
-                mat = Matrix4f.Scale(0.1f, 0.25f, 0.1f) * Matrix4f.CreateTranslation(0.0f, i, 0.0f) * camera;
+                mat = camera * Matrix4f.CreateTranslation(0.0f, i, 0.0f) * Matrix4f.Scale(0.1f, 0.25f, 0.1f);
                 uMVMatrix.set(mat);
                 fb.draw(p, mesh1);
             }
             for (int i = 0; i < num; i++)
             {
-                mat = Matrix4f.Scale(0.1f, 0.1f, 0.25f) * Matrix4f.CreateTranslation(0.0f, 0.0f, i) * camera;
+                mat = camera * Matrix4f.CreateTranslation(0.0f, 0.0f, i) * Matrix4f.Scale(0.1f, 0.1f, 0.25f);
                 uMVMatrix.set(mat);
                 fb.draw(p, mesh1);
             }

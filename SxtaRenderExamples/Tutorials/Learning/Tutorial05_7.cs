@@ -2,7 +2,6 @@
 // without express or implied warranty of any kind.
 
 using OpenTK;
-using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
 using Sxta.Math;
 using Sxta.Render;
@@ -111,7 +110,7 @@ namespace Examples.Tutorials
 
         #region OnUpdateFrame
 
-        Matrix4f MV = Matrix4f.CreateRotationX(Math.PI / 2) * Matrix4f.CreateTranslation(0.0f, -0.3f, -3.0f);
+        Matrix4f MV = Matrix4f.CreateTranslation(0.0f, -0.3f, -3.0f) * Matrix4f.CreateRotationX(-Math.PI / 2);
 
         /// <summary>
         /// Add your game logic here.
@@ -122,7 +121,7 @@ namespace Examples.Tutorials
         {
             angle += 0.01f;
 
-            mat = Matrix4f.CreateRotationZ(-angle) * MV;
+            mat = MV * Matrix4f.CreateRotationZ(angle);
             uMVMatrix.set(mat);
         }
 

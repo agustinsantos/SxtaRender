@@ -61,6 +61,7 @@
   <ItemGroup>
     <Compile Include="FirstPersonCamera2.cs" />
     <Compile Include="FirstPersonCamera.cs" />
+    <Compile Include="BasicFPCamera.cs" />
     <Compile Include="Tutorials\Learning\Tutorial02_10.cs" />
     <Compile Include="Tutorials\Learning\Tutorial03_2.cs" />
     <Compile Include="Tutorials\Learning\Tutorial03_1.cs" />
@@ -72,6 +73,7 @@
     <Compile Include="Tutorials\Learning\Tutorial04_11.cs" />
     <Compile Include="Tutorials\Learning\Tutorial04_10.cs" />
     <Compile Include="Tutorials\Learning\Tutorial05_5.cs" />
+    <Compile Include="Tutorials\Learning\Tutorial06_2.cs" />
     <Compile Include="Tutorials\Learning\Tutorial06_1.cs" />
     <Compile Include="Tutorials\Learning\Tutorial05_7.cs" />
     <Compile Include="Tutorials\Learning\Tutorial05_6.cs" />

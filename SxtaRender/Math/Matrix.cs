@@ -1738,22 +1738,22 @@ namespace Sxta.Math
         public static void Mult(ref Matrix4i left, ref Matrix4i right, out Matrix4i result)
         {
             result = new Matrix4i(
-                right.M11 * left.M11 + right.M12 * left.M21 + right.M13 * left.M31 + right.M14 * left.M41,
-                right.M11 * left.M12 + right.M12 * left.M22 + right.M13 * left.M32 + right.M14 * left.M42,
-                right.M11 * left.M13 + right.M12 * left.M23 + right.M13 * left.M33 + right.M14 * left.M43,
-                right.M11 * left.M14 + right.M12 * left.M24 + right.M13 * left.M34 + right.M14 * left.M44,
-                right.M21 * left.M11 + right.M22 * left.M21 + right.M23 * left.M31 + right.M24 * left.M41,
-                right.M21 * left.M12 + right.M22 * left.M22 + right.M23 * left.M32 + right.M24 * left.M42,
-                right.M21 * left.M13 + right.M22 * left.M23 + right.M23 * left.M33 + right.M24 * left.M43,
-                right.M21 * left.M14 + right.M22 * left.M24 + right.M23 * left.M34 + right.M24 * left.M44,
-                right.M31 * left.M11 + right.M32 * left.M21 + right.M33 * left.M31 + right.M34 * left.M41,
-                right.M31 * left.M12 + right.M32 * left.M22 + right.M33 * left.M32 + right.M34 * left.M42,
-                right.M31 * left.M13 + right.M32 * left.M23 + right.M33 * left.M33 + right.M34 * left.M43,
-                right.M31 * left.M14 + right.M32 * left.M24 + right.M33 * left.M34 + right.M34 * left.M44,
-                right.M41 * left.M11 + right.M42 * left.M21 + right.M43 * left.M31 + right.M44 * left.M41,
-                right.M41 * left.M12 + right.M42 * left.M22 + right.M43 * left.M32 + right.M44 * left.M42,
-                right.M41 * left.M13 + right.M42 * left.M23 + right.M43 * left.M33 + right.M44 * left.M43,
-                right.M41 * left.M14 + right.M42 * left.M24 + right.M43 * left.M34 + right.M44 * left.M44);
+                left.R0C0 * right.R0C0 + left.R0C1 * right.R1C0 + left.R0C2 * right.R2C0 + left.R0C3 * right.R3C0,
+                left.R0C0 * right.R0C1 + left.R0C1 * right.R1C1 + left.R0C2 * right.R2C1 + left.R0C3 * right.R3C1,
+                left.R0C0 * right.R0C2 + left.R0C1 * right.R1C2 + left.R0C2 * right.R2C2 + left.R0C3 * right.R3C2,
+                left.R0C0 * right.R0C3 + left.R0C1 * right.R1C3 + left.R0C2 * right.R2C3 + left.R0C3 * right.R3C3,
+                left.R1C0 * right.R0C0 + left.R1C1 * right.R1C0 + left.R1C2 * right.R2C0 + left.R1C3 * right.R3C0,
+                left.R1C0 * right.R0C1 + left.R1C1 * right.R1C1 + left.R1C2 * right.R2C1 + left.R1C3 * right.R3C1,
+                left.R1C0 * right.R0C2 + left.R1C1 * right.R1C2 + left.R1C2 * right.R2C2 + left.R1C3 * right.R3C2,
+                left.R1C0 * right.R0C3 + left.R1C1 * right.R1C3 + left.R1C2 * right.R2C3 + left.R1C3 * right.R3C3,
+                left.R2C0 * right.R0C0 + left.R2C1 * right.R1C0 + left.R2C2 * right.R2C0 + left.R2C3 * right.R3C0,
+                left.R2C0 * right.R0C1 + left.R2C1 * right.R1C1 + left.R2C2 * right.R2C1 + left.R2C3 * right.R3C1,
+                left.R2C0 * right.R0C2 + left.R2C1 * right.R1C2 + left.R2C2 * right.R2C2 + left.R2C3 * right.R3C2,
+                left.R2C0 * right.R0C3 + left.R2C1 * right.R1C3 + left.R2C2 * right.R2C3 + left.R2C3 * right.R3C3,
+                left.R3C0 * right.R0C0 + left.R3C1 * right.R1C0 + left.R3C2 * right.R2C0 + left.R3C3 * right.R3C0,
+                left.R3C0 * right.R0C1 + left.R3C1 * right.R1C1 + left.R3C2 * right.R2C1 + left.R3C3 * right.R3C1,
+                left.R3C0 * right.R0C2 + left.R3C1 * right.R1C2 + left.R3C2 * right.R2C2 + left.R3C3 * right.R3C2,
+                left.R3C0 * right.R0C3 + left.R3C1 * right.R1C3 + left.R3C2 * right.R2C3 + left.R3C3 * right.R3C3);
 		}
 
         #endregion
@@ -3748,22 +3748,22 @@ namespace Sxta.Math
         public static void Mult(ref Matrix4ui left, ref Matrix4ui right, out Matrix4ui result)
         {
             result = new Matrix4ui(
-                right.M11 * left.M11 + right.M12 * left.M21 + right.M13 * left.M31 + right.M14 * left.M41,
-                right.M11 * left.M12 + right.M12 * left.M22 + right.M13 * left.M32 + right.M14 * left.M42,
-                right.M11 * left.M13 + right.M12 * left.M23 + right.M13 * left.M33 + right.M14 * left.M43,
-                right.M11 * left.M14 + right.M12 * left.M24 + right.M13 * left.M34 + right.M14 * left.M44,
-                right.M21 * left.M11 + right.M22 * left.M21 + right.M23 * left.M31 + right.M24 * left.M41,
-                right.M21 * left.M12 + right.M22 * left.M22 + right.M23 * left.M32 + right.M24 * left.M42,
-                right.M21 * left.M13 + right.M22 * left.M23 + right.M23 * left.M33 + right.M24 * left.M43,
-                right.M21 * left.M14 + right.M22 * left.M24 + right.M23 * left.M34 + right.M24 * left.M44,
-                right.M31 * left.M11 + right.M32 * left.M21 + right.M33 * left.M31 + right.M34 * left.M41,
-                right.M31 * left.M12 + right.M32 * left.M22 + right.M33 * left.M32 + right.M34 * left.M42,
-                right.M31 * left.M13 + right.M32 * left.M23 + right.M33 * left.M33 + right.M34 * left.M43,
-                right.M31 * left.M14 + right.M32 * left.M24 + right.M33 * left.M34 + right.M34 * left.M44,
-                right.M41 * left.M11 + right.M42 * left.M21 + right.M43 * left.M31 + right.M44 * left.M41,
-                right.M41 * left.M12 + right.M42 * left.M22 + right.M43 * left.M32 + right.M44 * left.M42,
-                right.M41 * left.M13 + right.M42 * left.M23 + right.M43 * left.M33 + right.M44 * left.M43,
-                right.M41 * left.M14 + right.M42 * left.M24 + right.M43 * left.M34 + right.M44 * left.M44);
+                left.R0C0 * right.R0C0 + left.R0C1 * right.R1C0 + left.R0C2 * right.R2C0 + left.R0C3 * right.R3C0,
+                left.R0C0 * right.R0C1 + left.R0C1 * right.R1C1 + left.R0C2 * right.R2C1 + left.R0C3 * right.R3C1,
+                left.R0C0 * right.R0C2 + left.R0C1 * right.R1C2 + left.R0C2 * right.R2C2 + left.R0C3 * right.R3C2,
+                left.R0C0 * right.R0C3 + left.R0C1 * right.R1C3 + left.R0C2 * right.R2C3 + left.R0C3 * right.R3C3,
+                left.R1C0 * right.R0C0 + left.R1C1 * right.R1C0 + left.R1C2 * right.R2C0 + left.R1C3 * right.R3C0,
+                left.R1C0 * right.R0C1 + left.R1C1 * right.R1C1 + left.R1C2 * right.R2C1 + left.R1C3 * right.R3C1,
+                left.R1C0 * right.R0C2 + left.R1C1 * right.R1C2 + left.R1C2 * right.R2C2 + left.R1C3 * right.R3C2,
+                left.R1C0 * right.R0C3 + left.R1C1 * right.R1C3 + left.R1C2 * right.R2C3 + left.R1C3 * right.R3C3,
+                left.R2C0 * right.R0C0 + left.R2C1 * right.R1C0 + left.R2C2 * right.R2C0 + left.R2C3 * right.R3C0,
+                left.R2C0 * right.R0C1 + left.R2C1 * right.R1C1 + left.R2C2 * right.R2C1 + left.R2C3 * right.R3C1,
+                left.R2C0 * right.R0C2 + left.R2C1 * right.R1C2 + left.R2C2 * right.R2C2 + left.R2C3 * right.R3C2,
+                left.R2C0 * right.R0C3 + left.R2C1 * right.R1C3 + left.R2C2 * right.R2C3 + left.R2C3 * right.R3C3,
+                left.R3C0 * right.R0C0 + left.R3C1 * right.R1C0 + left.R3C2 * right.R2C0 + left.R3C3 * right.R3C0,
+                left.R3C0 * right.R0C1 + left.R3C1 * right.R1C1 + left.R3C2 * right.R2C1 + left.R3C3 * right.R3C1,
+                left.R3C0 * right.R0C2 + left.R3C1 * right.R1C2 + left.R3C2 * right.R2C2 + left.R3C3 * right.R3C2,
+                left.R3C0 * right.R0C3 + left.R3C1 * right.R1C3 + left.R3C2 * right.R2C3 + left.R3C3 * right.R3C3);
 		}
 
         #endregion
@@ -5744,6 +5744,16 @@ namespace Sxta.Math
 								(float)m.Row2.X, (float)m.Row2.Y, (float)m.Row2.Z, (float)m.Row2.W,
 								(float)m.Row3.X, (float)m.Row3.Y, (float)m.Row3.Z, (float)m.Row3.W);
         }
+
+		/// <summary>Converts Matrix4f to Matrix3f.</summary>
+        /// <param name="m">The Matrix4f to convert.</param>
+        /// <returns>The resulting Matrix3f.</returns>
+        public static explicit operator Matrix3f(Matrix4f m)
+        {
+            return new Matrix3f((float)m.Row0.X, (float)m.Row0.Y, (float)m.Row0.Z,
+                                (float)m.Row1.X, (float)m.Row1.Y, (float)m.Row1.Z,
+                                (float)m.Row2.X, (float)m.Row2.Y, (float)m.Row2.Z);
+        }
 		                #region CreateFromAxisAngle
         
         /// <summary>
@@ -5768,7 +5778,7 @@ namespace Sxta.Math
         
         /// <summary>
         /// Build a rotation matrix from the specified axis/angle rotation.
-        /// </summary>
+		/// </summary>
         /// <param name="axis">The axis to rotate about.</param>
         /// <param name="angle">Angle in radians to rotate counter-clockwise (looking in the direction of the given axis).</param>
         /// <returns>A matrix instance.</returns>
@@ -5785,6 +5795,12 @@ namespace Sxta.Math
 
         /// <summary>
         /// Builds a rotation matrix for a rotation around the x-axis.
+        /// 
+		///   | 1.0  0.0  0.0 0.0 |
+		///   | 0.0  cos -sin 0.0 |
+		///   | 0.0  sin  cos 0.0 |
+		///   | 0.0  0.0  0.0 1.0 |
+		///
         /// </summary>
         /// <param name="angle">The counter-clockwise angle in radians.</param>
         /// <param name="result">The resulting Matrix4f instance.</param>
@@ -5794,13 +5810,19 @@ namespace Sxta.Math
             double sin =  System.Math.Sin(angle);
 
             result.Row0 = Vector4f.UnitX;
-            result.Row1 = new Vector4f(0, (float)(cos), (float)(sin), 0);
-            result.Row2 = new Vector4f(0, (float)(-sin), (float)(cos), 0);
+            result.Row1 = new Vector4f(0, (float)(cos), (float)(-sin), 0);
+            result.Row2 = new Vector4f(0, (float)(sin), (float)(cos), 0);
             result.Row3 = Vector4f.UnitW;
         }
 
         /// <summary>
         /// Builds a rotation matrix for a rotation around the x-axis.
+        /// 
+		///   | 1.0  0.0  0.0 0.0 |
+		///   | 0.0  cos -sin 0.0 |
+		///   | 0.0  sin  cos 0.0 |
+		///   | 0.0  0.0  0.0 1.0 |
+		///
         /// </summary>
         /// <param name="angle">The counter-clockwise angle in radians.</param>
         /// <returns>The resulting Matrix4f instance.</returns>
@@ -5814,9 +5836,9 @@ namespace Sxta.Math
         /// <summary>
         /// Builds a rotation matrix for a rotation around the y-axis.
         ///
-		///   | cos  0.0 -sin 0.0 |
+		///   | cos  0.0  sin 0.0 |
 		///   | 0.0  1.0  1.0 0.0 |
-		///   | sin  0.0  cos 0.0 |
+		///   |-sin  0.0  cos 0.0 |
 		///   | 0.0  0.0  0.0 1.0 |
 		///
 		/// </summary>
@@ -5827,18 +5849,18 @@ namespace Sxta.Math
             double cos = (float)System.Math.Cos(angle);
             double sin = (float)System.Math.Sin(angle);
 
-            result.Row0 = new Vector4f((float)cos, 0, (float)-sin, 0);
+            result.Row0 = new Vector4f((float)cos, 0, (float)sin, 0);
             result.Row1 = Vector4f.UnitY;
-            result.Row2 = new Vector4f((float)sin, 0, (float)cos, 0);
+            result.Row2 = new Vector4f((float)-sin, 0, (float)cos, 0);
             result.Row3 = Vector4f.UnitW;
         }
 
         /// <summary>
         /// Builds a rotation matrix for a rotation around the y-axis.
         ///
-		///   | cos  0.0 -sin 0.0 |
+		///   | cos  0.0  sin 0.0 |
 		///   | 0.0  1.0  1.0 0.0 |
-		///   | sin  0.0  cos 0.0 |
+		///   |-sin  0.0  cos 0.0 |
 		///   | 0.0  0.0  0.0 1.0 |
 		///
         /// </summary>
@@ -5915,18 +5937,17 @@ namespace Sxta.Math
             double c = System.Math.Cos(rad);
             double t = 1 - c;
 
-            // Construct the elements of the rotation matrix
-            result.M11 = (float)(x * x * t + c);
-            result.M12 = (float)(y * x * t + z * s);
-            result.M13 = (float)(z * x * t - y * s);
-            result.M21 = (float)(x * y * t - z * s);
-            result.M22 = (float)(y * y * t + c);
-            result.M23 = (float)(z * y * t + x * s);
-            result.M31 = (float)(x * z * t + y * s);
-            result.M32 = (float)(y * z * t - x * s);
-            result.M33 = (float)(z * z * t + c);
-            result.M44 = 1;
-
+			// Construct the elements of the rotation matrix
+            result.R0C0 = (float)(x * x * t + c);
+            result.R0C1 = (float)(y * x * t - z * s);
+            result.R0C2 = (float)(z * x * t + y * s);
+            result.R1C0 = (float)(x * y * t + z * s);
+            result.R1C1 = (float)(y * y * t + c);
+            result.R1C2 = (float)(z * y * t - x * s);
+            result.R2C0 = (float)(x * z * t - y * s);
+            result.R2C1 = (float)(y * z * t + x * s);
+            result.R2C2 = (float)(z * z * t + c);
+            result.R3C3 = 1;
             return result;
         }
 
@@ -5949,10 +5970,10 @@ namespace Sxta.Math
         /// <param name="z">Z translation.</param>
         public static Matrix4f Translate(Matrix4f mat, float x, float y, float z)
         {
-			mat.M14 = mat.M11 * x + mat.M12 * y + mat.M13 * z + mat.M14;
-		    mat.M24 = mat.M21 * x + mat.M22 * y + mat.M23 * z + mat.M24;
-            mat.M34 = mat.M31 * x + mat.M32 * y + mat.M33 * z + mat.M34;
-            mat.M44 = mat.M41 * x + mat.M42 * y + mat.M43 * z + mat.M44;
+			mat.R0C3 = mat.R0C0 * x + mat.R0C1 * y + mat.R0C2 * z + mat.R0C3;
+		    mat.R1C3 = mat.R1C0 * x + mat.R1C1 * y + mat.R1C2 * z + mat.R1C3;
+            mat.R2C3 = mat.R2C0 * x + mat.R2C1 * y + mat.R2C2 * z + mat.R2C3;
+            mat.R3C3 = mat.R3C0 * x + mat.R3C1 * y + mat.R3C2 * z + mat.R3C3;
 			return mat;
         }
 
@@ -6089,14 +6110,14 @@ namespace Sxta.Math
             float invBT = 1 / (bottom - top);
             float invNF = 1 / (zNear - zFar);
 
-            result.M11 = -2 * invLR;
-            result.M22 = -2 * invBT;
-            result.M33 =  2 * invNF;
+            result.R0C0 = -2 * invLR;
+            result.R1C1 = -2 * invBT;
+            result.R2C2 =  2 * invNF;
 
-            result.M14 = (right + left) * invLR;
-            result.M24 = (top + bottom) * invBT;
-            result.M34 = (zFar + zNear) * invNF;
-            result.M44 = 1;
+            result.R0C3 = (right + left) * invLR;
+            result.R1C3 = (top + bottom) * invBT;
+            result.R2C3 = (zFar + zNear) * invNF;
+            result.R3C3 = 1;
 
 		}
 
@@ -6345,22 +6366,22 @@ namespace Sxta.Math
         /// <returns>A scaling matrix</returns>
         public static Matrix4f Scale(Matrix4f matrix, float x, float y, float z)
         {
-			matrix.M11 = matrix.M11 * x;
-			matrix.M21 = matrix.M21 * x;
-			matrix.M31 = matrix.M31 * x;
-			matrix.M41 = matrix.M41 * x;
-			matrix.M12 = matrix.M12 * y;
-			matrix.M22 = matrix.M22 * y;
-			matrix.M32 = matrix.M32 * y;
-			matrix.M42 = matrix.M42 * y;
-			matrix.M13 = matrix.M13 * z;
-			matrix.M23 = matrix.M23 * z;
-			matrix.M33 = matrix.M33 * z;
-			matrix.M43 = matrix.M43 * z;
-			matrix.M14 = matrix.M14;
-			matrix.M24 = matrix.M24;
-			matrix.M34 = matrix.M34;
-			matrix.M44 = matrix.M44;
+			matrix.R0C0 = matrix.R0C0 * x;
+			matrix.R1C0 = matrix.R1C0 * x;
+			matrix.R2C0 = matrix.R2C0 * x;
+			matrix.R3C0 = matrix.R3C0 * x;
+			matrix.R0C1 = matrix.R0C1 * y;
+			matrix.R1C1 = matrix.R1C1 * y;
+			matrix.R2C1 = matrix.R2C1 * y;
+			matrix.R3C1 = matrix.R3C1 * y;
+			matrix.R0C2 = matrix.R0C2 * z;
+			matrix.R1C2 = matrix.R1C2 * z;
+			matrix.R2C2 = matrix.R2C2 * z;
+			matrix.R3C2 = matrix.R3C2 * z;
+			matrix.R0C3 = matrix.R0C3;
+			matrix.R1C3 = matrix.R1C3;
+			matrix.R2C3 = matrix.R2C3;
+			matrix.R3C3 = matrix.R3C3;
 			return matrix;
         }
         
@@ -6461,22 +6482,22 @@ namespace Sxta.Math
         public static void Mult(ref Matrix4f left, ref Matrix4f right, out Matrix4f result)
         {
             result = new Matrix4f(
-                right.M11 * left.M11 + right.M12 * left.M21 + right.M13 * left.M31 + right.M14 * left.M41,
-                right.M11 * left.M12 + right.M12 * left.M22 + right.M13 * left.M32 + right.M14 * left.M42,
-                right.M11 * left.M13 + right.M12 * left.M23 + right.M13 * left.M33 + right.M14 * left.M43,
-                right.M11 * left.M14 + right.M12 * left.M24 + right.M13 * left.M34 + right.M14 * left.M44,
-                right.M21 * left.M11 + right.M22 * left.M21 + right.M23 * left.M31 + right.M24 * left.M41,
-                right.M21 * left.M12 + right.M22 * left.M22 + right.M23 * left.M32 + right.M24 * left.M42,
-                right.M21 * left.M13 + right.M22 * left.M23 + right.M23 * left.M33 + right.M24 * left.M43,
-                right.M21 * left.M14 + right.M22 * left.M24 + right.M23 * left.M34 + right.M24 * left.M44,
-                right.M31 * left.M11 + right.M32 * left.M21 + right.M33 * left.M31 + right.M34 * left.M41,
-                right.M31 * left.M12 + right.M32 * left.M22 + right.M33 * left.M32 + right.M34 * left.M42,
-                right.M31 * left.M13 + right.M32 * left.M23 + right.M33 * left.M33 + right.M34 * left.M43,
-                right.M31 * left.M14 + right.M32 * left.M24 + right.M33 * left.M34 + right.M34 * left.M44,
-                right.M41 * left.M11 + right.M42 * left.M21 + right.M43 * left.M31 + right.M44 * left.M41,
-                right.M41 * left.M12 + right.M42 * left.M22 + right.M43 * left.M32 + right.M44 * left.M42,
-                right.M41 * left.M13 + right.M42 * left.M23 + right.M43 * left.M33 + right.M44 * left.M43,
-                right.M41 * left.M14 + right.M42 * left.M24 + right.M43 * left.M34 + right.M44 * left.M44);
+                left.R0C0 * right.R0C0 + left.R0C1 * right.R1C0 + left.R0C2 * right.R2C0 + left.R0C3 * right.R3C0,
+                left.R0C0 * right.R0C1 + left.R0C1 * right.R1C1 + left.R0C2 * right.R2C1 + left.R0C3 * right.R3C1,
+                left.R0C0 * right.R0C2 + left.R0C1 * right.R1C2 + left.R0C2 * right.R2C2 + left.R0C3 * right.R3C2,
+                left.R0C0 * right.R0C3 + left.R0C1 * right.R1C3 + left.R0C2 * right.R2C3 + left.R0C3 * right.R3C3,
+                left.R1C0 * right.R0C0 + left.R1C1 * right.R1C0 + left.R1C2 * right.R2C0 + left.R1C3 * right.R3C0,
+                left.R1C0 * right.R0C1 + left.R1C1 * right.R1C1 + left.R1C2 * right.R2C1 + left.R1C3 * right.R3C1,
+                left.R1C0 * right.R0C2 + left.R1C1 * right.R1C2 + left.R1C2 * right.R2C2 + left.R1C3 * right.R3C2,
+                left.R1C0 * right.R0C3 + left.R1C1 * right.R1C3 + left.R1C2 * right.R2C3 + left.R1C3 * right.R3C3,
+                left.R2C0 * right.R0C0 + left.R2C1 * right.R1C0 + left.R2C2 * right.R2C0 + left.R2C3 * right.R3C0,
+                left.R2C0 * right.R0C1 + left.R2C1 * right.R1C1 + left.R2C2 * right.R2C1 + left.R2C3 * right.R3C1,
+                left.R2C0 * right.R0C2 + left.R2C1 * right.R1C2 + left.R2C2 * right.R2C2 + left.R2C3 * right.R3C2,
+                left.R2C0 * right.R0C3 + left.R2C1 * right.R1C3 + left.R2C2 * right.R2C3 + left.R2C3 * right.R3C3,
+                left.R3C0 * right.R0C0 + left.R3C1 * right.R1C0 + left.R3C2 * right.R2C0 + left.R3C3 * right.R3C0,
+                left.R3C0 * right.R0C1 + left.R3C1 * right.R1C1 + left.R3C2 * right.R2C1 + left.R3C3 * right.R3C1,
+                left.R3C0 * right.R0C2 + left.R3C1 * right.R1C2 + left.R3C2 * right.R2C2 + left.R3C3 * right.R3C2,
+                left.R3C0 * right.R0C3 + left.R3C1 * right.R1C3 + left.R3C2 * right.R2C3 + left.R3C3 * right.R3C3);
 		}
 
         #endregion
@@ -8471,7 +8492,7 @@ namespace Sxta.Math
         
         /// <summary>
         /// Build a rotation matrix from the specified axis/angle rotation.
-        /// </summary>
+		/// </summary>
         /// <param name="axis">The axis to rotate about.</param>
         /// <param name="angle">Angle in radians to rotate counter-clockwise (looking in the direction of the given axis).</param>
         /// <returns>A matrix instance.</returns>
@@ -8488,6 +8509,12 @@ namespace Sxta.Math
 
         /// <summary>
         /// Builds a rotation matrix for a rotation around the x-axis.
+        /// 
+		///   | 1.0  0.0  0.0 0.0 |
+		///   | 0.0  cos -sin 0.0 |
+		///   | 0.0  sin  cos 0.0 |
+		///   | 0.0  0.0  0.0 1.0 |
+		///
         /// </summary>
         /// <param name="angle">The counter-clockwise angle in radians.</param>
         /// <param name="result">The resulting Matrix4d instance.</param>
@@ -8497,13 +8524,19 @@ namespace Sxta.Math
             double sin =  System.Math.Sin(angle);
 
             result.Row0 = Vector4d.UnitX;
-            result.Row1 = new Vector4d(0, (double)(cos), (double)(sin), 0);
-            result.Row2 = new Vector4d(0, (double)(-sin), (double)(cos), 0);
+            result.Row1 = new Vector4d(0, (double)(cos), (double)(-sin), 0);
+            result.Row2 = new Vector4d(0, (double)(sin), (double)(cos), 0);
             result.Row3 = Vector4d.UnitW;
         }
 
         /// <summary>
         /// Builds a rotation matrix for a rotation around the x-axis.
+        /// 
+		///   | 1.0  0.0  0.0 0.0 |
+		///   | 0.0  cos -sin 0.0 |
+		///   | 0.0  sin  cos 0.0 |
+		///   | 0.0  0.0  0.0 1.0 |
+		///
         /// </summary>
         /// <param name="angle">The counter-clockwise angle in radians.</param>
         /// <returns>The resulting Matrix4d instance.</returns>
@@ -8517,9 +8550,9 @@ namespace Sxta.Math
         /// <summary>
         /// Builds a rotation matrix for a rotation around the y-axis.
         ///
-		///   | cos  0.0 -sin 0.0 |
+		///   | cos  0.0  sin 0.0 |
 		///   | 0.0  1.0  1.0 0.0 |
-		///   | sin  0.0  cos 0.0 |
+		///   |-sin  0.0  cos 0.0 |
 		///   | 0.0  0.0  0.0 1.0 |
 		///
 		/// </summary>
@@ -8530,18 +8563,18 @@ namespace Sxta.Math
             double cos = (double)System.Math.Cos(angle);
             double sin = (double)System.Math.Sin(angle);
 
-            result.Row0 = new Vector4d((double)cos, 0, (double)-sin, 0);
+            result.Row0 = new Vector4d((double)cos, 0, (double)sin, 0);
             result.Row1 = Vector4d.UnitY;
-            result.Row2 = new Vector4d((double)sin, 0, (double)cos, 0);
+            result.Row2 = new Vector4d((double)-sin, 0, (double)cos, 0);
             result.Row3 = Vector4d.UnitW;
         }
 
         /// <summary>
         /// Builds a rotation matrix for a rotation around the y-axis.
         ///
-		///   | cos  0.0 -sin 0.0 |
+		///   | cos  0.0  sin 0.0 |
 		///   | 0.0  1.0  1.0 0.0 |
-		///   | sin  0.0  cos 0.0 |
+		///   |-sin  0.0  cos 0.0 |
 		///   | 0.0  0.0  0.0 1.0 |
 		///
         /// </summary>
@@ -8618,18 +8651,17 @@ namespace Sxta.Math
             double c = System.Math.Cos(rad);
             double t = 1 - c;
 
-            // Construct the elements of the rotation matrix
-            result.M11 = (double)(x * x * t + c);
-            result.M12 = (double)(y * x * t + z * s);
-            result.M13 = (double)(z * x * t - y * s);
-            result.M21 = (double)(x * y * t - z * s);
-            result.M22 = (double)(y * y * t + c);
-            result.M23 = (double)(z * y * t + x * s);
-            result.M31 = (double)(x * z * t + y * s);
-            result.M32 = (double)(y * z * t - x * s);
-            result.M33 = (double)(z * z * t + c);
-            result.M44 = 1;
-
+			// Construct the elements of the rotation matrix
+            result.R0C0 = (double)(x * x * t + c);
+            result.R0C1 = (double)(y * x * t - z * s);
+            result.R0C2 = (double)(z * x * t + y * s);
+            result.R1C0 = (double)(x * y * t + z * s);
+            result.R1C1 = (double)(y * y * t + c);
+            result.R1C2 = (double)(z * y * t - x * s);
+            result.R2C0 = (double)(x * z * t - y * s);
+            result.R2C1 = (double)(y * z * t + x * s);
+            result.R2C2 = (double)(z * z * t + c);
+            result.R3C3 = 1;
             return result;
         }
 
@@ -8652,10 +8684,10 @@ namespace Sxta.Math
         /// <param name="z">Z translation.</param>
         public static Matrix4d Translate(Matrix4d mat, double x, double y, double z)
         {
-			mat.M14 = mat.M11 * x + mat.M12 * y + mat.M13 * z + mat.M14;
-		    mat.M24 = mat.M21 * x + mat.M22 * y + mat.M23 * z + mat.M24;
-            mat.M34 = mat.M31 * x + mat.M32 * y + mat.M33 * z + mat.M34;
-            mat.M44 = mat.M41 * x + mat.M42 * y + mat.M43 * z + mat.M44;
+			mat.R0C3 = mat.R0C0 * x + mat.R0C1 * y + mat.R0C2 * z + mat.R0C3;
+		    mat.R1C3 = mat.R1C0 * x + mat.R1C1 * y + mat.R1C2 * z + mat.R1C3;
+            mat.R2C3 = mat.R2C0 * x + mat.R2C1 * y + mat.R2C2 * z + mat.R2C3;
+            mat.R3C3 = mat.R3C0 * x + mat.R3C1 * y + mat.R3C2 * z + mat.R3C3;
 			return mat;
         }
 
@@ -8792,14 +8824,14 @@ namespace Sxta.Math
             double invBT = 1 / (bottom - top);
             double invNF = 1 / (zNear - zFar);
 
-            result.M11 = -2 * invLR;
-            result.M22 = -2 * invBT;
-            result.M33 =  2 * invNF;
+            result.R0C0 = -2 * invLR;
+            result.R1C1 = -2 * invBT;
+            result.R2C2 =  2 * invNF;
 
-            result.M14 = (right + left) * invLR;
-            result.M24 = (top + bottom) * invBT;
-            result.M34 = (zFar + zNear) * invNF;
-            result.M44 = 1;
+            result.R0C3 = (right + left) * invLR;
+            result.R1C3 = (top + bottom) * invBT;
+            result.R2C3 = (zFar + zNear) * invNF;
+            result.R3C3 = 1;
 
 		}
 
@@ -9048,22 +9080,22 @@ namespace Sxta.Math
         /// <returns>A scaling matrix</returns>
         public static Matrix4d Scale(Matrix4d matrix, double x, double y, double z)
         {
-			matrix.M11 = matrix.M11 * x;
-			matrix.M21 = matrix.M21 * x;
-			matrix.M31 = matrix.M31 * x;
-			matrix.M41 = matrix.M41 * x;
-			matrix.M12 = matrix.M12 * y;
-			matrix.M22 = matrix.M22 * y;
-			matrix.M32 = matrix.M32 * y;
-			matrix.M42 = matrix.M42 * y;
-			matrix.M13 = matrix.M13 * z;
-			matrix.M23 = matrix.M23 * z;
-			matrix.M33 = matrix.M33 * z;
-			matrix.M43 = matrix.M43 * z;
-			matrix.M14 = matrix.M14;
-			matrix.M24 = matrix.M24;
-			matrix.M34 = matrix.M34;
-			matrix.M44 = matrix.M44;
+			matrix.R0C0 = matrix.R0C0 * x;
+			matrix.R1C0 = matrix.R1C0 * x;
+			matrix.R2C0 = matrix.R2C0 * x;
+			matrix.R3C0 = matrix.R3C0 * x;
+			matrix.R0C1 = matrix.R0C1 * y;
+			matrix.R1C1 = matrix.R1C1 * y;
+			matrix.R2C1 = matrix.R2C1 * y;
+			matrix.R3C1 = matrix.R3C1 * y;
+			matrix.R0C2 = matrix.R0C2 * z;
+			matrix.R1C2 = matrix.R1C2 * z;
+			matrix.R2C2 = matrix.R2C2 * z;
+			matrix.R3C2 = matrix.R3C2 * z;
+			matrix.R0C3 = matrix.R0C3;
+			matrix.R1C3 = matrix.R1C3;
+			matrix.R2C3 = matrix.R2C3;
+			matrix.R3C3 = matrix.R3C3;
 			return matrix;
         }
         
@@ -9164,22 +9196,22 @@ namespace Sxta.Math
         public static void Mult(ref Matrix4d left, ref Matrix4d right, out Matrix4d result)
         {
             result = new Matrix4d(
-                right.M11 * left.M11 + right.M12 * left.M21 + right.M13 * left.M31 + right.M14 * left.M41,
-                right.M11 * left.M12 + right.M12 * left.M22 + right.M13 * left.M32 + right.M14 * left.M42,
-                right.M11 * left.M13 + right.M12 * left.M23 + right.M13 * left.M33 + right.M14 * left.M43,
-                right.M11 * left.M14 + right.M12 * left.M24 + right.M13 * left.M34 + right.M14 * left.M44,
-                right.M21 * left.M11 + right.M22 * left.M21 + right.M23 * left.M31 + right.M24 * left.M41,
-                right.M21 * left.M12 + right.M22 * left.M22 + right.M23 * left.M32 + right.M24 * left.M42,
-                right.M21 * left.M13 + right.M22 * left.M23 + right.M23 * left.M33 + right.M24 * left.M43,
-                right.M21 * left.M14 + right.M22 * left.M24 + right.M23 * left.M34 + right.M24 * left.M44,
-                right.M31 * left.M11 + right.M32 * left.M21 + right.M33 * left.M31 + right.M34 * left.M41,
-                right.M31 * left.M12 + right.M32 * left.M22 + right.M33 * left.M32 + right.M34 * left.M42,
-                right.M31 * left.M13 + right.M32 * left.M23 + right.M33 * left.M33 + right.M34 * left.M43,
-                right.M31 * left.M14 + right.M32 * left.M24 + right.M33 * left.M34 + right.M34 * left.M44,
-                right.M41 * left.M11 + right.M42 * left.M21 + right.M43 * left.M31 + right.M44 * left.M41,
-                right.M41 * left.M12 + right.M42 * left.M22 + right.M43 * left.M32 + right.M44 * left.M42,
-                right.M41 * left.M13 + right.M42 * left.M23 + right.M43 * left.M33 + right.M44 * left.M43,
-                right.M41 * left.M14 + right.M42 * left.M24 + right.M43 * left.M34 + right.M44 * left.M44);
+                left.R0C0 * right.R0C0 + left.R0C1 * right.R1C0 + left.R0C2 * right.R2C0 + left.R0C3 * right.R3C0,
+                left.R0C0 * right.R0C1 + left.R0C1 * right.R1C1 + left.R0C2 * right.R2C1 + left.R0C3 * right.R3C1,
+                left.R0C0 * right.R0C2 + left.R0C1 * right.R1C2 + left.R0C2 * right.R2C2 + left.R0C3 * right.R3C2,
+                left.R0C0 * right.R0C3 + left.R0C1 * right.R1C3 + left.R0C2 * right.R2C3 + left.R0C3 * right.R3C3,
+                left.R1C0 * right.R0C0 + left.R1C1 * right.R1C0 + left.R1C2 * right.R2C0 + left.R1C3 * right.R3C0,
+                left.R1C0 * right.R0C1 + left.R1C1 * right.R1C1 + left.R1C2 * right.R2C1 + left.R1C3 * right.R3C1,
+                left.R1C0 * right.R0C2 + left.R1C1 * right.R1C2 + left.R1C2 * right.R2C2 + left.R1C3 * right.R3C2,
+                left.R1C0 * right.R0C3 + left.R1C1 * right.R1C3 + left.R1C2 * right.R2C3 + left.R1C3 * right.R3C3,
+                left.R2C0 * right.R0C0 + left.R2C1 * right.R1C0 + left.R2C2 * right.R2C0 + left.R2C3 * right.R3C0,
+                left.R2C0 * right.R0C1 + left.R2C1 * right.R1C1 + left.R2C2 * right.R2C1 + left.R2C3 * right.R3C1,
+                left.R2C0 * right.R0C2 + left.R2C1 * right.R1C2 + left.R2C2 * right.R2C2 + left.R2C3 * right.R3C2,
+                left.R2C0 * right.R0C3 + left.R2C1 * right.R1C3 + left.R2C2 * right.R2C3 + left.R2C3 * right.R3C3,
+                left.R3C0 * right.R0C0 + left.R3C1 * right.R1C0 + left.R3C2 * right.R2C0 + left.R3C3 * right.R3C0,
+                left.R3C0 * right.R0C1 + left.R3C1 * right.R1C1 + left.R3C2 * right.R2C1 + left.R3C3 * right.R3C1,
+                left.R3C0 * right.R0C2 + left.R3C1 * right.R1C2 + left.R3C2 * right.R2C2 + left.R3C3 * right.R3C2,
+                left.R3C0 * right.R0C3 + left.R3C1 * right.R1C3 + left.R3C2 * right.R2C3 + left.R3C3 * right.R3C3);
 		}
 
         #endregion

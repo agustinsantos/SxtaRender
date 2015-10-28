@@ -2,7 +2,6 @@
 // without express or implied warranty of any kind.
 
 using OpenTK;
-using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
 using Sxta.Math;
 using Sxta.Render;

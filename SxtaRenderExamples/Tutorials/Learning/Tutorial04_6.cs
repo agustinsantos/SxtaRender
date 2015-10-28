@@ -2,7 +2,6 @@
 // without express or implied warranty of any kind.
 
 using OpenTK;
-using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
 using Sxta.Math;
 using Sxta.Render;
@@ -177,7 +176,7 @@ namespace Examples.Tutorials
             for (int x = 0; x < 6; x++)
                 for (int y = 0; y < 6; y++)
                 {
-                    mat = Matrix4f.Scale(0.5f) * Matrix4f.CreateRotation(angle * 3, 0.0f, 1.0f, 0.5f) * Matrix4f.CreateTranslation(-5 + x * 2.0f, -5 + y * 2.0f, -10.0f);
+                    mat = Matrix4f.CreateTranslation(-5 + x * 2.0f, -5 + y * 2.0f, -10.0f) * Matrix4f.CreateRotation(angle * 3, 0.0f, 1.0f, 0.5f) * Matrix4f.Scale(0.5f);
                     uMVMatrix.set(mat);
                     fb.draw(p, mesh);
                 }

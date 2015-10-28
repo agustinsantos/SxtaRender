@@ -115,13 +115,11 @@ namespace Examples.Tutorials
             uColor.set(new Vector3f(1.0f, 0.0f, 0.0f));
             mat = Matrix4f.CreateTranslation(-0.6f, 0.8f, 0.0f);
             uMatrix.set(mat);
-            
+
             // Render our triangle at the initial position
             fb.draw(p, triangle);
             // Render our triangle after a translation and a scale operation
-            mat = Matrix4f.Translate(mat, 1.0f, 0.0f, 0.0f);
-            mat = Matrix4f.Scale(mat, 0.5f);
-            //mat = Matrix4f.Scale(0.5f) * Matrix4f.CreateTranslation(1.0f, 0.0f, 0.0f) * mat;
+            mat = mat * Matrix4f.CreateTranslation(1.0f, 0.0f, 0.0f) * Matrix4f.Scale(0.5f);
             uMatrix.set(mat);
             fb.draw(p, triangle);
 
@@ -131,7 +129,7 @@ namespace Examples.Tutorials
             uMatrix.set(mat);
             // Render our triangle at the initial position
             fb.draw(p, triangle);
-            mat =  Matrix4f.CreateTranslation(1.0f, 0.0f, 0.0f) * Matrix4f.Scale(0.5f) * mat;
+            mat = mat * Matrix4f.Scale(0.5f) * Matrix4f.CreateTranslation(1.0f, 0.0f, 0.0f);
             uMatrix.set(mat);
             // Render our triangle after a scale and translation operation
             fb.draw(p, triangle);
@@ -142,7 +140,7 @@ namespace Examples.Tutorials
             uMatrix.set(mat);
             // Render our triangle at the initial position
             fb.draw(p, triangle);
-            mat = Matrix4f.CreateRotationZ(-75) * Matrix4f.CreateTranslation(1.0f, 0.0f, 0.0f) * Matrix4f.Scale(0.5f) * mat;
+            mat = mat * Matrix4f.Scale(0.5f) * Matrix4f.CreateTranslation(1.0f, 0.0f, 0.0f) * Matrix4f.CreateRotationZ(-75);
             uMatrix.set(mat);
             // Render our triangle after a scale and translation and rotate operation
             fb.draw(p, triangle);
@@ -153,7 +151,7 @@ namespace Examples.Tutorials
             uMatrix.set(mat);
             // Render our triangle at the initial position
             fb.draw(p, triangle);
-            mat =  Matrix4f.CreateTranslation(1.0f, 0.0f, 0.0f) * Matrix4f.CreateRotationZ(-75) * Matrix4f.Scale(0.5f) * mat;
+            mat = mat * Matrix4f.Scale(0.5f) * Matrix4f.CreateRotationZ(-75) * Matrix4f.CreateTranslation(1.0f, 0.0f, 0.0f);
             uMatrix.set(mat);
             // Render our triangle after a scale and and rotate translation operation
             fb.draw(p, triangle);
@@ -164,7 +162,7 @@ namespace Examples.Tutorials
             uMatrix.set(mat);
             // Render our triangle at the initial position
             fb.draw(p, triangle);
-            mat = Matrix4f.Scale(0.5f) * Matrix4f.CreateTranslation(1.0f, 0.0f, 0.0f) * Matrix4f.CreateRotationZ(-75) * mat;
+            mat = mat * Matrix4f.CreateRotationZ(-75) * Matrix4f.CreateTranslation(1.0f, 0.0f, 0.0f) * Matrix4f.Scale(0.5f);
             uMatrix.set(mat);
             // Render our triangle after a rotate, translation, scale operation
             fb.draw(p, triangle);

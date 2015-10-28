@@ -124,7 +124,7 @@ namespace Examples.Tutorials
             Orientation = Quaternion.FromAxisAngle(Vector3f.UnitY, Rotation.Y) *
                           Quaternion.FromAxisAngle(Vector3f.UnitX, Rotation.X);
 
-            var forward = Vector3f.Transform(Vector3f.UnitZ, Orientation);
+            var forward = Vector3f.Transform(-Vector3f.UnitZ, Orientation);
             ViewMatrix = Matrix4f.LookAt(Position, Position + forward, Vector3f.UnitY);
         }
 
@@ -143,52 +143,13 @@ namespace Examples.Tutorials
         /// <param name="up">a vector indicating the local up direction.</param>
         public void LookAt(Vector3f direction, Vector3f up)
         {
-            throw new NotImplementedException("Working in progress");
-            /*
-            Vector3f forward = new Vector3f();
-            Vector3f.Subtract(ref direction, ref Position, out forward);
-            forward.Normalize();
-            ViewMatrix = Matrix4f.LookAt(Position, direction, up);
+            Vector3f forward = direction - Position;
 
-            float angle = (float)Vector3f.CalculateAngle(forward, up);
-            Orientation = Quaternion.FromAxisAngle(forward, angle);
-            Rotation.X = (float)Vector3f.CalculateAngle(forward, Vector3f.UnitX);
-            Rotation.Y = (float)Math.PI;  //(float)Vector3f.CalculateAngle(forward, Vector3f.UnitY);
-            Vector3f v;
-            float an;
-            Orientation.ToAxisAngle(out v, out an);
-            Matrix4f tmp = Quaternion.ToMatrix4f(Orientation) * Matrix4f.CreateTranslation(-Position);
+            Rotation.X = 0; // (float)(-Math.PI / 4);// (float)Vector3f.CalculateAngle(forward, Vector3f.UnitX);
+            Rotation.Y = 0;//(float)Vector3f.CalculateAngle(forward, Vector3f.UnitY );
 
-            float ax = (float)Vector3f.CalculateAngle(forward, Vector3f.UnitX);
-            float ay = (float)Vector3f.CalculateAngle(forward, Vector3f.UnitY);
-            float az = (float)Vector3f.CalculateAngle(forward, Vector3f.UnitZ);
-        */
+            Update();
         }
-
-        /*
-        private void test()
-        {
-            Vector3f pos = new Vector3f(0, 0, 0);
-            Vector3f at = new Vector3f(0, 0, 1);
-            Vector3f up = new Vector3f(0, 1, 0);
-
-            Matrix4f tmp1 = Matrix4f.LookAt(pos, at, up);
-
-            Vector3f forward = new Vector3f();
-            Vector3f.Subtract(ref at, ref pos, out forward);
-            forward.Normalize();
-
-            float dot = Vector3f.Dot(Vector3f.UnitY, up);
-            float rotAngle = (float)Math.Acos(dot);
-            Quaternion q = Quaternion.FromAxisAngle(forward, rotAngle);
-            Matrix4f tmp2 = Quaternion.ToMatrix4f(q);
-
-            Matrix3f tmp3 = new Matrix3f(tmp1.M11, tmp1.M12, tmp1.M13,
-                                        tmp1.M21, tmp1.M22, tmp1.M23,
-                                        tmp1.M31, tmp1.M32, tmp1.M33);
-            Quaternion q2 = Quaternion.FromRotateMatrix(tmp3);
-        }
-        */
 
         public void LookAt(Vector3f position, Vector3f direction, Vector3f up)
         {

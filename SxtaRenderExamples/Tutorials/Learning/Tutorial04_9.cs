@@ -2,7 +2,6 @@
 // without express or implied warranty of any kind.
 
 using OpenTK;
-using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
 using Sxta.Math;
 using Sxta.Render;
@@ -197,7 +196,7 @@ namespace Examples.Tutorials
 
             Matrix4f camera = Matrix4f.CreateTranslation(-3.0f, -2.0f, -10.0f);
 
-            mat = Matrix4f.CreateTranslation(5.0f, 1.0f, 2.0f) * camera;
+            mat = camera * Matrix4f.CreateTranslation(5.0f, 1.0f, 2.0f);
             uMVMatrix.set(mat);
             fb.draw(p, mesh2);
 
@@ -210,19 +209,19 @@ namespace Examples.Tutorials
         {
             for (int i = 0; i < num; i++)
             {
-                mat = Matrix4f.Scale(0.25f, 0.1f, 0.1f) * Matrix4f.CreateTranslation(i, 0.0f, 0.0f) * camera;
+                mat = camera * Matrix4f.CreateTranslation(i, 0.0f, 0.0f) * Matrix4f.Scale(0.25f, 0.1f, 0.1f);
                 uMVMatrix.set(mat);
                 fb.draw(p, mesh1);
             }
             for (int i = 0; i < num; i++)
             {
-                mat = Matrix4f.Scale(0.1f, 0.25f, 0.1f) * Matrix4f.CreateTranslation(0.0f, i, 0.0f) * camera;
+                mat = camera * Matrix4f.CreateTranslation(0.0f, i, 0.0f) * Matrix4f.Scale(0.1f, 0.25f, 0.1f);
                 uMVMatrix.set(mat);
                 fb.draw(p, mesh1);
             }
             for (int i = 0; i < num; i++)
             {
-                mat = Matrix4f.Scale(0.1f, 0.1f, 0.25f) * Matrix4f.CreateTranslation(0.0f, 0.0f, i) * camera;
+                mat = camera * Matrix4f.CreateTranslation(0.0f, 0.0f, i) * Matrix4f.Scale(0.1f, 0.1f, 0.25f);
                 uMVMatrix.set(mat);
                 fb.draw(p, mesh1);
             }

@@ -2,7 +2,6 @@
 // without express or implied warranty of any kind.
 
 using OpenTK;
-using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
 using Sxta.Math;
 using Sxta.Render;
@@ -214,7 +213,7 @@ namespace Examples.Tutorials
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
             angle += 0.01f;
-            mat = Matrix4f.CreateRotation(angle, 0.0f, 1.0f, 0.5f) * Matrix4f.CreateTranslation(0.0f, 0.0f, -6.0f);
+            mat = Matrix4f.CreateTranslation(0.0f, 0.0f, -6.0f) * Matrix4f.CreateRotation(angle, 0.0f, 1.0f, 0.5f);
             uMVMatrix.set(mat);
         }
 

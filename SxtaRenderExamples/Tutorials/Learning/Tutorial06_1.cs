@@ -61,10 +61,11 @@ namespace Examples.Tutorials
             p = new Program(new Module(330, FRAGMENT_SHADER));
             uMVMatrix = p.getUniformMatrix4f("uMVMatrix");
 
-            UniformMatrix4f uPMatrix = p.getUniformMatrix4f("uPMatrix");
+            uPMatrix = p.getUniformMatrix4f("uPMatrix");
             // position the camera 
-            camera = new FirstPersonCamera(this);
-            camera.LookAt(new Vector3f(2, 2, 7), new Vector3f(0, 0, 0), new Vector3f(0, 1, 0));
+            camera = new BasicFPCamera(this);
+            //camera.LookAt(new Vector3f(0, 0, 7), new Vector3f(0, 0, 0), new Vector3f(0, 1, 0));
+            camera.Position = new Vector3f(2, 2, 9);
 
             // fovy, aspect, zNear, zFar
             Matrix4f projection = Matrix4f.CreatePerspectiveFieldOfView((float)MathHelper.ToRadians(60), (float)this.Width / (float)this.Height, 0.01f, 100.0f);
@@ -79,6 +80,58 @@ namespace Examples.Tutorials
             // Model 4. Torus 
             mesh4 = MeshUtils.GenerateSolidTorus(0.5, 1.0, 20, 20);
 
+            // Model 1. Cube
+            cube = new Mesh<Vertex_V3C3f, uint>(Vertex_V3C3f.SizeInBytes, sizeof(uint), MeshMode.TRIANGLES, MeshUsage.GPU_STATIC);
+            cube.addAttributeType(0, 3, AttributeType.A32F, false);
+            cube.addAttributeType(1, 3, AttributeType.A32F, false);
+
+            cube.addVertex(new Vertex_V3C3f() { Position = new Vector3f(-1, -1, -1), Color = new Vector3f(1, 1, 0) });
+            cube.addVertex(new Vertex_V3C3f() { Position = new Vector3f(1, -1, -1), Color = new Vector3f(1, 1, 0) });
+            cube.addVertex(new Vertex_V3C3f() { Position = new Vector3f(1, 1, -1), Color = new Vector3f(1, 1, 0) });
+            cube.addVertex(new Vertex_V3C3f() { Position = new Vector3f(-1, 1, -1), Color = new Vector3f(1, 1, 0) });
+
+            cube.addVertex(new Vertex_V3C3f() { Position = new Vector3f(-1, -1, 1), Color = new Vector3f(0, 0, 1) });
+            cube.addVertex(new Vertex_V3C3f() { Position = new Vector3f(1, -1, 1), Color = new Vector3f(0, 0, 1) });
+            cube.addVertex(new Vertex_V3C3f() { Position = new Vector3f(1, 1, 1), Color = new Vector3f(0, 0, 1) });
+            cube.addVertex(new Vertex_V3C3f() { Position = new Vector3f(-1, 1, 1), Color = new Vector3f(0, 0, 1) });
+
+            cube.addVertex(new Vertex_V3C3f() { Position = new Vector3f(-1, -1, -1), Color = new Vector3f(0, 1, 1) });
+            cube.addVertex(new Vertex_V3C3f() { Position = new Vector3f(-1, 1, -1), Color = new Vector3f(0, 1, 1) });
+            cube.addVertex(new Vertex_V3C3f() { Position = new Vector3f(-1, 1, 1), Color = new Vector3f(0, 1, 1) });
+            cube.addVertex(new Vertex_V3C3f() { Position = new Vector3f(-1, -1, 1), Color = new Vector3f(0, 1, 1) });
+
+            cube.addVertex(new Vertex_V3C3f() { Position = new Vector3f(1, -1, -1), Color = new Vector3f(1, 0, 0) });
+            cube.addVertex(new Vertex_V3C3f() { Position = new Vector3f(1, 1, -1), Color = new Vector3f(1, 0, 0) });
+            cube.addVertex(new Vertex_V3C3f() { Position = new Vector3f(1, 1, 1), Color = new Vector3f(1, 0, 0) });
+            cube.addVertex(new Vertex_V3C3f() { Position = new Vector3f(1, -1, 1), Color = new Vector3f(1, 0, 0) });
+
+            cube.addVertex(new Vertex_V3C3f() { Position = new Vector3f(-1, -1, -1), Color = new Vector3f(1, 0, 1) });
+            cube.addVertex(new Vertex_V3C3f() { Position = new Vector3f(-1, -1, 1), Color = new Vector3f(1, 0, 1) });
+            cube.addVertex(new Vertex_V3C3f() { Position = new Vector3f(1, -1, 1), Color = new Vector3f(1, 0, 1) });
+            cube.addVertex(new Vertex_V3C3f() { Position = new Vector3f(1, -1, -1), Color = new Vector3f(1, 0, 1) });
+
+            cube.addVertex(new Vertex_V3C3f() { Position = new Vector3f(-1, 1, -1), Color = new Vector3f(0, 1, 0) });
+            cube.addVertex(new Vertex_V3C3f() { Position = new Vector3f(-1, 1, 1), Color = new Vector3f(0, 1, 0) });
+            cube.addVertex(new Vertex_V3C3f() { Position = new Vector3f(1, 1, 1), Color = new Vector3f(0, 1, 0) });
+            cube.addVertex(new Vertex_V3C3f() { Position = new Vector3f(1, 1, -1), Color = new Vector3f(0, 1, 0) });
+            cube.addIndices(new uint[] {
+                               0,1,2,
+                               0,2,3,
+
+                               4,5,6,
+                               4,6,7,
+
+                               8,9,10,
+                               8,10,11,
+
+                               12,13,14,
+                               12,14,15,
+
+                               16,17,18,
+                               16,18,19,
+
+                               20,21,22,
+                               20,22,23 });
 
             fb.setClearColor(Color.White);
         }
@@ -91,6 +144,8 @@ namespace Examples.Tutorials
         {
             if (p != null)
                 p.Dispose();
+            if (cube != null)
+                cube.Dispose();
             if (mesh1 != null)
                 mesh1.Dispose();
             if (mesh2 != null)
@@ -116,7 +171,14 @@ namespace Examples.Tutorials
         protected override void OnResize(EventArgs e)
         {
             fb.setViewport(new Vector4i(0, 0, Width, Height));
+            camera.Resize(Width, Height);
+            //camera.Update();
+
+            // fovy, aspect, zNear, zFar
+            //Matrix4f projection = Matrix4f.CreatePerspectiveFieldOfView((float)MathHelper.ToRadians(60), (float)this.Width / (float)this.Height, 0.01f, 100.0f);
+            uPMatrix.set(camera.ProjectionMatrix);
         }
+
         #endregion
 
         #region OnUpdateFrame
@@ -145,34 +207,58 @@ namespace Examples.Tutorials
         {
             fb.clear(true, false, true);
 
-            mat = Matrix4f.CreateRotation(angle * 3, 0.0f, 1.0f, 0.5f) * Matrix4f.CreateTranslation(0.5f, 3.0f, 0.0f) * camera.ViewMatrix;
+            mat = camera.ViewMatrix * Matrix4f.CreateTranslation(0.5f, 3.0f, 0.0f) * Matrix4f.CreateRotation(angle * 3, 0.0f, 1.0f, 0.5f);
             uMVMatrix.set(mat);
             fb.draw(p, mesh1);
 
-            mat = Matrix4f.CreateRotation(angle * 3, 0.0f, 1.0f, 0.5f) * Matrix4f.CreateTranslation(5.0f, 3.0f, 0.0f) * camera.ViewMatrix;
+            mat = camera.ViewMatrix * Matrix4f.CreateTranslation(5.0f, 3.0f, 0.0f) * Matrix4f.CreateRotation(angle * 3, 0.0f, 1.0f, 0.5f);
             uMVMatrix.set(mat);
             fb.draw(p, mesh2);
 
-            mat = Matrix4f.CreateRotation(angle * 3, 0.0f, 1.0f, 0.5f) * Matrix4f.CreateTranslation(0.5f, 0.0f, 0.0f) * camera.ViewMatrix;
+            mat = camera.ViewMatrix * Matrix4f.CreateTranslation(0.5f, 0.0f, 0.0f) * Matrix4f.CreateRotation(angle * 3, 0.0f, 1.0f, 0.5f);
             uMVMatrix.set(mat);
             fb.draw(p, mesh3);
 
-            mat = Matrix4f.CreateRotation(angle * 3, 0.0f, 1.0f, 0.5f) * Matrix4f.CreateTranslation(5.0f, 0.0f, 0.0f) * camera.ViewMatrix;
+            mat = camera.ViewMatrix * Matrix4f.CreateTranslation(5.0f, 0.0f, 0.0f) * Matrix4f.CreateRotation(angle * 3, 0.0f, 1.0f, 0.5f);
             uMVMatrix.set(mat);
             fb.draw(p, mesh4);
+
+            RenderAxes(camera.ViewMatrix);
 
             this.SwapBuffers();
         }
 
         #endregion
-
+        public virtual void RenderAxes(Matrix4f camera, int num = 10)
+        {
+            for (int i = 0; i < num; i++)
+            {
+                mat = camera * Matrix4f.CreateTranslation(i, 0.0f, 0.0f) * Matrix4f.Scale(0.25f, 0.1f, 0.1f);
+                uMVMatrix.set(mat);
+                fb.draw(p, cube);
+            }
+            for (int i = 0; i < num; i++)
+            {
+                mat = camera * Matrix4f.CreateTranslation(0.0f, i, 0.0f) * Matrix4f.Scale(0.1f, 0.25f, 0.1f);
+                uMVMatrix.set(mat);
+                fb.draw(p, cube);
+            }
+            for (int i = 0; i < num; i++)
+            {
+                mat = camera * Matrix4f.CreateTranslation(0.0f, 0.0f, i) * Matrix4f.Scale(0.1f, 0.1f, 0.25f);
+                uMVMatrix.set(mat);
+                fb.draw(p, cube);
+            }
+        }
         #region Fields
         FrameBuffer fb;
         Program p;
         Mesh<Vertex_V3N3T2f, ushort> mesh1, mesh2, mesh3, mesh4;
+        Mesh<Vertex_V3C3f, uint> cube;
         Matrix4f mat;
         UniformMatrix4f uMVMatrix;
-        private FirstPersonCamera camera;
+        UniformMatrix4f uPMatrix;
+        private BasicFPCamera camera;
         float angle = 0;
 
         const string FRAGMENT_SHADER = @"
@@ -221,6 +307,16 @@ namespace Examples.Tutorials
         }
 
         #endregion
+
+        private struct Vertex_V3C3f
+        {
+            public Vector3f Position;
+            public Vector3f Color;
+            public static int SizeInBytes
+            {
+                get { return Vector3f.SizeInBytes + Vector3f.SizeInBytes; }
+            }
+        }
     }
 
 

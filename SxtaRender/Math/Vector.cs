@@ -98,6 +98,9 @@ namespace Sxta.Math
 
         #region Instance
 
+		public void Set(int x, int y) { X = x; Y = y; }
+
+
         #region public void Add()
 
         /// <summary>Add the Vector passed as parameter to this instance.</summary>
@@ -924,6 +927,20 @@ namespace Sxta.Math
 			return false; //< They are equal
 		}
 
+		public static bool operator <=(Vector2i l, Vector2i r)
+        {
+			if (l.X != r.X) return l.X < r.X;
+			if (l.Y != r.Y) return l.Y < r.Y;
+			return true; //< They are equal
+		}
+
+		public static bool operator >=(Vector2i l, Vector2i r)
+        {
+			if (l.X != r.X) return l.X > r.X;
+			if (l.Y != r.Y) return l.Y > r.Y;
+			return true; //< They are equal
+		}
+
         #endregion
 
         #region Overrides
@@ -1080,6 +1097,9 @@ namespace Sxta.Math
         #region Public Members
 
         #region Instance
+
+		public void Set(int x, int y, int z) { X = x; Y = y; Z = z; }
+
 
         #region public void Add()
 
@@ -2125,7 +2145,21 @@ namespace Sxta.Math
 			if (l.Z != r.Z) return l.Z > r.Z;
 			return false; //< They are equal
 		}
+		public static bool operator <=(Vector3i l, Vector3i r)
+        {
+			if (l.X != r.X) return l.X < r.X;
+			if (l.Y != r.Y) return l.Y < r.Y;
+			if (l.Z != r.Z) return l.Z < r.Z;
+			return true; //< They are equal
+		}
 
+		public static bool operator >=(Vector3i l, Vector3i r)
+        {
+			if (l.X != r.X) return l.X > r.X;
+			if (l.Y != r.Y) return l.Y > r.Y;
+			if (l.Z != r.Z) return l.Z > r.Z;
+			return true; //< They are equal
+		}
         #endregion
 
         #region Overrides
@@ -2329,6 +2363,9 @@ namespace Sxta.Math
         #region Public Members
 
         #region Instance
+
+		public void Set(int x, int y, int z, int w) { X = x; Y = y; Z = z; W = w;}
+
 
         #region public void Add()
 
@@ -3124,7 +3161,23 @@ namespace Sxta.Math
 			if (l.W != r.W) return l.W > r.W;
 			return false; //< They are equal
 		}
+		public static bool operator <=(Vector4i l, Vector4i r)
+        {
+			if (l.X != r.X) return l.X < r.X;
+			if (l.Y != r.Y) return l.Y < r.Y;
+			if (l.Z != r.Z) return l.Z < r.Z;
+			if (l.W != r.W) return l.W < r.W;
+			return true; //< They are equal
+		}
 
+		public static bool operator >=(Vector4i l, Vector4i r)
+        {
+			if (l.X != r.X) return l.X > r.X;
+			if (l.Y != r.Y) return l.Y > r.Y;
+			if (l.Z != r.Z) return l.Z > r.Z;
+			if (l.W != r.W) return l.W > r.W;
+			return true; //< They are equal
+		}
         #endregion
 
         #region Overrides
@@ -3259,6 +3312,9 @@ namespace Sxta.Math
         #region Public Members
 
         #region Instance
+
+		public void Set(uint x, uint y) { X = x; Y = y; }
+
 
         #region public void Add()
 
@@ -4086,6 +4142,20 @@ namespace Sxta.Math
 			return false; //< They are equal
 		}
 
+		public static bool operator <=(Vector2ui l, Vector2ui r)
+        {
+			if (l.X != r.X) return l.X < r.X;
+			if (l.Y != r.Y) return l.Y < r.Y;
+			return true; //< They are equal
+		}
+
+		public static bool operator >=(Vector2ui l, Vector2ui r)
+        {
+			if (l.X != r.X) return l.X > r.X;
+			if (l.Y != r.Y) return l.Y > r.Y;
+			return true; //< They are equal
+		}
+
         #endregion
 
         #region Overrides
@@ -4242,6 +4312,9 @@ namespace Sxta.Math
         #region Public Members
 
         #region Instance
+
+		public void Set(uint x, uint y, uint z) { X = x; Y = y; Z = z; }
+
 
         #region public void Add()
 
@@ -5287,7 +5360,21 @@ namespace Sxta.Math
 			if (l.Z != r.Z) return l.Z > r.Z;
 			return false; //< They are equal
 		}
+		public static bool operator <=(Vector3ui l, Vector3ui r)
+        {
+			if (l.X != r.X) return l.X < r.X;
+			if (l.Y != r.Y) return l.Y < r.Y;
+			if (l.Z != r.Z) return l.Z < r.Z;
+			return true; //< They are equal
+		}
 
+		public static bool operator >=(Vector3ui l, Vector3ui r)
+        {
+			if (l.X != r.X) return l.X > r.X;
+			if (l.Y != r.Y) return l.Y > r.Y;
+			if (l.Z != r.Z) return l.Z > r.Z;
+			return true; //< They are equal
+		}
         #endregion
 
         #region Overrides
@@ -5491,6 +5578,9 @@ namespace Sxta.Math
         #region Public Members
 
         #region Instance
+
+		public void Set(uint x, uint y, uint z, uint w) { X = x; Y = y; Z = z; W = w;}
+
 
         #region public void Add()
 
@@ -6286,7 +6376,23 @@ namespace Sxta.Math
 			if (l.W != r.W) return l.W > r.W;
 			return false; //< They are equal
 		}
+		public static bool operator <=(Vector4ui l, Vector4ui r)
+        {
+			if (l.X != r.X) return l.X < r.X;
+			if (l.Y != r.Y) return l.Y < r.Y;
+			if (l.Z != r.Z) return l.Z < r.Z;
+			if (l.W != r.W) return l.W < r.W;
+			return true; //< They are equal
+		}
 
+		public static bool operator >=(Vector4ui l, Vector4ui r)
+        {
+			if (l.X != r.X) return l.X > r.X;
+			if (l.Y != r.Y) return l.Y > r.Y;
+			if (l.Z != r.Z) return l.Z > r.Z;
+			if (l.W != r.W) return l.W > r.W;
+			return true; //< They are equal
+		}
         #endregion
 
         #region Overrides
@@ -6421,6 +6527,9 @@ namespace Sxta.Math
         #region Public Members
 
         #region Instance
+
+		public void Set(float x, float y) { X = x; Y = y; }
+
 
         #region public void Add()
 
@@ -7280,6 +7389,20 @@ namespace Sxta.Math
 			return false; //< They are equal
 		}
 
+		public static bool operator <=(Vector2f l, Vector2f r)
+        {
+			if (l.X != r.X) return l.X < r.X;
+			if (l.Y != r.Y) return l.Y < r.Y;
+			return true; //< They are equal
+		}
+
+		public static bool operator >=(Vector2f l, Vector2f r)
+        {
+			if (l.X != r.X) return l.X > r.X;
+			if (l.Y != r.Y) return l.Y > r.Y;
+			return true; //< They are equal
+		}
+
         #endregion
 
         #region Overrides
@@ -7436,6 +7559,9 @@ namespace Sxta.Math
         #region Public Members
 
         #region Instance
+
+		public void Set(float x, float y, float z) { X = x; Y = y; Z = z; }
+
 
         #region public void Add()
 
@@ -8708,7 +8834,21 @@ namespace Sxta.Math
 			if (l.Z != r.Z) return l.Z > r.Z;
 			return false; //< They are equal
 		}
+		public static bool operator <=(Vector3f l, Vector3f r)
+        {
+			if (l.X != r.X) return l.X < r.X;
+			if (l.Y != r.Y) return l.Y < r.Y;
+			if (l.Z != r.Z) return l.Z < r.Z;
+			return true; //< They are equal
+		}
 
+		public static bool operator >=(Vector3f l, Vector3f r)
+        {
+			if (l.X != r.X) return l.X > r.X;
+			if (l.Y != r.Y) return l.Y > r.Y;
+			if (l.Z != r.Z) return l.Z > r.Z;
+			return true; //< They are equal
+		}
         #endregion
 
         #region Overrides
@@ -8912,6 +9052,9 @@ namespace Sxta.Math
         #region Public Members
 
         #region Instance
+
+		public void Set(float x, float y, float z, float w) { X = x; Y = y; Z = z; W = w;}
+
 
         #region public void Add()
 
@@ -9764,7 +9907,23 @@ namespace Sxta.Math
 			if (l.W != r.W) return l.W > r.W;
 			return false; //< They are equal
 		}
+		public static bool operator <=(Vector4f l, Vector4f r)
+        {
+			if (l.X != r.X) return l.X < r.X;
+			if (l.Y != r.Y) return l.Y < r.Y;
+			if (l.Z != r.Z) return l.Z < r.Z;
+			if (l.W != r.W) return l.W < r.W;
+			return true; //< They are equal
+		}
 
+		public static bool operator >=(Vector4f l, Vector4f r)
+        {
+			if (l.X != r.X) return l.X > r.X;
+			if (l.Y != r.Y) return l.Y > r.Y;
+			if (l.Z != r.Z) return l.Z > r.Z;
+			if (l.W != r.W) return l.W > r.W;
+			return true; //< They are equal
+		}
         #endregion
 
         #region Overrides
@@ -9899,6 +10058,9 @@ namespace Sxta.Math
         #region Public Members
 
         #region Instance
+
+		public void Set(double x, double y) { X = x; Y = y; }
+
 
         #region public void Add()
 
@@ -10758,6 +10920,20 @@ namespace Sxta.Math
 			return false; //< They are equal
 		}
 
+		public static bool operator <=(Vector2d l, Vector2d r)
+        {
+			if (l.X != r.X) return l.X < r.X;
+			if (l.Y != r.Y) return l.Y < r.Y;
+			return true; //< They are equal
+		}
+
+		public static bool operator >=(Vector2d l, Vector2d r)
+        {
+			if (l.X != r.X) return l.X > r.X;
+			if (l.Y != r.Y) return l.Y > r.Y;
+			return true; //< They are equal
+		}
+
         #endregion
 
         #region Overrides
@@ -10903,6 +11079,9 @@ namespace Sxta.Math
         #region Public Members
 
         #region Instance
+
+		public void Set(double x, double y, double z) { X = x; Y = y; Z = z; }
+
 
         #region public void Add()
 
@@ -12142,7 +12321,21 @@ namespace Sxta.Math
 			if (l.Z != r.Z) return l.Z > r.Z;
 			return false; //< They are equal
 		}
+		public static bool operator <=(Vector3d l, Vector3d r)
+        {
+			if (l.X != r.X) return l.X < r.X;
+			if (l.Y != r.Y) return l.Y < r.Y;
+			if (l.Z != r.Z) return l.Z < r.Z;
+			return true; //< They are equal
+		}
 
+		public static bool operator >=(Vector3d l, Vector3d r)
+        {
+			if (l.X != r.X) return l.X > r.X;
+			if (l.Y != r.Y) return l.Y > r.Y;
+			if (l.Z != r.Z) return l.Z > r.Z;
+			return true; //< They are equal
+		}
         #endregion
 
         #region Overrides
@@ -12346,6 +12539,9 @@ namespace Sxta.Math
         #region Public Members
 
         #region Instance
+
+		public void Set(double x, double y, double z, double w) { X = x; Y = y; Z = z; W = w;}
+
 
         #region public void Add()
 
@@ -13198,7 +13394,23 @@ namespace Sxta.Math
 			if (l.W != r.W) return l.W > r.W;
 			return false; //< They are equal
 		}
+		public static bool operator <=(Vector4d l, Vector4d r)
+        {
+			if (l.X != r.X) return l.X < r.X;
+			if (l.Y != r.Y) return l.Y < r.Y;
+			if (l.Z != r.Z) return l.Z < r.Z;
+			if (l.W != r.W) return l.W < r.W;
+			return true; //< They are equal
+		}
 
+		public static bool operator >=(Vector4d l, Vector4d r)
+        {
+			if (l.X != r.X) return l.X > r.X;
+			if (l.Y != r.Y) return l.Y > r.Y;
+			if (l.Z != r.Z) return l.Z > r.Z;
+			if (l.W != r.W) return l.W > r.W;
+			return true; //< They are equal
+		}
         #endregion
 
         #region Overrides

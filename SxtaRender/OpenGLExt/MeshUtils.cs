@@ -625,7 +625,7 @@ namespace Sxta.Render.OpenGLExt
         public static Mesh<Vertex_V3N3T2f, ushort> MeshGeometrySolid(float[] vertices, float[] normals, float[] textcs, int numVertices,
                                                                       ushort[] vertIdxs, int numParts, int numVertIdxsPerPart, MeshMode meshMode = MeshMode.TRIANGLES)
         {
-            Mesh<Vertex_V3N3T2f, ushort> mesh = new Mesh<Vertex_V3N3T2f, ushort>(Vertex_V3N3T2f.SizeInBytes, sizeof(ushort), meshMode, MeshUsage.GPU_STATIC);
+            Mesh<Vertex_V3N3T2f, ushort> mesh = new Mesh<Vertex_V3N3T2f, ushort>(Vertex_V3N3T2f.SizeInBytes, sizeof(ushort), meshMode, MeshUsage.GPU_STATIC, numVertices, vertIdxs.Length);
             mesh.addAttributeType(0, 3, AttributeType.A32F, false);
             mesh.addAttributeType(1, 3, AttributeType.A32F, false);
             mesh.addAttributeType(2, 2, AttributeType.A32F, false);

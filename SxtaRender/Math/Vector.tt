@@ -121,6 +121,9 @@ namespace Sxta.Math
 
         #region Instance
 
+		public void Set(<#= typeName #> x, <#= typeName #> y) { X = x; Y = y; }
+
+
         #region public void Add()
 
         /// <summary>Add the Vector passed as parameter to this instance.</summary>
@@ -981,6 +984,20 @@ namespace Sxta.Math
 			return false; //< They are equal
 		}
 
+		public static bool operator <=(<#= vec2Name #> l, <#= vec2Name #> r)
+        {
+			if (l.X != r.X) return l.X < r.X;
+			if (l.Y != r.Y) return l.Y < r.Y;
+			return true; //< They are equal
+		}
+
+		public static bool operator >=(<#= vec2Name #> l, <#= vec2Name #> r)
+        {
+			if (l.X != r.X) return l.X > r.X;
+			if (l.Y != r.Y) return l.Y > r.Y;
+			return true; //< They are equal
+		}
+
         #endregion
 
         #region Overrides
@@ -1139,6 +1156,9 @@ namespace Sxta.Math
         #region Public Members
 
         #region Instance
+
+		public void Set(<#= typeName #> x, <#= typeName #> y, <#= typeName #> z) { X = x; Y = y; Z = z; }
+
 
         #region public void Add()
 
@@ -2421,7 +2441,21 @@ namespace Sxta.Math
 			if (l.Z != r.Z) return l.Z > r.Z;
 			return false; //< They are equal
 		}
+		public static bool operator <=(<#= vec3Name #> l, <#= vec3Name #> r)
+        {
+			if (l.X != r.X) return l.X < r.X;
+			if (l.Y != r.Y) return l.Y < r.Y;
+			if (l.Z != r.Z) return l.Z < r.Z;
+			return true; //< They are equal
+		}
 
+		public static bool operator >=(<#= vec3Name #> l, <#= vec3Name #> r)
+        {
+			if (l.X != r.X) return l.X > r.X;
+			if (l.Y != r.Y) return l.Y > r.Y;
+			if (l.Z != r.Z) return l.Z > r.Z;
+			return true; //< They are equal
+		}
         #endregion
 
         #region Overrides
@@ -2625,6 +2659,9 @@ namespace Sxta.Math
         #region Public Members
 
         #region Instance
+
+		public void Set(<#= typeName #> x, <#= typeName #> y, <#= typeName #> z, <#= typeName #> w) { X = x; Y = y; Z = z; W = w;}
+
 
         #region public void Add()
 
@@ -3479,7 +3516,23 @@ namespace Sxta.Math
 			if (l.W != r.W) return l.W > r.W;
 			return false; //< They are equal
 		}
+		public static bool operator <=(<#= vec4Name #> l, <#= vec4Name #> r)
+        {
+			if (l.X != r.X) return l.X < r.X;
+			if (l.Y != r.Y) return l.Y < r.Y;
+			if (l.Z != r.Z) return l.Z < r.Z;
+			if (l.W != r.W) return l.W < r.W;
+			return true; //< They are equal
+		}
 
+		public static bool operator >=(<#= vec4Name #> l, <#= vec4Name #> r)
+        {
+			if (l.X != r.X) return l.X > r.X;
+			if (l.Y != r.Y) return l.Y > r.Y;
+			if (l.Z != r.Z) return l.Z > r.Z;
+			if (l.W != r.W) return l.W > r.W;
+			return true; //< They are equal
+		}
         #endregion
 
         #region Overrides

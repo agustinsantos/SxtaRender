@@ -2,7 +2,6 @@
 // without express or implied warranty of any kind.
 
 using OpenTK;
-using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
 using Sxta.Math;
 using Sxta.Render;
@@ -133,12 +132,12 @@ namespace Examples.Tutorials
 
             Matrix4f camera = Matrix4f.CreateTranslation(0.0f, 0.0f, -0.5f);
 
-            mat = Matrix4f.CreateTranslation(-1.05f, 0.0f, 0.0f) * camera;
+            mat = camera * Matrix4f.CreateTranslation(-1.05f, 0.0f, 0.0f) ;
             uMVMatrix.set(mat);
             uSampler.set(t1);
             fb.draw(p, mesh1);
 
-            mat = Matrix4f.CreateTranslation(1.05f, 0.0f, 0.0f) * camera;
+            mat = camera * Matrix4f.CreateTranslation(1.05f, 0.0f, 0.0f);
             uMVMatrix.set(mat);
             uSampler.set(t2);
             fb.draw(p, mesh1);

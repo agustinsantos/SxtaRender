@@ -59,8 +59,8 @@ namespace Examples.Tutorials
 
             uPMatrix = p.getUniformMatrix4f("uPMatrix");
             // position the camera 
-            camera = new FirstPersonCamera(this);
-            camera.Position = new Vector3f(0, 0, -5);
+            camera = new BasicFPCamera(this);
+            camera.Position = new Vector3f(0, 0, 3);
 
             triangle = new Mesh<Vector2f, uint>(Vector2f.SizeInBytes, MeshMode.TRIANGLES, MeshUsage.GPU_STATIC, 3);
             triangle.addAttributeType(0, 2, AttributeType.A32F, false);
@@ -105,7 +105,6 @@ namespace Examples.Tutorials
             // fovy, aspect, zNear, zFar
             //Matrix4f projection = Matrix4f.CreatePerspectiveFieldOfView((float)MathHelper.ToRadians(60), (float)this.Width / (float)this.Height, 0.01f, 100.0f);
             uPMatrix.set(camera.ProjectionMatrix);
-
         }
 
         #endregion
@@ -130,32 +129,32 @@ namespace Examples.Tutorials
             Matrix4f cam = camera.ViewMatrix;
             // Red
             uColor.set(new Vector3f(1.0f, 0.0f, 0.0f));
-            mat = Matrix4f.CreateTranslation(-0.6f, -0.4f, -1.0f) * cam;
+            mat = cam * Matrix4f.CreateTranslation(-0.6f, -0.4f, -1.0f);
             float[] vals = (float[])mat;
             uMVMatrix.set(mat);
             fb.draw(p, triangle);
 
             // Green
             uColor.set(new Vector3f(0.0f, 1.0f, 0.0f));
-            mat = Matrix4f.CreateTranslation(-0.4f, -0.4f, -2.0f) * cam;
+            mat = cam * Matrix4f.CreateTranslation(-0.4f, -0.4f, -2.0f);
             uMVMatrix.set(mat);
             fb.draw(p, triangle);
 
             // Blue
             uColor.set(new Vector3f(0.0f, 0.0f, 1.0f));
-            mat = Matrix4f.CreateTranslation(-0.2f, -0.4f, -3.0f) * cam;
+            mat = cam * Matrix4f.CreateTranslation(-0.2f, -0.4f, -3.0f);
             uMVMatrix.set(mat);
             fb.draw(p, triangle);
 
             // Light Blue
             uColor.set(new Vector3f(0.0f, 1.0f, 1.0f));
-            mat = Matrix4f.CreateTranslation(0.0f, -0.4f, -4.0f) * cam;
+            mat = cam * Matrix4f.CreateTranslation(0.0f, -0.4f, -4.0f);
             uMVMatrix.set(mat);
             fb.draw(p, triangle);
 
             // Yellow
             uColor.set(new Vector3f(01.0f, 1.0f, 0.0f));
-            mat = Matrix4f.CreateTranslation(0.2f, -0.4f, -5.0f) * cam;
+            mat = cam * Matrix4f.CreateTranslation(0.2f, -0.4f, -5.0f);
             uMVMatrix.set(mat);
             fb.draw(p, triangle);
 
@@ -179,7 +178,7 @@ namespace Examples.Tutorials
 
         Mesh<Vector2f, uint> triangle;
 
-        private FirstPersonCamera camera;
+        private BasicFPCamera camera;
 
         const string EXAMPLE_SHADER = @"
 #ifdef _VERTEX_
