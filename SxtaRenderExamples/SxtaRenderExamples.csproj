@@ -73,6 +73,7 @@
     <Compile Include="Tutorials\Learning\Tutorial04_11.cs" />
     <Compile Include="Tutorials\Learning\Tutorial04_10.cs" />
     <Compile Include="Tutorials\Learning\Tutorial05_5.cs" />
+    <Compile Include="Tutorials\Learning\Tutorial06_3.cs" />
     <Compile Include="Tutorials\Learning\Tutorial06_2.cs" />
     <Compile Include="Tutorials\Learning\Tutorial06_1.cs" />
     <Compile Include="Tutorials\Learning\Tutorial05_7.cs" />

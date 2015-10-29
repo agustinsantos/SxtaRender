@@ -17,10 +17,10 @@ namespace Examples.Tutorials
     /// <summary>
     /// Demonstrates how to compute Diffuse Reflection
     /// </summary>
-    [Example("Example 6.2: Diffuse Reflection (I)", ExampleCategory.Learning, "6. Lighting", 1, Source = "Tutorial06_2", Documentation = "Tutorial06_2")]
-    public class TutorialLearning06_2 : GameWindow
+    [Example("Example 6.3: Diffuse Reflection (II)", ExampleCategory.Learning, "6. Lighting", 1, Source = "Tutorial06_3", Documentation = "Tutorial06_3")]
+    public class TutorialLearning06_3 : GameWindow
     {
-        public TutorialLearning06_2()
+        public TutorialLearning06_3()
             : base(600, 600)
         {
             Keyboard.KeyDown += Keyboard_KeyDown;
@@ -60,6 +60,7 @@ namespace Examples.Tutorials
 
             p = new Program(new Module(330, FRAGMENT_SHADER));
             uMVMatrix = p.getUniformMatrix4f("uMVMatrix");
+            uNMatrix = p.getUniformMatrix4f("uNMatrix");
 
             uPMatrix = p.getUniformMatrix4f("uPMatrix");
 
@@ -69,8 +70,10 @@ namespace Examples.Tutorials
             uLightPosition.set(new Vector3f(2, 2, 7));
             uLd.set(new Vector3f(6.0f, 6.0f, 6.0f));
 
+
             // position the camera 
             camera = new BasicFPCamera(this);
+            //camera.LookAt(new Vector3f(0, 0, 7), new Vector3f(0, 0, 0), new Vector3f(0, 1, 0));
             camera.Position = new Vector3f(2, 2, 9);
 
             // fovy, aspect, zNear, zFar
@@ -180,11 +183,15 @@ namespace Examples.Tutorials
             camera.Resize(Width, Height);
             //camera.Update();
 
-            // fovy, aspect, zNear, zFar
-            //Matrix4f projection = Matrix4f.CreatePerspectiveFieldOfView((float)MathHelper.ToRadians(60), (float)this.Width / (float)this.Height, 0.01f, 100.0f);
             uPMatrix.set(camera.ProjectionMatrix);
         }
-        
+        private void SetNormalMatrix(Matrix4f viewMatrix)
+        {
+            Matrix4f normalMatrix = viewMatrix;
+            normalMatrix.Invert();
+            normalMatrix.Transpose();
+            uNMatrix.set(normalMatrix);
+        }
         #endregion
 
         #region OnUpdateFrame
@@ -213,21 +220,25 @@ namespace Examples.Tutorials
             fb.clear(true, false, true);
 
             mat = camera.ViewMatrix * Matrix4f.CreateTranslation(0.5f, 3.0f, 0.0f) * Matrix4f.CreateRotation(angle * 3, 0.0f, 1.0f, 0.5f);
-            uMVMatrix.set( mat);
+            SetNormalMatrix(mat);
+            uMVMatrix.set(mat);
             uKd.set(new Vector3f(1.0f, 0.2f, 0.3f));
             fb.draw(p, mesh1);
 
             mat = camera.ViewMatrix * Matrix4f.CreateTranslation(5.0f, 3.0f, 0.0f) * Matrix4f.CreateRotation(angle * 3, 0.0f, 1.0f, 0.5f);
+            SetNormalMatrix(mat);
             uMVMatrix.set(mat);
             uKd.set(new Vector3f(0.3f, 1.0f, 0.1f));
             fb.draw(p, mesh2);
 
             mat = camera.ViewMatrix * Matrix4f.CreateTranslation(0.5f, 0.0f, 0.0f) * Matrix4f.CreateRotation(angle * 3, 0.0f, 1.0f, 0.5f);
+            SetNormalMatrix(mat);
             uMVMatrix.set(mat);
             uKd.set(new Vector3f(0.2f, 0.2f, 1.0f));
             fb.draw(p, mesh3);
 
             mat = camera.ViewMatrix * Matrix4f.CreateTranslation(5.0f, 0.0f, 0.0f) * Matrix4f.CreateRotation(angle * 3, 0.0f, 1.0f, 0.5f);
+            SetNormalMatrix(mat);
             uMVMatrix.set(mat);
             uKd.set(new Vector3f(1.0f, 1.0f, 0.3f));
             fb.draw(p, mesh4);
@@ -243,6 +254,7 @@ namespace Examples.Tutorials
             for (int i = 0; i < num; i++)
             {
                 mat = camera * Matrix4f.CreateTranslation(i, 0.0f, 0.0f) * Matrix4f.Scale(0.25f, 0.1f, 0.1f);
+                SetNormalMatrix(mat);
                 uMVMatrix.set(mat);
                 uKd.set(new Vector3f(1.0f, 0.0f, 0.0f));
                 fb.draw(p, cube);
@@ -250,6 +262,7 @@ namespace Examples.Tutorials
             for (int i = 0; i < num; i++)
             {
                 mat = camera * Matrix4f.CreateTranslation(0.0f, i, 0.0f) * Matrix4f.Scale(0.1f, 0.25f, 0.1f);
+                SetNormalMatrix(mat);
                 uMVMatrix.set(mat);
                 uKd.set(new Vector3f(0.0f, 1.0f, 0.0f));
                 fb.draw(p, cube);
@@ -257,6 +270,7 @@ namespace Examples.Tutorials
             for (int i = 0; i < num; i++)
             {
                 mat = camera * Matrix4f.CreateTranslation(0.0f, 0.0f, i) * Matrix4f.Scale(0.1f, 0.1f, 0.25f);
+                SetNormalMatrix(mat);
                 uMVMatrix.set(mat);
                 uKd.set(new Vector3f(0.0f, 0.0f, 1.0f));
                 fb.draw(p, cube);
@@ -270,6 +284,7 @@ namespace Examples.Tutorials
         Matrix4f mat;
         UniformMatrix4f uMVMatrix;
         UniformMatrix4f uPMatrix;
+        UniformMatrix4f uNMatrix;
         Uniform3f uKd;
         private BasicFPCamera camera;
         float angle = 0;
@@ -281,6 +296,7 @@ namespace Examples.Tutorials
 
         uniform mat4 uMVMatrix;
         uniform mat4 uPMatrix;
+        uniform mat4 uNMatrix;           // The normal matrix is the transpose inverse of the modelview matrix
 
         uniform vec3 uLightPosition;	 // Light position in eye coords
         uniform vec3 uKd;                // Diffuse Reflectivity
@@ -292,9 +308,7 @@ namespace Examples.Tutorials
         {
             // Convert normal and position to eye coords
             vec4 eyeCoords = uMVMatrix * vec4(aPosition, 1.0);
-            // The normal matrix is the transpose inverse of the modelview matrix
-            mat4 normalMatrix = transpose(inverse(uMVMatrix));
-            vec3 tnorm = vec3(normalize(normalMatrix * vec4(aNormal, 1.0)));
+            vec3 tnorm = vec3(normalize(uNMatrix * vec4(aNormal, 1.0)));
             
             vec3 s = normalize(uLightPosition - vec3(eyeCoords));
 
@@ -323,7 +337,7 @@ namespace Examples.Tutorials
         [STAThread]
         public static void Main()
         {
-            using (TutorialLearning06_2 example = new TutorialLearning06_2())
+            using (TutorialLearning06_3 example = new TutorialLearning06_3())
             {
                 example.Run(30.0, 10.0);
             }

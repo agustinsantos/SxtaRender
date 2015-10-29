@@ -374,5 +374,88 @@ namespace SxtaRenderTests
             Assert.AreEqual(m.R3C3, viewMatrix.R3C3, epsilonError);
         }
         #endregion
+
+        #region NormalMatrix
+        [TestMethod]
+        public void TestComputeNormalMatrix01()
+        {
+            Matrix4f src = new Matrix4f(1, 0, 0, 0,
+                                        0, 1, 0, 0,
+                                        0, 0, 1, -1.5f,
+                                        0, 0, 0, 1);
+            Matrix4f rst = new Matrix4f(1, 0, 0, 0,
+                                        0, 1, 0, 0,
+                                        0, 0, 1, 0,
+                                        0, 0, 1.5f, 1);
+
+            Matrix4f normalMatrix = src;
+            normalMatrix.Invert();
+            normalMatrix.Transpose();
+
+            Assert.AreEqual(rst.R0C0, normalMatrix.R0C0, epsilonError);
+            Assert.AreEqual(rst.R0C1, normalMatrix.R0C1, epsilonError);
+            Assert.AreEqual(rst.R0C2, normalMatrix.R0C2, epsilonError);
+            Assert.AreEqual(rst.R0C3, normalMatrix.R0C3, epsilonError);
+            Assert.AreEqual(rst.R1C0, normalMatrix.R1C0, epsilonError);
+            Assert.AreEqual(rst.R1C1, normalMatrix.R1C1, epsilonError);
+            Assert.AreEqual(rst.R1C2, normalMatrix.R1C2, epsilonError);
+            Assert.AreEqual(rst.R1C3, normalMatrix.R1C3, epsilonError);
+            Assert.AreEqual(rst.R2C0, normalMatrix.R2C0, epsilonError);
+            Assert.AreEqual(rst.R2C1, normalMatrix.R2C1, epsilonError);
+            Assert.AreEqual(rst.R2C2, normalMatrix.R2C2, epsilonError);
+            Assert.AreEqual(rst.R2C3, normalMatrix.R2C3, epsilonError);
+            Assert.AreEqual(rst.R3C0, normalMatrix.R3C0, epsilonError);
+            Assert.AreEqual(rst.R3C1, normalMatrix.R3C1, epsilonError);
+            Assert.AreEqual(rst.R3C2, normalMatrix.R3C2, epsilonError);
+            Assert.AreEqual(rst.R3C3, normalMatrix.R3C3, epsilonError);
+        }
+
+        [TestMethod]
+        public void TestComputeNormalMatrix02()
+        {
+            Matrix4f src = new Matrix4f(0.943355917930603f, 0, 0.3317824602127075f, 0,
+                                        0, 1, 0, 0,
+                                        -0.3317824602127075f, 0, 0.943355917930603f, -1.5f,
+                                        0, 0, 0, 1);
+            Matrix4f rst = new Matrix4f(0.943355917930603f, 0, 0.3317824602127075f, 0,
+                                        0, 1, 0, 0,
+                                        -0.3317824602127075f, 0, 0.943355917930603f, 0,
+                                        -0.4976736903190613f, 0, 1.4150339365005493f, 1);
+            Matrix3f rst2 = (Matrix3f)rst;
+
+            Matrix4f normalMatrix = src;
+            normalMatrix.Invert();
+            normalMatrix.Transpose();
+
+            Assert.AreEqual(rst.R0C0, normalMatrix.R0C0, epsilonError);
+            Assert.AreEqual(rst.R0C1, normalMatrix.R0C1, epsilonError);
+            Assert.AreEqual(rst.R0C2, normalMatrix.R0C2, epsilonError);
+            Assert.AreEqual(rst.R0C3, normalMatrix.R0C3, epsilonError);
+            Assert.AreEqual(rst.R1C0, normalMatrix.R1C0, epsilonError);
+            Assert.AreEqual(rst.R1C1, normalMatrix.R1C1, epsilonError);
+            Assert.AreEqual(rst.R1C2, normalMatrix.R1C2, epsilonError);
+            Assert.AreEqual(rst.R1C3, normalMatrix.R1C3, epsilonError);
+            Assert.AreEqual(rst.R2C0, normalMatrix.R2C0, epsilonError);
+            Assert.AreEqual(rst.R2C1, normalMatrix.R2C1, epsilonError);
+            Assert.AreEqual(rst.R2C2, normalMatrix.R2C2, epsilonError);
+            Assert.AreEqual(rst.R2C3, normalMatrix.R2C3, epsilonError);
+            Assert.AreEqual(rst.R3C0, normalMatrix.R3C0, epsilonError);
+            Assert.AreEqual(rst.R3C1, normalMatrix.R3C1, epsilonError);
+            Assert.AreEqual(rst.R3C2, normalMatrix.R3C2, epsilonError);
+            Assert.AreEqual(rst.R3C3, normalMatrix.R3C3, epsilonError);
+
+            Matrix3f normalMatrix3 = (Matrix3f)normalMatrix;
+
+            Assert.AreEqual(rst.R0C0, normalMatrix3.R0C0, epsilonError);
+            Assert.AreEqual(rst.R0C1, normalMatrix3.R0C1, epsilonError);
+            Assert.AreEqual(rst.R0C2, normalMatrix3.R0C2, epsilonError);
+            Assert.AreEqual(rst.R1C0, normalMatrix.R1C0, epsilonError);
+            Assert.AreEqual(rst.R1C1, normalMatrix.R1C1, epsilonError);
+            Assert.AreEqual(rst.R1C2, normalMatrix.R1C2, epsilonError);
+            Assert.AreEqual(rst.R2C0, normalMatrix.R2C0, epsilonError);
+            Assert.AreEqual(rst.R2C1, normalMatrix.R2C1, epsilonError);
+            Assert.AreEqual(rst.R2C2, normalMatrix.R2C2, epsilonError);
+        }
+        #endregion
     }
 }

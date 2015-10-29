@@ -5349,10 +5349,33 @@ namespace Sxta.Math
 
         #endregion
 
+        /// <summary>
+        /// Returns the inverse of the matrix
+        /// </summary>
+        public static Matrix3f Invert(Matrix3f m)
+        {
+            // Compute determinant as early as possible using these cofactors.      
+            float d = m.Determinant;
+
+            if (System.Math.Abs(d) <= 0.0000000001f)
+                throw new DivideByZeroException("Matrix is singular. Inversion impossible.");
+
+            Matrix3f I = new Matrix3f();
+            I.R0C0 = (m.R1C1 * m.R2C2 - m.R1C2 * m.R2C1) / d;
+            I.R1C0 = (m.R1C2 * m.R2C0 - m.R1C0 * m.R2C2) / d;
+            I.R2C0 = (m.R1C0 * m.R2C1 - m.R1C1 * m.R2C0) / d;
+            I.R0C1 = (m.R0C2 * m.R2C1 - m.R0C1 * m.R2C2) / d;
+            I.R1C1 = (m.R0C0 * m.R2C2 - m.R0C2 * m.R2C0) / d;
+            I.R2C1 = (m.R0C1 * m.R2C0 - m.R0C0 * m.R2C1) / d;
+            I.R0C2 = (m.R0C1 * m.R1C2 - m.R0C2 * m.R1C1) / d;
+            I.R1C2 = (m.R0C2 * m.R1C0 - m.R0C0 * m.R1C2) / d;
+            I.R2C2 = (m.R0C0 * m.R1C1 - m.R0C1 * m.R1C0) / d;
+            return I;
+        }
         #region Constants
 
-		
-		/// <summary>
+
+        /// <summary>
         /// Defines the size of the Matrix3f struct in bytes.
         /// </summary>
         public static readonly int SizeInBytes = Marshal.SizeOf(new Matrix3f());
