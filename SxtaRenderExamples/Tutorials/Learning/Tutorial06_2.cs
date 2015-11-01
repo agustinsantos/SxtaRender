@@ -66,7 +66,7 @@ namespace Examples.Tutorials
             Uniform3f uLightPosition = p.getUniform3f("uLightPosition");
             uKd = p.getUniform3f("uKd");
             Uniform3f uLd = p.getUniform3f("uLd");
-            uLightPosition.set(new Vector3f(2, 2, 7));
+            uLightPosition.set(new Vector3f(3, 3, 0));
             uLd.set(new Vector3f(6.0f, 6.0f, 6.0f));
 
             // position the camera 

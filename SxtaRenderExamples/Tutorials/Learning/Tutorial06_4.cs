@@ -15,12 +15,12 @@ using MathHelper = Sxta.Math.MathHelper;
 namespace Examples.Tutorials
 {
     /// <summary>
-    /// Demonstrates how to compute Diffuse Reflection
+    /// Demonstrates how to compute ADS Lighting Model
     /// </summary>
-    [Example("Example 6.3: Diffuse Reflection (II)", ExampleCategory.Learning, "6. Lighting", 1, Source = "Tutorial06_3", Documentation = "Tutorial06_3")]
-    public class TutorialLearning06_3 : GameWindow
+    [Example("Example 6.4: Ambient, Diffuse and Specular", ExampleCategory.Learning, "6. Lighting", 1, Source = "Tutorial06_4", Documentation = "Tutorial06_4")]
+    public class TutorialLearning06_4 : GameWindow
     {
-        public TutorialLearning06_3()
+        public TutorialLearning06_4()
             : base(600, 600)
         {
             Keyboard.KeyDown += Keyboard_KeyDown;
@@ -65,10 +65,18 @@ namespace Examples.Tutorials
             uPMatrix = p.getUniformMatrix4f("uPMatrix");
 
             Uniform3f uLightPosition = p.getUniform3f("uLightPosition");
+            uKa = p.getUniform3f("uKa");
             uKd = p.getUniform3f("uKd");
+            uKs = p.getUniform3f("uKs");
+            Uniform3f uLa = p.getUniform3f("uLa");
             Uniform3f uLd = p.getUniform3f("uLd");
-            uLightPosition.set(new Vector3f(2, 2, -7));
-            uLd.set(new Vector3f(6.0f, 6.0f, 6.0f));
+            Uniform3f uLs = p.getUniform3f("uLs");
+            Uniform1f uShininess = p.getUniform1f("uShininess");
+            uLightPosition.set(new Vector3f(-2, -2, -10));
+            uLa.set(new Vector3f(0.0f, 0.0f, 0.0f));
+            uLd.set(new Vector3f(4.0f, 4.0f, 4.0f));
+            uLs.set(new Vector3f(3.0f, 3.0f, 3.0f));
+            uShininess.set(18.0f);
 
 
             // position the camera 
@@ -222,25 +230,33 @@ namespace Examples.Tutorials
             mat = camera.ViewMatrix * Matrix4f.CreateTranslation(0.5f, 3.0f, 0.0f) * Matrix4f.CreateRotation(angle * 3, 0.0f, 1.0f, 0.5f);
             SetNormalMatrix(mat);
             uMVMatrix.set(mat);
+            uKa.set(new Vector3f(1.0f, 0.2f, 0.3f));
             uKd.set(new Vector3f(1.0f, 0.2f, 0.3f));
+            uKs.set(new Vector3f(1.0f, 0.2f, 0.3f));
             fb.draw(p, mesh1);
 
             mat = camera.ViewMatrix * Matrix4f.CreateTranslation(5.0f, 3.0f, 0.0f) * Matrix4f.CreateRotation(angle * 3, 0.0f, 1.0f, 0.5f);
             SetNormalMatrix(mat);
             uMVMatrix.set(mat);
+            uKa.set(new Vector3f(0.3f, 1.0f, 0.1f));
             uKd.set(new Vector3f(0.3f, 1.0f, 0.1f));
+            uKs.set(new Vector3f(0.3f, 1.0f, 0.1f));
             fb.draw(p, mesh2);
 
             mat = camera.ViewMatrix * Matrix4f.CreateTranslation(0.5f, 0.0f, 0.0f) * Matrix4f.CreateRotation(angle * 3, 0.0f, 1.0f, 0.5f);
             SetNormalMatrix(mat);
             uMVMatrix.set(mat);
+            uKa.set(new Vector3f(0.2f, 0.2f, 1.0f));
             uKd.set(new Vector3f(0.2f, 0.2f, 1.0f));
+            uKs.set(new Vector3f(0.2f, 0.2f, 1.0f));
             fb.draw(p, mesh3);
 
             mat = camera.ViewMatrix * Matrix4f.CreateTranslation(5.0f, 0.0f, 0.0f) * Matrix4f.CreateRotation(angle * 3, 0.0f, 1.0f, 0.5f);
             SetNormalMatrix(mat);
             uMVMatrix.set(mat);
+            uKa.set(new Vector3f(1.0f, 1.0f, 0.3f));
             uKd.set(new Vector3f(1.0f, 1.0f, 0.3f));
+            uKs.set(new Vector3f(1.0f, 1.0f, 0.3f));
             fb.draw(p, mesh4);
 
             RenderAxes(camera.ViewMatrix);
@@ -256,7 +272,9 @@ namespace Examples.Tutorials
                 mat = camera * Matrix4f.CreateTranslation(i, 0.0f, 0.0f) * Matrix4f.Scale(0.25f, 0.1f, 0.1f);
                 SetNormalMatrix(mat);
                 uMVMatrix.set(mat);
+                uKa.set(new Vector3f(1.0f, 0.0f, 0.0f));
                 uKd.set(new Vector3f(1.0f, 0.0f, 0.0f));
+                uKs.set(new Vector3f(1.0f, 0.0f, 0.0f));
                 fb.draw(p, cube);
             }
             for (int i = 0; i < num; i++)
@@ -264,7 +282,9 @@ namespace Examples.Tutorials
                 mat = camera * Matrix4f.CreateTranslation(0.0f, i, 0.0f) * Matrix4f.Scale(0.1f, 0.25f, 0.1f);
                 SetNormalMatrix(mat);
                 uMVMatrix.set(mat);
+                uKa.set(new Vector3f(0.0f, 1.0f, 0.0f));
                 uKd.set(new Vector3f(0.0f, 1.0f, 0.0f));
+                uKs.set(new Vector3f(0.0f, 1.0f, 0.0f));
                 fb.draw(p, cube);
             }
             for (int i = 0; i < num; i++)
@@ -272,7 +292,9 @@ namespace Examples.Tutorials
                 mat = camera * Matrix4f.CreateTranslation(0.0f, 0.0f, i) * Matrix4f.Scale(0.1f, 0.1f, 0.25f);
                 SetNormalMatrix(mat);
                 uMVMatrix.set(mat);
+                uKa.set(new Vector3f(0.0f, 0.0f, 1.0f));
                 uKd.set(new Vector3f(0.0f, 0.0f, 1.0f));
+                uKs.set(new Vector3f(0.0f, 0.0f, 1.0f));
                 fb.draw(p, cube);
             }
         }
@@ -285,7 +307,7 @@ namespace Examples.Tutorials
         UniformMatrix4f uMVMatrix;
         UniformMatrix4f uPMatrix;
         UniformMatrix4f uNMatrix;
-        Uniform3f uKd;
+        Uniform3f uKa, uKd, uKs;
         private BasicFPCamera camera;
         float angle = 0;
 
@@ -299,8 +321,15 @@ namespace Examples.Tutorials
         uniform mat4 uNMatrix;           // The normal matrix is the transpose inverse of the modelview matrix
 
         uniform vec3 uLightPosition;	 // Light position in eye coords
+        uniform vec3 uKa;                // Ambient Reflectivity
         uniform vec3 uKd;                // Diffuse Reflectivity
-        uniform vec3 uLd;                // Light source intensity
+        uniform vec3 uKs;                // Specular Reflectivity
+
+        uniform vec3 uLa;                // Ambient light intensity
+        uniform vec3 uLd;                // Diffuse light intensity
+        uniform vec3 uLs;                // Specular light intensity
+
+        uniform float uShininess;        // Specular shininess factor
 
         out vec3 vColor;
 
@@ -310,10 +339,23 @@ namespace Examples.Tutorials
             vec4 eyeCoords = uMVMatrix * vec4(aPosition, 1.0);
             vec3 tnorm = vec3(normalize(uNMatrix * vec4(aNormal, 1.0)));
             
-            vec3 s = normalize(uLightPosition - vec3(eyeCoords));
+            vec3 s = normalize(vec3(uLightPosition - vec3(eyeCoords)));
+            vec3 v = normalize(- vec3(eyeCoords));
+            vec3 r = reflect(-s, tnorm);
+            vec3 ambient = uLa * uKa;
+            float sDotN = max(dot(s, tnorm), 0.0);
+            vec3 diffuse = uLd * uKd * sDotN;
+            vec3 specular = vec3(0.0);
+            if(sDotN > 0.0)
+            {
+                specular = uLs * uKs * pow ( max (dot(r,v), 0.0), uShininess);
 
             // The diffuse shading equation
-            vColor = uLd * uKd * max(dot(s, tnorm), 0.0);
+            vColor = ambient + diffuse + specular;
+             } else
+                // The diffuse shading equation
+                vColor = s;
+
             gl_Position = uPMatrix * eyeCoords;
         }
 #endif
@@ -337,7 +379,7 @@ namespace Examples.Tutorials
         [STAThread]
         public static void Main()
         {
-            using (TutorialLearning06_3 example = new TutorialLearning06_3())
+            using (TutorialLearning06_4 example = new TutorialLearning06_4())
             {
                 example.Run(30.0, 10.0);
             }

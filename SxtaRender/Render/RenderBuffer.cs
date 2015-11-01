@@ -10,7 +10,7 @@ namespace Sxta.Render
     /// <summary>
     /// A buffer for offscreen rendering.
     /// </summary>
-    public class RenderBuffer
+    public class RenderBuffer : IDisposable
     {
 
         
@@ -407,21 +407,71 @@ namespace Sxta.Render
 		/// </summary>
         ~RenderBuffer()
         {
-#if OPENGL
-            glDeleteRenderbuffers(1, &bufferId);
-#else
-            GL.DeleteRenderbuffers(1, ref bufferId);
-#endif
-            Debug.Assert(FrameBuffer.getError() == ErrorCode.NoError);
+            // Do not re-create Dispose clean-up code here. 
+            // Calling Dispose(false) is optimal in terms of 
+            // readability and maintainability.
+            Dispose(false);
         }
 
-       
-		/// <summary>
-		/// Returns the id of this render buffer.
-		/// </summary>
-		/// <returns>
-		/// The identifier.
-		/// </returns>
+
+        #region Dispose
+
+        // Track whether Dispose has been called. 
+        private bool disposed = false;
+
+        public void Dispose()
+        {
+            Dispose(true);
+            // This object will be cleaned up by the Dispose method. 
+            // Therefore, you should call GC.SupressFinalize to 
+            // take this object off the finalization queue 
+            // and prevent finalization code for this object 
+            // from executing a second time.
+            GC.SuppressFinalize(this);
+        }
+
+        // Dispose(bool disposing) executes in two distinct scenarios. 
+        // If disposing equals true, the method has been called directly 
+        // or indirectly by a user's code. Managed and unmanaged resources 
+        // can be disposed. 
+        // If disposing equals false, the method has been called by the 
+        // runtime from inside the finalizer and you should not reference 
+        // other objects. Only unmanaged resources can be disposed. 
+        protected virtual void Dispose(bool disposing)
+        {
+            // Check to see if Dispose has already been called. 
+            if (!this.disposed)
+            {
+                // If disposing equals true, dispose all managed 
+                // and unmanaged resources. 
+                if (disposing)
+                {
+                    // Nothing here
+                }
+
+                // Call the appropriate methods to clean up 
+                // unmanaged resources here. 
+                // If disposing is false, 
+                // only the following code is executed.
+#if OPENGL
+                glDeleteRenderbuffers(1, &bufferId);
+#else
+                GL.DeleteRenderbuffers(1, ref bufferId);
+#endif
+                Debug.Assert(FrameBuffer.getError() == ErrorCode.NoError);
+
+                // Note disposing has been done.
+                disposed = true;
+            }
+        }
+        #endregion
+
+        /// <summary>
+        /// Returns the id of this render buffer.
+        /// </summary>
+        /// <returns>
+        /// The identifier.
+        /// </returns>
         public uint getId()
         {
             return bufferId;

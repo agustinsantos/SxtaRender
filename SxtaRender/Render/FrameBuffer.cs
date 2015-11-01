@@ -3991,7 +3991,7 @@ namespace Sxta.Render
 		/// <summary>
 		/// A quad mesh.
 		/// </summary>
-        private static Mesh<Vector4f, uint> QUAD = null;
+        private Mesh<Vector4f, uint> QUAD = null;
 
 
 		/// <summary>
@@ -4440,7 +4440,7 @@ namespace Sxta.Render
                     {
                         CURRENT = null;
                     }
-                    if (QUAD != null && framebufferId == 0)
+                    if (QUAD != null)
                     {
                         QUAD.Dispose();
                         QUAD = null;
