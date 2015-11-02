@@ -11,7 +11,7 @@ using System.Drawing;
 namespace SxtaRenderTests
 {
     [TestClass]
-    public class UniformTest
+    public class UniformTestf
     {
         private static GameWindow control = null;
         protected const int Width = 500;
@@ -19,7 +19,7 @@ namespace SxtaRenderTests
         protected ImageComparator imageComparer = new ImageComparator(DiffOptions.IGNORE_NOTHING);
         protected const float epsilonError = 0.0001f;
 
-        private static readonly string TESTSNAME = "UniformTest";
+        private static readonly string TESTSNAME = "UniformTestf";
 
         [ClassInitialize()]
         public static void ClassInit(TestContext context)

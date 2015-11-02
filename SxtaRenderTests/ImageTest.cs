@@ -1,8 +1,8 @@
-﻿using System;
+﻿#define SAVE_RESULTS
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Drawing;
 using Sxta.TestTools.ImageTesting;
-using System.Drawing.Imaging;
+using SxtaRenderTests.TestTools;
+using System.Drawing;
 
 namespace SxtaRenderTests
 {
@@ -10,6 +10,7 @@ namespace SxtaRenderTests
     public class ImageTest
     {
         private const float epsilonError = 0.0001f;
+        private static readonly string TESTSNAME = "ImageTest";
 
         [TestMethod]
         public void TestImageDiff01()
@@ -21,7 +22,9 @@ namespace SxtaRenderTests
 
             float dissimilarity;
             Image diffResult = imageComparer.ComputeSimilarity(img1, img2, out dissimilarity);
-            //diffResult.Save("TestImageDiff01.jpg", ImageFormat.Jpeg);
+#if SAVE_RESULTS
+            RenderTestUtils.SaveTestResult(TESTSNAME, "TestImageDiff01_ImageDiff", diffResult);
+#endif
             Assert.AreEqual(0.962, dissimilarity, epsilonError);
         }
 
@@ -29,17 +32,19 @@ namespace SxtaRenderTests
         public void TestImageDiff02()
         {
             Image img1 = Image.FromFile("Resources/People1.jpg");
- 
+
             ImageComparator imageComparer = new ImageComparator(DiffOptions.IGNORE_COLORS);
 
             Image rst = ImageComparator.ReplaceColor(img1, Color.White, Color.AliceBlue);
-            rst.Save("AliceBlue.jpg", ImageFormat.Jpeg);
-            Image img2 = Image.FromFile("AliceBlue.jpg");
+            string filename = RenderTestUtils.SaveTestResult(TESTSNAME, "TestImageDiff02_Result", rst);
+            Image img2 = Image.FromFile(filename);
 
             float dissimilarity;
             Image diffResult = imageComparer.ComputeSimilarity(img1, img2, out dissimilarity);
-            //diffResult.Save("TestImageDiff02.jpg", ImageFormat.Jpeg);
-            Assert.AreEqual(0.05956, dissimilarity, epsilonError);
+#if SAVE_RESULTS
+            RenderTestUtils.SaveTestResult(TESTSNAME, "TestImageDiff02_ImageDiff", diffResult);
+#endif
+            Assert.AreEqual(0.0, dissimilarity, epsilonError);
         }
 
         [TestMethod]
@@ -47,16 +52,18 @@ namespace SxtaRenderTests
         {
             Image img1 = Image.FromFile("Resources/People1.jpg");
 
-            ImageComparator imageComparer = new ImageComparator(DiffOptions.IGNORE_COLORS);
+            ImageComparator imageComparer = new ImageComparator(DiffOptions.IGNORE_NOTHING);
 
             Image rst = ImageComparator.ReplaceColor(img1, Color.White, Color.BurlyWood);
-            rst.Save("BurlyWood.jpg", ImageFormat.Jpeg);
-            Image img2 = Image.FromFile("BurlyWood.jpg");
+            string filename = RenderTestUtils.SaveTestResult(TESTSNAME, "TestImageDiff03_Result", rst);
+            Image img2 = Image.FromFile(filename);
 
             float dissimilarity;
             Image diffResult = imageComparer.ComputeSimilarity(img1, img2, out dissimilarity);
-            //diffResult.Save("TestImageDiff03.jpg", ImageFormat.Jpeg);
-            Assert.AreEqual(44.51, dissimilarity, epsilonError);
+#if SAVE_RESULTS
+            RenderTestUtils.SaveTestResult(TESTSNAME, "TestImageDiff03_ImageDiff", diffResult);
+#endif
+            Assert.AreEqual(44.346, dissimilarity, epsilonError);
         }
 
         [TestMethod]
@@ -66,14 +73,16 @@ namespace SxtaRenderTests
 
             ImageComparator imageComparer = new ImageComparator(DiffOptions.IGNORE_COLORS);
 
-            Image rst2 = ImageComparator.MakeGreyscale(img1);
-            rst2.Save("grayscale.jpg", ImageFormat.Jpeg);
-            Image img2 = Image.FromFile("grayscale.jpg");
+            Image rst = ImageComparator.MakeGreyscale(img1);
+            string filename = RenderTestUtils.SaveTestResult(TESTSNAME, "TestImageDiff04_Result", rst);
+            Image img2 = Image.FromFile(filename);
 
             float dissimilarity;
             Image diffResult = imageComparer.ComputeSimilarity(img1, img2, out dissimilarity);
-            //diffResult.Save("TestImageDiff04.jpg", ImageFormat.Jpeg);
-            Assert.AreEqual(0.0376, dissimilarity, epsilonError);
+#if SAVE_RESULTS
+            RenderTestUtils.SaveTestResult(TESTSNAME, "TestImageDiff04_ImageDiff", diffResult);
+#endif
+            Assert.AreEqual(0.0, dissimilarity, epsilonError);
         }
 
         [TestMethod]
@@ -86,12 +95,14 @@ namespace SxtaRenderTests
             diffOptions.ErrorColor = Color.FromArgb(255, 0, 0, 255);
             diffOptions.OverlayTransparency = 0.1f;
             diffOptions.OverlayType = OverlayType.Flat;
- 
+
             ImageComparator imageComparer = new ImageComparator(diffOptions);
 
             float dissimilarity;
             Image diffResult = imageComparer.ComputeSimilarity(img1, img2, out dissimilarity);
-            //diffResult.Save("TestImageDiff05.jpg", ImageFormat.Jpeg);
+#if SAVE_RESULTS
+            RenderTestUtils.SaveTestResult(TESTSNAME, "TestImageDiff05_ImageDiff", diffResult);
+#endif
             Assert.AreEqual(0.962, dissimilarity, epsilonError);
         }
 
@@ -115,7 +126,9 @@ namespace SxtaRenderTests
 
             float dissimilarity;
             Image diffResult = imageComparer.ComputeSimilarity(img1, img2, out dissimilarity);
-            //diffResult.Save("TestImageDiff06.jpg", ImageFormat.Jpeg);
+#if SAVE_RESULTS
+            RenderTestUtils.SaveTestResult(TESTSNAME, "TestImageDiff06_ImageDiff", diffResult);
+#endif
             Assert.AreEqual(0.962, dissimilarity, epsilonError);
         }
 
@@ -129,7 +142,9 @@ namespace SxtaRenderTests
 
             float dissimilarity;
             Image diffResult = imageComparer.ComputeSimilarity(img1, img2, out dissimilarity);
-            //diffResult.Save("TestImageDiff07.jpg", ImageFormat.Jpeg);
+#if SAVE_RESULTS
+            RenderTestUtils.SaveTestResult(TESTSNAME, "TestImageDiff07_ImageDiff", diffResult);
+#endif
             Assert.AreEqual(5.8564, dissimilarity, epsilonError);
         }
 
@@ -143,7 +158,9 @@ namespace SxtaRenderTests
 
             float dissimilarity;
             Image diffResult = imageComparer.ComputeSimilarity(img1, img2, out dissimilarity);
-            //diffResult.Save("TestImageDiff08.jpg", ImageFormat.Jpeg);
+#if SAVE_RESULTS
+            RenderTestUtils.SaveTestResult(TESTSNAME, "TestImageDiff08_ImageDiff", diffResult);
+#endif
             Assert.AreEqual(97.2724, dissimilarity, epsilonError);
         }
 
@@ -157,7 +174,9 @@ namespace SxtaRenderTests
 
             float dissimilarity;
             Image diffResult = imageComparer.ComputeSimilarity(img1, img2, out dissimilarity);
-            //diffResult.Save("TestImageDiff09.jpg", ImageFormat.Jpeg);
+#if SAVE_RESULTS
+            RenderTestUtils.SaveTestResult(TESTSNAME, "TestImageDiff09_ImageDiff", diffResult);
+#endif
             Assert.AreEqual(18.4008, dissimilarity, epsilonError);
         }
 
@@ -176,7 +195,9 @@ namespace SxtaRenderTests
 
             float dissimilarity;
             Image diffResult = imageComparer.ComputeSimilarity(img1, img2, out dissimilarity);
-            //diffResult.Save("TestImageDiff10.jpg", ImageFormat.Jpeg);
+#if SAVE_RESULTS
+            RenderTestUtils.SaveTestResult(TESTSNAME, "TestImageDiff10_ImageDiff", diffResult);
+#endif
             Assert.AreEqual(0.962, dissimilarity, epsilonError);
         }
         [TestMethod]
@@ -194,7 +215,9 @@ namespace SxtaRenderTests
 
             float dissimilarity;
             Image diffResult = imageComparer.ComputeSimilarity(img1, img2, out dissimilarity);
-            //diffResult.Save("TestImageDiff11.jpg", ImageFormat.Jpeg);
+#if SAVE_RESULTS
+            RenderTestUtils.SaveTestResult(TESTSNAME, "TestImageDiff11_ImageDiff", diffResult);
+#endif
             Assert.AreEqual(0.962, dissimilarity, epsilonError);
         }
         [TestMethod]
@@ -212,7 +235,9 @@ namespace SxtaRenderTests
 
             float dissimilarity;
             Image diffResult = imageComparer.ComputeSimilarity(img1, img2, out dissimilarity);
-            //diffResult.Save("TestImageDiff12.jpg", ImageFormat.Jpeg);
+#if SAVE_RESULTS
+            RenderTestUtils.SaveTestResult(TESTSNAME, "TestImageDiff12_ImageDiff", diffResult);
+#endif
             Assert.AreEqual(0.962, dissimilarity, epsilonError);
         }
     }

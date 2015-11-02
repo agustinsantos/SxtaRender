@@ -1457,22 +1457,23 @@ namespace Sxta.Render
 #if  ORK_NO_GLPROGRAMUNIFORM
 				GL.Uniform3(location, (value.X? 1 : 0), (value.Y? 1 : 0), (value.Z? 1 : 0));
 #else
-				GL.Uniform3(location, (value.X? 1 : 0), (value.Y? 1 : 0), (value.Z? 1 : 0));
+				GL.ProgramUniform3(program.getId(), location, (value.X? 1 : 0), (value.Y? 1 : 0), (value.Z? 1 : 0));
 #endif
 #else
-#if  ORK_NO_GLPROGRAMUNIFORM
+#if ORK_NO_GLPROGRAMUNIFORM
 				glUniform3f(location, value.X, value.Y, value.Z);
 #else
 				glProgramUniform3fEXT(program->getId(), location, value.X, value.Y, value.Z);
 #endif
 #endif
-			}
+            Debug.Assert(FrameBuffer.getError() == ErrorCode.NoError);
+        }
 
 
-			/*
-			 * The current value of this uniform.
-			 */
-			private Vector3b value;
+        /*
+         * The current value of this uniform.
+         */
+        private Vector3b value;
 		}
 
 		/// <summary>

@@ -20,25 +20,26 @@ namespace SxtaRenderTests.TestTools
             return context;
         }
 
-        public static Bitmap GetScreenshot(int Width, int Height)
+        public static Bitmap GetScreenshot(int Width, int Height, OpenTK.Graphics.OpenGL.PixelFormat pf= OpenTK.Graphics.OpenGL.PixelFormat.Bgr)
         {
             Bitmap bmp = new Bitmap(Width, Height);
             System.Drawing.Imaging.BitmapData data =
                 bmp.LockBits(new Rectangle(0, 0, Width, Height), System.Drawing.Imaging.ImageLockMode.WriteOnly, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
-            GL.ReadPixels(0, 0, Width, Height, OpenTK.Graphics.OpenGL.PixelFormat.Bgr, OpenTK.Graphics.OpenGL.PixelType.UnsignedByte, data.Scan0);
+            GL.ReadPixels(0, 0, Width, Height, pf, OpenTK.Graphics.OpenGL.PixelType.UnsignedByte, data.Scan0);
             bmp.UnlockBits(data);
             bmp.RotateFlip(RotateFlipType.RotateNoneFlipY);
 
             return bmp;
         }
 
-        public static void SaveTestResult(string TestClass, string TestName, Image img)
+        public static string SaveTestResult(string TestClass, string TestName, Image img)
         {
             string path = Path.Combine(SAVE_RESULTS_DIR, TestClass);
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
             string filename = Path.Combine(path, TestName + ".bmp");
             img.Save(filename, ImageFormat.Bmp);
+            return filename;
         }
 
         public static void DeleteResultDir(string TestClass)

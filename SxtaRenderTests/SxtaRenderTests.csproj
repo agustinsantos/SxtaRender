@@ -66,7 +66,11 @@
     <Compile Include="OpenGLContextTest.cs" />
     <Compile Include="FrameBufferTest.cs" />
     <Compile Include="TestTools\RenderTestUtils.cs" />
-    <Compile Include="UniformTest.cs" />
+    <Compile Include="UniformTestb.cs" />
+    <Compile Include="DrawTestf.cs" />
+    <Compile Include="UniformTesti.cs" />
+    <Compile Include="UniformTestd.cs" />
+    <Compile Include="UniformTestf.cs" />
     <Compile Include="Vector3fTest.cs" />
     <Compile Include="QuaternionTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -85,6 +89,15 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\ControlImages\Screenshot03.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\ControlImages\Screenshot04.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\ControlImages\Screenshot05.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\ControlImages\Screenshot06.bmp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\People1.jpg">
