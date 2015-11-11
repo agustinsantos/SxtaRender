@@ -41,6 +41,7 @@ namespace Sxta.Render
         }
         public Mesh(int vertexsize, int indexSize, MeshMode m, MeshUsage usage, int vertexCount = 4, int indiceCount = 4)
         {
+            Debug.Assert(Marshal.SizeOf(typeof(vertex)) == vertexsize, "vertexsize sould be equals to sizeof(" + typeof(vertex).Name + ")");
             this.vertexSize = vertexsize;
             this.indexSize = indexSize;
             this.usage = usage;
@@ -253,8 +254,6 @@ namespace Sxta.Render
             buffers.addAttributeBuffer(id, size, vertexSize, type, norm);
         }
 
-
-
         /// <summary>
         /// Sets the capacity of the vertex and indice array of this mesh. Does
         /// nothing if the provided sizes are smaller than the current ones.
@@ -334,6 +333,7 @@ namespace Sxta.Render
         /// </param>
         public void addIndice(index i)
         {
+            Debug.Assert(this.indexSize != 0, "You can't add indices when Index size is 0.");
             if (indicesCount == indicesLength)
             {
                 resizeIndices(2 * indicesLength);
@@ -353,6 +353,8 @@ namespace Sxta.Render
 		/// </param>
         public void addIndices(index[] arr)
         {
+            Debug.Assert(this.indexSize != 0, "You can't add indices when Index size is 0.");
+
             int intitialCnt = indicesCount;
             resizeIndices(indicesCount + arr.Length);
             Array.Copy(arr, 0, indices, intitialCnt, arr.Length);
@@ -657,6 +659,8 @@ namespace Sxta.Render
 
             if (indicesCount != 0)
             {
+                Debug.Assert(Marshal.SizeOf(typeof(index)) == this.indexSize, "indexSize sould be equals to sizeof(" + typeof(index).Name + ")");
+
                 if (usage == MeshUsage.GPU_STATIC || usage == MeshUsage.GPU_DYNAMIC || usage == MeshUsage.GPU_STREAM)
                 {
                     indexBuffer = new GPUBuffer();

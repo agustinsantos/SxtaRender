@@ -40,7 +40,7 @@ namespace Sxta.TestTools.ImageTesting
             ErrorColor = Color.FromArgb(255, 0, 255, 255),
             OverlayTransparency = 1.0f,
             OverlayType = OverlayType.Flat,
-            Tolerance = new Tolerance() { R = 5, G = 5, B = 5, A = 5, MinBrightness = 5, MaxBrightness = 255 },
+            Tolerance = new Tolerance() { R = 2, G = 2, B = 2, A = 2, MinBrightness = 5, MaxBrightness = 255 },
             IgnoreColor = false,
             IgnoreAntialiasing = false,
             AntialiasingDistance = 1

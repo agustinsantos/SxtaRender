@@ -575,7 +575,43 @@ namespace Sxta.Render
 			throw new Exception ("Wrong BufferAccess" + a);
 		}
 
-		public static DrawElementsType getDrawElementType (AttributeType t)
+        /// <summary>
+		/// Returns the size of a type (which depends on its type: byte, int, float, etc).
+        /// Except for the packed
+        /// formats A32I_2_10_10_10_REV and A32UI_2_10_10_10_REV.
+		/// </summary>
+		/// <returns>
+		/// The attribute size.
+		/// </returns>
+        public static int getAttributeSize(AttributeType type)
+        {
+            int size = 0;
+            switch (type)
+            {
+                case AttributeType.A8I:
+                case AttributeType.A8UI:
+                    size = 1;
+                    break;
+                case AttributeType.A16I:
+                case AttributeType.A16UI:
+                case AttributeType.A16F:
+                    size = 2;
+                    break;
+                case AttributeType.A32I:
+                case AttributeType.A32UI:
+                case AttributeType.A32F:
+                    size = 4;
+                    break;
+                case AttributeType.A64F:
+                    size = 8;
+                    break;
+                case AttributeType.A32I_2_10_10_10_REV:
+                case AttributeType.A32UI_2_10_10_10_REV:
+                    return 4;
+            }
+            return size;
+        }
+        public static DrawElementsType getDrawElementType (AttributeType t)
 		{
 			switch (t) {
 			case AttributeType.A8UI:
@@ -684,6 +720,7 @@ namespace Sxta.Render
 			Debug.Assert (false);
 			throw new Exception ();
 		}
+       
 
         public static PrimitiveType getPrimitiveType(MeshMode m)
         {

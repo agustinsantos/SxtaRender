@@ -50,11 +50,7 @@ namespace Sxta.Render
         internal override IntPtr data(int offset)
         {
             //return (void*)((char*)p + offset);
-#if TODO
-            return new ArraySegment<T>(p, offset, p.Length);
- 
-#endif
-            throw new NotImplementedException();
+            return (IntPtr)offset;
         }
 
         internal override void unbind(BufferTarget target) { }

@@ -3269,7 +3269,7 @@ namespace Sxta.Render
 		/// <param name='bases'>
 		/// Bases the base vertices to use. Only used for meshes with indices.
 		/// </param>
-        public void multiDraw(Program p, MeshBuffers mesh, MeshMode m, int[] firsts, int[] counts, int primCount, int[] bases = null)
+        public void multiDraw(Program p, MeshBuffers mesh, MeshMode m, int[] firsts, int[] counts, int primCount = 1, int[] bases = null)
         {
             Debug.Assert(TransformFeedback.TRANSFORM == null);
             set();
@@ -3319,26 +3319,25 @@ namespace Sxta.Render
             endConditionalRender();
         }
 
- 
-		/// <summary>
-		/// Draws the mesh resulting from a transform feedback session.
+        /// <summary>
+        /// Draws the mesh resulting from a transform feedback session.
         /// Only available with OpenGL 4.0 or more.
-		/// </summary>
-		/// <returns>
-		/// The feedback.
-		/// </returns>
-		/// <param name='p'>
-		/// P the program to use to draw the mesh.
-		/// </param>
-		/// <param name='m'>
-		/// M how the mesh vertices must be interpreted.
-		/// </param>
-		/// <param name='tfb'>
-		/// Tfb a TransformFeedback containing the results of a transform feedback session.
-		/// </param>
-		/// <param name='stream'>
-		/// Stream the stream to draw.
-		/// </param>
+        /// </summary>
+        /// <returns>
+        /// The feedback.
+        /// </returns>
+        /// <param name='p'>
+        /// P the program to use to draw the mesh.
+        /// </param>
+        /// <param name='m'>
+        /// M how the mesh vertices must be interpreted.
+        /// </param>
+        /// <param name='tfb'>
+        /// Tfb a TransformFeedback containing the results of a transform feedback session.
+        /// </param>
+        /// <param name='stream'>
+        /// Stream the stream to draw.
+        /// </param>
         public void drawFeedback(Program p, MeshMode m, TransformFeedback tfb, int stream = 0)
         {
             Debug.Assert(TransformFeedback.TRANSFORM == null);
