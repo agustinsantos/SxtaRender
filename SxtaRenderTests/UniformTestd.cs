@@ -210,6 +210,7 @@ namespace SxtaRenderTests
 #endif
             Assert.AreEqual(0, dissimilarity, epsilonError);
         }
+
         [TestMethod]
         public void TestUniform2d02()
         {

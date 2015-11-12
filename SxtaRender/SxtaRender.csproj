@@ -81,6 +81,7 @@
     <Compile Include="Math\Vector4b.cs" />
     <Compile Include="OpenGLExt\Font.cs" />
     <Compile Include="OpenGLExt\GLHelper.cs" />
+    <Compile Include="OpenGLExt\ImageDDS.cs" />
     <Compile Include="OpenGLExt\KTXfile.cs" />
     <Compile Include="OpenGLExt\MeshUtils.cs" />
     <Compile Include="OpenGLExt\ScreenShot.cs" />

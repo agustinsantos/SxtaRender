@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Sxta.Render.OSG
 {
@@ -55,6 +52,7 @@ namespace Sxta.Render.OSG
         SWAP_COPY,      // Copy back to front buffer.
         SWAP_UNDEFINED  // Move back to front buffer leaving contents of back buffer undefined.
     }
+
     /// <summary>
     /// DisplaySettings class for encapsulating what visuals are required and
     /// have been set up, and the status of stereo viewing.

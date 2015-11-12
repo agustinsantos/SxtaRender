@@ -103,55 +103,55 @@ namespace Sxta.Render
                 return this;
             }
 
-            public virtual Parameters borderi(int r, int g, int b, int a = 0)
+            public override Sampler.Parameters borderi(int r, int g, int b, int a = 0)
             {
                 base.borderi(r, g, b, a);
                 return this;
             }
 
-            public virtual Parameters borderf(float r, float g, float b, float a = 0.0f)
+            public override Sampler.Parameters borderf(float r, float g, float b, float a = 0.0f)
             {
                 base.borderf(r, g, b, a);
                 return this;
             }
 
-            public virtual Parameters borderIi(int r, int g, int b, int a = 0)
+            public override Sampler.Parameters borderIi(int r, int g, int b, int a = 0)
             {
                 base.borderIi(r, g, b, a);
                 return this;
             }
 
-            public virtual Parameters borderIui(uint r, uint g, uint b, uint a = 0)
+            public override Sampler.Parameters borderIui(uint r, uint g, uint b, uint a = 0)
             {
                 base.borderIui(r, g, b, a);
                 return this;
             }
 
-            public virtual Parameters lodMin(float lodMin)
+            public override Sampler.Parameters lodMin(float lodMin)
             {
                 base.lodMin(lodMin);
                 return this;
             }
 
-            public virtual Parameters lodMax(float lodMax)
+            public override Sampler.Parameters lodMax(float lodMax)
             {
                 base.lodMax(lodMax);
                 return this;
             }
 
-            public virtual Parameters lodBias(float lodBias)
+            public override Sampler.Parameters lodBias(float lodBias)
             {
                 base.lodBias(lodBias);
                 return this;
             }
 
-            public virtual Parameters compareFunc(Function compareFunc)
+            public override Sampler.Parameters compareFunc(Function compareFunc)
             {
                 base.compareFunc(compareFunc);
                 return this;
             }
 
-            public virtual Parameters maxAnisotropyEXT(float maxAnisotropy)
+            public override Sampler.Parameters maxAnisotropyEXT(float maxAnisotropy)
             {
                 base.maxAnisotropyEXT(maxAnisotropy);
                 return this;
@@ -225,8 +225,6 @@ namespace Sxta.Render
             private int _minLevel;
 
             private int _maxLevel;
-
-
         }
 
 		/// <summary>

@@ -100,13 +100,17 @@ namespace Sxta.Render.OSG
             if (_traversalMode == TraversalMode.TRAVERSE_PARENTS) node.Ascend(this);
             else if (_traversalMode != TraversalMode.TRAVERSE_NONE) node.Traverse(this);
         }
-        /** Method called by osg::Node::accept() method before
-  * a call to the NodeVisitor::apply(..).  The back of the list will,
-  * therefore, be the current node being visited inside the apply(..),
-  * and the rest of the list will be the parental sequence of nodes
-  * from the top most node applied down the graph to the current node.
-  * Note, the user does not typically call pushNodeOnPath() as it
-  * will be called automatically by the Node::accept() method.*/
+
+        /// <summary>
+        /// Method called by osg::Node::accept() method before
+        /// a call to the NodeVisitor::apply(..).  The back of the list will,
+        /// therefore, be the current node being visited inside the apply(..),
+        /// and the rest of the list will be the parental sequence of nodes
+        /// from the top most node applied down the graph to the current node.
+        /// Note, the user does not typically call pushNodeOnPath() as it
+        /// will be called automatically by the Node::accept() method.
+        /// </summary>
+        /// <param name="node"></param>
         public void PushOntoNodePath(Node node)
         {
             if (_traversalMode != TraversalMode.TRAVERSE_PARENTS)
@@ -115,10 +119,12 @@ namespace Sxta.Render.OSG
                 _nodePath.Insert(0, node);
         }
 
-        /** Method called by osg::Node::accept() method after
-          * a call to NodeVisitor::apply(..).
-          * Note, the user does not typically call popFromNodePath() as it
-          * will be called automatically by the Node::accept() method.*/
+        /// <summary>
+        ///  Method called by osg::Node::accept() method after
+        ///  a call to NodeVisitor::apply(..).
+        ///  Note, the user does not typically call popFromNodePath() as it
+        ///  will be called automatically by the Node::accept() method.
+        /// </summary>
         public void PopFromNodePath()
         {
             if (_traversalMode != TraversalMode.TRAVERSE_PARENTS)
@@ -126,8 +132,10 @@ namespace Sxta.Render.OSG
             else _nodePath.RemoveAt(0);
         }
 
-        /** Get the non const NodePath from the top most node applied down
-          * to the current Node being visited.*/
+        /// <summary>
+        /// Get the non const NodePath from the top most node applied down
+        /// to the current Node being visited.
+        /// </summary>
         public List<Node> NodePath { get { return _nodePath; } }
 
 

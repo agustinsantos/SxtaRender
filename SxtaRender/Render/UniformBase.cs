@@ -344,7 +344,7 @@ namespace Sxta.Render
 	/// Initially the GPUBuffer associated with a UniformBlock is NULL. You must set it
 	/// with #setBuffer() before using the uniforms of this block.
 	/// </summary>
-	public class UniformBlock
+	public class UniformBlock : IDisposable
 	{
 
        
@@ -1029,11 +1029,6 @@ namespace Sxta.Render
 			return getUniform (name) as UniformSampler;
 		}
 
-		/*
-         *
-         *
-         * @param buffer
-         */
 		/// <summary>
 		///  Sets the GPUBuffer to store the values of the uniforms of this block.
 		/// </summary>
@@ -1055,6 +1050,8 @@ namespace Sxta.Render
 					buffers.Put (b.name);
 				}
 			}
+            if (buffer == null && this.buffer != null)
+                this.buffer.Dispose();
 			this.buffer = buffer;
 		}
 

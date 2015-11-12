@@ -1,9 +1,4 @@
 ﻿using Sxta.Math;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Sxta.Render.OSG
 {
@@ -14,7 +9,6 @@ namespace Sxta.Render.OSG
     /// </summary>
     public class BoundingBox
     {
-
         /// <summary>
         /// Creates an uninitialized bounding box.
         /// </summary>
