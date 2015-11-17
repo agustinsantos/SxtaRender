@@ -20,6 +20,9 @@ namespace Sxta.Proland.Core.Producer
     public class TileProducer
     {
 #if TODO
+
+/////////////////////////////////PARTE 2/////////////////////////////////////
+
         /*
           * Creates a new TileProducer.
           *
@@ -755,7 +758,7 @@ namespace Sxta.Proland.Core.Producer
             return r;
         }
 
-
+////////////////////////////////////PARTE .H/////////////////////////////////
 
 
         /*
@@ -855,6 +858,9 @@ namespace Sxta.Proland.Core.Producer
         }
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
     }
+
+///////////////////////PARTE 1//////////////////////////////
+
 
     /**
      * The Task that produces the tiles for a TileProducer.
