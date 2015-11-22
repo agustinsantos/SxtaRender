@@ -13,16 +13,16 @@ namespace Sxta.Render
     /// </summary>
     public enum BufferUsage
     {
-        STREAM_DRAW, ///< &nbsp;
-		STREAM_READ, ///< &nbsp;
-		STREAM_COPY, ///< &nbsp;
-		STATIC_DRAW, ///< &nbsp;
-		STATIC_READ, ///< &nbsp;
-		STATIC_COPY, ///< &nbsp;
-		DYNAMIC_DRAW, ///< &nbsp;
-		DYNAMIC_READ, ///< &nbsp;
-		DYNAMIC_COPY ///< &nbsp;
-	}
+        STREAM_DRAW,
+        STREAM_READ,
+        STREAM_COPY,
+        STATIC_DRAW,
+        STATIC_READ,
+        STATIC_COPY,
+        DYNAMIC_DRAW,
+        DYNAMIC_READ,
+        DYNAMIC_COPY
+    }
 
 
     /// <summary>
@@ -30,10 +30,10 @@ namespace Sxta.Render
     /// </summary>
     public enum BufferAccess
     {
-        READ_ONLY, ///< &nbsp;
-		WRITE_ONLY, ///< &nbsp;
-		READ_WRITE ///< &nbsp;
-	}
+        READ_ONLY,
+        WRITE_ONLY,
+        READ_WRITE
+    }
 
 
     /// <summary>
@@ -41,19 +41,19 @@ namespace Sxta.Render
     /// </summary>
     public enum AttributeType
     {
-        A8I, ///< &nbsp;
-		A8UI, ///< &nbsp;
-		A16I, ///< &nbsp;
-		A16UI, ///< &nbsp;
-		A32I, ///< &nbsp;
-		A32UI, ///< &nbsp;
-		A16F, ///< &nbsp;
-		A32F, ///< &nbsp;
-		A64F, ///< &nbsp;
-		A32I_2_10_10_10_REV, ///< &nbsp;
-		A32UI_2_10_10_10_REV, ///< &nbsp;
-		A32I_FIXED ///< &nbsp;
-	}
+        A8I,
+        A8UI,
+        A16I,
+        A16UI,
+        A32I,
+        A32UI,
+        A16F,
+        A32F,
+        A64F,
+        A32I_2_10_10_10_REV,
+        A32UI_2_10_10_10_REV,
+        A32I_FIXED
+    }
 
 
     /// <summary>
@@ -61,19 +61,19 @@ namespace Sxta.Render
     /// </summary>
     public enum MeshMode
     {
-        POINTS, ///< &nbsp;
-		LINE_STRIP, ///< &nbsp;
-		LINE_LOOP, ///< &nbsp;
-		LINES, ///< &nbsp;
-		TRIANGLE_STRIP, ///< &nbsp;
-		TRIANGLE_FAN, ///< &nbsp;
-		TRIANGLES, ///< &nbsp;
-		LINES_ADJACENCY, ///< &nbsp;
-		LINE_STRIP_ADJACENCY, ///< &nbsp;
-		TRIANGLES_ADJACENCY, ///< &nbsp;
-		TRIANGLE_STRIP_ADJACENCY, ///< &nbsp;
-		PATCHES ///< &nbsp;
-	}
+        POINTS,
+        LINE_STRIP,
+        LINE_LOOP,
+        LINES,
+        TRIANGLE_STRIP,
+        TRIANGLE_FAN,
+        TRIANGLES,
+        LINES_ADJACENCY,
+        LINE_STRIP_ADJACENCY,
+        TRIANGLES_ADJACENCY,
+        TRIANGLE_STRIP_ADJACENCY,
+        PATCHES
+    }
 
 
     /// <summary>
@@ -81,11 +81,11 @@ namespace Sxta.Render
     /// </summary>
     public enum MeshUsage
     {
-        CPU, ///< &nbsp;
-		GPU_STATIC, ///< &nbsp;
-		GPU_DYNAMIC, ///< &nbsp;
-		GPU_STREAM ///< &nbsp;
-	}
+        CPU,
+        GPU_STATIC,
+        GPU_DYNAMIC,
+        GPU_STREAM
+    }
 
 
     /// <summary>
@@ -93,13 +93,13 @@ namespace Sxta.Render
     /// </summary>
     public enum CubeFace
     {
-        POSITIVE_X = 0, ///< &nbsp;
-		NEGATIVE_X = 1, ///< &nbsp;
-		POSITIVE_Y = 2, ///< &nbsp;
-		NEGATIVE_Y = 3, ///< &nbsp;
-		POSITIVE_Z = 4, ///< &nbsp;
-		NEGATIVE_Z = 5 ///< &nbsp;
-	}
+        POSITIVE_X = 0,
+        NEGATIVE_X = 1,
+        POSITIVE_Y = 2,
+        NEGATIVE_Y = 3,
+        POSITIVE_Z = 4,
+        NEGATIVE_Z = 5
+    }
 
 
     /// <summary>
@@ -107,92 +107,92 @@ namespace Sxta.Render
     /// </summary>
     public enum TextureInternalFormat
     {
-        R8, ///< &nbsp;
-		R8_SNORM, ///< &nbsp;
-		R16, ///< &nbsp;
-		R16_SNORM, ///< &nbsp;
-		RG8, ///< &nbsp;
-		RG8_SNORM, ///< &nbsp;
-		RG16, ///< &nbsp;
-		RG16_SNORM, ///< &nbsp;
-		R3_G3_B2, ///< &nbsp;
-		RGB4, ///< &nbsp;
-		RGB5, ///< &nbsp;
-		RGB8, ///< &nbsp;
-		RGB8_SNORM, ///< &nbsp;
-		RGB10, ///< &nbsp;
-		RGB12, ///< &nbsp;
-		RGB16, ///< &nbsp;
-		RGB16_SNORM, ///< &nbsp;
-		RGBA2, ///< &nbsp;
-		RGBA4, ///< &nbsp;
-		RGB5_A1, ///< &nbsp;
-		RGBA8, ///< &nbsp;
-		RGBA8_SNORM, ///< &nbsp;
-		RGB10_A2, ///< &nbsp;
-		RGB10_A2UI, ///< &nbsp;
-		RGBA12, ///< &nbsp;
-		RGBA16, ///< &nbsp;
-		RGBA16_SNORM, ///< &nbsp;
-		SRGB8, ///< &nbsp;
-		SRGB8_ALPHA8, ///< &nbsp;
-		R16F, ///< &nbsp;
-		RG16F, ///< &nbsp;
-		RGB16F, ///< &nbsp;
-		RGBA16F, ///< &nbsp;
-		R32F, ///< &nbsp;
-		RG32F, ///< &nbsp;
-		RGB32F, ///< &nbsp;
-		RGBA32F, ///< &nbsp;
-		R11F_G11F_B10F, ///< &nbsp;
-		RGB9_E5, ///< &nbsp;
-		R8I, ///< &nbsp;
-		R8UI, ///< &nbsp;
-		R16I, ///< &nbsp;
-		R16UI, ///< &nbsp;
-		R32I, ///< &nbsp;
-		R32UI, ///< &nbsp;
-		RG8I, ///< &nbsp;
-		RG8UI, ///< &nbsp;
-		RG16I, ///< &nbsp;
-		RG16UI, ///< &nbsp;
-		RG32I, ///< &nbsp;
-		RG32UI, ///< &nbsp;
-		RGB8I, ///< &nbsp;
-		RGB8UI, ///< &nbsp;
-		RGB16I, ///< &nbsp;
-		RGB16UI, ///< &nbsp;
-		RGB32I, ///< &nbsp;
-		RGB32UI, ///< &nbsp;
-		RGBA8I, ///< &nbsp;
-		RGBA8UI, ///< &nbsp;
-		RGBA16I, ///< &nbsp;
-		RGBA16UI, ///< &nbsp;
-		RGBA32I, ///< &nbsp;
-		RGBA32UI, ///< &nbsp;
-		DEPTH_COMPONENT16, ///< &nbsp;
-		DEPTH_COMPONENT24, ///< &nbsp;
-		DEPTH_COMPONENT32F, ///< &nbsp;
-		DEPTH32F_STENCIL8, ///< &nbsp;
-		DEPTH24_STENCIL8, ///< &nbsp;
-		COMPRESSED_RED, ///< &nbsp;
-		COMPRESSED_RG, ///< &nbsp;
-		COMPRESSED_RGB, ///< &nbsp;
-		COMPRESSED_RGBA, ///< &nbsp;
-		COMPRESSED_SRGB, ///< &nbsp;
-		COMPRESSED_RED_RGTC1, ///< &nbsp;
-		COMPRESSED_SIGNED_RED_RGTC1, ///< &nbsp;
-		COMPRESSED_RG_RGTC2, ///< &nbsp;
-		COMPRESSED_SIGNED_RG_RGTC2, ///< &nbsp;
-		COMPRESSED_RGBA_BPTC_UNORM_ARB, ///< &nbsp;
-		COMPRESSED_SRGB_ALPHA_BPTC_UNORM_ARB, ///< &nbsp;
-		COMPRESSED_RGB_BPTC_SIGNED_FLOAT_ARB, ///< &nbsp;
-		COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT_ARB, ///< &nbsp;
-		COMPRESSED_RGB_S3TC_DXT1_EXT, ///< &nbsp;
-		COMPRESSED_RGBA_S3TC_DXT1_EXT, ///< &nbsp;
-		COMPRESSED_RGBA_S3TC_DXT3_EXT, ///< &nbsp;
-		COMPRESSED_RGBA_S3TC_DXT5_EXT ///< &nbsp;
-	}
+        R8 = PixelInternalFormat.R8,
+        R8_SNORM = PixelInternalFormat.R8Snorm,
+        R16 = PixelInternalFormat.R16,
+        R16_SNORM = PixelInternalFormat.R16Snorm,
+        RG8 = PixelInternalFormat.Rg8,
+        RG8_SNORM = PixelInternalFormat.Rg8Snorm,
+        RG16 = PixelInternalFormat.Rg16,
+        RG16_SNORM = PixelInternalFormat.Rg16Snorm,
+        R3_G3_B2 = PixelInternalFormat.R3G3B2,
+        RGB4 = PixelInternalFormat.Rgb4,
+        RGB5 = PixelInternalFormat.Rgb5,
+        RGB8 = PixelInternalFormat.Rgb8,
+        RGB8_SNORM = PixelInternalFormat.Rgb8Snorm,
+        RGB10 = PixelInternalFormat.Rgb10,
+        RGB12 = PixelInternalFormat.Rgb12,
+        RGB16 = PixelInternalFormat.Rgb16,
+        RGB16_SNORM = PixelInternalFormat.Rgb16Snorm,
+        RGBA2 = PixelInternalFormat.Rgba2,
+        RGBA4 = PixelInternalFormat.Rgba4,
+        RGB5_A1 = PixelInternalFormat.Rgb5A1,
+        RGBA8 = PixelInternalFormat.Rgba8,
+        RGBA8_SNORM = PixelInternalFormat.Rgba8Snorm,
+        RGB10_A2 = PixelInternalFormat.Rgb10A2,
+        RGB10_A2UI = PixelInternalFormat.Rgb10A2ui,
+        RGBA12 = PixelInternalFormat.Rgba12,
+        RGBA16 = PixelInternalFormat.Rgba16,
+        RGBA16_SNORM = PixelInternalFormat.Rgba16Snorm,
+        SRGB8 = PixelInternalFormat.Srgb8,
+        SRGB8_ALPHA8 = PixelInternalFormat.Srgb8Alpha8,
+        R16F = PixelInternalFormat.R16f,
+        RG16F = PixelInternalFormat.Rg16f,
+        RGB16F = PixelInternalFormat.Rgb16f,
+        RGBA16F = PixelInternalFormat.Rgba16f,
+        R32F = PixelInternalFormat.R32f,
+        RG32F = PixelInternalFormat.Rg32f,
+        RGB32F = PixelInternalFormat.Rgb32f,
+        RGBA32F = PixelInternalFormat.Rgba32f,
+        R11F_G11F_B10F = PixelInternalFormat.R11fG11fB10f,
+        RGB9_E5 = PixelInternalFormat.Rgb9E5,
+        R8I = PixelInternalFormat.R8i,
+        R8UI = PixelInternalFormat.R8ui,
+        R16I = PixelInternalFormat.R16i,
+        R16UI = PixelInternalFormat.R16ui,
+        R32I = PixelInternalFormat.R32i,
+        R32UI = PixelInternalFormat.R32ui,
+        RG8I = PixelInternalFormat.Rg8i,
+        RG8UI = PixelInternalFormat.Rg8ui,
+        RG16I = PixelInternalFormat.Rg16i,
+        RG16UI = PixelInternalFormat.Rg16ui,
+        RG32I = PixelInternalFormat.Rg32i,
+        RG32UI = PixelInternalFormat.Rg32ui,
+        RGB8I = PixelInternalFormat.Rgb8i,
+        RGB8UI = PixelInternalFormat.Rgb8ui,
+        RGB16I = PixelInternalFormat.Rgb16i,
+        RGB16UI = PixelInternalFormat.Rgb16ui,
+        RGB32I = PixelInternalFormat.Rgb32i,
+        RGB32UI = PixelInternalFormat.Rgb32ui,
+        RGBA8I = PixelInternalFormat.Rgba8i,
+        RGBA8UI = PixelInternalFormat.Rgba8ui,
+        RGBA16I = PixelInternalFormat.Rgba16i,
+        RGBA16UI = PixelInternalFormat.Rgba16ui,
+        RGBA32I = PixelInternalFormat.Rgba32i,
+        RGBA32UI = PixelInternalFormat.Rgba32ui,
+        DEPTH_COMPONENT16 = PixelInternalFormat.DepthComponent16,
+        DEPTH_COMPONENT24 = PixelInternalFormat.DepthComponent24,
+        DEPTH_COMPONENT32F = PixelInternalFormat.DepthComponent32f,
+        DEPTH32F_STENCIL8 = PixelInternalFormat.Depth32fStencil8,
+        DEPTH24_STENCIL8 = PixelInternalFormat.Depth24Stencil8,
+        COMPRESSED_RED = PixelInternalFormat.CompressedRed,
+        COMPRESSED_RG = PixelInternalFormat.CompressedRg,
+        COMPRESSED_RGB = PixelInternalFormat.CompressedRgb,
+        COMPRESSED_RGBA = PixelInternalFormat.CompressedRgba,
+        COMPRESSED_SRGB = PixelInternalFormat.CompressedSrgb,
+        COMPRESSED_RED_RGTC1 = PixelInternalFormat.CompressedRedRgtc1,
+        COMPRESSED_SIGNED_RED_RGTC1 = PixelInternalFormat.CompressedSignedRedRgtc1,
+        COMPRESSED_SIGNED_RG_RGTC2 = PixelInternalFormat.CompressedSignedRgRgtc2,
+        COMPRESSED_RG_RGTC2 = PixelInternalFormat.CompressedRgRgtc2,
+        COMPRESSED_RGBA_BPTC_UNORM_ARB = PixelInternalFormat.CompressedRgbaBptcUnorm,
+        COMPRESSED_SRGB_ALPHA_BPTC_UNORM_ARB = PixelInternalFormat.CompressedSrgbAlpha,
+        COMPRESSED_RGB_BPTC_SIGNED_FLOAT_ARB = PixelInternalFormat.CompressedRgbBptcSignedFloat,
+        COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT_ARB = PixelInternalFormat.CompressedRgbBptcUnsignedFloat,
+        COMPRESSED_RGB_S3TC_DXT1_EXT = PixelInternalFormat.CompressedRgbS3tcDxt1Ext,
+        COMPRESSED_RGBA_S3TC_DXT1_EXT = PixelInternalFormat.CompressedRgbaS3tcDxt1Ext,
+        COMPRESSED_RGBA_S3TC_DXT3_EXT = PixelInternalFormat.CompressedRgbaS3tcDxt3Ext,
+        COMPRESSED_RGBA_S3TC_DXT5_EXT = PixelInternalFormat.CompressedRgbaS3tcDxt5Ext
+    }
 
 
     /// <summary>
@@ -200,59 +200,59 @@ namespace Sxta.Render
     /// </summary>
     public enum TextureFormat
     {
-        COLOR_INDEX,
-        STENCIL_INDEX, ///< &nbsp;
-		DEPTH_COMPONENT, ///< &nbsp;
-		DEPTH_STENCIL, ///< &nbsp;
-		RED, ///< &nbsp;
-		GREEN, ///< &nbsp;
-		BLUE, ///< &nbsp;
-		RG, ///< &nbsp;
-		RGB, ///< &nbsp;
-		RGBA, ///< &nbsp;
-		BGR, ///< &nbsp;
-		BGRA, ///< &nbsp;
-		RED_INTEGER, ///< &nbsp;
-		BLUE_INTEGER, ///< &nbsp;
-		GREEN_INTEGER, ///< &nbsp;
-		RG_INTEGER, ///< &nbsp;
-		RGB_INTEGER, ///< &nbsp;
-		RGBA_INTEGER, ///< &nbsp;
-		BGR_INTEGER, ///< &nbsp;
-		BGRA_INTEGER ///< &nbsp;
-	}
+        COLOR_INDEX = PixelFormat.ColorIndex,
+        STENCIL_INDEX = PixelFormat.StencilIndex,
+        DEPTH_COMPONENT = PixelFormat.DepthComponent,
+        DEPTH_STENCIL = PixelFormat.DepthStencil,
+        RED = PixelFormat.Red,
+        GREEN = PixelFormat.Green,
+        BLUE = PixelFormat.Blue,
+        RG = PixelFormat.Rg,
+        RGB = PixelFormat.Rgb,
+        RGBA = PixelFormat.Rgba,
+        BGR = PixelFormat.Bgr,
+        BGRA = PixelFormat.Bgra,
+        RED_INTEGER = PixelFormat.RedInteger,
+        BLUE_INTEGER = PixelFormat.BlueInteger,
+        GREEN_INTEGER = PixelFormat.GreenInteger,
+        RG_INTEGER = PixelFormat.RgInteger,
+        RGB_INTEGER = PixelFormat.RgbInteger,
+        RGBA_INTEGER = PixelFormat.RgbaInteger,
+        BGR_INTEGER = PixelFormat.BgrInteger,
+        BGRA_INTEGER = PixelFormat.BgraInteger
+    }
 
 
     /// <summary>
     /// A pixel component type. Specifies a type for reading or writing texture data.
     /// </summary>
-    public enum PixelType
+    public enum PixelType : uint
     {
-        UNSIGNED_BYTE, ///< &nbsp;
-		BYTE, ///< &nbsp;
-		UNSIGNED_SHORT, ///< &nbsp;
-		SHORT, ///< &nbsp;
-		UNSIGNED_INT, ///< &nbsp;
-		INT, ///< &nbsp;
-		HALF, ///< &nbsp;
-		FLOAT, ///< &nbsp;
-		UNSIGNED_BYTE_3_3_2, ///< &nbsp;
-		UNSIGNED_BYTE_2_3_3_REV, ///< &nbsp;
-		UNSIGNED_SHORT_5_6_5, ///< &nbsp;
-		UNSIGNED_SHORT_5_6_5_REV, ///< &nbsp;
-		UNSIGNED_SHORT_4_4_4_4, ///< &nbsp;
-		UNSIGNED_SHORT_4_4_4_4_REV, ///< &nbsp;
-		UNSIGNED_SHORT_5_5_5_1, ///< &nbsp;
-		UNSIGNED_SHORT_1_5_5_5_REV, ///< &nbsp;
-		UNSIGNED_INT_8_8_8_8, ///< &nbsp;
-		UNSIGNED_INT_8_8_8_8_REV, ///< &nbsp;
-		UNSIGNED_INT_10_10_10_2, ///< &nbsp;
-		UNSIGNED_INT_2_10_10_10_REV, ///< &nbsp;
-		UNSIGNED_INT_24_8, ///< &nbsp;
-		UNSIGNED_INT_10F_11F_11F_REV, ///< &nbsp;
-		UNSIGNED_INT_5_9_9_9_REV, ///< &nbsp;
-		FLOAT_32_UNSIGNED_INT_24_8_REV ///< &nbsp;
-	}
+        UNSIGNED_BYTE, /// 
+		BYTE,
+        UNSIGNED_SHORT,
+        SHORT,
+        UNSIGNED_INT,
+        INT,
+        HALF,
+        FLOAT,
+        UNSIGNED_BYTE_3_3_2,
+        UNSIGNED_BYTE_2_3_3_REV,
+        UNSIGNED_SHORT_5_6_5,
+        UNSIGNED_SHORT_5_6_5_REV,
+        UNSIGNED_SHORT_4_4_4_4,
+        UNSIGNED_SHORT_4_4_4_4_REV,
+        UNSIGNED_SHORT_5_5_5_1,
+        UNSIGNED_SHORT_1_5_5_5_REV,
+        UNSIGNED_INT_8_8_8_8,
+        UNSIGNED_INT_8_8_8_8_REV,
+        UNSIGNED_INT_10_10_10_2,
+        UNSIGNED_INT_2_10_10_10_REV,
+        UNSIGNED_INT_24_8,
+        UNSIGNED_INT_10F_11F_11F_REV,
+        UNSIGNED_INT_5_9_9_9_REV,
+        FLOAT_32_UNSIGNED_INT_24_8_REV
+    }
 
 
     /// <summary>
@@ -260,11 +260,11 @@ namespace Sxta.Render
     /// </summary>
     public enum TextureWrap
     {
-        CLAMP_TO_EDGE, ///< &nbsp;
-		CLAMP_TO_BORDER, ///< &nbsp;
-		REPEAT, ///< &nbsp;
-		MIRRORED_REPEAT ///< &nbsp;
-	}
+        CLAMP_TO_EDGE,
+        CLAMP_TO_BORDER,
+        REPEAT,
+        MIRRORED_REPEAT
+    }
 
 
     /// <summary>
@@ -272,12 +272,12 @@ namespace Sxta.Render
     /// </summary>
     public enum TextureFilter
     {
-        NEAREST, ///< &nbsp;
-		LINEAR, ///< &nbsp;
-		NEAREST_MIPMAP_NEAREST, ///< &nbsp;
-		NEAREST_MIPMAP_LINEAR, ///< &nbsp;
-		LINEAR_MIPMAP_NEAREST, ///< &nbsp;
-		LINEAR_MIPMAP_LINEAR ///< &nbsp;
+        NEAREST,
+        LINEAR,
+        NEAREST_MIPMAP_NEAREST,
+        NEAREST_MIPMAP_LINEAR,
+        LINEAR_MIPMAP_NEAREST,
+        LINEAR_MIPMAP_LINEAR
     }
     ;
 
@@ -287,14 +287,14 @@ namespace Sxta.Render
     /// </summary>
     public enum Function
     {
-        LEQUAL, ///< &nbsp;
-		GEQUAL, ///< &nbsp;
-		LESS, ///< &nbsp;
-		GREATER, ///< &nbsp;
-		EQUAL, ///< &nbsp;
-		NOTEQUAL, ///< &nbsp;
-		ALWAYS, ///< &nbsp;
-		NEVER ///< &nbsp;
+        LEQUAL,
+        GEQUAL,
+        LESS,
+        GREATER,
+        EQUAL,
+        NOTEQUAL,
+        ALWAYS,
+        NEVER
     }
     ;
 
@@ -307,16 +307,16 @@ namespace Sxta.Render
     {
         NOVALUE = -1,
         DEFAULT = 0,
-        COLOR0 = 1, ///< &nbsp;
-		COLOR1 = 2, ///< &nbsp;
-		COLOR2 = 4, ///< &nbsp;
-		COLOR3 = 8, ///< &nbsp;
-		COLOR4 = 16, ///< &nbsp;
-		COLOR5 = 32, ///< &nbsp;
-		COLOR6 = 64, ///< &nbsp;
-		COLOR7 = 128, ///< &nbsp;
-		STENCIL = 256, ///< &nbsp;
-		DEPTH = 512 ///< depth
+        COLOR0 = 1,
+        COLOR1 = 2,
+        COLOR2 = 4,
+        COLOR3 = 8,
+        COLOR4 = 16,
+        COLOR5 = 32,
+        COLOR6 = 64,
+        COLOR7 = 128,
+        STENCIL = 256,
+        DEPTH = 512 ///< depth
     }
     ;
 
@@ -326,10 +326,10 @@ namespace Sxta.Render
     /// </summary>
     public enum PolygonMode
     {
-        CULL, ///< &nbsp;
-		POINT, ///< &nbsp;
-		LINE, ///< &nbsp;
-		FILL ///< &nbsp;
+        CULL,
+        POINT,
+        LINE,
+        FILL
     }
     ;
 
@@ -339,14 +339,14 @@ namespace Sxta.Render
     /// </summary>
     public enum StencilOperation
     {
-        KEEP, ///< &nbsp;
-		RESET, ///< &nbsp;
-		REPLACE, ///< &nbsp;
-		INCR, ///< &nbsp;
-		DECR, ///< &nbsp;
-		INVERT, ///< &nbsp;
-		INCR_WRAP, ///< &nbsp;
-		DECR_WRAP ///< &nbsp;
+        KEEP,
+        RESET,
+        REPLACE,
+        INCR,
+        DECR,
+        INVERT,
+        INCR_WRAP,
+        DECR_WRAP
     }
     ;
 
@@ -356,11 +356,11 @@ namespace Sxta.Render
     /// </summary>
     public enum BlendEquation
     {
-        ADD, ///< &nbsp;
-		SUBTRACT, ///< &nbsp;
-		REVERSE_SUBTRACT, ///< &nbsp;
-		MIN, ///< &nbsp;
-		MAX ///< &nbsp;
+        ADD,
+        SUBTRACT,
+        REVERSE_SUBTRACT,
+        MIN,
+        MAX
     }
     ;
 
@@ -370,20 +370,20 @@ namespace Sxta.Render
     /// </summary>
     public enum BlendArgument
     {
-        ZERO, ///< &nbsp;
-		ONE, ///< &nbsp;
-		SRC_COLOR, ///< &nbsp;
-		ONE_MINUS_SRC_COLOR, ///< &nbsp;
-		DST_COLOR, ///< &nbsp;
-		ONE_MINUS_DST_COLOR, ///< &nbsp;
-		SRC_ALPHA, ///< &nbsp;
-		ONE_MINUS_SRC_ALPHA, ///< &nbsp;
-		DST_ALPHA, ///< &nbsp;
-		ONE_MINUS_DST_ALPHA, ///< &nbsp;
-		CONSTANT_COLOR, ///< &nbsp;
-		ONE_MINUS_CONSTANT_COLOR, ///< &nbsp;
-		CONSTANT_ALPHA, ///< &nbsp;
-		ONE_MINUS_CONSTANT_ALPHA ///< &nbsp;
+        ZERO,
+        ONE,
+        SRC_COLOR,
+        ONE_MINUS_SRC_COLOR,
+        DST_COLOR,
+        ONE_MINUS_DST_COLOR,
+        SRC_ALPHA,
+        ONE_MINUS_SRC_ALPHA,
+        DST_ALPHA,
+        ONE_MINUS_DST_ALPHA,
+        CONSTANT_COLOR,
+        ONE_MINUS_CONSTANT_COLOR,
+        CONSTANT_ALPHA,
+        ONE_MINUS_CONSTANT_ALPHA
     }
     ;
 
@@ -393,22 +393,22 @@ namespace Sxta.Render
     /// </summary>
     public enum LogicOperation
     {
-        CLEAR, ///< &nbsp;
-		AND, ///< &nbsp;
-		AND_REVERSE, ///< &nbsp;
-		COPY, ///< &nbsp;
-		AND_INVERTED, ///< &nbsp;
-		NOOP, ///< &nbsp;
-		XOR, ///< &nbsp;
-		OR, ///< &nbsp;
-		NOR, ///< &nbsp;
-		EQUIV, ///< &nbsp;
-		NOT, ///< &nbsp;
-		OR_REVERSE, ///< &nbsp;
-		COPY_INVERTED, ///< &nbsp;
-		OR_INVERTED, ///< &nbsp;
-		NAND, ///< &nbsp;
-		SET ///< &nbsp;
+        CLEAR,
+        AND,
+        AND_REVERSE,
+        COPY,
+        AND_INVERTED,
+        NOOP,
+        XOR,
+        OR,
+        NOR,
+        EQUIV,
+        NOT,
+        OR_REVERSE,
+        COPY_INVERTED,
+        OR_INVERTED,
+        NAND,
+        SET
     }
     ;
 
@@ -418,11 +418,11 @@ namespace Sxta.Render
     /// </summary>
     public enum Stage
     {
-        VERTEX, ///< &nbsp;
-		TESSELATION_CONTROL, ///< &nbsp;
-		TESSELATION_EVALUATION, ///< &nbsp;
-		GEOMETRY, ///< &nbsp;
-		FRAGMENT ///< &nbsp;
+        VERTEX,
+        TESSELATION_CONTROL,
+        TESSELATION_EVALUATION,
+        GEOMETRY,
+        FRAGMENT
     }
     ;
 
@@ -432,77 +432,77 @@ namespace Sxta.Render
     /// </summary>
     public enum UniformType
     {
-        VEC1F, ///< &nbsp;
-		VEC2F, ///< &nbsp;
-		VEC3F, ///< &nbsp;
-		VEC4F, ///< &nbsp;
-		VEC1D, ///< &nbsp;
-		VEC2D, ///< &nbsp;
-		VEC3D, ///< &nbsp;
-		VEC4D, ///< &nbsp;
-		VEC1I, ///< &nbsp;
-		VEC2I, ///< &nbsp;
-		VEC3I, ///< &nbsp;
-		VEC4I, ///< &nbsp;
-		VEC1UI, ///< &nbsp;
-		VEC2UI, ///< &nbsp;
-		VEC3UI, ///< &nbsp;
-		VEC4UI, ///< &nbsp;
-		VEC1B, ///< &nbsp;
-		VEC2B, ///< &nbsp;
-		VEC3B, ///< &nbsp;
-		VEC4B, ///< &nbsp;
-		MAT2F, ///< &nbsp;
-		MAT3F, ///< &nbsp;
-		MAT4F, ///< &nbsp;
-		MAT2x3F, ///< &nbsp;
-		MAT2x4F, ///< &nbsp;
-		MAT3x2F, ///< &nbsp;
-		MAT3x4F, ///< &nbsp;
-		MAT4x2F, ///< &nbsp;
-		MAT4x3F, ///< &nbsp;
-		MAT2D, ///< &nbsp;
-		MAT3D, ///< &nbsp;
-		MAT4D, ///< &nbsp;
-		MAT2x3D, ///< &nbsp;
-		MAT2x4D, ///< &nbsp;
-		MAT3x2D, ///< &nbsp;
-		MAT3x4D, ///< &nbsp;
-		MAT4x2D, ///< &nbsp;
-		MAT4x3D, ///< &nbsp;
-		SAMPLER_1D, ///< &nbsp;
-		SAMPLER_2D, ///< &nbsp;
-		SAMPLER_3D, ///< &nbsp;
-		SAMPLER_CUBE, ///< &nbsp;
-		SAMPLER_1D_ARRAY, ///< &nbsp;
-		SAMPLER_2D_ARRAY, ///< &nbsp;
-		SAMPLER_CUBE_MAP_ARRAY, ///< &nbsp;
-		SAMPLER_2D_MULTISAMPLE, ///< &nbsp;
-		SAMPLER_2D_MULTISAMPLE_ARRAY, ///< &nbsp;
-		SAMPLER_BUFFER, ///< &nbsp;
-		SAMPLER_2D_RECT, ///< &nbsp;
-		INT_SAMPLER_1D, ///< &nbsp;
-		INT_SAMPLER_2D, ///< &nbsp;
-		INT_SAMPLER_3D, ///< &nbsp;
-		INT_SAMPLER_CUBE, ///< &nbsp;
-		INT_SAMPLER_1D_ARRAY, ///< &nbsp;
-		INT_SAMPLER_2D_ARRAY, ///< &nbsp;
-		INT_SAMPLER_CUBE_MAP_ARRAY, ///< &nbsp;
-		INT_SAMPLER_2D_MULTISAMPLE, ///< &nbsp;
-		INT_SAMPLER_2D_MULTISAMPLE_ARRAY, ///< &nbsp;
-		INT_SAMPLER_BUFFER, ///< &nbsp;
-		INT_SAMPLER_2D_RECT, ///< &nbsp;
-		UNSIGNED_INT_SAMPLER_1D, ///< &nbsp;
-		UNSIGNED_INT_SAMPLER_2D, ///< &nbsp;
-		UNSIGNED_INT_SAMPLER_3D, ///< &nbsp;
-		UNSIGNED_INT_SAMPLER_CUBE, ///< &nbsp;
-		UNSIGNED_INT_SAMPLER_1D_ARRAY, ///< &nbsp;
-		UNSIGNED_INT_SAMPLER_2D_ARRAY, ///< &nbsp;
-		UNSIGNED_INT_SAMPLER_CUBE_MAP_ARRAY, ///< &nbsp;
-		UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE, ///< &nbsp;
-		UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE_ARRAY, ///< &nbsp;
-		UNSIGNED_INT_SAMPLER_BUFFER, ///< &nbsp;
-		UNSIGNED_INT_SAMPLER_2D_RECT ///< &nbsp;
+        VEC1F,
+        VEC2F,
+        VEC3F,
+        VEC4F,
+        VEC1D,
+        VEC2D,
+        VEC3D,
+        VEC4D,
+        VEC1I,
+        VEC2I,
+        VEC3I,
+        VEC4I,
+        VEC1UI,
+        VEC2UI,
+        VEC3UI,
+        VEC4UI,
+        VEC1B,
+        VEC2B,
+        VEC3B,
+        VEC4B,
+        MAT2F,
+        MAT3F,
+        MAT4F,
+        MAT2x3F,
+        MAT2x4F,
+        MAT3x2F,
+        MAT3x4F,
+        MAT4x2F,
+        MAT4x3F,
+        MAT2D,
+        MAT3D,
+        MAT4D,
+        MAT2x3D,
+        MAT2x4D,
+        MAT3x2D,
+        MAT3x4D,
+        MAT4x2D,
+        MAT4x3D,
+        SAMPLER_1D,
+        SAMPLER_2D,
+        SAMPLER_3D,
+        SAMPLER_CUBE,
+        SAMPLER_1D_ARRAY,
+        SAMPLER_2D_ARRAY,
+        SAMPLER_CUBE_MAP_ARRAY,
+        SAMPLER_2D_MULTISAMPLE,
+        SAMPLER_2D_MULTISAMPLE_ARRAY,
+        SAMPLER_BUFFER,
+        SAMPLER_2D_RECT,
+        INT_SAMPLER_1D,
+        INT_SAMPLER_2D,
+        INT_SAMPLER_3D,
+        INT_SAMPLER_CUBE,
+        INT_SAMPLER_1D_ARRAY,
+        INT_SAMPLER_2D_ARRAY,
+        INT_SAMPLER_CUBE_MAP_ARRAY,
+        INT_SAMPLER_2D_MULTISAMPLE,
+        INT_SAMPLER_2D_MULTISAMPLE_ARRAY,
+        INT_SAMPLER_BUFFER,
+        INT_SAMPLER_2D_RECT,
+        UNSIGNED_INT_SAMPLER_1D,
+        UNSIGNED_INT_SAMPLER_2D,
+        UNSIGNED_INT_SAMPLER_3D,
+        UNSIGNED_INT_SAMPLER_CUBE,
+        UNSIGNED_INT_SAMPLER_1D_ARRAY,
+        UNSIGNED_INT_SAMPLER_2D_ARRAY,
+        UNSIGNED_INT_SAMPLER_CUBE_MAP_ARRAY,
+        UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE,
+        UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE_ARRAY,
+        UNSIGNED_INT_SAMPLER_BUFFER,
+        UNSIGNED_INT_SAMPLER_2D_RECT
     }
     ;
 
@@ -511,11 +511,11 @@ namespace Sxta.Render
      */
     public enum QueryType
     {
-        PRIMITIVES_GENERATED, ///< &nbsp;
-		TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN, ///< &nbsp;
-		SAMPLES_PASSED, ///< &nbsp;
-		ANY_SAMPLES_PASSED, ///< &nbsp;
-		TIME_STAMP ///< &nbsp;
+        PRIMITIVES_GENERATED,
+        TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN,
+        SAMPLES_PASSED,
+        ANY_SAMPLES_PASSED,
+        TIME_STAMP
     }
     ;
 
@@ -525,11 +525,11 @@ namespace Sxta.Render
     /// </summary>
     public enum QueryMode
     {
-        WAIT, ///< &nbsp;
-		NO_WAIT, ///< &nbsp;
-		REGION_WAIT, ///< &nbsp;
-		REGION_NO_WAIT ///< &nbsp;
-	}
+        WAIT,
+        NO_WAIT,
+        REGION_WAIT,
+        REGION_NO_WAIT
+    }
 
     /// <summary>
     /// Provides utility methods to work with OpenTK enumerations.

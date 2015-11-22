@@ -28,8 +28,8 @@ namespace Sxta.Proland.Core.Producer
     /// </summary>
     public class TileCache
     {
-#if TODO
 
+#if TODO
         /*
          * Creates a new TileCache.
          *
@@ -67,6 +67,7 @@ namespace Sxta.Proland.Core.Producer
     unusedTilesOrder.Clear();
     deletedTiles.Clear();
 }
+
 
         /*
          * Returns the storage used to store the actual tiles data.
@@ -567,7 +568,7 @@ namespace Sxta.Proland.Core.Producer
     deletedTiles.erase(i);
     pthread_mutex_unlock((pthread_mutex_t*) mutex);
 }
-
+#endif
 
         /*
          * A tile described by its level,tx,ty coordinates. A TileCache.Tile
@@ -581,7 +582,7 @@ namespace Sxta.Proland.Core.Producer
              * level, tx, ty.
              */
             //typedef std.pair<int, std.pair<int, int> > Id;
-            public class Id : Tuple<int, Tuple<int, int>>
+            public class Id //: Tuple<int, Tuple<int, int>>
             {
             }
 
@@ -590,7 +591,7 @@ namespace Sxta.Proland.Core.Producer
              * tile coordinates level,tx,ty (second pair element).
              */
             // typedef std.pair<int, Id> TId;
-            public class TId : Tuple<int, Tuple<int, int>>
+            public class TId //: Tuple<int, Tuple<int, int>>
             {
             }
 
@@ -632,17 +633,18 @@ namespace Sxta.Proland.Core.Producer
              * @param task the task that will produce the tile data.
              * @param data where the produced tile data must be stored.
              */
-            public Tile(int producerId, int level, int tx, int ty, Task task, TileStorage.Slot data)        {
-    this.producerId=producerId; 
-            this.level=level; 
-                this.tx=tx; 
-                this.ty=ty;
-                this.task=task;
-                this.data=data; 
-                this.users=0;
+            public Tile(int producerId, int level, int tx, int ty, Task task, TileStorage.Slot data)
+            {
+                this.producerId = producerId;
+                this.level = level;
+                this.tx = tx;
+                this.ty = ty;
+                this.task = task;
+                this.data = data;
+                this.users = 0;
 
-    Debug.Assert(data != null);
-}
+                Debug.Assert(data != null);
+            }
 
             /*
              * Deletes this tile. This does not delete the tile data itself, only
@@ -658,26 +660,32 @@ namespace Sxta.Proland.Core.Producer
              * @return the actual data of this tile, or null if the task that
              *      produces this data is not done.
              */
-            public TileStorage.Slot getData(bool check = true){
-    bool isDone = task.isDone();
-    assert(isDone || !check);
-    assert(getTId() == data.id || !check);
-    return isDone ? data : null;
-}
+            public TileStorage.Slot getData(bool check = true)
+            {
+#if TODO
+                bool isDone = task.isDone();
+                assert(isDone || !check);
+                assert(getTId() == data.id || !check);
+                return isDone ? data : null;
+#endif
+                throw new NotImplementedException();
+            }
 
             /*
              * Returns the identifier of this tile.
              */
-            public Id getId(){
-    return getId(level, tx, ty);
-}
+            public Id getId()
+            {
+                return getId(level, tx, ty);
+            }
 
             /*
              * Returns the identifier of this tile.
              */
-            public TId getTId(){
-    return getTId(producerId, level, tx, ty);
-}
+            public TId getTId()
+            {
+                return getTId(producerId, level, tx, ty);
+            }
 
             /*
              * Returns the identifier of a tile.
@@ -686,9 +694,13 @@ namespace Sxta.Proland.Core.Producer
              * @param tx the tile's quadtree x coordinate.
              * @param ty the tile's quadtree y coordinate.
              */
-            public static Id getId(int level, int tx, int ty){
-    return make_pair(level, make_pair(tx, ty));
-}
+            public static Id getId(int level, int tx, int ty)
+            {
+#if TODO
+                return make_pair(level, make_pair(tx, ty));
+#endif
+                throw new NotImplementedException();
+            }
 
             /*
              * Returns the identifier of a tile.
@@ -698,9 +710,13 @@ namespace Sxta.Proland.Core.Producer
              * @param tx the tile's quadtree x coordinate.
              * @param ty the tile's quadtree y coordinate.
              */
-            public static TId getTId(int producerId, int level, int tx, int ty){
-    return make_pair(producerId, make_pair(level, make_pair(tx, ty)));
-}
+            public static TId getTId(int producerId, int level, int tx, int ty)
+            {
+#if TODO
+                return make_pair(producerId, make_pair(level, make_pair(tx, ty)));
+#endif
+                throw new NotImplementedException();
+            }
 
 
             /*
@@ -716,6 +732,5 @@ namespace Sxta.Proland.Core.Producer
              */
             private int users;
         }
-#endif
     }
 }

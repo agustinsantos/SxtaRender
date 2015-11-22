@@ -1,8 +1,11 @@
 using OpenTK.Graphics.OpenGL;
 using Sxta.Render;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace Sxta.Render.OpenGLExt
 {
@@ -94,7 +97,7 @@ namespace Sxta.Render.OpenGLExt
             /// For compressed textures specifies the base internal, e.g.
             /// GL_RGB, GL_RGBA.
             /// </summary>
-            public uint glBaseInternalFormat;
+            public PixelInternalFormat glBaseInternalFormat;
 
             /// <summary>
             /// Width of the image for texture level 0, in pixels.
@@ -202,7 +205,7 @@ namespace Sxta.Render.OpenGLExt
         /// <returns>KTX_SUCCESS on success, other KTX_Error_Code enum values on error.</returns>
         public static KTX_Error_Code LoadTexture(Stream stream, ref uint pTexture, out TextureTarget pTarget,
                                                     out KTX_dimensions pDimensions, out bool pIsMipmapped,
-                                                    out  ErrorCode pGlerror, ref  int pKvdLen, ref byte[] ppKvd)
+                                                    out ErrorCode pGlerror, ref int pKvdLen, ref byte[] ppKvd)
         {
             pTarget = TextureTarget.Texture2D;
             pGlerror = ErrorCode.NoError;
@@ -332,10 +335,10 @@ namespace Sxta.Render.OpenGLExt
                  * use at runtime, the library either provides its own support
                  * or handles the expected errors.
                  */
-                const int GL_ALPHA = 0x1906;
-                const int GL_LUMINANCE = 0x1909;
-                const int GL_LUMINANCE_ALPHA = 0x190A;
-                const int GL_INTENSITY = 0x8049;
+                const PixelInternalFormat GL_ALPHA = PixelInternalFormat.Alpha;// 0x1906;
+                const PixelInternalFormat GL_LUMINANCE = PixelInternalFormat.Luminance;// 0x1909;
+                const PixelInternalFormat GL_LUMINANCE_ALPHA = PixelInternalFormat.LuminanceAlpha;// 0x190A;
+                const PixelInternalFormat GL_INTENSITY = PixelInternalFormat.Intensity;// 0x8049;
 
                 // With only unsized formats must change internal format.
                 if (sizedFormats == _NO_SIZED_FORMATS
@@ -344,7 +347,7 @@ namespace Sxta.Render.OpenGLExt
                     || header.glBaseInternalFormat == GL_LUMINANCE_ALPHA
                     || header.glBaseInternalFormat == GL_INTENSITY)))
                 {
-                    glInternalFormat = (PixelInternalFormat)header.glBaseInternalFormat;
+                    glInternalFormat = header.glBaseInternalFormat;
                 }
 #endif
             }
@@ -565,7 +568,7 @@ namespace Sxta.Render.OpenGLExt
         /// <returns>KTX_SUCCESS on success, other KTX_Error_Code enum values on error.</returns>
         public static KTX_Error_Code LoadTexture(string filename, ref uint pTexture, out TextureTarget pTarget,
                                             out KTX_dimensions pDimensions, out bool pIsMipmapped,
-                                            out  ErrorCode pGlerror, ref  int pKvdLen, ref byte[] ppKvd)
+                                            out ErrorCode pGlerror, ref int pKvdLen, ref byte[] ppKvd)
         {
             KTX_Error_Code errorCode;
             using (FileStream stream = new FileStream("Media/rgb-reference.ktx", FileMode.Open))
@@ -728,7 +731,7 @@ namespace Sxta.Render.OpenGLExt
             }
         }
 
-        private static uint ReadUInt(Stream stream, uint endianness)
+        internal static uint ReadUInt(Stream stream, uint endianness)
         {
             byte[] buff = new byte[sizeof(uint)];
             stream.Read(buff, 0, sizeof(uint));
@@ -742,7 +745,7 @@ namespace Sxta.Render.OpenGLExt
             return val;
         }
 
-        private static void SwapEndianArr16(byte[] data, uint len)
+        internal static void SwapEndianArr16(byte[] data, uint len)
         {
             int cnt = 0;
             for (uint i = 0; i < len; i++)
@@ -755,7 +758,7 @@ namespace Sxta.Render.OpenGLExt
             }
         }
 
-        private static void SwapEndianArr32(byte[] data, uint len)
+        internal static void SwapEndianArr32(byte[] data, uint len)
         {
             int cnt = 0;
             for (uint i = 0; i < len; i++)
@@ -1177,7 +1180,7 @@ namespace Sxta.Render.OpenGLExt
         /// KTX file header. See the KTX specification for descriptions
         /// </summary>
         [StructLayout(LayoutKind.Sequential)]
-        internal unsafe struct KTX_header
+        public unsafe struct KTX_header
         {
             //public fixed byte identifier[16];
             public byte identifier0;
@@ -1198,7 +1201,7 @@ namespace Sxta.Render.OpenGLExt
             public uint glTypeSize;
             public uint glFormat;
             public uint glInternalFormat;
-            public uint glBaseInternalFormat;
+            public PixelInternalFormat glBaseInternalFormat;
             public uint pixelWidth;
             public uint pixelHeight;
             public uint pixelDepth;
@@ -1419,8 +1422,8 @@ namespace Sxta.Render.OpenGLExt
                 this.glFormat = (x << 24) | ((x & 0xFF00) << 8) | ((x & 0xFF0000) >> 8) | (x >> 24);
                 x = this.glInternalFormat;
                 this.glInternalFormat = (x << 24) | ((x & 0xFF00) << 8) | ((x & 0xFF0000) >> 8) | (x >> 24);
-                x = this.glBaseInternalFormat;
-                this.glBaseInternalFormat = (x << 24) | ((x & 0xFF00) << 8) | ((x & 0xFF0000) >> 8) | (x >> 24);
+                x = (uint)this.glBaseInternalFormat;
+                this.glBaseInternalFormat = (PixelInternalFormat)((x << 24) | ((x & 0xFF00) << 8) | ((x & 0xFF0000) >> 8) | (x >> 24));
                 x = this.pixelWidth;
                 this.pixelWidth = (x << 24) | ((x & 0xFF00) << 8) | ((x & 0xFF0000) >> 8) | (x >> 24);
                 x = this.pixelHeight;
@@ -1445,13 +1448,816 @@ namespace Sxta.Render.OpenGLExt
     /// <summary>
     /// CheckHeader returns texture information in this structure
     /// </summary>
-    internal struct KTX_texinfo
+    public struct KTX_texinfo
     {
         /* Data filled in by CheckHeader() */
         public uint textureDimensions;
         public TextureTarget glTarget;
         public bool compressed;
         public bool generateMipmaps;
+    }
+    /// <summary>
+    /// KTX file header. See the KTX specification for descriptions
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
+    internal unsafe struct KTX_header
+    {
+        //public fixed byte identifier[16];
+        public byte identifier0;
+        public byte identifier1;
+        public byte identifier2;
+        public byte identifier3;
+        public byte identifier4;
+        public byte identifier5;
+        public byte identifier6;
+        public byte identifier7;
+        public byte identifier8;
+        public byte identifier9;
+        public byte identifier10;
+        public byte identifier11;
+
+        public uint endianness;
+        public OpenTK.Graphics.OpenGL.PixelType glType;
+        public uint glTypeSize;
+        public PixelFormat glFormat;
+        public PixelInternalFormat glInternalFormat;
+        public PixelInternalFormat glBaseInternalFormat;
+        public uint pixelWidth;
+        public uint pixelHeight;
+        public uint pixelDepth;
+        public uint numberOfArrayElements;
+        public uint numberOfFaces;
+        public uint numberOfMipmapLevels;
+        public uint bytesOfKeyValueData;
+
+        private const int KTX_HEADER_SIZE = 64;
+
+        public const int KTX_ENDIAN_REF = 0x04030201;
+        public const int KTX_ENDIAN_REF_REV = 0x01020304;
+
+
+        /// <summary>
+        /// Read and check a KTX header
+        /// </summary>
+        /// <param name="header"></param>
+        /// <param name="stream"></param>
+        /// <returns></returns>
+        public static KTX_header ReadHeader(Stream stream)
+        {
+
+            byte[] buff = new byte[KTX_HEADER_SIZE];
+            stream.Read(buff, 0, KTX_HEADER_SIZE);
+            KTX_header header = ReadUsingPointer(buff);
+            return header;
+        }
+
+        public static void WriteHeader(Stream stream, KTX_header header)
+        {
+            byte[] buff = new byte[KTX_HEADER_SIZE];
+            fixed (byte* pbuff = buff)
+            {
+                *(KTX_header*)pbuff = *((KTX_header*)&header);
+                stream.Write(buff, 0, KTX_HEADER_SIZE);
+            }
+        }
+
+        /// <summary>
+        /// This method reads unmanaged data into a header structure 
+        /// This uses a technique described in 
+        /// http://www.codeproject.com/Articles/25896/Reading-Unmanaged-Data-Into-Structures
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        private static unsafe KTX_header ReadUsingPointer(byte[] data)
+        {
+            fixed (byte* header = &data[0])
+            {
+                return *(KTX_header*)header;
+            }
+        }
+
+        /// <summary>
+        /// Check a KTX file header.
+        /// As well as checking that the header identifies a KTX file, the function
+        /// sanity checks the values and returns information about the texture in a
+        /// KTX_texinfo structure.
+        /// </summary>
+        /// <param name="header">KTX header to check</param>
+        /// <param name="texinfo">KTX_texinfo structure in which to return information about the texture.</param>
+        /// <returns></returns>
+        public static KTX_texinfo CheckHeader(ref KTX_header header)
+        {
+            KTX_texinfo texinfo;
+
+            //TODO Check if 1D texture is supported
+            bool SupportedCompressedTexImage1D = true;
+            bool SupportedTexImage1D = true;
+
+            // TODO Check if texture is supported
+            bool SupportedCompressedTexImage3D = true;
+            bool SupportedTexImage3D = true;
+
+
+            uint max_dim;
+
+            /* Compare identifier, is this a KTX file? */
+            //private readonly byte[] KTX_IDENTIFIER_REF = new byte[12] { 0xAB, 0x4B, 0x54, 0x58, 0x20, 0x31, 0x31, 0xBB, 0x0D, 0x0A, 0x1A, 0x0A };
+
+            if (header.identifier0 != 0xAB || header.identifier1 != 0x4B || header.identifier2 != 0x54 || header.identifier3 != 0x58 ||
+                header.identifier4 != 0x20 || header.identifier5 != 0x31 || header.identifier6 != 0x31 || header.identifier7 != 0xBB ||
+                header.identifier8 != 0x0D || header.identifier9 != 0x0A || header.identifier10 != 0x1A || header.identifier11 != 0x0A)
+            {
+                throw new Exception("Invalid file format");
+            }
+            if (header.endianness == KTX_ENDIAN_REF_REV)
+            {
+                /* Convert endianness of header fields if necessary */
+                header.SwapEndian();
+
+                if (header.glTypeSize != 1 ||
+                    header.glTypeSize != 2 ||
+                    header.glTypeSize != 4)
+                {
+                    /* Only 8, 16, and 32-bit types supported so far */
+                    throw new Exception("Only 8, 16, and 32-bit types supported so far");
+                }
+            }
+            else if (header.endianness != KTX_ENDIAN_REF)
+            {
+                throw new Exception("Invalid endiannes value");
+            }
+
+            /* Check glType and glFormat */
+            texinfo.compressed = false;
+            if (header.glType == 0 || header.glFormat == 0)
+            {
+                if ((uint)header.glType + (uint)header.glFormat != 0)
+                {
+                    /* either both or none of glType, glFormat must be zero */
+                    throw new Exception("either both or none of glType, glFormat must be zero ");
+                }
+                texinfo.compressed = true;
+            }
+
+            /* Check texture dimensions. KTX files can store 8 types of textures:
+               1D, 2D, 3D, cube, and array variants of these. There is currently
+               no GL extension that would accept 3D array or cube array textures. */
+            if ((header.pixelWidth == 0) ||
+                (header.pixelDepth > 0 && header.pixelHeight == 0))
+            {
+                /* texture must have width */
+                /* texture must have height if it has depth */
+                throw new Exception("Invalid width or height");
+            }
+
+            texinfo.textureDimensions = 1;
+            texinfo.glTarget = TextureTarget.Texture1D;
+            texinfo.generateMipmaps = false;
+            if (header.pixelHeight > 0)
+            {
+                texinfo.textureDimensions = 2;
+                texinfo.glTarget = TextureTarget.Texture2D;
+            }
+            if (header.pixelDepth > 0)
+            {
+                texinfo.textureDimensions = 3;
+                texinfo.glTarget = TextureTarget.Texture3D;
+            }
+
+            if (header.numberOfFaces == 6)
+            {
+                if (texinfo.textureDimensions == 2)
+                {
+                    texinfo.glTarget = TextureTarget.TextureCubeMap;
+                }
+                else
+                {
+                    /* cube map needs 2D faces */
+                    throw new Exception("cube map needs 2D faces");
+                }
+            }
+            else if (header.numberOfFaces != 1)
+            {
+                /* numberOfFaces must be either 1 or 6 */
+                throw new Exception("numberOfFaces must be either 1 or 6");
+            }
+
+            /* load as 2D texture if 1D textures are not supported */
+            if (texinfo.textureDimensions == 1 &&
+                ((texinfo.compressed && (!SupportedCompressedTexImage1D)) ||
+                 (!texinfo.compressed && (!SupportedTexImage1D))))
+            {
+                texinfo.textureDimensions = 2;
+                texinfo.glTarget = TextureTarget.Texture2D;
+                header.pixelHeight = 1;
+            }
+
+            if (header.numberOfArrayElements > 0)
+            {
+                if (texinfo.glTarget == TextureTarget.Texture1D)
+                {
+                    texinfo.glTarget = TextureTarget.Texture1DArray;
+                }
+                else if (texinfo.glTarget == TextureTarget.Texture2D)
+                {
+                    texinfo.glTarget = TextureTarget.Texture2DArray;
+                }
+                else
+                {
+                    /* No API for 3D and cube arrays yet */
+                    throw new Exception("Unsupported Texture Type");
+                }
+                texinfo.textureDimensions++;
+            }
+
+            /* reject 3D texture if unsupported */
+            if (texinfo.textureDimensions == 3 &&
+                ((texinfo.compressed && (!SupportedCompressedTexImage3D)) ||
+                 (!texinfo.compressed && (!SupportedTexImage3D))))
+            {
+                throw new Exception("Unsupported Texture Type");
+            }
+
+            /* Check number of mipmap levels */
+            if (header.numberOfMipmapLevels == 0)
+            {
+                texinfo.generateMipmaps = true;
+                header.numberOfMipmapLevels = 1;
+            }
+
+            max_dim = System.Math.Max(System.Math.Max(header.pixelWidth, header.pixelHeight), header.pixelDepth);
+            if (max_dim < (uint)(1 << (int)(header.numberOfMipmapLevels - 1)))
+            {
+                /* Can't have more mip levels than 1 + log2(max(width, height, depth)) */
+                throw new Exception("Can't have more mip levels than 1 + log2(max(width, height, depth))");
+            }
+
+            return texinfo;
+        }
+
+        public bool IsLittleEndian
+        {
+            get { return endianness == KTX_ENDIAN_REF_REV; }
+        }
+
+        private void SwapEndian()
+        {
+            uint x = (uint)this.glType;
+            this.glType = (OpenTK.Graphics.OpenGL.PixelType)((x << 24) | ((x & 0xFF00) << 8) | ((x & 0xFF0000) >> 8) | (x >> 24));
+            x = this.glTypeSize;
+            this.glTypeSize = (x << 24) | ((x & 0xFF00) << 8) | ((x & 0xFF0000) >> 8) | (x >> 24);
+            x = (uint)this.glFormat;
+            this.glFormat = (PixelFormat)((x << 24) | ((x & 0xFF00) << 8) | ((x & 0xFF0000) >> 8) | (x >> 24));
+            x = (uint)this.glInternalFormat;
+            this.glInternalFormat = (PixelInternalFormat)((x << 24) | ((x & 0xFF00) << 8) | ((x & 0xFF0000) >> 8) | (x >> 24));
+            x = (uint)this.glBaseInternalFormat;
+            this.glBaseInternalFormat = (PixelInternalFormat)((x << 24) | ((x & 0xFF00) << 8) | ((x & 0xFF0000) >> 8) | (x >> 24));
+            x = this.pixelWidth;
+            this.pixelWidth = (x << 24) | ((x & 0xFF00) << 8) | ((x & 0xFF0000) >> 8) | (x >> 24);
+            x = this.pixelHeight;
+            this.pixelHeight = (x << 24) | ((x & 0xFF00) << 8) | ((x & 0xFF0000) >> 8) | (x >> 24);
+            x = this.pixelDepth;
+            this.pixelDepth = (x << 24) | ((x & 0xFF00) << 8) | ((x & 0xFF0000) >> 8) | (x >> 24);
+            x = this.numberOfArrayElements;
+            this.numberOfArrayElements = (x << 24) | ((x & 0xFF00) << 8) | ((x & 0xFF0000) >> 8) | (x >> 24);
+            x = this.numberOfFaces;
+            this.numberOfFaces = (x << 24) | ((x & 0xFF00) << 8) | ((x & 0xFF0000) >> 8) | (x >> 24);
+            x = this.numberOfMipmapLevels;
+            this.numberOfMipmapLevels = (x << 24) | ((x & 0xFF00) << 8) | ((x & 0xFF0000) >> 8) | (x >> 24);
+            x = this.bytesOfKeyValueData;
+            this.bytesOfKeyValueData = (x << 24) | ((x & 0xFF00) << 8) | ((x & 0xFF0000) >> 8) | (x >> 24);
+        }
+
+    }
+
+
+
+    public class ImageKTX
+    {
+        /// <summary>
+        /// The type of the image data.
+        /// 
+        ///  Values are the same as in the type parameter of
+        ///  glTexImage*D. Must be 0 for compressed images.
+        /// </summary>
+        public OpenTK.Graphics.OpenGL.PixelType PixelType { get { return header.glType; } }
+
+        /// <summary>
+        /// The data type size to be used in case of endianness conversion.
+        /// 
+        ///  This value is used in the event conversion is required when the
+        ///  KTX file is loaded. It should be the size in bytes corresponding
+        ///  to glType. Must be 1 for compressed images.
+        /// </summary>
+        public uint TypeSize { get { return header.glTypeSize; } }
+
+        /// <summary>
+        /// The format of the image(s).
+        /// 
+        /// Values are the same as in the format parameter
+        /// of glTexImage*D. Must be 0 for compressed images.
+        /// </summary>
+        public PixelFormat Format { get { return header.glFormat; } }
+
+        /// <summary>
+        /// The internalformat of the image(s).
+        /// 
+        /// Values are the same as for the internalformat parameter of
+        /// glTexImage*2D. Note: it will not be used when a KTX file
+        /// containing an uncompressed texture is loaded into OpenGL ES.
+        /// </summary>
+        public PixelInternalFormat InternalFormat { get { return header.glInternalFormat; } }
+
+        /// <summary>
+        /// The base internalformat of the image(s)
+        ///
+        /// For non-compressed textures, should be the same as glFormat.
+        /// For compressed textures specifies the base internal, e.g.
+        /// GL_RGB, GL_RGBA.
+        /// </summary>
+        public PixelInternalFormat BaseInternalFormat { get { return header.glBaseInternalFormat; } }
+
+        /// <summary>
+        /// Width of the image for texture level 0, in pixels.
+        /// </summary>
+        public int Width { get { return (int)header.pixelWidth; } }
+
+        /// <summary>
+        /// Height of the texture image for level 0, in pixels.
+        ///
+        /// Must be 0 for 1D textures.
+        /// </summary>
+        public int Height { get { return (int)header.pixelHeight; } }
+
+        /// <summary>
+        /// Depth of the texture image for level 0, in pixels.
+        ///
+        /// Must be 0 for 1D, 2D and cube textures.
+        /// </summary>
+        public int Depth { get { return (int)header.pixelDepth; } }
+
+        /// <summary>
+        /// The number of array elements.
+        ///
+        /// Must be 0 if not an array texture.
+        /// </summary>
+        public int NumberOfArrayElements { get { return (int)header.numberOfArrayElements; } }
+
+        /// <summary>
+        /// The number of cubemap faces.
+        ///
+        /// Must be 6 for cubemaps and cubemap arrays, 1 otherwise. Cubemap
+        /// faces must be provided in the order: +X, -X, +Y, -Y, +Z, -Z.
+        /// </summary>
+        public int NumberOfFaces { get { return (int)header.numberOfFaces; } }
+
+        public uint TextureDimensions { get { return texinfo.textureDimensions; } }
+
+        public TextureTarget TextureTarget
+        {
+            get { return texinfo.glTarget; }
+            internal set { texinfo.glTarget = value; }
+        }
+
+        public bool Compressed { get { return texinfo.compressed; } }
+
+        public bool GenerateMipmaps { get { return texinfo.generateMipmaps; } }
+
+
+        /// <summary>
+        /// The number of mipmap levels.
+        ///
+        /// 1 for non-mipmapped texture. 0 indicates that a full mipmap pyramid should
+        /// be generated from level 0 at load time (this is usually not allowed for
+        /// compressed formats). Mipmaps must be provided in order from largest size to
+        /// smallest size. The first mipmap level is always level 0.
+        /// </summary>
+        public int NumberOfMipmapLevels { get { return (int)header.numberOfMipmapLevels; } }
+
+        private IList<Tuple<string, string>> kvdList = null;
+
+        public IList<Tuple<string, string>> KeyValueData
+        {
+            get
+            {
+                if (kvdList != null)
+                    return kvdList;
+                if (ppKvd != null && ppKvd.Length != 0)
+                {
+                    kvdList = new List<Tuple<string, string>>();
+                    int pos = 0;
+                    while (pos <= ppKvd.Length - 4)
+                    {
+                        int keyAndValueByteSize = BitConverter.ToInt32(ppKvd, pos);
+                        pos += sizeof(int);
+                        if (!BitConverter.IsLittleEndian && header.IsLittleEndian)
+                        {
+                            int x = keyAndValueByteSize;
+                            keyAndValueByteSize = (x << 24) | ((x & 0xFF00) << 8) | ((x & 0xFF0000) >> 8) | (x >> 24);
+                        }
+                        byte[] buff = new byte[keyAndValueByteSize];
+                        Array.Copy(ppKvd, pos, buff, 0, keyAndValueByteSize);
+                        pos += keyAndValueByteSize;
+                        pos += 3 - ((keyAndValueByteSize + 3) % 4); // padding
+                        string str = Encoding.ASCII.GetString(buff);
+                        string[] pair = str.Split('\0');
+                        Tuple<string, string> kv = new Tuple<string, string>(pair[0], pair[1]);
+                        kvdList.Add(kv);
+                    }
+                }
+                return kvdList;
+            }
+        }
+
+        public byte[] this[int mipmapLevel, int face]
+        {
+            get { return imgData[mipmapLevel][face]; }
+        }
+
+        public byte[][][] InternalData
+        {
+            get { return imgData; }
+        }
+
+        private KTX_header header;
+        private KTX_texinfo texinfo;
+        private byte[] ppKvd;
+        private byte[][][] imgData;
+
+        protected ImageKTX() { }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="filename">A string that contains the path of the file to load.</param>
+        /// <param name="pTexture">	name of the GL texture to load. If pTexture == 0
+        ///                         the function will generate a texture name.
+        ///                         The function binds either the
+        ///                         generated name or the name given in pTexture
+        /// 						to the texture target returned in pTarget,
+        /// 						before loading the texture data. If pTexture
+        ///                         is not null and a name was generated, the generated
+        ///                         name will be returned in pTexture.</param>
+        /// <param name="pTarget">pTarget is set to the texture target used. The
+        /// 					  target is chosen based on the file contents.</param>
+        /// <param name="pDimensions">the width, height and depth of the texture's base level are returned in the
+        ///                          fields of the KTX_dimensions structure.</param>
+        /// <param name="pIsMipmapped">pIsMipmapped is set to TRUE if the KTX texture is mipmapped, DALSE
+        ///                           otherwise.</param>
+        /// <param name="pGlerror">pGlerror is set to the value returned by
+        ///                          glGetError when this function returns the error
+        ///                          KTX_GL_ERROR. </param>
+        /// <param name="pKvdLen"> pKvdLen is set to the number of bytes
+        ///                        of key-value data pointed at by ppKvd. Must not be
+        ///                        null, ifppKvd is not null.</param>
+        /// <param name="ppKvd">If not null,ppKvd is set to the point to a block of
+        ///                     memory containing key-value data read from the file.
+        ///                     The application is responsible for freeing the memory.</param>
+        /// <returns>KTX_SUCCESS on success, other KTX_Error_Code enum values on error.</returns>
+        public static ImageKTX LoadTexture(string filename)
+        {
+            ImageKTX ktxImage = new ImageKTX();
+            if (string.IsNullOrWhiteSpace(filename) || !File.Exists(filename))
+                throw new ArgumentException("Invalid file name.");
+            using (FileStream stream = new FileStream(filename, FileMode.Open))
+            {
+                if (stream == null || !stream.CanRead || !stream.CanSeek)
+                {
+                    throw new ArgumentException("Invalid stream");
+                }
+
+                ktxImage.header = KTX_header.ReadHeader(stream);
+                ktxImage.texinfo = KTX_header.CheckHeader(ref ktxImage.header);
+
+                int pKvdLen = (int)ktxImage.header.bytesOfKeyValueData;
+                if (pKvdLen != 0)
+                {
+                    ktxImage.ppKvd = new byte[pKvdLen];
+                    if (stream.Read(ktxImage.ppKvd, 0, pKvdLen) == 0)
+                    {
+                        ktxImage.ppKvd = null;
+                        throw new Exception("Unexpected end of file");
+                    }
+                }
+                ktxImage.imgData = new byte[ktxImage.header.numberOfMipmapLevels][][];
+                int numberOfFaces = (int)(ktxImage.header.numberOfFaces == 0 ? 1 : ktxImage.header.numberOfFaces);
+                for (int mipmapLevel = 0; mipmapLevel < ktxImage.header.numberOfMipmapLevels; mipmapLevel++)
+                {
+                    ktxImage.imgData[mipmapLevel] = new byte[numberOfFaces][];
+                    for (int face = 0; face < numberOfFaces; face++)
+                    {
+                        uint faceLodSize = LibKTX.ReadUInt(stream, ktxImage.header.endianness);
+                        uint faceLodSizeRounded = (faceLodSize + 3) & ~(uint)3;
+                        ktxImage.imgData[mipmapLevel][face] = new byte[faceLodSizeRounded];
+
+                        stream.Read(ktxImage.imgData[mipmapLevel][face], 0, (int)faceLodSizeRounded);
+                        /* Perform endianness conversion on texture data */
+                        if (ktxImage.header.endianness == KTX_header.KTX_ENDIAN_REF_REV && ktxImage.header.glTypeSize == 2)
+                        {
+                            LibKTX.SwapEndianArr16(ktxImage.imgData[mipmapLevel][face], faceLodSize / 2);
+                        }
+                        else if (ktxImage.header.endianness == KTX_header.KTX_ENDIAN_REF_REV && ktxImage.header.glTypeSize == 4)
+                        {
+                            LibKTX.SwapEndianArr32(ktxImage.imgData[mipmapLevel][face], faceLodSize / 4);
+                        }
+                    }
+                }
+
+                return ktxImage;
+            }
+        }
+
+        public TextureKTX BuildTexture(Texture.Parameters params_ = null)
+        {
+            if (params_ == null)
+                params_ = new Texture.Parameters();
+            TextureKTX texKtx = new TextureKTX();
+            texKtx.init(this, params_);
+
+            return texKtx;
+        }
+    }
+
+    public class TextureKTX : Texture
+    {
+        #region static
+        /// <summary>
+        /// Required unpack alignment
+        /// </summary>
+        public const int KTX_GL_UNPACK_ALIGNMENT = 4;
+        /// <summary>
+        /// Additional contextProfile bit indicating an OpenGL ES context.
+        /// 
+        /// This is the same value NVIDIA returns when using an OpenGL ES profile
+        /// of their desktop drivers. However it is not specified in any official
+        /// specification as OpenGL ES does not support the GL_CONTEXT_PROFILE_MASK
+        /// query.
+        /// </summary>
+        private const int _CONTEXT_ES_PROFILE_BIT = 0x4;
+
+        /// <summary>
+        /// These values describe values that may be used with the sizedFormats
+        ///  variable.
+        /// </summary>
+        private const int _NON_LEGACY_FORMATS = 0x1; /*Non-legacy sized formats are supported. */
+        private const int _LEGACY_FORMATS = 0x2;  /*Legacy sized formats are supported. */
+
+        /// <summary>
+        /// All sized formats are supported
+        /// </summary>
+        private const int _ALL_SIZED_FORMATS = (_NON_LEGACY_FORMATS | _LEGACY_FORMATS);
+        private const int _NO_SIZED_FORMATS = 0; /*No sized formats are supported. */
+
+        /// <summary>
+        /// used to pass GL context capabilites to subroutines.
+        /// </summary>
+        private const int _KTX_NO_R16_FORMATS = 0x0;
+        private const int _KTX_R16_FORMATS_NORM = 0x1;
+        private const int _KTX_R16_FORMATS_SNORM = 0x2;
+        private const int _KTX_ALL_R16_FORMATS = (_KTX_R16_FORMATS_NORM | _KTX_R16_FORMATS_SNORM);
+        /// <summary>
+        /// indicates the profile of the current context.
+        /// </summary>
+        private static int contextProfile = 0;
+
+        /// <summary>
+        /// indicates what sized texture formats are supported
+        /// by the current context.
+        /// </summary>
+        private static int sizedFormats = _ALL_SIZED_FORMATS;
+        private static bool supportsSwizzle = true;
+
+        /// <summary>
+        /// indicates which R16 & RG16 formats are supported by the current context.
+        /// </summary>
+        private static int R16Formats = _KTX_ALL_R16_FORMATS;
+
+        /// <summary>
+        /// indicates if the current context supports sRGB textures.
+        /// </summary>
+        private static bool supportsSRGB = true;
+
+        /// <summary>
+        /// Discover the capabilities of the current GL context.
+        /// Queries the context and sets several the following internal variables indicating
+        /// the capabilities of the context:
+        /// </summary>
+        private static void DiscoverContextCapabilities()
+        {
+            int majorVersion = 1;
+            int minorVersion = 0;
+            string extensions = GL.GetString(StringName.Extensions);
+
+            if (GL.GetString(StringName.Version).StartsWith("GL ES"))
+                contextProfile = _CONTEXT_ES_PROFILE_BIT;
+            // MAJOR & MINOR only introduced in GL {,ES} 3.0
+            GL.GetInteger(GetPName.MajorVersion, out majorVersion);
+            GL.GetInteger(GetPName.MinorVersion, out minorVersion);
+            if (GL.GetError() != ErrorCode.NoError)
+            {
+#if TODO
+                // < v3.0; resort to the old-fashioned way.
+                if (contextProfile & _CONTEXT_ES_PROFILE_BIT)
+                    sscanf(GL.GetString(StringName.Version), "OpenGL ES %d.%d ", &majorVersion, &minorVersion);
+                else
+                    sscanf(GL.GetString(StringName.Version), "OpenGL %d.%d ", &majorVersion, &minorVersion);
+#endif
+                throw new NotSupportedException("Only support a OpenGL version higher than 3.0");
+            }
+            if ((contextProfile & _CONTEXT_ES_PROFILE_BIT) != 0)
+            {
+                if (majorVersion < 3)
+                {
+                    supportsSwizzle = false;
+                    sizedFormats = _NO_SIZED_FORMATS;
+                    R16Formats = _KTX_NO_R16_FORMATS;
+                    supportsSRGB = false;
+                }
+                else
+                {
+                    sizedFormats = _NON_LEGACY_FORMATS;
+                }
+                if (extensions.Contains("GL_OES_required_internalformat"))
+                {
+                    sizedFormats |= _ALL_SIZED_FORMATS;
+                }
+                // There are no OES extensions for sRGB textures or R16 formats.
+            }
+            else
+            {
+                // TODO. OpenTK does not have defined this constants :-/
+                const int GL_CONTEXT_PROFILE_MASK = 0x9126;
+                const int GL_CONTEXT_CORE_PROFILE_BIT = 0x00000001;
+                const int GL_CONTEXT_COMPATIBILITY_PROFILE_BIT = 0x00000002;
+                // PROFILE_MASK was introduced in OpenGL 3.2.
+                // Profiles: CONTEXT_CORE_PROFILE_BIT 0x1, CONTEXT_COMPATIBILITY_PROFILE_BIT 0x2.
+                GL.GetInteger((GetPName)GL_CONTEXT_PROFILE_MASK, out contextProfile);
+
+                if (GL.GetError() == ErrorCode.NoError)
+                {
+                    // >= 3.2
+                    if (majorVersion == 3 && minorVersion < 3)
+                        supportsSwizzle = false;
+                    if ((contextProfile & GL_CONTEXT_CORE_PROFILE_BIT) != 0)
+                        sizedFormats &= ~_LEGACY_FORMATS;
+                }
+                else
+                {
+                    // < 3.2
+                    contextProfile = GL_CONTEXT_COMPATIBILITY_PROFILE_BIT;
+                    supportsSwizzle = false;
+                    // sRGB textures introduced in 2.0
+                    if (majorVersion < 2 && !extensions.Contains("GL_EXT_texture_sRGB"))
+                    {
+                        supportsSRGB = false;
+                    }
+                    // R{,G]16 introduced in 3.0; R{,G}16_SNORM introduced in 3.1.
+                    if (majorVersion == 3)
+                    {
+                        if (minorVersion == 0)
+                            R16Formats &= ~_KTX_R16_FORMATS_SNORM;
+                    }
+                    else if (extensions.Contains("GL_ARB_texture_rg"))
+                    {
+                        R16Formats &= ~_KTX_R16_FORMATS_SNORM;
+                    }
+                    else
+                    {
+                        R16Formats = _KTX_NO_R16_FORMATS;
+                    }
+                }
+            }
+        }
+        #endregion
+
+        private ImageKTX img;
+        private PixelFormat glFormat;
+        private PixelInternalFormat glInternalFormat;
+
+        internal void init(ImageKTX imgktx, Parameters params_)
+        {
+            this.img = imgktx;
+
+            int previousUnpackAlignment;
+            if (contextProfile == 0)
+                DiscoverContextCapabilities();
+
+            /* KTX files require an unpack alignment of 4 */
+            GL.GetInteger(GetPName.UnpackAlignment, out previousUnpackAlignment);
+            if (previousUnpackAlignment != KTX_GL_UNPACK_ALIGNMENT)
+            {
+                GL.PixelStore(PixelStoreParameter.UnpackAlignment, KTX_GL_UNPACK_ALIGNMENT);
+            }
+            this.textureTarget = imgktx.TextureTarget;
+            base.init((TextureInternalFormat)img.InternalFormat, params_);
+
+            //OpenTK supports GenerateMipmap for OpenGL >= 3.0
+            const bool SupportedGenerateMipmap = true;
+
+            // Prefer glGenerateMipmaps over GL_GENERATE_MIPMAP
+            if (imgktx.GenerateMipmaps && (SupportedGenerateMipmap))
+            {
+                GL.TexParameter(imgktx.TextureTarget, TextureParameterName.GenerateMipmap, 1);
+            }
+
+            if (imgktx.TextureTarget == TextureTarget.TextureCubeMap)
+            {
+                imgktx.TextureTarget = TextureTarget.TextureCubeMapPositiveX;
+            }
+            glInternalFormat = imgktx.InternalFormat;
+            glFormat = imgktx.Format;
+            if (!imgktx.Compressed)
+            {
+                /*
+                 * These defines are needed to compile the KTX library.
+                 * When these things are not available in the GL version in
+                 * use at runtime, the library either provides its own support
+                 * or handles the expected errors.
+                 */
+                const PixelInternalFormat GL_ALPHA = PixelInternalFormat.Alpha;// 0x1906;
+                const PixelInternalFormat GL_LUMINANCE = PixelInternalFormat.Luminance;// 0x1909;
+                const PixelInternalFormat GL_LUMINANCE_ALPHA = PixelInternalFormat.LuminanceAlpha;// 0x190A;
+                const PixelInternalFormat GL_INTENSITY = PixelInternalFormat.Intensity;// 0x8049;
+
+                // With only unsized formats must change internal format.
+                if (sizedFormats == _NO_SIZED_FORMATS
+                    || ((sizedFormats & _LEGACY_FORMATS) == 0 && (imgktx.BaseInternalFormat == GL_ALPHA
+                    || imgktx.BaseInternalFormat == GL_LUMINANCE
+                    || imgktx.BaseInternalFormat == GL_LUMINANCE_ALPHA
+                    || imgktx.BaseInternalFormat == GL_INTENSITY)))
+                {
+                    glInternalFormat = imgktx.BaseInternalFormat;
+                }
+            }
+            for (int level = 0; level < imgktx.NumberOfMipmapLevels; ++level)
+            {
+                int pixelWidth = System.Math.Max(1, imgktx.Width >> level);
+                int pixelHeight = System.Math.Max(1, imgktx.Height >> level);
+                int pixelDepth = System.Math.Max(1, imgktx.Depth >> level);
+
+                for (int face = 0; face < imgktx.NumberOfFaces; ++face)
+                {
+                    int faceLodSize = imgktx[level, face].Length;
+                    if (imgktx.TextureDimensions == 1)
+                    {
+                        if (imgktx.Compressed)
+                        {
+                            GL.CompressedTexImage1D((TextureTarget)((int)imgktx.TextureTarget + face), (int)level,
+                                                    glInternalFormat, pixelWidth, 0, faceLodSize, imgktx[level, face]);
+                        }
+                        else
+                        {
+                            GL.TexImage1D((TextureTarget)((int)imgktx.TextureTarget + face), (int)level,
+                                        glInternalFormat, pixelWidth, 0, glFormat, imgktx.PixelType, imgktx[level, face]);
+                        }
+                    }
+                    else if (imgktx.TextureDimensions == 2)
+                    {
+                        if (imgktx.NumberOfArrayElements != 0)
+                        {
+                            pixelHeight = (int)imgktx.NumberOfArrayElements;
+                        }
+                        if (imgktx.Compressed)
+                        {
+                            // It is simpler to just attempt to load the format, rather than divine which
+                            // formats are supported by the implementation. In the event of an error,
+                            // software unpacking can be attempted.
+                            GL.CompressedTexImage2D((TextureTarget)((int)imgktx.TextureTarget + face), (int)level,
+                                                    glInternalFormat, pixelWidth, pixelHeight, 0, (int)faceLodSize, imgktx[level, face]);
+                        }
+                        else
+                        {
+                            GL.TexImage2D((TextureTarget)((int)imgktx.TextureTarget + face), (int)level,
+                                            glInternalFormat, pixelWidth, pixelHeight, 0, glFormat, imgktx.PixelType, imgktx[level, face]);
+                        }
+                    }
+                    else if (imgktx.TextureDimensions == 3)
+                    {
+                        if (imgktx.NumberOfArrayElements != 0)
+                        {
+                            pixelDepth = (int)imgktx.NumberOfArrayElements;
+                        }
+                        if (imgktx.Compressed)
+                        {
+                            GL.CompressedTexImage3D((TextureTarget)((int)imgktx.TextureTarget + face), (int)level,
+                                                    glInternalFormat, pixelWidth, pixelHeight, pixelDepth, 0, (int)imgktx.PixelType, imgktx[level, face]);
+                        }
+                        else
+                        {
+                            GL.TexImage3D((TextureTarget)((int)imgktx.TextureTarget + face), (int)level,
+                                            glInternalFormat, pixelWidth, pixelHeight, pixelDepth, 0,
+                                            glFormat, imgktx.PixelType, imgktx[level, face]);
+                        }
+                    }
+                    Debug.Assert(FrameBuffer.getError() == ErrorCode.NoError);
+                }
+
+                if (previousUnpackAlignment != KTX_GL_UNPACK_ALIGNMENT)
+                {
+                    GL.PixelStore(PixelStoreParameter.UnpackAlignment, previousUnpackAlignment);
+                }
+            }
+        }
     }
 }
 
