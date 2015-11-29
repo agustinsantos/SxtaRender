@@ -1,6 +1,6 @@
 using System;
 
-namespace Mogre.Utils.GluTesselator
+namespace Sxta.Render.Utils.GluTesselator
 {
 	/// <summary>
 	/// Summary description for GL.

@@ -49,14 +49,14 @@
 ** Java Port: Pepijn Van Eeckhoudt, July 2003
 ** Java Port: Nathan Parker Burg, August 2003*/
 using System;
-namespace Mogre.Utils.GluTesselator
+namespace Sxta.Render.Utils.GluTesselator
 {
 	
 	class GLUvertex
 	{
 		public GLUvertex next; /* next vertex (never NULL) */
 		public GLUvertex prev; /* previous vertex (never NULL) */
-		public Mogre.Utils.GluTesselator.GLUhalfEdge anEdge; /* a half-edge with this origin */
+		public Sxta.Render.Utils.GluTesselator.GLUhalfEdge anEdge; /* a half-edge with this origin */
 		public System.Object data; /* client's data */
 		
 		/* Internal data (keep hidden) */

@@ -48,7 +48,7 @@
 ** Author: Eric Veach, July 1994
 ** Java Port: Pepijn Van Eeckhoudt, July 2003
 ** Java Port: Nathan Parker Burg, August 2003*/
-namespace Mogre.Utils.GluTesselator
+namespace Sxta.Render.Utils.GluTesselator
 {
 	
 	class Render
@@ -77,7 +77,7 @@ namespace Mogre.Utils.GluTesselator
 			{
 			}
 			
-			public FaceCount(long size, Mogre.Utils.GluTesselator.GLUhalfEdge eStart, Render.renderCallBack render)
+			public FaceCount(long size, Sxta.Render.Utils.GluTesselator.GLUhalfEdge eStart, Render.renderCallBack render)
 			{
 				this.size = size;
 				this.eStart = eStart;
@@ -85,7 +85,7 @@ namespace Mogre.Utils.GluTesselator
 			}
 			
 			internal long size; /* number of triangles used */
-			internal Mogre.Utils.GluTesselator.GLUhalfEdge eStart; /* edge where this primitive starts */
+			internal Sxta.Render.Utils.GluTesselator.GLUhalfEdge eStart; /* edge where this primitive starts */
 			internal Render.renderCallBack render;
 		}
 		
@@ -93,7 +93,7 @@ namespace Mogre.Utils.GluTesselator
 		//UPGRADE_NOTE: The access modifier for this class or class field has been changed in order to prevent compilation errors due to the visibility level. 'ms-help://MS.VSCC.2003/commoner/redir/redirect.htm?keyword="jlca1296_3"'
 		internal interface renderCallBack
 		{
-			void  render(GLUtessellatorImpl tess, Mogre.Utils.GluTesselator.GLUhalfEdge e, long size);
+			void  render(GLUtessellatorImpl tess, Sxta.Render.Utils.GluTesselator.GLUhalfEdge e, long size);
 		}
 		
 		/// <summary>********************* Strips and Fans decomposition *****************</summary>
@@ -105,9 +105,9 @@ namespace Mogre.Utils.GluTesselator
 		*
 		* The rendering output is provided as callbacks (see the api).
 		*/
-		public static void  __gl_renderMesh(GLUtessellatorImpl tess, Mogre.Utils.GluTesselator.GLUmesh mesh)
+		public static void  __gl_renderMesh(GLUtessellatorImpl tess, Sxta.Render.Utils.GluTesselator.GLUmesh mesh)
 		{
-			Mogre.Utils.GluTesselator.GLUface f;
+			Sxta.Render.Utils.GluTesselator.GLUface f;
 			
 			/* Make a list of separate triangles so we can render them all at once */
 			tess.lonelyTriList = null;
@@ -137,7 +137,7 @@ namespace Mogre.Utils.GluTesselator
 		}
 		
 		
-		internal static void  RenderMaximumFaceGroup(GLUtessellatorImpl tess, Mogre.Utils.GluTesselator.GLUface fOrig)
+		internal static void  RenderMaximumFaceGroup(GLUtessellatorImpl tess, Sxta.Render.Utils.GluTesselator.GLUface fOrig)
 		{
 			/* We want to find the largest triangle fan or strip of unmarked faces
 			* which includes the given face fOrig.  There are 3 possible fans
@@ -146,7 +146,7 @@ namespace Mogre.Utils.GluTesselator
 			* is to try all of these, and take the primitive which uses the most
 			* triangles (a greedy approach).
 			*/
-			Mogre.Utils.GluTesselator.GLUhalfEdge e = fOrig.anEdge;
+			Sxta.Render.Utils.GluTesselator.GLUhalfEdge e = fOrig.anEdge;
 			FaceCount max = new FaceCount();
 			FaceCount newFace = new FaceCount();
 			
@@ -199,19 +199,19 @@ namespace Mogre.Utils.GluTesselator
 		* more complicated, and we need a general tracking method like the
 		* one here.
 		*/
-		private static bool Marked(Mogre.Utils.GluTesselator.GLUface f)
+		private static bool Marked(Sxta.Render.Utils.GluTesselator.GLUface f)
 		{
 			return !f.inside || f.marked;
 		}
 		
-		private static GLUface AddToTrail(Mogre.Utils.GluTesselator.GLUface f, Mogre.Utils.GluTesselator.GLUface t)
+		private static GLUface AddToTrail(Sxta.Render.Utils.GluTesselator.GLUface f, Sxta.Render.Utils.GluTesselator.GLUface t)
 		{
 			f.trail = t;
 			f.marked = true;
 			return f;
 		}
 		
-		private static void  FreeTrail(Mogre.Utils.GluTesselator.GLUface t)
+		private static void  FreeTrail(Sxta.Render.Utils.GluTesselator.GLUface t)
 		{
 			if (true)
 			{
@@ -227,15 +227,15 @@ namespace Mogre.Utils.GluTesselator
 			}
 		}
 		
-		internal static FaceCount MaximumFan(Mogre.Utils.GluTesselator.GLUhalfEdge eOrig)
+		internal static FaceCount MaximumFan(Sxta.Render.Utils.GluTesselator.GLUhalfEdge eOrig)
 		{
 			/* eOrig.Lface is the face we want to render.  We want to find the size
 			* of a maximal fan around eOrig.Org.  To do this we just walk around
 			* the origin vertex as far as possible in both directions.
 			*/
 			FaceCount newFace = new FaceCount(0, null, renderFan);
-			Mogre.Utils.GluTesselator.GLUface trail = null;
-			Mogre.Utils.GluTesselator.GLUhalfEdge e;
+			Sxta.Render.Utils.GluTesselator.GLUface trail = null;
+			Sxta.Render.Utils.GluTesselator.GLUhalfEdge e;
 			
 			for (e = eOrig; !Marked(e.Lface); e = e.Onext)
 			{
@@ -259,7 +259,7 @@ namespace Mogre.Utils.GluTesselator
 			return (n & 0x1L) == 0;
 		}
 		
-		internal static FaceCount MaximumStrip(Mogre.Utils.GluTesselator.GLUhalfEdge eOrig)
+		internal static FaceCount MaximumStrip(Sxta.Render.Utils.GluTesselator.GLUhalfEdge eOrig)
 		{
 			/* Here we are looking for a maximal strip that contains the vertices
 			* eOrig.Org, eOrig.Dst, eOrig.Lnext.Dst (in that order or the
@@ -273,8 +273,8 @@ namespace Mogre.Utils.GluTesselator
 			*/
 			FaceCount newFace = new FaceCount(0, null, renderStrip);
 			long headSize = 0, tailSize = 0;
-			Mogre.Utils.GluTesselator.GLUface trail = null;
-			Mogre.Utils.GluTesselator.GLUhalfEdge e, eTail, eHead;
+			Sxta.Render.Utils.GluTesselator.GLUface trail = null;
+			Sxta.Render.Utils.GluTesselator.GLUhalfEdge e, eTail, eHead;
 			
 			for (e = eOrig; !Marked(e.Lface); ++tailSize, e = e.Onext)
 			{
@@ -322,23 +322,23 @@ namespace Mogre.Utils.GluTesselator
 		
 		private class RenderTriangle : Render.renderCallBack
 		{
-			public virtual void  render(GLUtessellatorImpl tess, Mogre.Utils.GluTesselator.GLUhalfEdge e, long size)
+			public virtual void  render(GLUtessellatorImpl tess, Sxta.Render.Utils.GluTesselator.GLUhalfEdge e, long size)
 			{
 				/* Just add the triangle to a triangle list, so we can render all
 				* the separate triangles at once.
 				*/
 				//assert(size == 1);
-				tess.lonelyTriList = Mogre.Utils.GluTesselator.Render.AddToTrail(e.Lface, tess.lonelyTriList);
+				tess.lonelyTriList = Sxta.Render.Utils.GluTesselator.Render.AddToTrail(e.Lface, tess.lonelyTriList);
 			}
 		}
 		
 		
-		internal static void  RenderLonelyTriangles(GLUtessellatorImpl tess, Mogre.Utils.GluTesselator.GLUface f)
+		internal static void  RenderLonelyTriangles(GLUtessellatorImpl tess, Sxta.Render.Utils.GluTesselator.GLUface f)
 		{
 			/* Now we render all the separate triangles which could not be
 			* grouped into a triangle fan or strip.
 			*/
-			Mogre.Utils.GluTesselator.GLUhalfEdge e;
+			Sxta.Render.Utils.GluTesselator.GLUhalfEdge e;
 			int newState;
 			int edgeState = - 1; /* force edge state output for first vertex */
 			
@@ -374,7 +374,7 @@ namespace Mogre.Utils.GluTesselator
 		
 		private class RenderFan : Render.renderCallBack
 		{
-			public virtual void  render(GLUtessellatorImpl tess, Mogre.Utils.GluTesselator.GLUhalfEdge e, long size)
+			public virtual void  render(GLUtessellatorImpl tess, Sxta.Render.Utils.GluTesselator.GLUhalfEdge e, long size)
 			{
 				/* Render as many CCW triangles as possible in a fan starting from
 				* edge "e".  The fan *should* contain exactly "size" triangles
@@ -384,7 +384,7 @@ namespace Mogre.Utils.GluTesselator
 				tess.callVertexOrVertexData(e.Org.data);
 				tess.callVertexOrVertexData(e.Sym.Org.data);
 				
-				while (!Mogre.Utils.GluTesselator.Render.Marked(e.Lface))
+				while (!Sxta.Render.Utils.GluTesselator.Render.Marked(e.Lface))
 				{
 					e.Lface.marked = true;
 					--size;
@@ -399,7 +399,7 @@ namespace Mogre.Utils.GluTesselator
 		
 		private class RenderStrip : Render.renderCallBack
 		{
-			public virtual void  render(GLUtessellatorImpl tess, Mogre.Utils.GluTesselator.GLUhalfEdge e, long size)
+			public virtual void  render(GLUtessellatorImpl tess, Sxta.Render.Utils.GluTesselator.GLUhalfEdge e, long size)
 			{
 				/* Render as many CCW triangles as possible in a strip starting from
 				* edge "e".  The strip *should* contain exactly "size" triangles
@@ -409,13 +409,13 @@ namespace Mogre.Utils.GluTesselator
 				tess.callVertexOrVertexData(e.Org.data);
 				tess.callVertexOrVertexData(e.Sym.Org.data);
 				
-				while (!Mogre.Utils.GluTesselator.Render.Marked(e.Lface))
+				while (!Sxta.Render.Utils.GluTesselator.Render.Marked(e.Lface))
 				{
 					e.Lface.marked = true;
 					--size;
 					e = e.Lnext.Sym;
 					tess.callVertexOrVertexData(e.Org.data);
-					if (Mogre.Utils.GluTesselator.Render.Marked(e.Lface))
+					if (Sxta.Render.Utils.GluTesselator.Render.Marked(e.Lface))
 						break;
 					
 					e.Lface.marked = true;
@@ -435,10 +435,10 @@ namespace Mogre.Utils.GluTesselator
 		* contour for each face marked "inside".  The rendering output is
 		* provided as callbacks (see the api).
 		*/
-		public static void  __gl_renderBoundary(GLUtessellatorImpl tess, Mogre.Utils.GluTesselator.GLUmesh mesh)
+		public static void  __gl_renderBoundary(GLUtessellatorImpl tess, Sxta.Render.Utils.GluTesselator.GLUmesh mesh)
 		{
-			Mogre.Utils.GluTesselator.GLUface f;
-			Mogre.Utils.GluTesselator.GLUhalfEdge e;
+			Sxta.Render.Utils.GluTesselator.GLUface f;
+			Sxta.Render.Utils.GluTesselator.GLUhalfEdge e;
 			
 			for (f = mesh.fHead.next; f != mesh.fHead; f = f.next)
 			{
@@ -472,7 +472,7 @@ namespace Mogre.Utils.GluTesselator
 		* SIGN_INCONSISTENT.
 		*/
 		{
-			Mogre.Utils.GluTesselator.CachedVertex[] v = tess.cache;
+			Sxta.Render.Utils.GluTesselator.CachedVertex[] v = tess.cache;
 			//            CachedVertex vn = v0 + tess.cacheCount;
 			int vn = tess.cacheCount;
 			//            CachedVertex vc;
@@ -565,7 +565,7 @@ namespace Mogre.Utils.GluTesselator
 		*/
 		public static bool __gl_renderCache(GLUtessellatorImpl tess)
 		{
-			Mogre.Utils.GluTesselator.CachedVertex[] v = tess.cache;
+			Sxta.Render.Utils.GluTesselator.CachedVertex[] v = tess.cache;
 			//            CachedVertex vn = v0 + tess.cacheCount;
 			int vn = tess.cacheCount;
 			//            CachedVertex vc;

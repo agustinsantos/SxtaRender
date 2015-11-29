@@ -51,8 +51,8 @@
 using System;
 using javax.media.opengl;
 using javax.media.opengl.glu;
-using Mogre.Utils.GluTesselator;
-namespace Mogre.Utils.GluTesselator
+using Sxta.Render.Utils.GluTesselator;
+namespace Sxta.Render.Utils.GluTesselator
 {
 	
 	public class GLUtessellatorImpl : GLUtessellator

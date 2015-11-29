@@ -51,26 +51,26 @@
 using System;
 using javax.media.opengl;
 using javax.media.opengl.glu;
-namespace Mogre.Utils.GluTesselator
+namespace Sxta.Render.Utils.GluTesselator
 {
 	
 	class Sweep
 	{
 		private class AnonymousClassDictLeq : Dict.DictLeq
 		{
-			public AnonymousClassDictLeq(Mogre.Utils.GluTesselator.GLUtessellatorImpl tess)
+			public AnonymousClassDictLeq(Sxta.Render.Utils.GluTesselator.GLUtessellatorImpl tess)
 			{
 				InitBlock(tess);
 			}
-			private void  InitBlock(Mogre.Utils.GluTesselator.GLUtessellatorImpl tess)
+			private void  InitBlock(Sxta.Render.Utils.GluTesselator.GLUtessellatorImpl tess)
 			{
 				this.tess = tess;
 			}
 			//UPGRADE_NOTE: Final variable tess was copied into class AnonymousClassDictLeq. 'ms-help://MS.VSCC.2003/commoner/redir/redirect.htm?keyword="jlca1023_3"'
-			private Mogre.Utils.GluTesselator.GLUtessellatorImpl tess;
+			private Sxta.Render.Utils.GluTesselator.GLUtessellatorImpl tess;
 			public virtual bool leq(System.Object frame, System.Object key1, System.Object key2)
 			{
-				return Mogre.Utils.GluTesselator.Sweep.EdgeLeq(tess, (ActiveRegion) key1, (ActiveRegion) key2);
+				return Sxta.Render.Utils.GluTesselator.Sweep.EdgeLeq(tess, (ActiveRegion) key1, (ActiveRegion) key2);
 			}
 		}
 		private class AnonymousClassLeq : PriorityQ.Leq

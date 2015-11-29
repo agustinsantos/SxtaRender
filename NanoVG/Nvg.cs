@@ -1,15 +1,10 @@
 ﻿using Sxta.Math;
+using Sxta.Render;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using NVGcolor = Sxta.Math.Vector4f;
 
 namespace NanoVG
 {
-    public struct Matrix23f
-    { }
-
     public struct Bound
     {
         public float xmin;
@@ -20,13 +15,29 @@ namespace NanoVG
 
     public struct NVGpaint
     {
-        float[] xform; // = new float[6];
-        float[] extent; // = new float[2];
-        float radius;
-        float feather;
-        Vector3f innerColor;
-        Vector3f outerColor;
-        int image;
+        public float[] xform;// = new float[6];
+        public float[] extent;// = new float[2];
+        public float radius;
+        public float feather;
+        public NVGcolor innerColor;
+        public NVGcolor outerColor;
+        public int image;
+
+        public void Init()
+        {
+            this.xform = new float[6] { 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f }; //nvgTransformIdentity(p.xform);
+            this.extent = new float[2];
+        }
+
+        public void SetPaintColor(NVGcolor color)
+        {
+            this.xform = new float[6] { 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f }; //nvgTransformIdentity(p.xform);
+            this.extent = new float[2];
+            this.radius = 0.0f;
+            this.feather = 1.0f;
+            this.innerColor = color;
+            this.outerColor = color;
+        }
     }
 
 
@@ -42,15 +53,45 @@ namespace NanoVG
         NVG_HOLE = 2,			// CW
     }
 
+    /// <summary>
+    /// The lineCap property sets or returns the style of the end caps for a line.
+    /// </summary>
     public enum NVGlineCap
     {
+        /// <summary>
+        /// Default. A flat edge is added to each end of the line
+        /// </summary>
         NVG_BUTT,
+        /// <summary>
+        /// A rounded end cap is added to each end of the line
+        /// </summary>
         NVG_ROUND,
-        NVG_SQUARE,
-        NVG_BEVEL,
-        NVG_MITER,
+        /// <summary>
+        /// A square end cap is added to each end of the line
+        /// </summary>
+        NVG_SQUARE
     }
 
+    /// <summary>
+    /// The lineJoin property sets or returns the type of corner created, when two lines meet.
+    /// </summary>
+    public enum NVGlineJoin
+    {
+        /// <summary>
+        /// Default. Creates a sharp corner
+        /// </summary>
+        NVG_MITER,
+        /// <summary>
+        /// Creates a rounded corner
+        /// </summary>
+        NVG_ROUND,
+        /// <summary>
+        /// Creates a beveled corner
+        /// </summary>
+        NVG_BEVEL
+    }
+
+    [Flags]
     public enum NVGalign
     {
         // Horizontal align
@@ -66,21 +107,22 @@ namespace NanoVG
 
     public struct NVGglyphPosition
     {
-        int str;	        // Position of the glyph in the input string.
-        float x;			// The x-coordinate of the logical glyph position.
-        float minx, maxx;	// The bounds of the glyph shape.
+        public int str;	        // Position of the glyph in the input string.
+        public float x;         // The x-coordinate of the logical glyph position.
+        public float minx, maxx;	// The bounds of the glyph shape.
     }
 
 
     public struct NVGtextRow
     {
-        int start;	// Pointer to the input text where the row starts.
-        int end;	// Pointer to the input text where the row ends (one past the last character).
-        int next;	// Pointer to the beginning of the next row.
-        float width;		// Logical width of the row.
-        float minx, maxx;	// Actual bounds of the row. Logical with and bounds can differ because of kerning and some parts over extending.
+        public int start;   // Pointer to the input text where the row starts.
+        public int end; // Pointer to the input text where the row ends (one past the last character).
+        public int next;    // Pointer to the beginning of the next row.
+        public float width;		// Logical width of the row.
+        public float minx, maxx;	// Actual bounds of the row. Logical with and bounds can differ because of kerning and some parts over extending.
     }
 
+    [Flags]
     public enum NVGimageFlags
     {
         NVG_IMAGE_GENERATE_MIPMAPS = 1 << 0,     // Generate mipmaps during creation of the image.
@@ -91,29 +133,43 @@ namespace NanoVG
     }
 
 
+
     public class Nvg
     {
-        // Begin drawing a new frame
-        // Calls to nanovg drawing API should be wrapped in nvgBeginFrame() & nvgEndFrame()
-        // nvgBeginFrame() defines the size of the window to render to in relation currently
-        // set viewport (i.e. glViewport on GL backends). Device pixel ration allows to
-        // control the rendering on Hi-DPI devices.
-        // For example, GLFW returns two dimension for an opened window: window size and
-        // frame buffer size. In that case you would set windowWidth/Height to the window size
-        // devicePixelRatio to: frameBufferWidth / windowWidth.
-        public void nvgBeginFrame(NVGcontext ctx, int windowWidth, int windowHeight, float devicePixelRatio)
-        {
-            /*	printf("Tris: draws:%d  fill:%d  stroke:%d  text:%d  TOT:%d\n",
-                    ctx.drawCallCount, ctx.fillTriCount, ctx.strokeTriCount, ctx.textTriCount,
-                    ctx.fillTriCount+ctx.strokeTriCount+ctx.textTriCount);*/
 
+        public static NVGcontext CreateContext(FrameBuffer fb, NVGcreateFlags flags = NVGcreateFlags.NVG_NONE, object userData = null)
+        {
+            NVGparams params_ = new NVGparams();
+            params_.UserPtr = userData;
+            params_.EdgeAntiAlias = flags.HasFlag(NVGcreateFlags.NVG_ANTIALIAS);
+
+            NVGcontext ctx = new NVGcontext(fb, flags, params_);
+            return ctx;
+        }
+
+        /// <summary>
+        /// Begin drawing a new frame
+        /// Calls to nanovg drawing API should be wrapped in nvgBeginFrame() & nvgEndFrame()
+        /// nvgBeginFrame() defines the size of the window to render to in relation currently
+        /// set viewport (i.e. glViewport on GL backends). Device pixel ration allows to
+        /// control the rendering on Hi-DPI devices.
+        /// For example, GLFW returns two dimension for an opened window: window size and
+        /// frame buffer size. In that case you would set windowWidth/Height to the window size
+        /// devicePixelRatio to: frameBufferWidth / windowWidth.
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="windowWidth"></param>
+        /// <param name="windowHeight"></param>
+        /// <param name="devicePixelRatio"></param>
+        public static void BeginFrame(NVGcontext ctx, int windowWidth, int windowHeight, float devicePixelRatio)
+        {
             ctx.nstates = 0;
-            nvgSave(ctx);
-            nvgReset(ctx);
+            ctx.SaveState();
+            ctx.Reset();
 
             SetDevicePixelRatio(ctx, devicePixelRatio);
 
-            ctx.params_.renderViewport(ctx.params_.userPtr, windowWidth, windowHeight);
+            ctx.RenderViewport(windowWidth, windowHeight);
 
             ctx.drawCallCount = 0;
             ctx.fillTriCount = 0;
@@ -121,16 +177,22 @@ namespace NanoVG
             ctx.textTriCount = 0;
         }
 
-        // Cancels drawing the current frame.
-        public void nvgCancelFrame(NVGcontext ctx)
+        /// <summary>
+        /// Cancels drawing the current frame.
+        /// </summary>
+        /// <param name="ctx"></param>
+        public void CancelFrame(NVGcontext ctx)
         {
-            ctx.params_.renderCancel(ctx.params_.userPtr);
+            ctx.glctx.RenderCancel();
         }
 
-        // Ends drawing flushing remaining render state.
-        public void nvgEndFrame(NVGcontext ctx)
+        /// <summary>
+        /// Ends drawing flushing remaining render state.
+        /// </summary>
+        /// <param name="ctx"></param>
+        public static void EndFrame(NVGcontext ctx)
         {
-            ctx.params_.renderFlush(ctx.params_.userPtr);
+            ctx.glctx.RenderFlush();
             if (ctx.fontImageIdx != 0)
             {
                 int fontImage = ctx.fontImages[ctx.fontImageIdx];
@@ -156,7 +218,7 @@ namespace NanoVG
                 ctx.fontImages[0] = fontImage;
                 ctx.fontImageIdx = 0;
                 // clear all images after j
-                for (i = j; i < NVG_MAX_FONTIMAGES; i++)
+                for (i = j; i < NVGcontext.NVG_MAX_FONTIMAGES; i++)
                     ctx.fontImages[i] = 0;
             }
         }
@@ -164,66 +226,97 @@ namespace NanoVG
         //
         // Color utils
         //
-        // Colors in NanoVG are stored as unsigned ints in ABGR format.
 
-        // Returns a color value from red, green, blue values. Alpha will be set to 255 (1.0f).
-        public Vector4ui nvgRGB(byte r, byte g, byte b)
+        /// <summary>
+        /// Returns a color value from red, green, blue values. Alpha will be set to 255 (1.0f).
+        /// </summary>
+        /// <param name="r"></param>
+        /// <param name="g"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
+        public static NVGcolor RGB(byte r, byte g, byte b)
         {
-            return nvgRGBA(r, g, b, 255);
+            return RGBA(r, g, b, 255);
         }
 
-        // Returns a color value from red, green, blue values. Alpha will be set to 1.0f.
-        public Vector4ui nvgRGBf(float r, float g, float b)
+        /// <summary>
+        /// Returns a color value from red, green, blue values. Alpha will be set to 1.0f.
+        /// </summary>
+        /// <param name="r"></param>
+        /// <param name="g"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
+        public static NVGcolor RGBf(float r, float g, float b)
         {
-            return nvgRGBA(r, g, b, 1.0f);
+            return RGBAf(r, g, b, 1.0f);
         }
 
-
-        // Returns a color value from red, green, blue and alpha values.
-        public Vector4ui nvgRGBA(byte r, byte g, byte b, byte a)
+        /// <summary>
+        ///  Returns a color value from red, green, blue and alpha values.
+        /// </summary>
+        /// <param name="r"></param>
+        /// <param name="g"></param>
+        /// <param name="b"></param>
+        /// <param name="a"></param>
+        /// <returns></returns>
+        public static NVGcolor RGBA(byte r, byte g, byte b, byte a)
         {
-            return new Vector4ui(r, g, b, a);
+            return new NVGcolor(r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f);
         }
 
-
-        // Returns a color value from red, green, blue and alpha values.
-        public Vector4ui nvgRGBAf(float r, float g, float b, float a)
+        /// <summary>
+        /// Returns a color value from red, green, blue and alpha values.
+        /// </summary>
+        /// <param name="r"></param>
+        /// <param name="g"></param>
+        /// <param name="b"></param>
+        /// <param name="a"></param>
+        /// <returns></returns>
+        public static NVGcolor RGBAf(float r, float g, float b, float a)
         {
-            Vector4ui color;
-            // Use longer initialization to suppress warning.
-            color.X = (uint)(r / 255.0f);
-            color.Y = (uint)(g / 255.0f);
-            color.Z = (uint)(b / 255.0f);
-            color.W = (uint)(a / 255.0f);
-            return color;
+            return new NVGcolor(r, g, b, a);
         }
 
-        // Linearly interpolates from color c0 to c1, and returns resulting color value.
-        public Vector4ui nvgLerpRGBA(Vector3f c0, Vector3f c1, float u)
+        /// <summary>
+        /// Linearly interpolates from color c0 to c1, and returns resulting color value.
+        /// </summary>
+        /// <param name="c0"></param>
+        /// <param name="c1"></param>
+        /// <param name="u"></param>
+        /// <returns></returns>
+        public static NVGcolor LerpRGBA(NVGcolor c0, NVGcolor c1, float u)
         {
-            int i;
             float oneminu;
-            Vector4ui cint;
 
             u = Clampf(u, 0.0f, 1.0f);
             oneminu = 1.0f - u;
-            for (i = 0; i < 4; i++)
-            {
-                cint[i] = c0[i] * oneminu + c1[i] * u;
-            }
+            NVGcolor cint = new NVGcolor(c0.X * oneminu + c1.X * u,
+                                        c0.Y * oneminu + c1.Y * u,
+                                        c0.Z * oneminu + c1.Z * u,
+                                        c0.W * oneminu + c1.W * u);
 
             return cint;
         }
 
-        // Sets transparency of a color value.
-        public Vector4ui nvgTransRGBA(Vector4ui c0, byte a)
+        /// <summary>
+        /// Sets transparency of a color value.
+        /// </summary>
+        /// <param name="c0"></param>
+        /// <param name="a"></param>
+        /// <returns></returns>
+        public static NVGcolor TransRGBA(NVGcolor c0, byte a)
         {
             c0.W = (uint)(a / 255.0f);
             return c0;
         }
 
-        // Sets transparency of a color value.
-        public Vector3f nvgTransRGBAf(Vector3f c0, float a)
+        /// <summary>
+        /// Sets transparency of a color value.
+        /// </summary>
+        /// <param name="c0"></param>
+        /// <param name="a"></param>
+        /// <returns></returns>
+        public static NVGcolor TransRGBAf(NVGcolor c0, float a)
         {
             c0.W = a;
             return c0;
@@ -257,17 +350,6 @@ namespace NanoVG
             throw new NotImplementedException();
         }
 
-        // Pops and restores current render state.
-        public void nvgRestore(NVGcontext ctx)
-        {
-            throw new NotImplementedException();
-        }
-
-        // Resets current render state to default values. Does not affect the render state stack.
-        public void nvgReset(NVGcontext ctx)
-        {
-            throw new NotImplementedException();
-        }
 
         //
         // Render styles
@@ -278,62 +360,118 @@ namespace NanoVG
         //
         // Current render style can be saved and restored using nvgSave() and nvgRestore(). 
 
-        // Sets current stroke style to a solid color.
-        public void nvgStrokeColor(NVGcontext ctx, Vector3f color)
+        /// <summary>
+        ///  Sets current stroke style to a solid color.
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="color"></param>
+        public static void StrokeColor(NVGcontext ctx, NVGcolor color)
         {
-            throw new NotImplementedException();
+            NVGstate state = ctx.GetState();
+            state.stroke.SetPaintColor(color);
+            ctx.SetState(state);
         }
 
-        // Sets current stroke style to a paint, which can be a one of the gradients or a pattern.
-        public void nvgStrokePaint(NVGcontext ctx, NVGpaint paint)
+        /// <summary>
+        /// Sets current stroke style to a paint, which can be a one of the gradients or a pattern.
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="paint"></param>
+        public static void StrokePaint(NVGcontext ctx, NVGpaint paint)
         {
-            throw new NotImplementedException();
+            NVGstate state = ctx.GetState();
+            state.stroke = paint;
+            TransformMultiply(state.stroke.xform, state.xform);
+            ctx.SetState(state);
         }
 
-        // Sets current fill style to a solid color.
-        public void nvgFillColor(NVGcontext ctx, Vector3f color)
+        /// <summary>
+        /// Sets current fill style to a solid color.
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="color"></param>
+        public static void FillColor(NVGcontext ctx, NVGcolor color)
         {
-            throw new NotImplementedException();
+            NVGstate state = ctx.GetState();
+            state.fill.SetPaintColor(color);
         }
 
-        // Sets current fill style to a paint, which can be a one of the gradients or a pattern.
-        public void nvgFillPaint(NVGcontext ctx, NVGpaint paint)
+        /// <summary>
+        /// Sets current fill style to a paint, which can be a one of the gradients or a pattern. 
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="paint"></param>
+        public static void FillPaint(NVGcontext ctx, NVGpaint paint)
         {
-            throw new NotImplementedException();
+            NVGstate state = ctx.GetState();
+            state.fill = paint;
+            TransformMultiply(state.fill.xform, state.xform);
+            ctx.SetState(state);
         }
 
-        // Sets the miter limit of the stroke style.
-        // Miter limit controls when a sharp corner is beveled.
-        public void nvgMiterLimit(NVGcontext ctx, float limit)
+
+        /// <summary>
+        /// Sets the miter limit of the stroke style.
+        /// Miter limit controls when a sharp corner is beveled.
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="limit"></param>
+        public static void MiterLimit(NVGcontext ctx, float limit)
         {
-            throw new NotImplementedException();
+            NVGstate state = ctx.GetState();
+            state.miterLimit = limit;
+            ctx.SetState(state);
         }
 
-        // Sets the stroke width of the stroke style.
-        public void nvgStrokeWidth(NVGcontext ctx, float size)
+        /// <summary>
+        /// Sets the stroke width of the stroke style.
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="width"></param>
+        public static void StrokeWidth(NVGcontext ctx, float width)
         {
-            throw new NotImplementedException();
+            NVGstate state = ctx.GetState();
+            state.strokeWidth = width;
+            ctx.SetState(state);
         }
 
-        // Sets how the end of the line (cap) is drawn,
-        // Can be one of: NVG_BUTT (default), NVG_ROUND, NVG_SQUARE.
-        public void nvgLineCap(NVGcontext ctx, int cap)
+        /// <summary>
+        /// Sets how the end of the line (cap) is drawn,
+        /// Can be one of: NVG_BUTT (default), NVG_ROUND, NVG_SQUARE.
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="cap"></param>
+        public static void LineCap(NVGcontext ctx, NVGlineCap cap)
         {
-            throw new NotImplementedException();
+            NVGstate state = ctx.GetState();
+            state.lineCap = cap;
+            ctx.SetState(state);
         }
 
-        // Sets how sharp path corners are drawn.
-        // Can be one of NVG_MITER (default), NVG_ROUND, NVG_BEVEL.
-        public void nvgLineJoin(NVGcontext ctx, int join)
+        /// <summary>
+        /// Sets how sharp path corners are drawn.
+        /// Can be one of NVG_MITER (default), NVG_ROUND, NVG_BEVEL.
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="join"></param>
+        public static void LineJoin(NVGcontext ctx, NVGlineJoin join)
         {
-            throw new NotImplementedException();
+            NVGstate state = ctx.GetState();
+            state.lineJoin = join;
+            ctx.SetState(state);
         }
 
-        // Sets the transparency applied to all rendered shapes.
-        // Already transparent paths will get proportionally more transparent as well.
-        public void nvgGlobalAlpha(NVGcontext ctx, float alpha)
+        /// <summary>
+        /// Sets the transparency applied to all rendered shapes.
+        /// Already transparent paths will get proportionally more transparent as well.
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="alpha"></param>
+        public static void GlobalAlpha(NVGcontext ctx, float alpha)
         {
-            throw new NotImplementedException();
+            NVGstate state = ctx.GetState();
+            state.alpha = alpha;
+            ctx.SetState(state);
         }
 
         //
@@ -413,76 +551,130 @@ namespace NanoVG
         // The following functions can be used to make calculations on 2x3 transformation matrices.
         // A 2x3 matrix is represented as float[6].
 
-        // Sets the transform to identity matrix.
-        public void nvgTransformIdentity(out Matrix23f dst)
+        /// <summary>
+        ///  Sets the transform to identity matrix.
+        /// </summary>
+        /// <param name="t"></param>
+        public static void TransformIdentity(float[] t)
         {
-            throw new NotImplementedException();
+            t[0] = 1.0f; t[1] = 0.0f;
+            t[2] = 0.0f; t[3] = 1.0f;
+            t[4] = 0.0f; t[5] = 0.0f;
         }
 
         // Sets the transform to translation matrix matrix.
-        public void nvgTransformTranslate(out Matrix23f dst, float tx, float ty)
+        public void nvgTransformTranslate(float[] dst, float tx, float ty)
         {
             throw new NotImplementedException();
         }
 
-        // Sets the transform to scale matrix.
-        public void nvgTransformScale(out Matrix23f dst, float sx, float sy)
+        /// <summary>
+        /// Sets the transform to scale matrix.
+        /// </summary>
+        /// <param name="t"></param>
+        /// <param name="sx"></param>
+        /// <param name="sy"></param>
+        public static void TransformScale(float[] t, float sx, float sy)
         {
-            throw new NotImplementedException();
+            t[0] = sx; t[1] = 0.0f;
+            t[2] = 0.0f; t[3] = sy;
+            t[4] = 0.0f; t[5] = 0.0f;
         }
 
         // Sets the transform to rotate matrix. Angle is specified in radians.
-        public void nvgTransformRotate(out Matrix23f dst, float a)
+        public void nvgTransformRotate(float[] dst, float a)
         {
             throw new NotImplementedException();
         }
 
         // Sets the transform to skew-x matrix. Angle is specified in radians.
-        public void nvgTransformSkewX(out Matrix23f dst, float a)
+        public void nvgTransformSkewX(float[] dst, float a)
         {
             throw new NotImplementedException();
         }
 
         // Sets the transform to skew-y matrix. Angle is specified in radians.
-        public void nvgTransformSkewY(out Matrix23f dst, float a)
+        public void nvgTransformSkewY(float[] dst, float a)
         {
             throw new NotImplementedException();
         }
 
-        // Sets the transform to the result of multiplication of two transforms, of A = A*B.
-        public void nvgTransformMultiply(out Matrix23f dst, Matrix23f src)
+        /// <summary>
+        /// Sets the transform to the result of multiplication of two transforms, of A = A*B.
+        /// </summary>
+        /// <param name="t"></param>
+        /// <param name="s"></param>
+        public static void TransformMultiply(float[] t, float[] s)
+        {
+            float t0 = t[0] * s[0] + t[1] * s[2];
+            float t2 = t[2] * s[0] + t[3] * s[2];
+            float t4 = t[4] * s[0] + t[5] * s[2] + s[4];
+            t[1] = t[0] * s[1] + t[1] * s[3];
+            t[3] = t[2] * s[1] + t[3] * s[3];
+            t[5] = t[4] * s[1] + t[5] * s[3] + s[5];
+            t[0] = t0;
+            t[2] = t2;
+            t[4] = t4;
+        }
+
+        /// <summary>
+        /// Sets the transform to the result of multiplication of two transforms, of A = B*A.
+        /// </summary>
+        /// <param name="dst"></param>
+        /// <param name="src"></param>
+        public void nvgTransformPremultiply(float[] dst, float[] src)
         {
             throw new NotImplementedException();
         }
 
-        // Sets the transform to the result of multiplication of two transforms, of A = B*A.
-        public void nvgTransformPremultiply(out Matrix23f dst, Matrix23f src)
+        /// <summary>
+        /// Sets the destination to inverse of specified transform.
+        /// </summary>
+        /// <param name="inv"></param>
+        /// <param name="t"></param>
+        public static void TransformInverse(float[] inv, float[] t)
         {
-            throw new NotImplementedException();
+            double invdet, det = (double)t[0] * t[3] - (double)t[2] * t[1];
+            if (det > -1e-6 && det < 1e-6)
+            {
+                Nvg.TransformIdentity(inv);
+            }
+            invdet = 1.0 / det;
+            inv[0] = (float)(t[3] * invdet);
+            inv[2] = (float)(-t[2] * invdet);
+            inv[4] = (float)(((double)t[2] * t[5] - (double)t[3] * t[4]) * invdet);
+            inv[1] = (float)(-t[1] * invdet);
+            inv[3] = (float)(t[0] * invdet);
+            inv[5] = (float)(((double)t[1] * t[4] - (double)t[0] * t[5]) * invdet);
         }
 
-        // Sets the destination to inverse of specified transform.
-        // Returns 1 if the inverse could be calculated, else 0.
-        public int nvgTransformInverse(out Matrix23f dst, Matrix23f src)
+        /// <summary>
+        /// Transform a point by given transform.
+        /// </summary>
+        /// <param name="dstx"></param>
+        /// <param name="dsty"></param>
+        /// <param name="t"></param>
+        /// <param name="srcx"></param>
+        /// <param name="srcy"></param>
+        public static void TransformPoint(out float dstx, out float dsty, float[] t, float srcx, float srcy)
         {
-            throw new NotImplementedException();
+            dstx = srcx * t[0] + srcy * t[2] + t[4];
+            dsty = srcx * t[1] + srcy * t[3] + t[5];
         }
 
-        // Transform a point by given transform.
-        public void nvgTransformPoint(out Matrix23f dstx, Matrix23f dsty, Matrix23f xform, float srcx, float srcy)
+        /// <summary>
+        /// Converts degrees to radians and vice versa.
+        /// </summary>
+        /// <param name="deg"></param>
+        /// <returns></returns>
+        public static float DegToRad(float deg)
         {
-            throw new NotImplementedException();
+            return deg / 180.0f * (float)Math.PI;
         }
 
-        // Converts degrees to radians and vice versa.
-        public float nvgDegToRad(float deg)
+        public static float RadToDeg(float rad)
         {
-            throw new NotImplementedException();
-        }
-
-        public float nvgRadToDeg(float rad)
-        {
-            throw new NotImplementedException();
+            return rad / (float)Math.PI * 180.0f;
         }
 
         //
@@ -520,15 +712,15 @@ namespace NanoVG
         }
 
         // Returns the dimensions of a created image.
-        public void nvgImageSize(NVGcontext ctx, int image, out int w, out int h)
+        public static void nvgImageSize(NVGcontext ctx, int image, out int w, out int h)
         {
-            throw new NotImplementedException();
+            ctx.glctx.RenderGetTextureSize(image, out w, out h);
         }
 
         // Deletes created image.
-        public void nvgDeleteImage(NVGcontext ctx, int image)
+        public static void nvgDeleteImage(NVGcontext ctx, int image)
         {
-            throw new NotImplementedException();
+            ctx.glctx.RenderDeleteTexture(image);
         }
 
         //
@@ -537,30 +729,130 @@ namespace NanoVG
         // NanoVG supports four types of paints: linear gradient, box gradient, radial gradient and image pattern.
         // These can be used as paints for strokes and fills.
 
-        // Creates and returns a linear gradient. Parameters (sx,sy)-(ex,ey) specify the start and end coordinates
-        // of the linear gradient, icol specifies the start color and ocol the end color.
-        // The gradient is transformed by the current transform when it is passed to nvgFillPaint() or nvgStrokePaint().
-        public NVGpaint nvgLinearGradient(NVGcontext ctx, float sx, float sy, float ex, float ey, Vector3f icol, Vector3f ocol)
+        /// <summary>
+        /// Creates and returns a linear gradient. Parameters (sx,sy)-(ex,ey) specify the start and end coordinates
+        /// of the linear gradient, icol specifies the start color and ocol the end color.
+        /// The gradient is transformed by the current transform when it is passed to FillPaint() or StrokePaint().
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="sx"></param>
+        /// <param name="sy"></param>
+        /// <param name="ex"></param>
+        /// <param name="ey"></param>
+        /// <param name="icol"></param>
+        /// <param name="ocol"></param>
+        /// <returns></returns>
+        public static NVGpaint LinearGradient(NVGcontext ctx, float sx, float sy, float ex, float ey, NVGcolor icol, NVGcolor ocol)
         {
-            throw new NotImplementedException();
+            NVGpaint p = new NVGpaint();
+            p.Init();
+            float dx, dy, d;
+            const float large = 1e5f;
+
+            // Calculate transform aligned to the line
+            dx = ex - sx;
+            dy = ey - sy;
+            d = (float)Math.Sqrt(dx * dx + dy * dy);
+            if (d > 0.0001f)
+            {
+                dx /= d;
+                dy /= d;
+            }
+            else
+            {
+                dx = 0;
+                dy = 1;
+            }
+
+            p.xform[0] = dy; p.xform[1] = -dx;
+            p.xform[2] = dx; p.xform[3] = dy;
+            p.xform[4] = sx - dx * large; p.xform[5] = sy - dy * large;
+
+            p.extent[0] = large;
+            p.extent[1] = large + d * 0.5f;
+
+            p.radius = 0.0f;
+
+            p.feather = Math.Max(1.0f, d);
+
+            p.innerColor = icol;
+            p.outerColor = ocol;
+
+            return p;
         }
 
-        // Creates and returns a box gradient. Box gradient is a feathered rounded rectangle, it is useful for rendering
-        // drop shadows or highlights for boxes. Parameters (x,y) define the top-left corner of the rectangle,
-        // (w,h) define the size of the rectangle, r defines the corner radius, and f feather. Feather defines how blurry
-        // the border of the rectangle is. Parameter icol specifies the inner color and ocol the outer color of the gradient.
-        // The gradient is transformed by the current transform when it is passed to nvgFillPaint() or nvgStrokePaint().
-        public NVGpaint nvgBoxGradient(NVGcontext ctx, float x, float y, float w, float h, float r, float f, Vector3f icol, Vector3f ocol)
+        /// <summary>
+        /// Creates and returns a box gradient. Box gradient is a feathered rounded rectangle, it is useful for rendering
+        /// drop shadows or highlights for boxes. Parameters (x,y) define the top-left corner of the rectangle,
+        /// (w,h) define the size of the rectangle, r defines the corner radius, and f feather. Feather defines how blurry
+        /// the border of the rectangle is. Parameter icol specifies the inner color and ocol the outer color of the gradient.
+        /// The gradient is transformed by the current transform when it is passed to FillPaint() or StrokePaint().
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="w"></param>
+        /// <param name="h"></param>
+        /// <param name="r"></param>
+        /// <param name="f"></param>
+        /// <param name="icol"></param>
+        /// <param name="ocol"></param>
+        /// <returns></returns>
+        public static NVGpaint BoxGradient(NVGcontext ctx, float x, float y, float w, float h, float r, float f, NVGcolor icol, NVGcolor ocol)
         {
-            throw new NotImplementedException();
+            NVGpaint p = new NVGpaint();
+            p.Init();
+
+            p.xform[4] = x + w * 0.5f;
+            p.xform[5] = y + h * 0.5f;
+
+            p.extent[0] = w * 0.5f;
+            p.extent[1] = h * 0.5f;
+
+            p.radius = r;
+
+            p.feather = Math.Max(1.0f, f);
+
+            p.innerColor = icol;
+            p.outerColor = ocol;
+
+            return p;
         }
 
-        // Creates and returns a radial gradient. Parameters (cx,cy) specify the center, inr and outr specify
-        // the inner and outer radius of the gradient, icol specifies the start color and ocol the end color.
-        // The gradient is transformed by the current transform when it is passed to nvgFillPaint() or nvgStrokePaint().
-        public NVGpaint nvgRadialGradient(NVGcontext ctx, float cx, float cy, float inr, float outr, Vector3f icol, Vector3f ocol)
+
+        /// <summary>
+        /// Creates and returns a radial gradient. Parameters (cx,cy) specify the center, inr and outr specify
+        /// the inner and outer radius of the gradient, icol specifies the start color and ocol the end color.
+        /// The gradient is transformed by the current transform when it is passed to FillPaint() or StrokePaint().       
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="cx"></param>
+        /// <param name="cy"></param>
+        /// <param name="inr"></param>
+        /// <param name="outr"></param>
+        /// <param name="icol"></param>
+        /// <param name="ocol"></param>
+        /// <returns></returns>
+        public static NVGpaint RadialGradient(NVGcontext ctx, float cx, float cy, float inr, float outr, NVGcolor icol, NVGcolor ocol)
         {
-            throw new NotImplementedException();
+            NVGpaint p = new NVGpaint();
+            p.Init();
+            float r = (inr + outr) * 0.5f;
+            float f = (outr - inr);
+            p.xform[4] = cx;
+            p.xform[5] = cy;
+
+            p.extent[0] = r;
+            p.extent[1] = r;
+
+            p.radius = r;
+
+            p.feather = Math.Max(1.0f, f);
+
+            p.innerColor = icol;
+            p.outerColor = ocol;
+
+            return p;
         }
 
         // Creates and returns an image patter. Parameters (ox,oy) specify the left-top location of the image pattern,
@@ -619,96 +911,417 @@ namespace NanoVG
         //
         // The curve segments and sub-paths are transformed by the current transform.
 
-        // Clears the current path and sub-paths.
-        public void nvgBeginPath(NVGcontext ctx)
+        /// <summary>
+        /// Clears the current path and sub-paths.
+        /// </summary>
+        /// <param name="ctx"></param>
+        public static void BeginPath(NVGcontext ctx)
         {
-            throw new NotImplementedException();
+            ctx.ncommands = 0;
+            ctx.ClearPathCache();
         }
 
-        // Starts new sub-path with specified point as first point.
-        public void nvgMoveTo(NVGcontext ctx, float x, float y)
+        /// <summary>
+        /// Starts new sub-path with specified point as first point.
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        public static void MoveTo(NVGcontext ctx, float x, float y)
         {
-            throw new NotImplementedException();
+            float[] vals = { (float)NVGcommands.NVG_MOVETO, x, y };
+            AppendCommands(ctx, vals);
         }
 
-        // Adds line segment from the last point in the path to the specified point.
-        public void nvgLineTo(NVGcontext ctx, float x, float y)
+        /// <summary>
+        /// Adds line segment from the last point in the path to the specified point.
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        public static void LineTo(NVGcontext ctx, float x, float y)
         {
-            throw new NotImplementedException();
+            float[] vals = { (float)NVGcommands.NVG_LINETO, x, y };
+            AppendCommands(ctx, vals);
         }
 
-        // Adds cubic bezier segment from last point in the path via two control points to the specified point.
-        public void nvgBezierTo(NVGcontext ctx, float c1x, float c1y, float c2x, float c2y, float x, float y)
+        /// <summary>
+        /// Adds cubic bezier segment from last point in the path via two control points to the specified point.
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="c1x"></param>
+        /// <param name="c1y"></param>
+        /// <param name="c2x"></param>
+        /// <param name="c2y"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        public static void BezierTo(NVGcontext ctx, float c1x, float c1y, float c2x, float c2y, float x, float y)
         {
-            throw new NotImplementedException();
+            float[] vals = { (float)NVGcommands.NVG_BEZIERTO, c1x, c1y, c2x, c2y, x, y };
+            AppendCommands(ctx, vals);
         }
 
-        // Adds quadratic bezier segment from last point in the path via a control point to the specified point.
-        public void nvgQuadTo(NVGcontext ctx, float cx, float cy, float x, float y)
+        /// <summary>
+        /// Adds quadratic bezier segment from last point in the path via a control point to the specified point.
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="cx"></param>
+        /// <param name="cy"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        public static void QuadTo(NVGcontext ctx, float cx, float cy, float x, float y)
         {
-            throw new NotImplementedException();
+            float x0 = ctx.commandx;
+            float y0 = ctx.commandy;
+            float[] vals = { (float)NVGcommands.NVG_BEZIERTO,
+                                x0 + 2.0f/3.0f*(cx - x0), y0 + 2.0f/3.0f*(cy - y0),
+                                x + 2.0f/3.0f*(cx - x), y + 2.0f/3.0f*(cy - y),
+                                x, y };
+            AppendCommands(ctx, vals);
         }
 
-        // Adds an arc segment at the corner defined by the last path point, and two specified points.
-        public void nvgArcTo(NVGcontext ctx, float x1, float y1, float x2, float y2, float radius)
+        /// <summary>
+        /// Adds an arc segment at the corner defined by the last path point, and two specified points.
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="x1"></param>
+        /// <param name="y1"></param>
+        /// <param name="x2"></param>
+        /// <param name="y2"></param>
+        /// <param name="radius"></param>
+        public static void ArcTo(NVGcontext ctx, float x1, float y1, float x2, float y2, float radius)
         {
-            throw new NotImplementedException();
+            float x0 = ctx.commandx;
+            float y0 = ctx.commandy;
+            float dx0, dy0, dx1, dy1, a, d, cx, cy, a0, a1;
+            NVGwinding dir;
+
+            if (ctx.ncommands == 0)
+            {
+                return;
+            }
+
+            // Handle degenerate cases.
+            if (NVGpoint.Equals(x0, y0, x1, y1, ctx.distTol) ||
+                NVGpoint.Equals(x1, y1, x2, y2, ctx.distTol) ||
+                NVGpoint.DistPtSeg(x1, y1, x0, y0, x2, y2) < ctx.distTol * ctx.distTol ||
+                radius < ctx.distTol)
+            {
+                LineTo(ctx, x1, y1);
+                return;
+            }
+
+            // Calculate tangential circle to lines (x0,y0)-(x1,y1) and (x1,y1)-(x2,y2).
+            dx0 = x0 - x1;
+            dy0 = y0 - y1;
+            dx1 = x2 - x1;
+            dy1 = y2 - y1;
+            NVGpoint.Normalize(ref dx0, ref dy0);
+            NVGpoint.Normalize(ref dx1, ref dy1);
+            a = (float)Math.Acos(dx0 * dx1 + dy0 * dy1);
+            d = radius / (float)Math.Tan(a / 2.0f);
+
+            //	printf("a=%f° d=%f\n", a/NVG_PI*180.0f, d);
+
+            if (d > 10000.0f)
+            {
+                LineTo(ctx, x1, y1);
+                return;
+            }
+
+            if (Cross(dx0, dy0, dx1, dy1) > 0.0f)
+            {
+                cx = x1 + dx0 * d + dy0 * radius;
+                cy = y1 + dy0 * d + -dx0 * radius;
+                a0 = (float)Math.Atan2(dx0, -dy0);
+                a1 = (float)Math.Atan2(-dx1, dy1);
+                dir = NVGwinding.NVG_CW;
+                //		printf("CW c=(%f, %f) a0=%f° a1=%f°\n", cx, cy, a0/NVG_PI*180.0f, a1/NVG_PI*180.0f);
+            }
+            else
+            {
+                cx = x1 + dx0 * d + -dy0 * radius;
+                cy = y1 + dy0 * d + dx0 * radius;
+                a0 = (float)Math.Atan2(-dx0, dy0);
+                a1 = (float)Math.Atan2(dx1, -dy1);
+                dir = NVGwinding.NVG_CCW;
+                //		printf("CCW c=(%f, %f) a0=%f° a1=%f°\n", cx, cy, a0/NVG_PI*180.0f, a1/NVG_PI*180.0f);
+            }
+
+            Arc(ctx, cx, cy, radius, a0, a1, dir);
         }
 
-        // Closes current sub-path with a line segment.
-        public void nvgClosePath(NVGcontext ctx)
+        /// <summary>
+        /// Closes current sub-path with a line segment.
+        /// </summary>
+        /// <param name="ctx"></param>
+        public static void ClosePath(NVGcontext ctx)
         {
-            throw new NotImplementedException();
+            float[] vals = { (float)NVGcommands.NVG_CLOSE };
+            AppendCommands(ctx, vals);
         }
 
-        // Sets the current sub-path winding, see NVGwinding and NVGsolidity. 
-        public void nvgPathWinding(NVGcontext ctx, int dir)
+        /// <summary>
+        /// Sets the current sub-path winding, see NVGwinding and NVGsolidity. 
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="dir"></param>
+        public static void PathWinding(NVGcontext ctx, int dir)
         {
-            throw new NotImplementedException();
+            float[] vals = { (float)NVGcommands.NVG_WINDING, (float)dir };
+            AppendCommands(ctx, vals);
         }
 
-        // Creates new circle arc shaped sub-path. The arc center is at cx,cy, the arc radius is r,
-        // and the arc is drawn from angle a0 to a1, and swept in direction dir (NVG_CCW, or NVG_CW).
-        // Angles are specified in radians.
-        public void nvgArc(NVGcontext ctx, float cx, float cy, float r, float a0, float a1, int dir)
+        /// <summary>
+        /// Creates new circle arc shaped sub-path. The arc center is at cx,cy, the arc radius is r,
+        /// and the arc is drawn from angle a0 to a1, and swept in direction dir (NVG_CCW, or NVG_CW).
+        /// Angles are specified in radians.
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="cx"></param>
+        /// <param name="cy"></param>
+        /// <param name="r"></param>
+        /// <param name="a0"></param>
+        /// <param name="a1"></param>
+        /// <param name="dir"></param>
+        public static void Arc(NVGcontext ctx, float cx, float cy, float r, float a0, float a1, NVGwinding dir)
         {
-            throw new NotImplementedException();
+            float a = 0, da = 0, hda = 0, kappa = 0;
+            float dx = 0, dy = 0, x = 0, y = 0, tanx = 0, tany = 0;
+            float px = 0, py = 0, ptanx = 0, ptany = 0;
+            float[] vals = new float[3 + 5 * 7 + 100];
+            int i, ndivs, nvals;
+            NVGcommands move = ctx.ncommands > 0 ? NVGcommands.NVG_LINETO : NVGcommands.NVG_MOVETO;
+
+            // Clamp angles
+            da = a1 - a0;
+            if (dir == NVGwinding.NVG_CW)
+            {
+                if (Math.Abs(da) >= Math.PI * 2)
+                {
+                    da = (float)(Math.PI * 2);
+                }
+                else
+                {
+                    while (da < 0.0f) da += (float)(Math.PI * 2);
+                }
+            }
+            else
+            {
+                if (Math.Abs(da) >= Math.PI * 2)
+                {
+                    da = -(float)(Math.PI * 2);
+                }
+                else
+                {
+                    while (da > 0.0f) da -= (float)(Math.PI * 2);
+                }
+            }
+
+            // Split arc into max 90 degree segments.
+            ndivs = Math.Max(1, Math.Min((int)(Math.Abs(da) / (Math.PI * 0.5f) + 0.5f), 5));
+            hda = (da / (float)ndivs) / 2.0f;
+            kappa = (float)(Math.Abs(4.0f / 3.0f * (1.0f - Math.Cos(hda)) / Math.Sin(hda)));
+
+            if (dir == NVGwinding.NVG_CCW)
+                kappa = -kappa;
+
+            nvals = 0;
+            for (i = 0; i <= ndivs; i++)
+            {
+                a = a0 + da * (i / (float)ndivs);
+                dx = (float)(Math.Cos(a));
+                dy = (float)(Math.Sin(a));
+                x = cx + dx * r;
+                y = cy + dy * r;
+                tanx = -dy * r * kappa;
+                tany = dx * r * kappa;
+
+                if (i == 0)
+                {
+                    vals[nvals++] = (float)move;
+                    vals[nvals++] = x;
+                    vals[nvals++] = y;
+                }
+                else
+                {
+                    vals[nvals++] = (float)NVGcommands.NVG_BEZIERTO;
+                    vals[nvals++] = px + ptanx;
+                    vals[nvals++] = py + ptany;
+                    vals[nvals++] = x - tanx;
+                    vals[nvals++] = y - tany;
+                    vals[nvals++] = x;
+                    vals[nvals++] = y;
+                }
+                px = x;
+                py = y;
+                ptanx = tanx;
+                ptany = tany;
+            }
+
+            AppendCommands(ctx, vals, nvals);
         }
 
-        // Creates new rectangle shaped sub-path.
-        public void nvgRect(NVGcontext ctx, float x, float y, float w, float h)
+        /// <summary>
+        /// Creates new rectangle shaped sub-path.
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="w"></param>
+        /// <param name="h"></param>
+        public static void Rect(NVGcontext ctx, float x, float y, float w, float h)
         {
-            throw new NotImplementedException();
+            float[] vals = new float[]{
+                    (float)NVGcommands.NVG_MOVETO, x,y,
+                    (float)NVGcommands.NVG_LINETO, x,y+h,
+                    (float)NVGcommands.NVG_LINETO, x+w,y+h,
+                    (float)NVGcommands.NVG_LINETO, x+w,y,
+                    (float)NVGcommands.NVG_CLOSE
+            };
+            AppendCommands(ctx, vals);
         }
 
-        // Creates new rounded rectangle shaped sub-path.
-        public void nvgRoundedRect(NVGcontext ctx, float x, float y, float w, float h, float r)
+        /// <summary>
+        /// Creates new rounded rectangle shaped sub-path.
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="w"></param>
+        /// <param name="h"></param>
+        /// <param name="r"></param>
+        public static void RoundedRect(NVGcontext ctx, float x, float y, float w, float h, float r)
         {
-            throw new NotImplementedException();
+            if (r < 0.1f)
+            {
+                Rect(ctx, x, y, w, h);
+                return;
+            }
+            else
+            {
+                float rx = Math.Min(r, Math.Abs(w) * 0.5f) * Math.Sign(w), ry = Math.Min(r, Math.Abs(h) * 0.5f) * Math.Sign(h);
+                float[] vals = new float[]{
+                        (float)NVGcommands.NVG_MOVETO, x, y+ry,
+                        (float)NVGcommands.NVG_LINETO, x, y+h-ry,
+                        (float)NVGcommands.NVG_BEZIERTO, x, y+h-ry*(1-NVG_KAPPA90), x+rx*(1-NVG_KAPPA90), y+h, x+rx, y+h,
+                        (float)NVGcommands.NVG_LINETO, x+w-rx, y+h,
+                        (float)NVGcommands.NVG_BEZIERTO, x+w-rx*(1-NVG_KAPPA90), y+h, x+w, y+h-ry*(1-NVG_KAPPA90), x+w, y+h-ry,
+                        (float)NVGcommands.NVG_LINETO, x+w, y+ry,
+                        (float)NVGcommands.NVG_BEZIERTO, x+w, y+ry*(1-NVG_KAPPA90), x+w-rx*(1-NVG_KAPPA90), y, x+w-rx, y,
+                        (float)NVGcommands.NVG_LINETO, x+rx, y,
+                        (float)NVGcommands.NVG_BEZIERTO, x+rx*(1-NVG_KAPPA90), y, x, y+ry*(1-NVG_KAPPA90), x, y+ry,
+                        (float)NVGcommands.NVG_CLOSE
+                    };
+                AppendCommands(ctx, vals);
+            }
         }
 
-        // Creates new ellipse shaped sub-path.
-        public void nvgEllipse(NVGcontext ctx, float cx, float cy, float rx, float ry)
+        /// <summary>
+        /// Creates new ellipse shaped sub-path.
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="cx"></param>
+        /// <param name="cy"></param>
+        /// <param name="rx"></param>
+        /// <param name="ry"></param>
+        public static void Ellipse(NVGcontext ctx, float cx, float cy, float rx, float ry)
         {
-            throw new NotImplementedException();
+            float[] vals = {
+                            (float)NVGcommands.NVG_MOVETO, cx-rx, cy,
+                            (float)NVGcommands.NVG_BEZIERTO, cx-rx, cy+ry*NVG_KAPPA90, cx-rx*NVG_KAPPA90, cy+ry, cx, cy+ry,
+                            (float)NVGcommands.NVG_BEZIERTO, cx+rx*NVG_KAPPA90, cy+ry, cx+rx, cy+ry*NVG_KAPPA90, cx+rx, cy,
+                            (float)NVGcommands.NVG_BEZIERTO, cx+rx, cy-ry*NVG_KAPPA90, cx+rx*NVG_KAPPA90, cy-ry, cx, cy-ry,
+                            (float)NVGcommands.NVG_BEZIERTO, cx-rx*NVG_KAPPA90, cy-ry, cx-rx, cy-ry*NVG_KAPPA90, cx-rx, cy,
+                            (float)NVGcommands.NVG_CLOSE
+                        };
+            AppendCommands(ctx, vals);
         }
 
-        // Creates new circle shaped sub-path. 
-        public void nvgCircle(NVGcontext ctx, float cx, float cy, float r)
+        /// <summary>
+        /// Creates new circle shaped sub-path. 
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="cx"></param>
+        /// <param name="cy"></param>
+        /// <param name="r"></param>
+        public static void Circle(NVGcontext ctx, float cx, float cy, float r)
         {
-            throw new NotImplementedException();
+            Ellipse(ctx, cx, cy, r, r);
         }
 
-        // Fills the current path with current fill style.
-        public void nvgFill(NVGcontext ctx)
+        /// <summary>
+        /// Fills the current path with current fill style.
+        /// </summary>
+        /// <param name="ctx"></param>
+        public static void Fill(NVGcontext ctx)
         {
-            throw new NotImplementedException();
+            NVGstate state = ctx.GetState();
+            NVGpaint fillPaint = state.fill;
+
+            ctx.FlattenPaths();
+            if (ctx.params_.EdgeAntiAlias)
+                ctx.ExpandFill(ctx.fringeWidth, NVGlineJoin.NVG_MITER, 2.4f);
+            else
+                ctx.ExpandFill(0.0f, NVGlineJoin.NVG_MITER, 2.4f);
+
+            // Apply global alpha
+            fillPaint.innerColor.W *= state.alpha;
+            fillPaint.outerColor.W *= state.alpha;
+
+            ctx.glctx.RenderFill(fillPaint, state.scissor, ctx.fringeWidth, ctx.cache.bounds, ctx.cache.paths, ctx.cache.npaths);
+
+            // Count triangles
+            for (int i = 0; i < ctx.cache.npaths; i++)
+            {
+                NVGpath path = ctx.cache.paths[i];
+                ctx.fillTriCount += path.nfill - 2;
+                ctx.fillTriCount += path.nstroke - 2;
+                ctx.drawCallCount += 2;
+            }
         }
 
-        // Fills the current path with current stroke style.
-        public void nvgStroke(NVGcontext ctx)
+        /// <summary>
+        /// Fills the current path with current stroke style.
+        /// </summary>
+        /// <param name="ctx"></param>
+        public static void Stroke(NVGcontext ctx)
         {
-            throw new NotImplementedException();
+            NVGstate state = ctx.GetState();
+            float scale = GetAverageScale(state.xform);
+            float strokeWidth = Clampf(state.strokeWidth * scale, 0.0f, 200.0f);
+            NVGpaint strokePaint = state.stroke;
+
+            if (strokeWidth < ctx.fringeWidth)
+            {
+                // If the stroke width is less than pixel size, use alpha to emulate coverage.
+                // Since coverage is area, scale by alpha*alpha.
+                float alpha = Clampf(strokeWidth / ctx.fringeWidth, 0.0f, 1.0f);
+                strokePaint.innerColor.Z *= alpha * alpha;
+                strokePaint.outerColor.Z *= alpha * alpha;
+                strokeWidth = ctx.fringeWidth;
+            }
+
+            // Apply global alpha
+            strokePaint.innerColor.Z *= state.alpha;
+            strokePaint.outerColor.Z *= state.alpha;
+
+            ctx.FlattenPaths();
+
+            if (ctx.params_.EdgeAntiAlias)
+                ctx.ExpandStroke(strokeWidth * 0.5f + ctx.fringeWidth * 0.5f, state.lineCap, state.lineJoin, state.miterLimit);
+            else
+                ctx.ExpandStroke(strokeWidth * 0.5f, state.lineCap, state.lineJoin, state.miterLimit);
+
+            ctx.glctx.RenderStroke(strokePaint, state.scissor, ctx.fringeWidth, strokeWidth, ctx.cache.paths);
+
+            // Count triangles
+            for (int i = 0; i < ctx.cache.npaths; i++)
+            {
+                NVGpath path = ctx.cache.paths[i];
+                ctx.strokeTriCount += path.nstroke - 2;
+                ctx.drawCallCount++;
+            }
         }
 
 
@@ -894,16 +1507,75 @@ namespace NanoVG
             ctx.fringeWidth = 1.0f / ratio;
             ctx.devicePxRatio = ratio;
         }
+        private static void AppendCommands(NVGcontext ctx, float[] vals)
+        {
+            AppendCommands(ctx, vals, vals.Length);
+        }
+
+        private static void AppendCommands(NVGcontext ctx, float[] vals, int nvals)
+        {
+            NVGstate state = ctx.GetState();
+            if (ctx.ncommands + nvals > ctx.ccommands)
+            {
+                int ccommands = ctx.ncommands + nvals + ctx.ccommands / 2;
+                ctx.commands = NVGcontext.ResizeArray(ctx.commands, ccommands);
+                ctx.ccommands = ccommands;
+            }
+
+            if ((NVGcommands)vals[0] != NVGcommands.NVG_CLOSE && (NVGcommands)vals[0] != NVGcommands.NVG_WINDING)
+            {
+                ctx.commandx = vals[nvals - 2];
+                ctx.commandy = vals[nvals - 1];
+            }
+
+            // transform commands
+            int i = 0;
+            while (i < nvals)
+            {
+                int cmd = (int)vals[i];
+                switch ((NVGcommands)cmd)
+                {
+                    case NVGcommands.NVG_MOVETO:
+                        TransformPoint(out vals[i + 1], out vals[i + 2], state.xform, vals[i + 1], vals[i + 2]);
+                        i += 3;
+                        break;
+                    case NVGcommands.NVG_LINETO:
+                        TransformPoint(out vals[i + 1], out vals[i + 2], state.xform, vals[i + 1], vals[i + 2]);
+                        i += 3;
+                        break;
+                    case NVGcommands.NVG_BEZIERTO:
+                        TransformPoint(out vals[i + 1], out vals[i + 2], state.xform, vals[i + 1], vals[i + 2]);
+                        TransformPoint(out vals[i + 3], out vals[i + 4], state.xform, vals[i + 3], vals[i + 4]);
+                        TransformPoint(out vals[i + 5], out vals[i + 6], state.xform, vals[i + 5], vals[i + 6]);
+                        i += 7;
+                        break;
+                    case NVGcommands.NVG_CLOSE:
+                        i++;
+                        break;
+                    case NVGcommands.NVG_WINDING:
+                        i += 2;
+                        break;
+                    default:
+                        i++;
+                        break;
+                }
+            }
+
+            Array.Copy(vals, 0, ctx.commands, ctx.ncommands, nvals);
+            ctx.ncommands += nvals;
+        }
+
+        private static float Clampf(float a, float mn, float mx) { return a < mn ? mn : (a > mx ? mx : a); }
+        private static float Cross(float dx0, float dy0, float dx1, float dy1) { return dx1 * dy0 - dx0 * dy1; }
+        static float GetAverageScale(float[] t)
+        {
+            float sx = (float)Math.Sqrt(t[0] * t[0] + t[2] * t[2]);
+            float sy = (float)Math.Sqrt(t[1] * t[1] + t[3] * t[3]);
+            return (sx + sy) * 0.5f;
+        }
 
         private const int NVG_INIT_FONTIMAGE_SIZE = 512;
         private const int NVG_MAX_FONTIMAGE_SIZE = 2048;
-        private const int NVG_MAX_FONTIMAGES = 4;
-
-        private const int NVG_INIT_COMMANDS_SIZE = 256;
-        private const int NVG_INIT_POINTS_SIZE = 128;
-        private const int NVG_INIT_PATHS_SIZE = 16;
-        private const int NVG_INIT_VERTS_SIZE = 256;
-        private const int NVG_MAX_STATES = 32;
 
         private const float NVG_KAPPA90 = 0.5522847493f;
     }

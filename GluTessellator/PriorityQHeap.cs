@@ -49,31 +49,31 @@
 ** Java Port: Pepijn Van Eeckhoudt, July 2003
 ** Java Port: Nathan Parker Burg, August 2003*/
 using System;
-namespace Mogre.Utils.GluTesselator
+namespace Sxta.Render.Utils.GluTesselator
 {
 	
 	
 	
-	class PriorityQHeap:Mogre.Utils.GluTesselator.PriorityQ
+	class PriorityQHeap:Sxta.Render.Utils.GluTesselator.PriorityQ
 	{
-		internal Mogre.Utils.GluTesselator.PriorityQ.PQnode[] nodes;
-		internal Mogre.Utils.GluTesselator.PriorityQ.PQhandleElem[] handles;
+		internal Sxta.Render.Utils.GluTesselator.PriorityQ.PQnode[] nodes;
+		internal Sxta.Render.Utils.GluTesselator.PriorityQ.PQhandleElem[] handles;
 		internal int size, max;
 		internal int freeList;
 		internal bool initialized;
-		internal Mogre.Utils.GluTesselator.PriorityQ.Leq leq;
+		internal Sxta.Render.Utils.GluTesselator.PriorityQ.Leq leq;
 		
 		/* really __gl_pqHeapNewPriorityQ */
-		public PriorityQHeap(Mogre.Utils.GluTesselator.PriorityQ.Leq leq)
+		public PriorityQHeap(Sxta.Render.Utils.GluTesselator.PriorityQ.Leq leq)
 		{
 			size = 0;
-			max = Mogre.Utils.GluTesselator.PriorityQ.INIT_SIZE;
-			nodes = new Mogre.Utils.GluTesselator.PriorityQ.PQnode[Mogre.Utils.GluTesselator.PriorityQ.INIT_SIZE + 1];
+			max = Sxta.Render.Utils.GluTesselator.PriorityQ.INIT_SIZE;
+			nodes = new Sxta.Render.Utils.GluTesselator.PriorityQ.PQnode[Sxta.Render.Utils.GluTesselator.PriorityQ.INIT_SIZE + 1];
 			for (int i = 0; i < nodes.Length; i++)
 			{
 				nodes[i] = new PQnode();
 			}
-			handles = new Mogre.Utils.GluTesselator.PriorityQ.PQhandleElem[Mogre.Utils.GluTesselator.PriorityQ.INIT_SIZE + 1];
+			handles = new Sxta.Render.Utils.GluTesselator.PriorityQ.PQhandleElem[Sxta.Render.Utils.GluTesselator.PriorityQ.INIT_SIZE + 1];
 			for (int i = 0; i < handles.Length; i++)
 			{
 				handles[i] = new PQhandleElem();
@@ -95,8 +95,8 @@ namespace Mogre.Utils.GluTesselator
 		
 		internal virtual void  FloatDown(int curr)
 		{
-			Mogre.Utils.GluTesselator.PriorityQ.PQnode[] n = nodes;
-			Mogre.Utils.GluTesselator.PriorityQ.PQhandleElem[] h = handles;
+			Sxta.Render.Utils.GluTesselator.PriorityQ.PQnode[] n = nodes;
+			Sxta.Render.Utils.GluTesselator.PriorityQ.PQhandleElem[] h = handles;
 			int hCurr, hChild;
 			int child;
 			
@@ -127,8 +127,8 @@ namespace Mogre.Utils.GluTesselator
 		
 		internal virtual void  FloatUp(int curr)
 		{
-			Mogre.Utils.GluTesselator.PriorityQ.PQnode[] n = nodes;
-			Mogre.Utils.GluTesselator.PriorityQ.PQhandleElem[] h = handles;
+			Sxta.Render.Utils.GluTesselator.PriorityQ.PQnode[] n = nodes;
+			Sxta.Render.Utils.GluTesselator.PriorityQ.PQhandleElem[] h = handles;
 			int hCurr, hParent;
 			int parent;
 			
@@ -175,8 +175,8 @@ namespace Mogre.Utils.GluTesselator
 			curr = ++size;
 			if ((curr * 2) > max)
 			{
-				Mogre.Utils.GluTesselator.PriorityQ.PQnode[] saveNodes = nodes;
-				Mogre.Utils.GluTesselator.PriorityQ.PQhandleElem[] saveHandles = handles;
+				Sxta.Render.Utils.GluTesselator.PriorityQ.PQnode[] saveNodes = nodes;
+				Sxta.Render.Utils.GluTesselator.PriorityQ.PQhandleElem[] saveHandles = handles;
 				
 				/* If the heap overflows, double its size. */
 				max <<= 1;
@@ -234,8 +234,8 @@ namespace Mogre.Utils.GluTesselator
 		/* really __gl_pqHeapExtractMin */
 		internal override System.Object pqExtractMin()
 		{
-			Mogre.Utils.GluTesselator.PriorityQ.PQnode[] n = nodes;
-			Mogre.Utils.GluTesselator.PriorityQ.PQhandleElem[] h = handles;
+			Sxta.Render.Utils.GluTesselator.PriorityQ.PQnode[] n = nodes;
+			Sxta.Render.Utils.GluTesselator.PriorityQ.PQhandleElem[] h = handles;
 			int hMin = n[1].handle;
 			System.Object min = h[hMin].key;
 			
@@ -259,8 +259,8 @@ namespace Mogre.Utils.GluTesselator
 		/* really __gl_pqHeapDelete */
 		internal override void  pqDelete(int hCurr)
 		{
-			Mogre.Utils.GluTesselator.PriorityQ.PQnode[] n = nodes;
-			Mogre.Utils.GluTesselator.PriorityQ.PQhandleElem[] h = handles;
+			Sxta.Render.Utils.GluTesselator.PriorityQ.PQnode[] n = nodes;
+			Sxta.Render.Utils.GluTesselator.PriorityQ.PQhandleElem[] h = handles;
 			int curr;
 			
 			//assert(hCurr >= 1 && hCurr <= max && h[hCurr].key != null);

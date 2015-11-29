@@ -49,7 +49,7 @@
 ** Java Port: Pepijn Van Eeckhoudt, July 2003
 ** Java Port: Nathan Parker Burg, August 2003*/
 using System;
-namespace Mogre.Utils.GluTesselator
+namespace Sxta.Render.Utils.GluTesselator
 {
 	
 	/// <summary> The <b>GLUtessellatorCallbackAdapter</b> provides a default implementation of
@@ -79,7 +79,7 @@ namespace Mogre.Utils.GluTesselator
 		public virtual void  end()
 		{
 		}
-		//  public void mesh(Mogre.Utils.GluTesselator.GLUmesh mesh) {}
+		//  public void mesh(Sxta.Render.Utils.GluTesselator.GLUmesh mesh) {}
 		public virtual void  error(int errnum)
 		{
 		}

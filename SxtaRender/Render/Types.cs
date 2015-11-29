@@ -279,7 +279,6 @@ namespace Sxta.Render
         LINEAR_MIPMAP_NEAREST,
         LINEAR_MIPMAP_LINEAR
     }
-    ;
 
 
     /// <summary>
@@ -287,16 +286,15 @@ namespace Sxta.Render
     /// </summary>
     public enum Function
     {
-        LEQUAL,
-        GEQUAL,
-        LESS,
-        GREATER,
-        EQUAL,
-        NOTEQUAL,
-        ALWAYS,
-        NEVER
+        LEQUAL = StencilFunction.Lequal,
+        GEQUAL = StencilFunction.Gequal,
+        LESS = StencilFunction.Less,
+        GREATER = StencilFunction.Greater,
+        EQUAL = StencilFunction.Equal,
+        NOTEQUAL = StencilFunction.Notequal,
+        ALWAYS = StencilFunction.Always,
+        NEVER = StencilFunction.Never
     }
-    ;
 
 
     /// <summary>
@@ -318,7 +316,6 @@ namespace Sxta.Render
         STENCIL = 256,
         DEPTH = 512 ///< depth
     }
-    ;
 
 
     /// <summary>
@@ -331,7 +328,6 @@ namespace Sxta.Render
         LINE,
         FILL
     }
-    ;
 
 
     /// <summary>
@@ -339,16 +335,15 @@ namespace Sxta.Render
     /// </summary>
     public enum StencilOperation
     {
-        KEEP,
-        RESET,
-        REPLACE,
-        INCR,
-        DECR,
-        INVERT,
-        INCR_WRAP,
-        DECR_WRAP
+        KEEP = StencilOp.Keep,
+        RESET = StencilOp.Zero,
+        REPLACE = StencilOp.Replace,
+        INCR = StencilOp.Incr,
+        DECR = StencilOp.Decr,
+        INVERT = StencilOp.Invert,
+        INCR_WRAP = StencilOp.IncrWrap,
+        DECR_WRAP = StencilOp.DecrWrap
     }
-    ;
 
 
     /// <summary>
@@ -362,7 +357,6 @@ namespace Sxta.Render
         MIN,
         MAX
     }
-    ;
 
 
     /// <summary>
@@ -385,7 +379,6 @@ namespace Sxta.Render
         CONSTANT_ALPHA,
         ONE_MINUS_CONSTANT_ALPHA
     }
-    ;
 
 
     /// <summary>
@@ -1468,52 +1461,54 @@ namespace Sxta.Render
 
         public static StencilFunction getStencilFunction(Function f)
         {
-            switch (f)
-            {
-                case Function.LEQUAL:
-                    return StencilFunction.Lequal;
-                case Function.GEQUAL:
-                    return StencilFunction.Gequal;
-                case Function.LESS:
-                    return StencilFunction.Less;
-                case Function.GREATER:
-                    return StencilFunction.Greater;
-                case Function.EQUAL:
-                    return StencilFunction.Equal;
-                case Function.NOTEQUAL:
-                    return StencilFunction.Notequal;
-                case Function.ALWAYS:
-                    return StencilFunction.Always;
-                case Function.NEVER:
-                    return StencilFunction.Never;
-            }
-            Debug.Assert(false);
-            throw new Exception();
+            return (StencilFunction)f;
+            //switch (f)
+            //{
+            //    case Function.LEQUAL:
+            //        return StencilFunction.Lequal;
+            //    case Function.GEQUAL:
+            //        return StencilFunction.Gequal;
+            //    case Function.LESS:
+            //        return StencilFunction.Less;
+            //    case Function.GREATER:
+            //        return StencilFunction.Greater;
+            //    case Function.EQUAL:
+            //        return StencilFunction.Equal;
+            //    case Function.NOTEQUAL:
+            //        return StencilFunction.Notequal;
+            //    case Function.ALWAYS:
+            //        return StencilFunction.Always;
+            //    case Function.NEVER:
+            //        return StencilFunction.Never;
+            //}
+            //Debug.Assert(false);
+            //throw new Exception();
         }
 
         public static DepthFunction getDepthFunction(Function f)
         {
-            switch (f)
-            {
-                case Function.LEQUAL:
-                    return DepthFunction.Lequal;
-                case Function.GEQUAL:
-                    return DepthFunction.Gequal;
-                case Function.LESS:
-                    return DepthFunction.Less;
-                case Function.GREATER:
-                    return DepthFunction.Greater;
-                case Function.EQUAL:
-                    return DepthFunction.Equal;
-                case Function.NOTEQUAL:
-                    return DepthFunction.Notequal;
-                case Function.ALWAYS:
-                    return DepthFunction.Always;
-                case Function.NEVER:
-                    return DepthFunction.Never;
-            }
-            Debug.Assert(false);
-            throw new Exception();
+            return (DepthFunction)f;
+            //switch (f)
+            //{
+            //    case Function.LEQUAL:
+            //        return DepthFunction.Lequal;
+            //    case Function.GEQUAL:
+            //        return DepthFunction.Gequal;
+            //    case Function.LESS:
+            //        return DepthFunction.Less;
+            //    case Function.GREATER:
+            //        return DepthFunction.Greater;
+            //    case Function.EQUAL:
+            //        return DepthFunction.Equal;
+            //    case Function.NOTEQUAL:
+            //        return DepthFunction.Notequal;
+            //    case Function.ALWAYS:
+            //        return DepthFunction.Always;
+            //    case Function.NEVER:
+            //        return DepthFunction.Never;
+            //}
+            //Debug.Assert(false);
+            //throw new Exception();
         }
 
         public static int getBufferId(BufferId b)
@@ -1539,27 +1534,28 @@ namespace Sxta.Render
 
         public static StencilOp getStencilOperation(StencilOperation o)
         {
-            switch (o)
-            {
-                case StencilOperation.KEEP:
-                    return StencilOp.Keep;
-                case StencilOperation.RESET:
-                    return StencilOp.Zero;
-                case StencilOperation.REPLACE:
-                    return StencilOp.Replace;
-                case StencilOperation.INVERT:
-                    return StencilOp.Invert;
-                case StencilOperation.INCR:
-                    return StencilOp.Incr;
-                case StencilOperation.DECR:
-                    return StencilOp.Decr;
-                case StencilOperation.INCR_WRAP:
-                    return StencilOp.IncrWrap;
-                case StencilOperation.DECR_WRAP:
-                    return StencilOp.DecrWrap;
-            }
-            Debug.Assert(false);
-            throw new Exception();
+            return (StencilOp)o;
+            //switch (o)
+            //{
+            //    case StencilOperation.KEEP:
+            //        return StencilOp.Keep;
+            //    case StencilOperation.RESET:
+            //        return StencilOp.Zero;
+            //    case StencilOperation.REPLACE:
+            //        return StencilOp.Replace;
+            //    case StencilOperation.INVERT:
+            //        return StencilOp.Invert;
+            //    case StencilOperation.INCR:
+            //        return StencilOp.Incr;
+            //    case StencilOperation.DECR:
+            //        return StencilOp.Decr;
+            //    case StencilOperation.INCR_WRAP:
+            //        return StencilOp.IncrWrap;
+            //    case StencilOperation.DECR_WRAP:
+            //        return StencilOp.DecrWrap;
+            //}
+            //Debug.Assert(false);
+            //throw new Exception();
         }
 
         public static BlendEquationMode getBlendEquation(BlendEquation e)

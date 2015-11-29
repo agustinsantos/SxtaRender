@@ -49,7 +49,7 @@
 ** Java Port: Pepijn Van Eeckhoudt, July 2003
 ** Java Port: Nathan Parker Burg, August 2003*/
 using System;
-namespace Mogre.Utils.GluTesselator
+namespace Sxta.Render.Utils.GluTesselator
 {
 	
 	class Mesh
@@ -63,20 +63,20 @@ namespace Mogre.Utils.GluTesselator
 		* No vertex or face structures are allocated, but these must be assigned
 		* before the current edge operation is completed.
 		*/
-		internal static Mogre.Utils.GluTesselator.GLUhalfEdge MakeEdge(Mogre.Utils.GluTesselator.GLUhalfEdge eNext)
+		internal static Sxta.Render.Utils.GluTesselator.GLUhalfEdge MakeEdge(Sxta.Render.Utils.GluTesselator.GLUhalfEdge eNext)
 		{
-			Mogre.Utils.GluTesselator.GLUhalfEdge e;
-			Mogre.Utils.GluTesselator.GLUhalfEdge eSym;
-			Mogre.Utils.GluTesselator.GLUhalfEdge ePrev;
+			Sxta.Render.Utils.GluTesselator.GLUhalfEdge e;
+			Sxta.Render.Utils.GluTesselator.GLUhalfEdge eSym;
+			Sxta.Render.Utils.GluTesselator.GLUhalfEdge ePrev;
 			
 			//        EdgePair * pair = (EdgePair *)
 			//        memAlloc(sizeof(EdgePair));
 			//        if (pair == NULL) return NULL;
 			//
 			//        e = &pair - > e;
-			e = new Mogre.Utils.GluTesselator.GLUhalfEdge(true);
+			e = new Sxta.Render.Utils.GluTesselator.GLUhalfEdge(true);
 			//        eSym = &pair - > eSym;
-			eSym = new Mogre.Utils.GluTesselator.GLUhalfEdge(false);
+			eSym = new Sxta.Render.Utils.GluTesselator.GLUhalfEdge(false);
 			
 			
 			/* Make sure eNext points to the first edge of the edge pair */
@@ -119,10 +119,10 @@ namespace Mogre.Utils.GluTesselator
 		* depending on whether a and b belong to different face or vertex rings.
 		* For more explanation see __gl_meshSplice() below.
 		*/
-		internal static void  Splice(Mogre.Utils.GluTesselator.GLUhalfEdge a, Mogre.Utils.GluTesselator.GLUhalfEdge b)
+		internal static void  Splice(Sxta.Render.Utils.GluTesselator.GLUhalfEdge a, Sxta.Render.Utils.GluTesselator.GLUhalfEdge b)
 		{
-			Mogre.Utils.GluTesselator.GLUhalfEdge aOnext = a.Onext;
-			Mogre.Utils.GluTesselator.GLUhalfEdge bOnext = b.Onext;
+			Sxta.Render.Utils.GluTesselator.GLUhalfEdge aOnext = a.Onext;
+			Sxta.Render.Utils.GluTesselator.GLUhalfEdge bOnext = b.Onext;
 			
 			aOnext.Sym.Lnext = b;
 			bOnext.Sym.Lnext = a;
@@ -136,11 +136,11 @@ namespace Mogre.Utils.GluTesselator
 		* the new vertex *before* vNext so that algorithms which walk the vertex
 		* list will not see the newly created vertices.
 		*/
-		internal static void  MakeVertex(Mogre.Utils.GluTesselator.GLUvertex newVertex, Mogre.Utils.GluTesselator.GLUhalfEdge eOrig, Mogre.Utils.GluTesselator.GLUvertex vNext)
+		internal static void  MakeVertex(Sxta.Render.Utils.GluTesselator.GLUvertex newVertex, Sxta.Render.Utils.GluTesselator.GLUhalfEdge eOrig, Sxta.Render.Utils.GluTesselator.GLUvertex vNext)
 		{
-			Mogre.Utils.GluTesselator.GLUhalfEdge e;
-			Mogre.Utils.GluTesselator.GLUvertex vPrev;
-			Mogre.Utils.GluTesselator.GLUvertex vNew = newVertex;
+			Sxta.Render.Utils.GluTesselator.GLUhalfEdge e;
+			Sxta.Render.Utils.GluTesselator.GLUvertex vPrev;
+			Sxta.Render.Utils.GluTesselator.GLUvertex vNew = newVertex;
 			
 			//assert(vNew != null);
 			
@@ -171,11 +171,11 @@ namespace Mogre.Utils.GluTesselator
 		* the new face *before* fNext so that algorithms which walk the face
 		* list will not see the newly created faces.
 		*/
-		internal static void  MakeFace(Mogre.Utils.GluTesselator.GLUface newFace, Mogre.Utils.GluTesselator.GLUhalfEdge eOrig, Mogre.Utils.GluTesselator.GLUface fNext)
+		internal static void  MakeFace(Sxta.Render.Utils.GluTesselator.GLUface newFace, Sxta.Render.Utils.GluTesselator.GLUhalfEdge eOrig, Sxta.Render.Utils.GluTesselator.GLUface fNext)
 		{
-			Mogre.Utils.GluTesselator.GLUhalfEdge e;
-			Mogre.Utils.GluTesselator.GLUface fPrev;
-			Mogre.Utils.GluTesselator.GLUface fNew = newFace;
+			Sxta.Render.Utils.GluTesselator.GLUhalfEdge e;
+			Sxta.Render.Utils.GluTesselator.GLUface fPrev;
+			Sxta.Render.Utils.GluTesselator.GLUface fNew = newFace;
 			
 			//assert(fNew != null);
 			
@@ -209,9 +209,9 @@ namespace Mogre.Utils.GluTesselator
 		/* KillEdge( eDel ) destroys an edge (the half-edges eDel and eDel->Sym),
 		* and removes from the global edge list.
 		*/
-		internal static void  KillEdge(Mogre.Utils.GluTesselator.GLUhalfEdge eDel)
+		internal static void  KillEdge(Sxta.Render.Utils.GluTesselator.GLUhalfEdge eDel)
 		{
-			Mogre.Utils.GluTesselator.GLUhalfEdge ePrev, eNext;
+			Sxta.Render.Utils.GluTesselator.GLUhalfEdge ePrev, eNext;
 			
 			/* Half-edges are allocated in pairs, see EdgePair above */
 			if (!eDel.first)
@@ -230,10 +230,10 @@ namespace Mogre.Utils.GluTesselator
 		/* KillVertex( vDel ) destroys a vertex and removes it from the global
 		* vertex list.  It updates the vertex loop to point to a given new vertex.
 		*/
-		internal static void  KillVertex(Mogre.Utils.GluTesselator.GLUvertex vDel, Mogre.Utils.GluTesselator.GLUvertex newOrg)
+		internal static void  KillVertex(Sxta.Render.Utils.GluTesselator.GLUvertex vDel, Sxta.Render.Utils.GluTesselator.GLUvertex newOrg)
 		{
-			Mogre.Utils.GluTesselator.GLUhalfEdge e, eStart = vDel.anEdge;
-			Mogre.Utils.GluTesselator.GLUvertex vPrev, vNext;
+			Sxta.Render.Utils.GluTesselator.GLUhalfEdge e, eStart = vDel.anEdge;
+			Sxta.Render.Utils.GluTesselator.GLUvertex vPrev, vNext;
 			
 			/* change the origin of all affected edges */
 			e = eStart;
@@ -254,10 +254,10 @@ namespace Mogre.Utils.GluTesselator
 		/* KillFace( fDel ) destroys a face and removes it from the global face
 		* list.  It updates the face loop to point to a given new face.
 		*/
-		internal static void  KillFace(Mogre.Utils.GluTesselator.GLUface fDel, Mogre.Utils.GluTesselator.GLUface newLface)
+		internal static void  KillFace(Sxta.Render.Utils.GluTesselator.GLUface fDel, Sxta.Render.Utils.GluTesselator.GLUface newLface)
 		{
-			Mogre.Utils.GluTesselator.GLUhalfEdge e, eStart = fDel.anEdge;
-			Mogre.Utils.GluTesselator.GLUface fPrev, fNext;
+			Sxta.Render.Utils.GluTesselator.GLUhalfEdge e, eStart = fDel.anEdge;
+			Sxta.Render.Utils.GluTesselator.GLUface fPrev, fNext;
 			
 			/* change the left face of all affected edges */
 			e = eStart;
@@ -281,12 +281,12 @@ namespace Mogre.Utils.GluTesselator
 		/* __gl_meshMakeEdge creates one edge, two vertices, and a loop (face).
 		* The loop consists of the two new half-edges.
 		*/
-		public static Mogre.Utils.GluTesselator.GLUhalfEdge __gl_meshMakeEdge(Mogre.Utils.GluTesselator.GLUmesh mesh)
+		public static Sxta.Render.Utils.GluTesselator.GLUhalfEdge __gl_meshMakeEdge(Sxta.Render.Utils.GluTesselator.GLUmesh mesh)
 		{
-			Mogre.Utils.GluTesselator.GLUvertex newVertex1 = new Mogre.Utils.GluTesselator.GLUvertex();
-			Mogre.Utils.GluTesselator.GLUvertex newVertex2 = new Mogre.Utils.GluTesselator.GLUvertex();
-			Mogre.Utils.GluTesselator.GLUface newFace = new Mogre.Utils.GluTesselator.GLUface();
-			Mogre.Utils.GluTesselator.GLUhalfEdge e;
+			Sxta.Render.Utils.GluTesselator.GLUvertex newVertex1 = new Sxta.Render.Utils.GluTesselator.GLUvertex();
+			Sxta.Render.Utils.GluTesselator.GLUvertex newVertex2 = new Sxta.Render.Utils.GluTesselator.GLUvertex();
+			Sxta.Render.Utils.GluTesselator.GLUface newFace = new Sxta.Render.Utils.GluTesselator.GLUface();
+			Sxta.Render.Utils.GluTesselator.GLUhalfEdge e;
 			
 			e = MakeEdge(mesh.eHead);
 			if (e == null)
@@ -322,7 +322,7 @@ namespace Mogre.Utils.GluTesselator
 		* If eDst == eOrg->Onext, the new vertex will have a single edge.
 		* If eDst == eOrg->Oprev, the old vertex will have a single edge.
 		*/
-		public static bool __gl_meshSplice(Mogre.Utils.GluTesselator.GLUhalfEdge eOrg, Mogre.Utils.GluTesselator.GLUhalfEdge eDst)
+		public static bool __gl_meshSplice(Sxta.Render.Utils.GluTesselator.GLUhalfEdge eOrg, Sxta.Render.Utils.GluTesselator.GLUhalfEdge eDst)
 		{
 			bool joiningLoops = false;
 			bool joiningVertices = false;
@@ -348,7 +348,7 @@ namespace Mogre.Utils.GluTesselator
 			
 			if (!joiningVertices)
 			{
-				Mogre.Utils.GluTesselator.GLUvertex newVertex = new Mogre.Utils.GluTesselator.GLUvertex();
+				Sxta.Render.Utils.GluTesselator.GLUvertex newVertex = new Sxta.Render.Utils.GluTesselator.GLUvertex();
 				
 				/* We split one vertex into two -- the new vertex is eDst.Org.
 				* Make sure the old vertex points to a valid half-edge.
@@ -358,7 +358,7 @@ namespace Mogre.Utils.GluTesselator
 			}
 			if (!joiningLoops)
 			{
-				Mogre.Utils.GluTesselator.GLUface newFace = new Mogre.Utils.GluTesselator.GLUface();
+				Sxta.Render.Utils.GluTesselator.GLUface newFace = new Sxta.Render.Utils.GluTesselator.GLUface();
 				
 				/* We split one loop into two -- the new loop is eDst.Lface.
 				* Make sure the old face points to a valid half-edge.
@@ -381,9 +381,9 @@ namespace Mogre.Utils.GluTesselator
 		* plus a few calls to memFree, but this would allocate and delete
 		* unnecessary vertices and faces.
 		*/
-		internal static bool __gl_meshDelete(Mogre.Utils.GluTesselator.GLUhalfEdge eDel)
+		internal static bool __gl_meshDelete(Sxta.Render.Utils.GluTesselator.GLUhalfEdge eDel)
 		{
-			Mogre.Utils.GluTesselator.GLUhalfEdge eDelSym = eDel.Sym;
+			Sxta.Render.Utils.GluTesselator.GLUhalfEdge eDelSym = eDel.Sym;
 			bool joiningLoops = false;
 			
 			/* First step: disconnect the origin vertex eDel.Org.  We make all
@@ -409,7 +409,7 @@ namespace Mogre.Utils.GluTesselator
 				Splice(eDel, eDel.Sym.Lnext);
 				if (!joiningLoops)
 				{
-					Mogre.Utils.GluTesselator.GLUface newFace = new Mogre.Utils.GluTesselator.GLUface();
+					Sxta.Render.Utils.GluTesselator.GLUface newFace = new Sxta.Render.Utils.GluTesselator.GLUface();
 					
 					/* We are splitting one loop into two -- create a new loop for eDel. */
 					MakeFace(newFace, eDel, eDel.Lface);
@@ -450,10 +450,10 @@ namespace Mogre.Utils.GluTesselator
 		* eNew == eOrg.Lnext, and eNew.Dst is a newly created vertex.
 		* eOrg and eNew will have the same left face.
 		*/
-		internal static Mogre.Utils.GluTesselator.GLUhalfEdge __gl_meshAddEdgeVertex(Mogre.Utils.GluTesselator.GLUhalfEdge eOrg)
+		internal static Sxta.Render.Utils.GluTesselator.GLUhalfEdge __gl_meshAddEdgeVertex(Sxta.Render.Utils.GluTesselator.GLUhalfEdge eOrg)
 		{
-			Mogre.Utils.GluTesselator.GLUhalfEdge eNewSym;
-			Mogre.Utils.GluTesselator.GLUhalfEdge eNew = MakeEdge(eOrg);
+			Sxta.Render.Utils.GluTesselator.GLUhalfEdge eNewSym;
+			Sxta.Render.Utils.GluTesselator.GLUhalfEdge eNew = MakeEdge(eOrg);
 			
 			eNewSym = eNew.Sym;
 			
@@ -463,7 +463,7 @@ namespace Mogre.Utils.GluTesselator
 			/* Set the vertex and face information */
 			eNew.Org = eOrg.Sym.Org;
 			{
-				Mogre.Utils.GluTesselator.GLUvertex newVertex = new Mogre.Utils.GluTesselator.GLUvertex();
+				Sxta.Render.Utils.GluTesselator.GLUvertex newVertex = new Sxta.Render.Utils.GluTesselator.GLUvertex();
 				
 				MakeVertex(newVertex, eNewSym, eNew.Org);
 			}
@@ -477,10 +477,10 @@ namespace Mogre.Utils.GluTesselator
 		* such that eNew == eOrg.Lnext.  The new vertex is eOrg.Sym.Org == eNew.Org.
 		* eOrg and eNew will have the same left face.
 		*/
-		public static Mogre.Utils.GluTesselator.GLUhalfEdge __gl_meshSplitEdge(Mogre.Utils.GluTesselator.GLUhalfEdge eOrg)
+		public static Sxta.Render.Utils.GluTesselator.GLUhalfEdge __gl_meshSplitEdge(Sxta.Render.Utils.GluTesselator.GLUhalfEdge eOrg)
 		{
-			Mogre.Utils.GluTesselator.GLUhalfEdge eNew;
-			Mogre.Utils.GluTesselator.GLUhalfEdge tempHalfEdge = __gl_meshAddEdgeVertex(eOrg);
+			Sxta.Render.Utils.GluTesselator.GLUhalfEdge eNew;
+			Sxta.Render.Utils.GluTesselator.GLUhalfEdge tempHalfEdge = __gl_meshAddEdgeVertex(eOrg);
 			
 			eNew = tempHalfEdge.Sym;
 			
@@ -509,11 +509,11 @@ namespace Mogre.Utils.GluTesselator
 		* If (eOrg.Lnext == eDst), the old face is reduced to a single edge.
 		* If (eOrg.Lnext.Lnext == eDst), the old face is reduced to two edges.
 		*/
-		internal static Mogre.Utils.GluTesselator.GLUhalfEdge __gl_meshConnect(Mogre.Utils.GluTesselator.GLUhalfEdge eOrg, Mogre.Utils.GluTesselator.GLUhalfEdge eDst)
+		internal static Sxta.Render.Utils.GluTesselator.GLUhalfEdge __gl_meshConnect(Sxta.Render.Utils.GluTesselator.GLUhalfEdge eOrg, Sxta.Render.Utils.GluTesselator.GLUhalfEdge eDst)
 		{
-			Mogre.Utils.GluTesselator.GLUhalfEdge eNewSym;
+			Sxta.Render.Utils.GluTesselator.GLUhalfEdge eNewSym;
 			bool joiningLoops = false;
-			Mogre.Utils.GluTesselator.GLUhalfEdge eNew = MakeEdge(eOrg);
+			Sxta.Render.Utils.GluTesselator.GLUhalfEdge eNew = MakeEdge(eOrg);
 			
 			eNewSym = eNew.Sym;
 			
@@ -538,7 +538,7 @@ namespace Mogre.Utils.GluTesselator
 			
 			if (!joiningLoops)
 			{
-				Mogre.Utils.GluTesselator.GLUface newFace = new Mogre.Utils.GluTesselator.GLUface();
+				Sxta.Render.Utils.GluTesselator.GLUface newFace = new Sxta.Render.Utils.GluTesselator.GLUface();
 				
 				/* We split one loop into two -- the new loop is eNew.Lface */
 				MakeFace(newFace, eNew, eOrg.Lface);
@@ -556,11 +556,11 @@ namespace Mogre.Utils.GluTesselator
 		* An entire mesh can be deleted by zapping its faces, one at a time,
 		* in any order.  Zapped faces cannot be used in further mesh operations!
 		*/
-		internal static void  __gl_meshZapFace(Mogre.Utils.GluTesselator.GLUface fZap)
+		internal static void  __gl_meshZapFace(Sxta.Render.Utils.GluTesselator.GLUface fZap)
 		{
-			Mogre.Utils.GluTesselator.GLUhalfEdge eStart = fZap.anEdge;
-			Mogre.Utils.GluTesselator.GLUhalfEdge e, eNext, eSym;
-			Mogre.Utils.GluTesselator.GLUface fPrev, fNext;
+			Sxta.Render.Utils.GluTesselator.GLUhalfEdge eStart = fZap.anEdge;
+			Sxta.Render.Utils.GluTesselator.GLUhalfEdge e, eNext, eSym;
+			Sxta.Render.Utils.GluTesselator.GLUface fPrev, fNext;
 			
 			/* walk around face, deleting edges whose right face is also null */
 			eNext = eStart.Lnext;
@@ -611,13 +611,13 @@ namespace Mogre.Utils.GluTesselator
 		/* __gl_meshNewMesh() creates a new mesh with no edges, no vertices,
 		* and no loops (what we usually call a "face").
 		*/
-		public static Mogre.Utils.GluTesselator.GLUmesh __gl_meshNewMesh()
+		public static Sxta.Render.Utils.GluTesselator.GLUmesh __gl_meshNewMesh()
 		{
-			Mogre.Utils.GluTesselator.GLUvertex v;
-			Mogre.Utils.GluTesselator.GLUface f;
-			Mogre.Utils.GluTesselator.GLUhalfEdge e;
-			Mogre.Utils.GluTesselator.GLUhalfEdge eSym;
-			Mogre.Utils.GluTesselator.GLUmesh mesh = new Mogre.Utils.GluTesselator.GLUmesh();
+			Sxta.Render.Utils.GluTesselator.GLUvertex v;
+			Sxta.Render.Utils.GluTesselator.GLUface f;
+			Sxta.Render.Utils.GluTesselator.GLUhalfEdge e;
+			Sxta.Render.Utils.GluTesselator.GLUhalfEdge eSym;
+			Sxta.Render.Utils.GluTesselator.GLUmesh mesh = new Sxta.Render.Utils.GluTesselator.GLUmesh();
 			
 			v = mesh.vHead;
 			f = mesh.fHead;
@@ -660,14 +660,14 @@ namespace Mogre.Utils.GluTesselator
 		/* __gl_meshUnion( mesh1, mesh2 ) forms the union of all structures in
 		* both meshes, and returns the new mesh (the old meshes are destroyed).
 		*/
-		internal static Mogre.Utils.GluTesselator.GLUmesh __gl_meshUnion(Mogre.Utils.GluTesselator.GLUmesh mesh1, Mogre.Utils.GluTesselator.GLUmesh mesh2)
+		internal static Sxta.Render.Utils.GluTesselator.GLUmesh __gl_meshUnion(Sxta.Render.Utils.GluTesselator.GLUmesh mesh1, Sxta.Render.Utils.GluTesselator.GLUmesh mesh2)
 		{
-			Mogre.Utils.GluTesselator.GLUface f1 = mesh1.fHead;
-			Mogre.Utils.GluTesselator.GLUvertex v1 = mesh1.vHead;
-			Mogre.Utils.GluTesselator.GLUhalfEdge e1 = mesh1.eHead;
-			Mogre.Utils.GluTesselator.GLUface f2 = mesh2.fHead;
-			Mogre.Utils.GluTesselator.GLUvertex v2 = mesh2.vHead;
-			Mogre.Utils.GluTesselator.GLUhalfEdge e2 = mesh2.eHead;
+			Sxta.Render.Utils.GluTesselator.GLUface f1 = mesh1.fHead;
+			Sxta.Render.Utils.GluTesselator.GLUvertex v1 = mesh1.vHead;
+			Sxta.Render.Utils.GluTesselator.GLUhalfEdge e1 = mesh1.eHead;
+			Sxta.Render.Utils.GluTesselator.GLUface f2 = mesh2.fHead;
+			Sxta.Render.Utils.GluTesselator.GLUvertex v2 = mesh2.vHead;
+			Sxta.Render.Utils.GluTesselator.GLUhalfEdge e2 = mesh2.eHead;
 			
 			/* Add the faces, vertices, and edges of mesh2 to those of mesh1 */
 			if (f2.next != f2)
@@ -700,9 +700,9 @@ namespace Mogre.Utils.GluTesselator
 		
 		/* __gl_meshDeleteMesh( mesh ) will free all storage for any valid mesh.
 		*/
-		internal static void  __gl_meshDeleteMeshZap(Mogre.Utils.GluTesselator.GLUmesh mesh)
+		internal static void  __gl_meshDeleteMeshZap(Sxta.Render.Utils.GluTesselator.GLUmesh mesh)
 		{
-			Mogre.Utils.GluTesselator.GLUface fHead = mesh.fHead;
+			Sxta.Render.Utils.GluTesselator.GLUface fHead = mesh.fHead;
 			
 			while (fHead.next != fHead)
 			{
@@ -713,11 +713,11 @@ namespace Mogre.Utils.GluTesselator
 		
 		/* __gl_meshDeleteMesh( mesh ) will free all storage for any valid mesh.
 		*/
-		public static void  __gl_meshDeleteMesh(Mogre.Utils.GluTesselator.GLUmesh mesh)
+		public static void  __gl_meshDeleteMesh(Sxta.Render.Utils.GluTesselator.GLUmesh mesh)
 		{
-			Mogre.Utils.GluTesselator.GLUface f, fNext;
-			Mogre.Utils.GluTesselator.GLUvertex v, vNext;
-			Mogre.Utils.GluTesselator.GLUhalfEdge e, eNext;
+			Sxta.Render.Utils.GluTesselator.GLUface f, fNext;
+			Sxta.Render.Utils.GluTesselator.GLUvertex v, vNext;
+			Sxta.Render.Utils.GluTesselator.GLUhalfEdge e, eNext;
 			
 			for (f = mesh.fHead.next; f != mesh.fHead; f = fNext)
 			{
@@ -738,14 +738,14 @@ namespace Mogre.Utils.GluTesselator
 		
 		/* __gl_meshCheckMesh( mesh ) checks a mesh for self-consistency.
 		*/
-		public static void  __gl_meshCheckMesh(Mogre.Utils.GluTesselator.GLUmesh mesh)
+		public static void  __gl_meshCheckMesh(Sxta.Render.Utils.GluTesselator.GLUmesh mesh)
 		{
-			Mogre.Utils.GluTesselator.GLUface fHead = mesh.fHead;
-			Mogre.Utils.GluTesselator.GLUvertex vHead = mesh.vHead;
-			Mogre.Utils.GluTesselator.GLUhalfEdge eHead = mesh.eHead;
-			Mogre.Utils.GluTesselator.GLUface f, fPrev;
-			Mogre.Utils.GluTesselator.GLUvertex v, vPrev;
-			Mogre.Utils.GluTesselator.GLUhalfEdge e, ePrev;
+			Sxta.Render.Utils.GluTesselator.GLUface fHead = mesh.fHead;
+			Sxta.Render.Utils.GluTesselator.GLUvertex vHead = mesh.vHead;
+			Sxta.Render.Utils.GluTesselator.GLUhalfEdge eHead = mesh.eHead;
+			Sxta.Render.Utils.GluTesselator.GLUface f, fPrev;
+			Sxta.Render.Utils.GluTesselator.GLUvertex v, vPrev;
+			Sxta.Render.Utils.GluTesselator.GLUhalfEdge e, ePrev;
 			
 			fPrev = fHead;
 			for (fPrev = fHead; (f = fPrev.next) != fHead; fPrev = f)

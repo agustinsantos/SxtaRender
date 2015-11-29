@@ -7,6 +7,7 @@ using Sxta.Render;
 using Sxta.TestTools.ImageTesting;
 using SxtaRenderTests.TestTools;
 using System.Drawing;
+using System.Runtime.InteropServices;
 
 namespace SxtaRenderTests
 {
@@ -886,5 +887,213 @@ namespace SxtaRenderTests
 #endif
             Assert.AreEqual(0, dissimilarity, epsilonError);
         }
+
+        private static readonly string TestUniformBlockComplex01_SHADER = @"
+#ifdef _VERTEX_
+        layout (location = 0) in vec3 aPosition; 
+        void main()
+        {
+            gl_Position = vec4(aPosition, 1.0);
+        }
+#endif
+#ifdef _FRAGMENT_
+        layout(std140) uniform uBlock { 
+            float uF1;
+            float uF2;
+            vec2  uFv;
+        };
+        out vec4 FragColor;
+        void main()
+        {
+            FragColor = vec4(uF1, uF2, uFv); 
+        }
+#endif";
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct UniformBlockStruct01
+        {
+            public float F1;
+            public float F2;
+            public Vector2f Fv;
+        }
+
+        [TestMethod]
+        public void TestUniformBlockComplex01()
+        {
+            Bitmap bmp;
+
+            IGraphicsContext context = RenderTestUtils.PrepareContext();
+            using (FrameBuffer fb = new FrameBuffer())
+            {
+                RenderBuffer rb = new RenderBuffer(RenderBuffer.RenderBufferFormat.RGB8, Width, Height);
+                fb.setRenderBuffer(BufferId.COLOR0, rb);
+                fb.setViewport(new Vector4i(0, 0, Width, Height));
+
+                Program p = new Program(new Module(330, TestUniformBlockComplex01_SHADER));
+                UniformBlockStruct01 block = new UniformBlockStruct01() { F1 = 0.2f, F2 = 0.4f, Fv = new Vector2f(0.6f, 1f) };
+                p.getUniformBlock("uBlock").set(block);
+                fb.drawQuad(p);
+
+                bmp = RenderTestUtils.GetScreenshot(Width, Height);
+#if SAVE_RESULTS
+                RenderTestUtils.SaveTestResult(TESTSNAME, "TestUniformBlockComplex01_Screenshot", bmp);
+#endif
+                if (rb != null)
+                    rb.Dispose();
+                if (p != null)
+                    p.Dispose();
+            }
+            context.MakeCurrent(null);
+
+            Image expectedImg = Image.FromFile("Resources/ControlImages/Screenshot03.bmp");
+            float dissimilarity;
+            Image diffResult = imageComparer.ComputeSimilarity(expectedImg, bmp, out dissimilarity);
+#if SAVE_RESULTS
+            RenderTestUtils.SaveTestResult(TESTSNAME, "TestUniformBlockComplex01_ImageDiff", diffResult);
+#endif
+            Assert.AreEqual(0, dissimilarity, epsilonError);
+        }
+
+
+        private static readonly string TestUniformBlockComplex02_SHADER = @"
+#ifdef _VERTEX_
+        layout (location = 0) in vec3 aPosition; 
+        void main()
+        {
+            gl_Position = vec4(aPosition, 1.0);
+        }
+#endif
+#ifdef _FRAGMENT_
+        layout(std140) uniform uBlock { 
+            vec2  uFv;
+            int uF1;
+            float uF2;
+        };
+        out vec4 FragColor;
+        void main()
+        {
+            FragColor = vec4(uF1/255.0, uF2, uFv); 
+        }
+#endif";
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct UniformBlockStruct02
+        {
+            public Vector2f Fv;
+            public int F1;
+            public float F2;
+        }
+
+        [TestMethod]
+        public void TestUniformBlockComplex02()
+        {
+            Bitmap bmp;
+
+            IGraphicsContext context = RenderTestUtils.PrepareContext();
+            using (FrameBuffer fb = new FrameBuffer())
+            {
+                RenderBuffer rb = new RenderBuffer(RenderBuffer.RenderBufferFormat.RGB8, Width, Height);
+                fb.setRenderBuffer(BufferId.COLOR0, rb);
+                fb.setViewport(new Vector4i(0, 0, Width, Height));
+
+                Program p = new Program(new Module(330, TestUniformBlockComplex02_SHADER));
+                UniformBlockStruct02 block = new UniformBlockStruct02() { Fv = new Vector2f(0.6f, 1f), F1 = (int)(0.2 * 255), F2 = 0.4f };
+                p.getUniformBlock("uBlock").set(block);
+                fb.drawQuad(p);
+
+                bmp = RenderTestUtils.GetScreenshot(Width, Height);
+#if SAVE_RESULTS
+                RenderTestUtils.SaveTestResult(TESTSNAME, "TestUniformBlockComplex02_Screenshot", bmp);
+#endif
+                if (rb != null)
+                    rb.Dispose();
+                if (p != null)
+                    p.Dispose();
+            }
+            context.MakeCurrent(null);
+
+            Image expectedImg = Image.FromFile("Resources/ControlImages/Screenshot03.bmp");
+            float dissimilarity;
+            Image diffResult = imageComparer.ComputeSimilarity(expectedImg, bmp, out dissimilarity);
+#if SAVE_RESULTS
+            RenderTestUtils.SaveTestResult(TESTSNAME, "TestUniformBlockComplex02_ImageDiff", diffResult);
+#endif
+            Assert.AreEqual(0, dissimilarity, epsilonError);
+        }
+
+        private static readonly string TestUniformBlockComplex03_SHADER = @"
+#ifdef _VERTEX_
+        layout (location = 0) in vec3 aPosition; 
+        void main()
+        {
+            gl_Position = vec4(aPosition, 1.0);
+        }
+#endif
+#ifdef _FRAGMENT_
+        layout(std140) uniform uBlock { 
+            vec3  uFv;
+            int uF1;
+            float uF2;
+        };
+        out vec4 FragColor;
+        void main()
+        {
+            FragColor = vec4(uF1/255.0, uF2, uFv.xy); 
+        }
+#endif";
+
+        [StructLayout(LayoutKind.Explicit)]
+        private struct UniformBlockStruct03
+        {
+            [FieldOffset(0)]
+            public Vector3f Fv;
+
+            [FieldOffset(12)]
+            public int F1;
+
+            [FieldOffset(16)]
+            public float F2;
+
+            [FieldOffset(28)]
+            public float Dummy;
+        }
+
+        [TestMethod]
+        public void TestUniformBlockComplex03()
+        {
+            Bitmap bmp;
+
+            IGraphicsContext context = RenderTestUtils.PrepareContext();
+            using (FrameBuffer fb = new FrameBuffer())
+            {
+                RenderBuffer rb = new RenderBuffer(RenderBuffer.RenderBufferFormat.RGB8, Width, Height);
+                fb.setRenderBuffer(BufferId.COLOR0, rb);
+                fb.setViewport(new Vector4i(0, 0, Width, Height));
+
+                Program p = new Program(new Module(330, TestUniformBlockComplex03_SHADER));
+                UniformBlockStruct03 block = new UniformBlockStruct03() { Fv = new Vector3f(0.6f, 1f, 0.0f), F1 = (int)(0.2 * 255), F2 = 0.4f };
+                p.getUniformBlock("uBlock").set(block);
+                fb.drawQuad(p);
+
+                bmp = RenderTestUtils.GetScreenshot(Width, Height);
+#if SAVE_RESULTS
+                RenderTestUtils.SaveTestResult(TESTSNAME, "TestUniformBlockComplex03_Screenshot", bmp);
+#endif
+                if (rb != null)
+                    rb.Dispose();
+                if (p != null)
+                    p.Dispose();
+            }
+            context.MakeCurrent(null);
+
+            Image expectedImg = Image.FromFile("Resources/ControlImages/Screenshot03.bmp");
+            float dissimilarity;
+            Image diffResult = imageComparer.ComputeSimilarity(expectedImg, bmp, out dissimilarity);
+#if SAVE_RESULTS
+            RenderTestUtils.SaveTestResult(TESTSNAME, "TestUniformBlockComplex03_ImageDiff", diffResult);
+#endif
+            Assert.AreEqual(0, dissimilarity, epsilonError);
+        }
+
     }
 }
