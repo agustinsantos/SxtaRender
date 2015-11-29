@@ -143,76 +143,76 @@ namespace SxtaRenderTests
         [TestMethod]
         public void TestDrawTexture_BMP_32BppBGR_01()
         {
-            DoTest("Resources/ImageFormat/test_32bppBGR.bmp", "TestDrawTexture_BMP_32BppBGR_01");
+            DoTest("Resources/ImageFormat/BMP/test_32bppBGR.bmp", "TestDrawTexture_BMP_32BppBGR_01");
         }
 
         [TestMethod]
         public void TestDrawTexture_BMP_24BppBGR_01()
         {
-            DoTest("Resources/ImageFormat/test_24bppBGR.bmp", "TestDrawTexture_BMP_24BppBGR_01");
+            DoTest("Resources/ImageFormat/BMP/test_24bppBGR.bmp", "TestDrawTexture_BMP_24BppBGR_01");
         }
 
         [TestMethod]
         public void TestDrawTexture_BMP_16BppBGR565_01()
         {
-            DoTest("Resources/ImageFormat/test_16bppBGR565.bmp", "TestDrawTexture_BMP_16BppBGR565_01");
+            DoTest("Resources/ImageFormat/BMP/test_16bppBGR565.bmp", "TestDrawTexture_BMP_16BppBGR565_01");
         }
 
         [TestMethod]
         public void TestDrawTexture_BMP_16BppBGR555_01()
         {
-            DoTest("Resources/ImageFormat/test_16bppBGR555.bmp", "TestDrawTexture_BMP_16BppBGR555_01");
+            DoTest("Resources/ImageFormat/BMP/test_16bppBGR555.bmp", "TestDrawTexture_BMP_16BppBGR555_01");
         }
 
         [TestMethod]
         public void TestDrawTexture_BMP_8BppIndexed_01()
         {
             // TODO. Indexed format is not implemented yet.
-            DoTest("Resources/ImageFormat/test_8bppIndexed.bmp", "TestDrawTexture_BMP_8BppIndexed_01");
+            DoTest("Resources/ImageFormat/BMP/test_8bppIndexed.bmp", "TestDrawTexture_BMP_8BppIndexed_01");
         }
 
         [TestMethod]
         public void TestDrawTexture_PNG_32BppBGRA_01()
         {
-            DoTest("Resources/ImageFormat/test_32bppBGRA.png", "TestDrawTexture_PNG_32BppBGRA_01");
+            DoTest("Resources/ImageFormat/PNG/test_32bppBGRA.png", "TestDrawTexture_PNG_32BppBGRA_01");
         }
 
         [TestMethod]
         public void TestDrawTexture_PNG_24BppBGR_01()
         {
-            DoTest("Resources/ImageFormat/test_24bppBGR.png", "TestDrawTexture_PNG_24BppBGR_01");
+            DoTest("Resources/ImageFormat/PNG/test_24bppBGR.png", "TestDrawTexture_PNG_24BppBGR_01");
         }
 
         [TestMethod]
         public void TestDrawTexture_JPG_24BppBGR_01()
         {
-            DoTest("Resources/ImageFormat/test_24bppBGR.jpg", "TestDrawTexture_JPG_24BppBGR_01");
+            DoTest("Resources/ImageFormat/JPG/test_24bppBGR.jpg", "TestDrawTexture_JPG_24BppBGR_01");
         }
 
         [TestMethod]
-        public void TestDrawTexture_GIT_8BppIndexed_01()
+        public void TestDrawTexture_GIF_8BppIndexed_01()
         {
             // TODO. Indexed format is not implemented yet.
-            DoTest("Resources/ImageFormat/test_8bppIndexed.gif", "TestDrawTexture_GIT_8BppIndexed_01");
+            DoTest("Resources/ImageFormat/GIF/test_8bppIndexed.gif", "TestDrawTexture_GIF_8BppIndexed_01");
         }
 
         [TestMethod]
         public void TestDrawTexture_TIF_32BppBGRA_NOCOMPRESS_01()
         {
-            DoTest("Resources/ImageFormat/test_NC_32bppBGRA.tif", "TestDrawTexture_TIF_32BppBGRA_NOCOMPRESS_01");
+            DoTest("Resources/ImageFormat/TIF/test_NC_32bppBGRA.tif", "TestDrawTexture_TIF_32BppBGRA_NOCOMPRESS_01");
         }
 
         [TestMethod]
         public void TestDrawTexture_TIF_24BppBGR_NOCOMPRESS_01()
         {
-            DoTest("Resources/ImageFormat/test_NC_24bppBGR.tif", "TestDrawTexture_TIF_24BppBGR_NOCOMPRESS_01");
+            DoTest("Resources/ImageFormat/TIF/test_NC_24bppBGR.tif", "TestDrawTexture_TIF_24BppBGR_NOCOMPRESS_01");
         }
 
         [TestMethod]
         public void TestDrawTexture_TIF_32BppCMYK_NOCOMPRESS_01()
         {
             // TODO. CMYK format is not implemented yet.
-            DoTest("Resources/ImageFormat/test_NC_32bppCMYK.tif", "TestDrawTexture_TIF_32BppCMYK_NOCOMPRESS_01");
+            DoTest("Resources/ImageFormat/TIF/test_NC_32bppCMYK.tif", "TestDrawTexture_TIF_32BppCMYK_NOCOMPRESS_01");
         }
     }
 }

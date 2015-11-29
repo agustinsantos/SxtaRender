@@ -645,16 +645,23 @@ namespace Sxta.Render
             textureTarget = target;
         }
 
-        
-		/// <summary>
-		/// Initializes this texture.
+        /// <summary>
+		/// Creates a new unitialized texture.
+		/// Initializes a new instance of the <see cref="Sxta.Render.Texture"/> class.
 		/// </summary>
-		/// <param name='tf'>
-		/// Tf. texture data format on GPU.
-		/// </param>
-		/// <param name='params_'>
-		/// Params_. the texture parameters.
-		/// </param>
+        protected Texture()
+        {
+        }
+
+        /// <summary>
+        /// Initializes this texture.
+        /// </summary>
+        /// <param name='tf'>
+        /// Tf. texture data format on GPU.
+        /// </param>
+        /// <param name='params_'>
+        /// Params_. the texture parameters.
+        /// </param>
         protected void init(TextureInternalFormat tf, Parameters params_)
         {
 #if OPENTK

@@ -16,16 +16,15 @@ namespace Sxta.Proland.Core.Producer
     /// of these methods in this class is empty.
     /// @authors Eric Bruneton, Antoine Begault
     /// </summary>
-    public class TileLayer
+    public abstract class TileLayer
     {
-#if TODO
 
         /// <summary>
         /// Creates a new TileLayer.
         /// </summary>
         /// <param name="type">the layer's type.</param>
         /// <param name="deform">whether we apply a spherical deformation on the layer or not.</param>
-        public TileLayer(string type, bool deform = false);
+        public TileLayer(string type, bool deform = false) { throw new NotImplementedException(); }
 
         /*
          * Deletes this TileLayer.
@@ -37,7 +36,7 @@ namespace Sxta.Proland.Core.Producer
         /// Returns the TileCache that stores the tiles produced by the producer using this TileLayer.
         /// </summary>
         /// <returns></returns>
-        public TileCache getCache();
+        public TileCache getCache() { throw new NotImplementedException(); }
 
 
         /// <summary>
@@ -46,7 +45,7 @@ namespace Sxta.Proland.Core.Producer
         /// cache.
         /// </summary>
         /// <returns></returns>
-        public int getProducerId();
+        public int getProducerId() { throw new NotImplementedException(); }
 
 
         /// <summary>
@@ -54,7 +53,7 @@ namespace Sxta.Proland.Core.Producer
         /// belongs. This size includes borders.
         /// </summary>
         /// <returns></returns>
-        public int getTileSize();
+        public int getTileSize() { throw new NotImplementedException(); }
 
         /*
          * Returns the size in pixels of the border of each tile. Tiles made of
@@ -66,53 +65,55 @@ namespace Sxta.Proland.Core.Producer
          * data redundancy but is usefull to get the valueC of the neighboring pixels
          * of a tile without needing to load the neighboring tiles.
          */
-        public int getTileBorder();
+        public int getTileBorder() { throw new NotImplementedException(); }
 
         /*
          * Returns the size in meters of the root quad produced by the producer using this Layer.
          */
-        public float getRootQuadSize();
+        public float getRootQuadSize() { throw new NotImplementedException(); }
 
         /*
          * Returns the ox,oy,l coordinates of the given tile.
          */
-        public Vector3d getTileCoords(int level, int tx, int ty);
+        public Vector3d getTileCoords(int level, int tx, int ty) { throw new NotImplementedException(); }
 
         /*
          * Returns true if a spherical deformation is applied on the layer or not.
          */
-        public bool isDeformed();
+        public bool isDeformed() { throw new NotImplementedException(); }
 
-        public void getDeformParameters(Vector3d tileCoords, out Vector2d nx, out Vector2d ny, out Vector2d lx, out Vector2d ly);
+        public void getDeformParameters(Vector3d tileCoords, out Vector2d nx, out Vector2d ny, out Vector2d lx, out Vector2d ly) { throw new NotImplementedException(); }
 
         /*
          * Returns true if this TileLayer is enabled.
          */
-        public bool isEnabled();
+        public bool isEnabled() { throw new NotImplementedException(); }
 
         /*
          * Enables or disables this TileLayer.
          *
          * @param enabled true to enable this TileLayer, false otherwise.
          */
-        public void setIsEnabled(bool enabled);
+        public void setIsEnabled(bool enabled) { throw new NotImplementedException(); }
+
 
         /*
          * Sets the TileCache that stores the tiles produced by this Layer.
          */
-        public virtual void setCache(TileCache cache, int producerId);
+        public virtual void setCache(TileCache cache, int producerId) { throw new NotImplementedException(); }
 
         /*
          * Returns the tile producers used by this TileLayer.
          *
          * @param[out] producers the tile producers used by this TileLayer.
          */
-        public virtual void getReferencedProducers(List<TileProducer> producers);
+        public virtual void getReferencedProducers(List<TileProducer> producers) { throw new NotImplementedException(); }
 
         /*
          * Sets the tile size valueC.
          */
-        public virtual void setTileSize(int tileSize, int tileBorder, float rootQuadSize);
+        public virtual void setTileSize(int tileSize, int tileBorder, float rootQuadSize) { throw new NotImplementedException(); }
+
 
         /*
          * Notifies this Layer that the given tile of its TileProducer is in use.
@@ -125,7 +126,7 @@ namespace Sxta.Proland.Core.Producer
          * @param deadline the deadline at which the tile data must be ready. 0 means
          *      the current frame.
          */
-        public virtual void useTile(int level, int tx, int ty, uint deadline);
+        public virtual void useTile(int level, int tx, int ty, uint deadline) { throw new NotImplementedException(); }
 
         /*
          * Notifies this Layer that the given tile of its TileProducer is unused.
@@ -136,7 +137,7 @@ namespace Sxta.Proland.Core.Producer
          * @param tx the tile's quadtree x coordinate.
          * @param ty the tile's quadtree y coordinate.
          */
-        public virtual void unuseTile(int level, int tx, int ty);
+        public virtual void unuseTile(int level, int tx, int ty) { throw new NotImplementedException(); }
 
         /*
          * Schedules a prefetch task to create the given tile. If the requested tile
@@ -151,19 +152,19 @@ namespace Sxta.Proland.Core.Producer
          * @return true if this method has been able to schedule a prefetch task
          *      for the given tile.
          */
-        public virtual void prefetchTile(int level, int tx, int ty);
+        public virtual void prefetchTile(int level, int tx, int ty) { throw new NotImplementedException(); }
 
         /*
          * Starts the creation of a tile.
          * See TileProducer#startCreateTile.
          */
-        public virtual void startCreateTile(int level, int tx, int ty, uint deadline, Task task, TaskGraph owner);
+        public virtual void startCreateTile(int level, int tx, int ty, uint deadline, Task task, TaskGraph owner) { throw new NotImplementedException(); }
 
         /*
          * Sets the execution context for the Task that produces the tile data.
          * See TileProducer#beginCreateTile.
          */
-        public virtual void beginCreateTile();
+        public virtual void beginCreateTile() { throw new NotImplementedException(); }
 
         /*
          * Creates the given tile.
@@ -175,20 +176,20 @@ namespace Sxta.Proland.Core.Producer
          * Restores the execution context for the Task that produces the tile data.
          * See TileProducer#endCreateTile.
          */
-        public virtual void endCreateTile();
+        public virtual void endCreateTile() { throw new NotImplementedException(); }
 
         /*
          * Stops the creation of a tile.
          * See TileProducer#stopCreateTile.
          */
-        public virtual void stopCreateTile(int level, int tx, int ty);
+        public virtual void stopCreateTile(int level, int tx, int ty) { throw new NotImplementedException(); }
 
         /*
          * Invalidates the tiles modified by this layer.
          * This means that the tasks to produce the actual data of these tiles will
          * be automatically reexecuted before the data can be used.
          */
-        public virtual void invalidateTiles();
+        public virtual void invalidateTiles() { throw new NotImplementedException(); }
 
 
         /*
@@ -196,9 +197,9 @@ namespace Sxta.Proland.Core.Producer
          *
          * @param deform whether we apply a spherical deformation on the layer or not.
          */
-        protected void init(bool deform = false);
+        protected void init(bool deform = false) { throw new NotImplementedException(); }
 
-        protected virtual void swap(TileLayer p);
+        protected virtual void swap(TileLayer p) { throw new NotImplementedException(); }
 
 
         /*
@@ -235,7 +236,5 @@ namespace Sxta.Proland.Core.Producer
         private bool deform;
 
         private bool enabled;
-#endif
     }
-
 }

@@ -58,6 +58,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="ImageDDSTest.cs" />
     <Compile Include="TextureFormatsTest.cs" />
     <Compile Include="DrawTextureTest.cs" />
     <Compile Include="TestTools\Color32.cs" />
@@ -75,6 +76,7 @@
     <Compile Include="UniformTestf.cs" />
     <Compile Include="DrawMeshTest.cs" />
     <Compile Include="UniformBlockTest.cs" />
+    <Compile Include="ImageKTXTest.cs" />
     <Compile Include="Vector3fTest.cs" />
     <Compile Include="QuaternionTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -86,7 +88,79 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\ImageFormat\KTX\Lenna_etc2_RGB.ktx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
+    <None Include="Resources\ImageFormat\KTX\kueken7_rg11b10_ufloat.ktx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\ImageFormat\KTX\kueken7_rgb8_srgb.ktx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\ImageFormat\KTX\kueken7_rgb8_unorm.ktx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\ImageFormat\KTX\kueken7_rgb9e5_ufloat.ktx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\ImageFormat\KTX\kueken7_rgba16_sfloat.ktx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\ImageFormat\KTX\kueken7_rgba8_srgb.ktx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\ImageFormat\KTX\kueken7_rgba8_unorm.ktx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\ImageFormat\KTX\kueken7_rgba_astc12x12_srgb.ktx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\ImageFormat\KTX\kueken7_rgba_astc4x4_srgb.ktx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\ImageFormat\KTX\kueken7_rgba_astc8x5_srgb.ktx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\ImageFormat\KTX\kueken7_rgba_dxt5_srgb.ktx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\ImageFormat\KTX\kueken7_rgba_dxt5_unorm.ktx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\ImageFormat\KTX\kueken7_rgba_etc2_a1_srgb.ktx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\ImageFormat\KTX\kueken7_rgba_etc2_srgb.ktx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\ImageFormat\KTX\kueken7_rgb_dxt1_srgb.ktx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\ImageFormat\KTX\kueken7_rgb_dxt1_unorm.ktx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\ImageFormat\KTX\kueken7_rgb_etc1_unorm.ktx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\ImageFormat\KTX\kueken7_rgb_etc2_srgb.ktx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\ImageFormat\KTX\kueken7_rg_eac_snorm.ktx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\ImageFormat\KTX\kueken7_rg_eac_unorm.ktx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\ImageFormat\KTX\kueken7_r_eac_snorm.ktx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\ImageFormat\KTX\kueken7_r_eac_unorm.ktx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\ImageFormat\KTX\kueken8_rgba8_srgb.ktx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\ControlImages\Screenshot02.bmp">
@@ -134,35 +208,65 @@
     <Content Include="Resources\ControlImages\Lena05_Screenshot.bmp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\ImageFormat\test.dds" />
-    <Content Include="Resources\ImageFormat\test_NC_32bppCMYK.tif">
+    <Content Include="Resources\ControlImages\KTXImage_rgb8_srgb_Screenshot.bmp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\ImageFormat\test_NC_24bppBGR.tif">
+    <Content Include="Resources\ControlImages\Test02_Screenshot.bmp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\ImageFormat\test_NC_32bppBGRA.tif">
+    <Content Include="Resources\ImageFormat\DDS\Lenna.dds" />
+    <Content Include="Resources\ImageFormat\DDS\Lenna_bc1_unorm.dds">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\ImageFormat\test_8bppIndexed.gif">
+    <Content Include="Resources\ImageFormat\DDS\Lenna_bc1_unorm_srgb.dds">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\ImageFormat\test_24bppBGR.jpg">
+    <Content Include="Resources\ImageFormat\DDS\Lenna_bc2_unorm.dds">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\ImageFormat\test_24bppBGR.png">
+    <Content Include="Resources\ImageFormat\DDS\Lenna_bc2_unorm_srgb.dds">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\ImageFormat\test_8bppIndexed.bmp">
+    <Content Include="Resources\ImageFormat\DDS\Lenna_bc3_unorm.dds">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\ImageFormat\test_16bppBGR555.bmp">
+    <Content Include="Resources\ImageFormat\DDS\Lenna_bc3_unorm_srgb.dds">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\ImageFormat\test_16bppBGR565.bmp">
+    <Content Include="Resources\ImageFormat\DDS\test.dds">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\ImageFormat\test_24bppBGR.bmp">
+    <Content Include="Resources\ImageFormat\PNG\test_32bppBGRA.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\ImageFormat\TIF\test_NC_32bppCMYK.tif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\ImageFormat\TIF\test_NC_24bppBGR.tif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\ImageFormat\TIF\test_NC_32bppBGRA.tif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\ImageFormat\GIF\test_8bppIndexed.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\ImageFormat\JPG\test_24bppBGR.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\ImageFormat\PNG\test_24bppBGR.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\ImageFormat\BMP\test_8bppIndexed.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\ImageFormat\BMP\test_16bppBGR555.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\ImageFormat\BMP\test_16bppBGR565.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\ImageFormat\BMP\test_24bppBGR.bmp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\Lenna.png">
@@ -177,13 +281,11 @@
     <Content Include="Resources\ControlImages\Screenshot01.bmp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\ImageFormat\test_32bppBGR.bmp">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\ImageFormat\test_32bppBGRA.png">
+    <Content Include="Resources\ImageFormat\BMP\test_32bppBGR.bmp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

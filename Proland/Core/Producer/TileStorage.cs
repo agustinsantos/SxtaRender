@@ -21,16 +21,15 @@ namespace Sxta.Proland.Core.Producer
     /// </summary>
     public class TileStorage
     {
-#if TODO
-        /*
-         * A slot managed by a TileStorage. Concrete sub classes of this class must
-         * provide a reference to the actual tile data.
-         */
+        /// <summary>
+        ///  A slot managed by a TileStorage. Concrete sub classes of this class must
+        ///  provide a reference to the actual tile data.
+        /// </summary>
         public class Slot
         {
-            /*
-             * The id of the tile currently stored in this slot.
-             */
+             /// <summary>
+             /// The id of the tile currently stored in this slot.
+             /// </summary>
             public Tuple<int, Tuple<int, Tuple<int, int>>> id;
 
             /*
@@ -44,7 +43,10 @@ namespace Sxta.Proland.Core.Producer
              *
              * @param owner the TileStorage that will manage this slot.
              */
-            public Slot(TileStorage owner);
+            public Slot(TileStorage owner)
+            {
+                throw new NotImplementedException();
+            }
 
             /*
              * Deletes this TileStorage::Slot. This destroys the data of the tile
@@ -55,7 +57,10 @@ namespace Sxta.Proland.Core.Producer
             /*
              * Returns the TileStorage that manages this slot.
              */
-            public TileStorage getOwner();
+            public TileStorage getOwner()
+            {
+                throw new NotImplementedException();
+            }
 
             /*
              * Locks or unlocks this slots. Slots can be accessed by several threads
@@ -65,7 +70,10 @@ namespace Sxta.Proland.Core.Producer
              *
              * @param lock true to lock the slot, false to unlock it.
              */
-            public void lock_(bool lock_);
+            public void lock_(bool lock_)
+            {
+                throw new NotImplementedException();
+            }
 
 
             /*
@@ -88,7 +96,10 @@ namespace Sxta.Proland.Core.Producer
          * @param capacity the number of slots allocated and managed by this tile
          *      storage. This capacity is fixed and cannot change with time.
          */
-        public TileStorage(int tileSize, int capacity);
+        public TileStorage(int tileSize, int capacity)
+        {
+            throw new NotImplementedException();
+        }
 
         /*
          * Deletes this TileStorage. This deletes the data associated with all the
@@ -103,7 +114,10 @@ namespace Sxta.Proland.Core.Producer
          *      returned slot is then considered to be allocated, until it is
          *      released with deleteSlot.
          */
-        public Slot newSlot();
+        public Slot newSlot()
+        {
+            throw new NotImplementedException();
+        }
 
         /*
          * Notifies this storage that the given slot is free. The given slot can
@@ -112,25 +126,37 @@ namespace Sxta.Proland.Core.Producer
          *
          * @param t a slot that is no longer in use.
          */
-        public void deleteSlot(Slot t);
+        public void deleteSlot(Slot t)
+        {
+            throw new NotImplementedException();
+        }
 
         /*
          * Returns the size of each tile. For tiles made of raster data, this size
          * is the tile width in pixels (the tile height is supposed equal to the
          * tile width).
          */
-        public int getTileSize();
+        public int getTileSize()
+        {
+            throw new NotImplementedException();
+        }
 
         /*
          * Returns the total number of slots managed by this TileStorage. This
          * includes both unused and used tiles.
          */
-        public int getCapacity();
+        public int getCapacity()
+        {
+            throw new NotImplementedException();
+        }
 
         /*
          * Returns the number of slots in this TileStorage that are currently unused.
          */
-        public int getFreeSlots();
+        public int getFreeSlots()
+        {
+            throw new NotImplementedException();
+        }
 
 
         /*
@@ -154,7 +180,10 @@ namespace Sxta.Proland.Core.Producer
         /*
          * Creates a new uninitialized TileStorage.
          */
-        protected TileStorage();
+        protected TileStorage()
+        {
+            throw new NotImplementedException();
+        }
 
         /*
          * Initializes this TileStorage.
@@ -165,8 +194,10 @@ namespace Sxta.Proland.Core.Producer
          * @param capacity the number of slots allocated and managed by this tile
          *      storage. This capacity is fixed and cannot change with time.
          */
-        protected void init(int tileSize, int capacity);
-#endif 
+        protected void init(int tileSize, int capacity)
+        {
+            throw new NotImplementedException();
+        }
     }
 
 }

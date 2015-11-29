@@ -46,6 +46,17 @@ namespace Sxta.TestTools.ImageTesting
             AntialiasingDistance = 1
         };
 
+        public static DiffOptions SIMILIAR = new DiffOptions()
+        {
+            ErrorColor = Color.FromArgb(255, 0, 255, 255),
+            OverlayTransparency = 1.0f,
+            OverlayType = OverlayType.Flat,
+            Tolerance = new Tolerance() { R = 5, G = 5, B = 5, A = 5, MinBrightness = 10, MaxBrightness = 125 },
+            IgnoreColor = false,
+            IgnoreAntialiasing = false,
+            AntialiasingDistance = 1
+        };
+
         public static DiffOptions IGNORE_NOTHING = new DiffOptions()
         {
             ErrorColor = Color.Orange,//.FromArgb(255, 0, 255, 255),
