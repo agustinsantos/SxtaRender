@@ -45,14 +45,14 @@
 ** Java Port: Pepijn Van Eeckhoudt, July 2003
 ** Java Port: Nathan Parker Burg, August 2003*/
 using System;
-namespace Mogre.Utils.GluTesselator
+namespace Sxta.Render.Utils.GluTesselator
 {
 	
 	
 	
-	class PriorityQSort:Mogre.Utils.GluTesselator.PriorityQ
+	class PriorityQSort:Sxta.Render.Utils.GluTesselator.PriorityQ
 	{
-		internal Mogre.Utils.GluTesselator.PriorityQHeap heap;
+		internal Sxta.Render.Utils.GluTesselator.PriorityQHeap heap;
 		internal System.Object[] keys;
 		
 		// JAVA: 'order' contains indices into the keys array.
@@ -61,16 +61,16 @@ namespace Mogre.Utils.GluTesselator
 		internal int[] order;
 		internal int size, max;
 		internal bool initialized;
-		internal Mogre.Utils.GluTesselator.PriorityQ.Leq leq;
+		internal Sxta.Render.Utils.GluTesselator.PriorityQ.Leq leq;
 		
-		public PriorityQSort(Mogre.Utils.GluTesselator.PriorityQ.Leq leq)
+		public PriorityQSort(Sxta.Render.Utils.GluTesselator.PriorityQ.Leq leq)
 		{
-			heap = new Mogre.Utils.GluTesselator.PriorityQHeap(leq);
+			heap = new Sxta.Render.Utils.GluTesselator.PriorityQHeap(leq);
 			
-			keys = new System.Object[Mogre.Utils.GluTesselator.PriorityQ.INIT_SIZE];
+			keys = new System.Object[Sxta.Render.Utils.GluTesselator.PriorityQ.INIT_SIZE];
 			
 			size = 0;
-			max = Mogre.Utils.GluTesselator.PriorityQ.INIT_SIZE;
+			max = Sxta.Render.Utils.GluTesselator.PriorityQ.INIT_SIZE;
 			initialized = false;
 			this.leq = leq;
 		}
@@ -84,14 +84,14 @@ namespace Mogre.Utils.GluTesselator
 			keys = null;
 		}
 		
-		private static bool LT(Mogre.Utils.GluTesselator.PriorityQ.Leq leq, System.Object x, System.Object y)
+		private static bool LT(Sxta.Render.Utils.GluTesselator.PriorityQ.Leq leq, System.Object x, System.Object y)
 		{
-			return (!Mogre.Utils.GluTesselator.PriorityQHeap.LEQ(leq, y, x));
+			return (!Sxta.Render.Utils.GluTesselator.PriorityQHeap.LEQ(leq, y, x));
 		}
 		
-		private static bool GT(Mogre.Utils.GluTesselator.PriorityQ.Leq leq, System.Object x, System.Object y)
+		private static bool GT(Sxta.Render.Utils.GluTesselator.PriorityQ.Leq leq, System.Object x, System.Object y)
 		{
-			return (!Mogre.Utils.GluTesselator.PriorityQHeap.LEQ(leq, x, y));
+			return (!Sxta.Render.Utils.GluTesselator.PriorityQHeap.LEQ(leq, x, y));
 		}
 		
 		private static void  Swap(int[] array, int a, int b)
@@ -291,7 +291,7 @@ namespace Mogre.Utils.GluTesselator
 			if (!heap.pqIsEmpty())
 			{
 				heapMin = heap.pqMinimum();
-				if (Mogre.Utils.GluTesselator.PriorityQHeap.LEQ(leq, heapMin, sortMin))
+				if (Sxta.Render.Utils.GluTesselator.PriorityQHeap.LEQ(leq, heapMin, sortMin))
 				{
 					return heapMin;
 				}

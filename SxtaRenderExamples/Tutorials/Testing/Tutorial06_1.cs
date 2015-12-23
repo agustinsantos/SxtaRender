@@ -2,26 +2,27 @@
 // without express or implied warranty of any kind.
 
 using OpenTK;
-using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
 using Sxta.Math;
 using Sxta.Render;
+using Sxta.Render.OpenGLExt;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Imaging;
 
 namespace Examples.Tutorials
 {
     /// <summary>
     /// Demonstrates the GameWindow class.
     /// </summary>
-    [Example("Example 6.1: Basic Texture Mapping", ExampleCategory.Testing, "6. Textures", 1, Source = "Tutorial06_1", Documentation = "Tutorial-TODO")]
+    [Example("Example 6.0: Using Fonts", ExampleCategory.Testing, "6. Drawing Fonts", 1, Source = "Tutorial06_1", Documentation = "Tutorial-TODO")]
     public class Tutorial06_1 : GameWindow
     {
         public Tutorial06_1()
             : base(600, 600)
         {
             Keyboard.KeyDown += Keyboard_KeyDown;
+            //MeasureStringSizeFFormat();
         }
 
         #region Keyboard_KeyDown
@@ -41,6 +42,11 @@ namespace Examples.Tutorials
                     this.WindowState = WindowState.Normal;
                 else
                     this.WindowState = WindowState.Fullscreen;
+
+            if (e.Key == Key.F12)
+            {
+                ScreenShot.SaveScreenShot(this.ClientSize, this.ClientRectangle);
+            }
         }
 
         #endregion
@@ -54,24 +60,8 @@ namespace Examples.Tutorials
         protected override void OnLoad(EventArgs e)
         {
             fb = new FrameBuffer(true);
-            p = new Program(new Module(330, EXAMPLE_SHADER));
-            Bitmap texture = new Bitmap("Resources/Texture-512x512-RGBA.bmp");
-            t = CreateTexture(texture);
-            p.getUniformSampler("gSampler").set(t);
-            quad = new Mesh<Vertex_V3T2f, uint>(Vertex_V3T2f.SizeInBytes, sizeof(uint), MeshMode.TRIANGLES, MeshUsage.GPU_STATIC, 4, 6);
-            quad.addAttributeType(0, 3, AttributeType.A32F, false);
-            quad.addAttributeType(1, 2, AttributeType.A32F, false);
-            quad.addVertex(new Vertex_V3T2f() { Position = new Vector3f(-1, -1, 0), TexCoord = new Vector2f(0, 0) });
-            quad.addVertex(new Vertex_V3T2f() { Position = new Vector3f(1, -1, 0), TexCoord = new Vector2f(1, 0) });
-            quad.addVertex(new Vertex_V3T2f() { Position = new Vector3f(-1, 1, 0), TexCoord = new Vector2f(0, 1) });
-            quad.addVertex(new Vertex_V3T2f() { Position = new Vector3f(1, 1, 0), TexCoord = new Vector2f(1, 1) });
-            quad.addIndice(0);
-            quad.addIndice(1);
-            quad.addIndice(2);
-            quad.addIndice(2);
-            quad.addIndice(1);
-            quad.addIndice(3);
-            m = quad.getBuffers();
+            fb.setClearColor(Color.MidnightBlue);
+            FrameBuffer.LogOpenGLInfo();
         }
 
         #endregion
@@ -80,14 +70,6 @@ namespace Examples.Tutorials
 
         protected override void OnUnload(EventArgs e)
         {
-            if (t != null)
-                t.Dispose();
-            if (buff != null)
-                buff.Dispose();
-            if (p != null)
-                p.Dispose();
-            if (quad != null)
-                quad.Dispose();
             if (fb != null)
                 fb.Dispose();
             base.OnUnload(e);
@@ -104,12 +86,7 @@ namespace Examples.Tutorials
         /// <remarks>There is no need to call the base implementation.</remarks>
         protected override void OnResize(EventArgs e)
         {
-            // GL.Viewport(0, 0, Width, Height);
             fb.setViewport(new Vector4i(0, 0, Width, Height));
-
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadIdentity();
-            GL.Ortho(-1.0, 1.0, -1.0, 1.0, 0.0, 4.0);
         }
 
         #endregion
@@ -138,64 +115,17 @@ namespace Examples.Tutorials
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             fb.clear(true, true, true);
-            fb.draw(p, m, MeshMode.TRIANGLES, 0, 6);
+            // Nothing to do!
             this.SwapBuffers();
         }
 
         #endregion
 
         #region Fields
+
         FrameBuffer fb;
-        Program p;
-        Mesh<Vertex_V3T2f, uint> quad;
-        MeshBuffers m;
-        Texture t;
-        GPUBuffer buff;
-
-        const string EXAMPLE_SHADER =
-@"#ifdef _VERTEX_
-        layout (location = 0) in vec3 Position;
-        layout (location = 1) in vec2 TexCoord;
-
-        out vec2 TexCoord0;
-
-        void main()
-        {
-            gl_Position = vec4(Position*0.8, 1.0);
-            TexCoord0 = TexCoord;
-        }
-#endif
-#ifdef _FRAGMENT_
-        in vec2 TexCoord0;
-        out vec4 FragColor;
-        uniform sampler2D gSampler;
- 
-        void main()
-        {
-            FragColor =  texture2D(gSampler, TexCoord0.xy);
-        }
-#endif";
-
 
         #endregion
-
-        public Texture CreateTexture(Bitmap img)
-        {
-            TextureInternalFormat pif;
-            TextureFormat pf;
-            Sxta.Render.PixelType pt;
-            int size;
-            EnumConversion.ConvertPixelFormat(img.PixelFormat, out pif, out pf, out pt, out size);
-            img.RotateFlip(RotateFlipType.RotateNoneFlipY);
-            BitmapData Data = img.LockBits(new System.Drawing.Rectangle(0, 0, img.Width, img.Height), ImageLockMode.ReadOnly, img.PixelFormat);
-            buff = new GPUBuffer();
-            buff.setData(Data.Width * Data.Height * size, Data.Scan0, BufferUsage.STATIC_DRAW);
-            img.UnlockBits(Data);
-            Texture.Parameters @params = new Texture.Parameters();
-            Sxta.Render.Buffer.Parameters s = new Sxta.Render.Buffer.Parameters();
-            Texture texture = new Texture2D(img.Width, img.Height, pif, pf, pt, @params, s, buff);
-            return texture;
-        }
 
         #region public static void Main()
 
@@ -212,17 +142,130 @@ namespace Examples.Tutorials
         }
 
         #endregion
-
-
-
-        private struct Vertex_V3T2f
+        private void MeasureStringSizeFFormat()
         {
-            public Vector3f Position;
-            public Vector2f TexCoord;
-            public static int SizeInBytes
+
+            // Set up string. 
+            string measureString = "AaFfIiOo";
+            FontFamily fontFamily = new FontFamily("Tahoma");
+            System.Drawing.Font stringFont = new System.Drawing.Font(
+               fontFamily,
+               50,
+               FontStyle.Regular,
+               GraphicsUnit.Pixel);
+            // Set character ranges to "First" and "Second".
+            CharacterRange[] characterRanges = { new CharacterRange(0, 1), 
+                                                 new CharacterRange(1, 1),
+                                                 new CharacterRange(2, 1),
+                                                 new CharacterRange(3, 1),
+                                                 new CharacterRange(4, 1)};
+            SolidBrush solidBrush = new SolidBrush(Color.FromArgb(255, 0, 0, 255));
+
+
+            // Set maximum layout size.
+            SizeF layoutSize = new SizeF(700.0F, 100.0F);
+            RectangleF layoutRect = new RectangleF(0, 0, 700.0F, 100.0F);
+
+            // Set string format.
+            StringFormat stringFormat = StringFormat.GenericDefault;
+            stringFormat.SetMeasurableCharacterRanges(characterRanges);
+            stringFormat.Alignment = StringAlignment.Near;
+
+            // Measure string.
+            SizeF[] stringSize = new SizeF[measureString.Length];
+            Bitmap text_bmp = new Bitmap(ClientSize.Width, ClientSize.Height);
+            FontChar[] fc = new FontChar[measureString.Length];
+            using (Graphics gfx = Graphics.FromImage(text_bmp))
             {
-                get { return Vector2f.SizeInBytes + Vector3f.SizeInBytes; }
+                gfx.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+                gfx.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
+                gfx.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
+                gfx.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.High;
+
+
+                // Measure two ranges in string.
+                Region[] stringRegions = gfx.MeasureCharacterRanges(measureString, stringFont, layoutRect, stringFormat);
+                // Draw rectangle representing size of string.
+                gfx.DrawString(measureString, stringFont, solidBrush, layoutRect, stringFormat);
+                for (int i = 0; i < characterRanges.Length; i++)
+                {
+                    Rectangle measureRect = Rectangle.Truncate(stringRegions[i].GetBounds(gfx));
+                    // we need to store the font width for later drawing
+                    fc[i] = new FontChar();
+                    fc[i].posX = measureRect.X;
+                    fc[i].posY = measureRect.Y;
+                    fc[i].width = measureRect.Width;
+                    fc[i].height = measureRect.Height;
+
+                    //gfx.DrawRectangle(new Pen(Color.Red, 0.1f), measureRect);
+                }
             }
+            text_bmp.Save("fontexample.bmp");
+            for (int i = 0; i < characterRanges.Length; i++)
+            {
+                // Most OpenGL cards need textures to be in powers of 2 (128x512 1024X1024 etc etc) so
+                // to be safe we will conform to this and calculate the nearest power of 2 for the glyph width and height
+                int widthPow2 = UpperPowerOfTwo(fc[i].width);
+                int heightPow2 = UpperPowerOfTwo(fc[i].height);
+                // now we set the texture co-ords for our quad it is a simple
+                // triangle billboard with tex-cords as shown
+                //  s0/t0  ---- s1,t0
+                //         |\ |
+                //         | \|
+                //  s0,t1  ---- s1,t1
+                // each quad will have the same s0 and the range s0-s1 == 0.0 -> 1.0
+                float s0 = 0.0f;
+                // we now need to scale the tex cord to it ranges from 0-1 based on the coverage
+                // of the glyph and not the power of 2 texture size. This will ensure that kerns
+                // / ligatures match
+                float s1 = fc[i].width * 1.0f / widthPow2;
+                // t0 will always be the same
+                float t0 = 0.0f;
+                // this will scale the height so we only get coverage of the glyph as above
+                float t1 = fc[i].height * -1.0f / heightPow2;
+
+                using (Bitmap img = new Bitmap(widthPow2, heightPow2))
+                {
+                    using (Graphics gfx2 = Graphics.FromImage(img))
+                    {
+                        gfx2.DrawImage(text_bmp, 0, 0, new Rectangle(fc[i].posX, fc[i].posY, fc[i].width, fc[i].height), GraphicsUnit.Pixel);
+                    }
+                    img.Save("fontexample" + i + ".bmp");
+                }
+            }
+        }
+        public int UpperPowerOfTwo(int num)
+        {
+            int v = num > 0 ? num - 1 : 0;
+            v |= v >> 1;
+            v |= v >> 2;
+            v |= v >> 4;
+            v |= v >> 8;
+            v |= v >> 16;
+            v++;
+            return v;
+        }
+
+        private List<Char> GetPrintableChars()
+        {
+            List<Char> printableChars = new List<char>();
+            for (int i = char.MinValue; i <= char.MaxValue; i++)
+            {
+                char c = Convert.ToChar(i);
+                if (!char.IsControl(c))
+                {
+                    printableChars.Add(c);
+                }
+            }
+            return printableChars;
+        }
+
+        public struct FontChar
+        {
+            public int width; /// the width of the font
+            public int height; /// the height of the font
+            public int posX, posY;
+            public int textureID; ///  the texture id of the font billboard
         }
     }
 }

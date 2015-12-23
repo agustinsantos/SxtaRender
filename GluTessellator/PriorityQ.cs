@@ -49,7 +49,7 @@
 ** Java Port: Pepijn Van Eeckhoudt, July 2003
 ** Java Port: Nathan Parker Burg, August 2003*/
 using System;
-namespace Mogre.Utils.GluTesselator
+namespace Sxta.Render.Utils.GluTesselator
 {
 	
 	abstract class PriorityQ
@@ -81,7 +81,7 @@ namespace Mogre.Utils.GluTesselator
 		//    #include "geom.h"
 		public static bool LEQ(PriorityQ.Leq leq, System.Object x, System.Object y)
 		{
-			return Mogre.Utils.GluTesselator.Geom.VertLeq((Mogre.Utils.GluTesselator.GLUvertex) x, (Mogre.Utils.GluTesselator.GLUvertex) y);
+			return Sxta.Render.Utils.GluTesselator.Geom.VertLeq((Sxta.Render.Utils.GluTesselator.GLUvertex) x, (Sxta.Render.Utils.GluTesselator.GLUvertex) y);
 		}
 		
 		internal static PriorityQ pqNewPriorityQ(PriorityQ.Leq leq)

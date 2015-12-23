@@ -92,7 +92,7 @@
     <Compile Include="Tutorials\Learning\Tutorial04_3.cs" />
     <Compile Include="Tutorials\Learning\Tutorial04_2.cs" />
     <Compile Include="Tutorials\Learning\Tutorial04_1.cs" />
-    <Compile Include="Tutorials\Testing\Tutorial07_1.cs" />
+    <Compile Include="Tutorials\Testing\Tutorial06_1.cs" />
     <Compile Include="Tutorials\Learning\Tutorial01_2.cs" />
     <Compile Include="Tutorials\Learning\Tutorial01_3.cs" />
     <Compile Include="Tutorials\Learning\Tutorial02_9.cs" />
@@ -155,10 +155,8 @@
     <Compile Include="Tutorials\Testing\Tutorial02_7.cs" />
     <Compile Include="Tutorials\Testing\Tutorial05_1.cs" />
     <Compile Include="Tutorials\Testing\Tutorial02_2.cs" />
-    <Compile Include="Tutorials\Testing\Tutorial06_3.cs" />
-    <Compile Include="Tutorials\Testing\Tutorial06_2.cs" />
     <Compile Include="Tutorials\Testing\Tutorial03_4.cs" />
-    <Compile Include="Tutorials\Testing\Tutorial06_1.cs" />
+    <Compile Include="Tutorials\Testing\Tutorial07_1.cs" />
     <Compile Include="Tutorials\Testing\Tutorial03_3.cs" />
     <Compile Include="Tutorials\Testing\Tutorial04_3.cs" />
     <Compile Include="Tutorials\Testing\Tutorial04_2.cs" />
@@ -354,6 +352,10 @@
     <None Include="Tutorials\Learning\Tutorial01_1.rtf" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NanoVG\NanoVG.csproj">
+      <Project>{37f92520-6b40-44c5-8294-d588f74683d7}</Project>
+      <Name>NanoVG</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ObjLoader\ObjLoader.csproj">
       <Project>{9b86ebeb-4d3a-4136-a90b-5c26e88b4656}</Project>
       <Name>ObjLoader</Name>
@@ -369,77 +371,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\App.ico" />
-    <Content Include="Resources\BmpSuite\COPYING.txt" />
-    <Content Include="Resources\BmpSuite\pal1.bmp">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\BmpSuite\pal1bg.bmp">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\BmpSuite\pal1wb.bmp">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\BmpSuite\pal4.bmp">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\BmpSuite\pal4rle.bmp">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\BmpSuite\pal8-0.bmp">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\BmpSuite\pal8.bmp">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\BmpSuite\pal8nonsquare.bmp">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\BmpSuite\pal8os2.bmp">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\BmpSuite\pal8rle.bmp">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\BmpSuite\pal8topdown.bmp">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\BmpSuite\pal8v4.bmp">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\BmpSuite\pal8v5.bmp">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\BmpSuite\pal8w124.bmp">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\BmpSuite\pal8w125.bmp">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\BmpSuite\pal8w126.bmp">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\BmpSuite\readme.txt" />
-    <Content Include="Resources\BmpSuite\rgb16-565.bmp">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\BmpSuite\rgb16-565pal.bmp">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\BmpSuite\rgb16.bmp">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\BmpSuite\rgb24.bmp">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\BmpSuite\rgb24pal.bmp">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\BmpSuite\rgb32.bmp">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\BmpSuite\rgb32bf.bmp">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Resources\ObjModels\cessna.png" />
     <Content Include="Resources\ObjModels\cube.png" />
     <Content Include="Resources\ObjModels\diamond.png" />
@@ -566,12 +497,6 @@
     <Content Include="Resources\Shaders\texturedPlastic.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\Texture-512x512-RGB.bmp">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Texture-512x512-RGBA.bmp">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Resources\Textures\BrickWall2.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -617,9 +542,7 @@
     </Content>
     <Content Include="Resources\Textures\verasansmono.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Resources\DdsSuite\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

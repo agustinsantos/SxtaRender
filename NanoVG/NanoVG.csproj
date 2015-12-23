@@ -39,9 +39,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GLVGshader.cs" />
     <Compile Include="MiscTypes.cs" />
     <Compile Include="NanoGL.cs" />
     <Compile Include="Nvg.cs" />
+    <Compile Include="NVGvertex.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -23,5 +23,6 @@ namespace Sxta.Math
         public const float PiOver4 = (float)(System.Math.PI / 4);
         public const float PiOver2 = (float)(System.Math.PI / 2);
         public const float TwoPi = (float)(2 * System.Math.PI);
+        public const float Pi = (float)(2 * System.Math.PI);
     }
 }

@@ -19,16 +19,16 @@ namespace Sxta.Render
     /// </summary>
     public class FrameBuffer : IDisposable
     {
-       
-		/// <summary>
-   	 	/// The state of a FrameBuffer.
-    	/// </summary>
+
+        /// <summary>
+        /// The state of a FrameBuffer.
+        /// </summary>
         public class Parameters : IDeepCloneable<Parameters>
         {
 
-			/// <summary>
-			/// Creates a new framebuffer state with default parameter values.
-			/// </summary>
+            /// <summary>
+            /// Creates a new framebuffer state with default parameter values.
+            /// </summary>
             public Parameters()
             {
                 // --------------- parameters related with transform
@@ -143,293 +143,293 @@ namespace Sxta.Render
             /// </summary>
             internal Vector4i viewport;
 
-			/// <summary>
-			/// The depth range that defines the destination area for #draw.
+            /// <summary>
+            /// The depth range that defines the destination area for #draw.
             /// Contains far and near planes.
-			/// </summary>
+            /// </summary>
             internal Vector2f depthRange;
 
-            			/// <summary>
-			/// Defines which planes must be used for clipping tests.
+            /// <summary>
+            /// Defines which planes must be used for clipping tests.
             /// Each bit of clipDistances corresponds to a given plane.
             /// Default is all activated.
-			/// </summary>
+            /// </summary>
             internal int clipDistances;
 
-			/// <summary>
-			/// A unique Id incremented each time viewport, depthrange or clipDistances change.
-			/// </summary>/
+            /// <summary>
+            /// A unique Id incremented each time viewport, depthrange or clipDistances change.
+            /// </summary>/
             internal int transformId;
 
             // -------------
 
-			/// <summary>
-			/// The color used to refill the framebuffer when calling glClear.
-			/// </summary>
+            /// <summary>
+            /// The color used to refill the framebuffer when calling glClear.
+            /// </summary>
             internal Vector4f clearColor;
 
-          
-			/// <summary>
-			/// The depth valueC used to refill the depthbuffer when calling glClear.
-			/// </summary>
+
+            /// <summary>
+            /// The depth valueC used to refill the depthbuffer when calling glClear.
+            /// </summary>
             internal double clearDepth;
 
-			/// <summary>
-			/// The stencil valueC used to refill the stencilbuffer when calling glClear.
-			/// </summary>
+            /// <summary>
+            /// The stencil valueC used to refill the stencilbuffer when calling glClear.
+            /// </summary>
             internal int clearStencil;
 
-			/// <summary>
-			/// A unique ID incremented each time clearColor, clearDepth or clearStencil
+            /// <summary>
+            /// A unique ID incremented each time clearColor, clearDepth or clearStencil
             /// change.
-			/// </summary>
+            /// </summary>
             internal int clearId;
 
             // -------------
 
-			/// <summary>
-			/// Defines the size of a drawn 'point' primitive.
-			/// </summary>
+            /// <summary>
+            /// Defines the size of a drawn 'point' primitive.
+            /// </summary>
             internal float pointSize; // <= 0.0 means controlled by program
 
-			/// <summary>
-			/// Defines the size above which point sizes are clamped.
-			/// </summary>
+            /// <summary>
+            /// Defines the size above which point sizes are clamped.
+            /// </summary>
             internal float pointFadeThresholdSize;
 
-         
-			/// <summary>
-			/// Defines the origin of a drawn point primitive.
+
+            /// <summary>
+            /// Defines the origin of a drawn point primitive.
             /// If true, will be the lower left corner.
             /// Otherwise, will be the upper left corner. Default is false.
-			/// </summary>
+            /// </summary>
             internal bool pointLowerLeftOrigin;
 
-			/// <summary>
-			/// A unique ID incremented each time pointSize, pointFadeThresholdSize or
+            /// <summary>
+            /// A unique ID incremented each time pointSize, pointFadeThresholdSize or
             /// pointLowerLeftOrigin change.
-			/// </summary>
+            /// </summary>
             internal int pointId;
 
             // -------------
             internal int lineId;
 
 
-			/// <summary>
-			/// Defines rasterized width of both aliased and antialiased lines.
-			/// </summary>
+            /// <summary>
+            /// Defines rasterized width of both aliased and antialiased lines.
+            /// </summary>
             internal float lineWidth;
 
-			/// <summary>
-			/// If true, antialiasing will be enabled when drawing lines.
-			/// </summary>
+            /// <summary>
+            /// If true, antialiasing will be enabled when drawing lines.
+            /// </summary>
             internal bool lineSmooth;
 
-			/// <summary>
-			/// Specifies the orientation of front-facing polygons.
+            /// <summary>
+            /// Specifies the orientation of front-facing polygons.
             /// If false, will be Counter-clockwise. Clockwise otherwise.
-			/// </summary>
+            /// </summary>
             internal bool frontFaceCW;
 
-			/// <summary>
-			/// Specifies how front-facing polygons will be rasterized.
-			/// </summary>
+            /// <summary>
+            /// Specifies how front-facing polygons will be rasterized.
+            /// </summary>
             internal PolygonMode polygonFront;
 
-			/// <summary>
-			/// Specifies how back-facing polygons will be rasterized.
-			/// </summary>
+            /// <summary>
+            /// Specifies how back-facing polygons will be rasterized.
+            /// </summary>
             internal PolygonMode polygonBack;
 
-         
-			/// <summary>
-			/// If true, antialiasing will be enabled when drawing polygons.
-			/// </summary>
+
+            /// <summary>
+            /// If true, antialiasing will be enabled when drawing polygons.
+            /// </summary>
             internal bool polygonSmooth;
 
-			/// <summary>
-			/// The scale and units used to calculate depth values.
+            /// <summary>
+            /// The scale and units used to calculate depth values.
             /// The x coordinate specifies a scale factor that is used
             /// to create a variable depth offset for each polygon.
             /// The y coordinate is multiplied by an implementation-specific
             /// valueC to create a constant depth offset.
-			/// </summary>
+            /// </summary>
             internal Vector2f polygonOffset;
 
-			/// <summary>
-			/// Determiens if fragment's depth valueC will be offset after it is
+            /// <summary>
+            /// Determiens if fragment's depth valueC will be offset after it is
             /// interpolated from the depth values of the appropriate vertices.
             /// x is for points, y for lines and z for polygons.
-			/// </summary
+            /// </summary
             internal Vector3b polygonOffsets;
 
-			/// <summary>
-			/// Modified each time frontFaceCW, polygonFront, polygonBack
+            /// <summary>
+            /// Modified each time frontFaceCW, polygonFront, polygonBack
             /// polygonSmooth, polygonOffset or polygonOffsets change.
-			/// </summary>
+            /// </summary>
             internal int polygonId;
 
-			/// <summary>
-			/// If enabled, use multiple fragment samples in computing the final
+            /// <summary>
+            /// If enabled, use multiple fragment samples in computing the final
             /// color of a pixel.
-			/// </summary>
+            /// </summary>
             internal bool multiSample;
 
-			/// <summary>
-			/// If enabled, computes a temporary coverage valueC where each bit is
+            /// <summary>
+            /// If enabled, computes a temporary coverage valueC where each bit is
             /// determined by the alpha valueC at the corresponding sample location.
             /// The temporary coverage valueC is then ANDed with the fragment
             /// coverage valueC.
-			/// The sample alpha to coverage.
-			/// </summary>
+            /// The sample alpha to coverage.
+            /// </summary>
             internal bool sampleAlphaToCoverage;
 
-			/// <summary>
-			/// If enabled, each sample alpha valueC is replaced by the maximum
+            /// <summary>
+            /// If enabled, each sample alpha valueC is replaced by the maximum
             /// representable alpha valueC.
-			/// </summary>
+            /// </summary>
             internal bool sampleAlphaToOne;
 
-            
-			/// <summary>
-			/// If enabled, the fragment's coverage is ANDed with the temporary
+
+            /// <summary>
+            /// If enabled, the fragment's coverage is ANDed with the temporary
             /// coverage valueC. If set to 1.0f, will disable sampleCoverage.
             /// Negative values will invert coverage valueC.
-			/// </summary>
+            /// </summary>
             internal float sampleCoverage;
 
-			/// <summary>
-			/// Used to change the coverage of a sample or to exclude some samples
+            /// <summary>
+            /// Used to change the coverage of a sample or to exclude some samples
             /// from further fragment processing. Will never enable uncovered samples.
-			/// </summary>
+            /// </summary>
             internal uint sampleMask; // 0xFFFFFFFF
 
-			/// <summary>
-			/// If enabled, this will explicitly request that an implementation uses
+            /// <summary>
+            /// If enabled, this will explicitly request that an implementation uses
             /// a minimum number of unique set of fragment computation inputs when
             /// multisampling a pixel (i.e. different samples). This is used to avoid
             /// aliasing.
-			/// </summary>
+            /// </summary>
             internal bool sampleShading;
 
-			/// <summary>
-			/// Minimum number of unique set of fragment computation inputs when
+            /// <summary>
+            /// Minimum number of unique set of fragment computation inputs when
             /// multisampling a pixel (i.e. different samples). Only used if
             /// #sampleShading is enabled.
-			/// </summary>
+            /// </summary>
             internal float samplesMin;
 
-			/// <summary>
-			/// Modified each time multiSample, sampleAlphaToCoverage, sampleAlphaToOne
+            /// <summary>
+            /// Modified each time multiSample, sampleAlphaToCoverage, sampleAlphaToOne
             /// sampleCoverage, sampleMask, sampleShading or samplesMin change.
-			/// </summary>
+            /// </summary>
             internal int multiSampleId;
 
             // -------------
 
-			/// <summary>
-			/// Occlusion queries use query objects to track the number of fragments
+            /// <summary>
+            /// Occlusion queries use query objects to track the number of fragments
             /// or samples that pass the depth test.
-			/// The occlusion query.
-			/// </summary>
+            /// The occlusion query.
+            /// </summary>
             internal Query occlusionQuery;
 
-			/// <summary>
-			/// Defines the comparison mode used for the depth tests when using occlusion
+            /// <summary>
+            /// Defines the comparison mode used for the depth tests when using occlusion
             /// queries.
-			/// </summary>
+            /// </summary>
             internal QueryMode occlusionMode;
 
             // -------------
 
-			/// <summary>
-			/// If enabled, only the fragments inside #scissor will not be discarded.
+            /// <summary>
+            /// If enabled, only the fragments inside #scissor will not be discarded.
             /// If disabled, the scissor test always passes.
-			/// </summary>
+            /// </summary>
             internal bool enableScissor;
 
-         
-			/// <summary>
-			/// The viewport of the scissor test.
-			/// </summary>
+
+            /// <summary>
+            /// The viewport of the scissor test.
+            /// </summary>
             internal Vector4i scissor;
 
-			/// <summary>
-			/// If enabled, the stencil test conditionnaly discards a fragment based on
+            /// <summary>
+            /// If enabled, the stencil test conditionnaly discards a fragment based on
             /// the outcome of a comparison between the valueC in the stencil buffer at
             /// the fragment's position and a reference valueC. Different test functions
             /// may be used, and front-faces and back-faces are treated separatly.
-			/// </summary>
+            /// </summary>
             internal bool enableStencil;
 
-         
-			/// <summary>
-			/// TThe stencil test function for front faces.
-			/// </summary>
+
+            /// <summary>
+            /// TThe stencil test function for front faces.
+            /// </summary>
             internal Function ffunc;
 
-        
-			/// <summary>
-			///  The stencil reference valueC for stencil tests of front faces.
-			/// </summary>
+
+            /// <summary>
+            ///  The stencil reference valueC for stencil tests of front faces.
+            /// </summary>
             internal int fref;
 
-			/// <summary>
-			/// The stencil mask valueC for stencil tests of front faces.
-			/// </summary>
+            /// <summary>
+            /// The stencil mask valueC for stencil tests of front faces.
+            /// </summary>
             internal uint fmask;
 
-			/// <summary>
-			/// The action to use when the stencil test fails for front faces.
-			/// </summary>
+            /// <summary>
+            /// The action to use when the stencil test fails for front faces.
+            /// </summary>
             internal StencilOperation ffail;
 
-          
-			/// <summary>
-			/// The action to use when the depth test fails for front faces.
-			/// </summary>
+
+            /// <summary>
+            /// The action to use when the depth test fails for front faces.
+            /// </summary>
             internal StencilOperation fdpfail;
 
-			/// <summary>
-			/// The action to use when the depth test passes for front faces.
-			/// </summary>
+            /// <summary>
+            /// The action to use when the depth test passes for front faces.
+            /// </summary>
             internal StencilOperation fdppass;
 
-			/// <summary>
-			/// The stencil test function for back faces.
-			/// </summary>
+            /// <summary>
+            /// The stencil test function for back faces.
+            /// </summary>
             internal Function bfunc;
 
-			/// <summary>
-			/// The stencil reference valueC for stencil tests of back faces.
-			/// </summary>
+            /// <summary>
+            /// The stencil reference valueC for stencil tests of back faces.
+            /// </summary>
             internal int bref;
 
-			/// <summary>
-			/// The stencil mask valueC for stencil tests of back faces.
-			/// </summary>
+            /// <summary>
+            /// The stencil mask valueC for stencil tests of back faces.
+            /// </summary>
             internal uint bmask;
 
-			/// <summary>
-			/// The action to use when the stencil test fails for back faces.
-			/// </summary>
+            /// <summary>
+            /// The action to use when the stencil test fails for back faces.
+            /// </summary>
             internal StencilOperation bfail;
 
-			/// <summary>
-			/// The action to use when the depth test fails for back faces.
-			/// </summary>
+            /// <summary>
+            /// The action to use when the depth test fails for back faces.
+            /// </summary>
             internal StencilOperation bdpfail;
 
-			/// <summary>
-			/// The action to use when the depth test passes for back faces.
-			/// </summary>
+            /// <summary>
+            /// The action to use when the depth test passes for back faces.
+            /// </summary>
             internal StencilOperation bdppass;
 
-			/// <summary>
-			/// A unique ID incremented each time enableStencil, ffunc, fref, fmask, ffail, fdpfail, fdppass,
+            /// <summary>
+            /// A unique ID incremented each time enableStencil, ffunc, fref, fmask, ffail, fdpfail, fdppass,
             /// bfunc, bref, bmask, bfail, bdpfail, bdppass change.
-			/// The stencil identifier.
-			/// </summary>
+            /// The stencil identifier.
+            /// </summary>
             internal int stencilId;
 
             // -------------
@@ -445,135 +445,135 @@ namespace Sxta.Render
             /// </summary>
             internal bool enableDepth;
 
-			/// <summary>
-			/// Depth comparison function.
-			/// </summary>
+            /// <summary>
+            /// Depth comparison function.
+            /// </summary>
             internal Function depth;
 
-			/// <summary>
-			/// If enabled, and if multiple draw buffers are set, blending will be
+            /// <summary>
+            /// If enabled, and if multiple draw buffers are set, blending will be
             /// enabled for all of them.
-			/// The multi blend enable.
-			/// </summary>
+            /// The multi blend enable.
+            /// </summary>
             internal bool multiBlendEnable;
 
-			/// <summary>
-			/// If enabled, and if multiple draw buffers are set, different blending
+            /// <summary>
+            /// If enabled, and if multiple draw buffers are set, different blending
             /// equations will be used.
-			/// </summary>
+            /// </summary>
             internal bool multiBlendEq;
 
-			/// <summary>
-			/// Determines for which draw buffers the blending should be enabled.
-			/// </summary>
+            /// <summary>
+            /// Determines for which draw buffers the blending should be enabled.
+            /// </summary>
             internal bool[] enableBlend = new bool[4];
 
-			/// <summary>
-			/// The blending equation to use for color channels.
-			/// </summary>
+            /// <summary>
+            /// The blending equation to use for color channels.
+            /// </summary>
             internal BlendEquation[] rgb = new BlendEquation[4];
 
-			/// <summary>
-			/// The source color to be blended.
-			/// </summary>
+            /// <summary>
+            /// The source color to be blended.
+            /// </summary>
             internal BlendArgument[] srgb = new BlendArgument[4];
 
-			/// <summary>
-			/// The destination color with which the source color must be blended.
-			/// </summary>
+            /// <summary>
+            /// The destination color with which the source color must be blended.
+            /// </summary>
             internal BlendArgument[] drgb = new BlendArgument[4];
 
-			/// <summary>
-			/// The blending equation to use for alpha channel.
-			/// </summary>
+            /// <summary>
+            /// The blending equation to use for alpha channel.
+            /// </summary>
             internal BlendEquation[] alpha = new BlendEquation[4];
 
-			/// <summary>
-			/// The source alpha to be blended.
-			/// </summary>
+            /// <summary>
+            /// The source alpha to be blended.
+            /// </summary>
             internal BlendArgument[] salpha = new BlendArgument[4];
 
-			/// <summary>
-			/// The destination alpha with which the source alpha must be blended.
-			/// </summary>
+            /// <summary>
+            /// The destination alpha with which the source alpha must be blended.
+            /// </summary>
             internal BlendArgument[] dalpha = new BlendArgument[4];
 
-			/// <summary>
-			/// The color used in the blend equations. Only used if any of the equation has CONSTANT_COLOR inside it.
-			/// </summary>
+            /// <summary>
+            /// The color used in the blend equations. Only used if any of the equation has CONSTANT_COLOR inside it.
+            /// </summary>
             internal Vector4f color;
 
-			/// <summary>
-			/// Modified each time multiBlendEnable, multiBlendeq, enableBlend, rgb, srgb, drgb,
+            /// <summary>
+            /// Modified each time multiBlendEnable, multiBlendeq, enableBlend, rgb, srgb, drgb,
             /// alpha, salpha or dalpha change.
-			/// </summary>
+            /// </summary>
             internal int blendId;
 
-            
-			/// <summary>
-			/// If enabled, dithering selects between two representable color values or indices.
+
+            /// <summary>
+            /// If enabled, dithering selects between two representable color values or indices.
             /// A representable valueC is a valueC that has an exact representation in the color buffer.
             /// Dithering selects, for each color component, either the largest representable color
             /// valueC (for that particular color component) that is less than or equal to the incoming
             /// color component valueC, c, or the smallest representable color valueC that is greater
             /// than or equal to c.
-			/// The enable dither.
-			/// </summary>
+            /// The enable dither.
+            /// </summary>
             internal bool enableDither;
 
             // -------------
 
-            
-			/// <summary>
-			/// If enabled, a logic operation is applied between the incoming fragment's color valueC
+
+            /// <summary>
+            /// If enabled, a logic operation is applied between the incoming fragment's color valueC
             /// and the color values stored at the corresponding location in the framebuffer.
-			/// The enable logic.
-			/// </summary>
+            /// The enable logic.
+            /// </summary>
             internal bool enableLogic;
 
-			/// <summary>
-			/// The logical operation used if logical operations are enabled.
-			/// The logic op.
-			/// </summary>
+            /// <summary>
+            /// The logical operation used if logical operations are enabled.
+            /// The logic op.
+            /// </summary>
             internal LogicOperation logicOp;
 
-			/// <summary>
-			/// If enabled, each draw buffer will have its own color mask. Color mask will determine
+            /// <summary>
+            /// If enabled, each draw buffer will have its own color mask. Color mask will determine
             /// which color(s) may be written to.
-			/// The multi color mask.
-			/// </summary>
+            /// The multi color mask.
+            /// </summary>
             internal bool multiColorMask;
 
-         
-			/// <summary>
-			/// The color masks for each draw buffers.
-			/// </summary>
+
+            /// <summary>
+            /// The color masks for each draw buffers.
+            /// </summary>
             internal Vector4b[] colorMask = new Vector4b[4];
 
-         
-			/// <summary>
-			///  If enabled, depth buffer can be written to.
-			/// </summary>
+
+            /// <summary>
+            ///  If enabled, depth buffer can be written to.
+            /// </summary>
             internal bool depthMask;
 
-         
-			/// <summary>
-			/// If enabled, stencil mask can be written to for front faces.
-			/// </summary>
+
+            /// <summary>
+            /// If enabled, stencil mask can be written to for front faces.
+            /// </summary>
             internal uint stencilMaskFront;
 
-			/// <summary>
-			/// If enabled, stencil mask can be written to for back faces.
-			/// </summary>
+            /// <summary>
+            /// If enabled, stencil mask can be written to for back faces.
+            /// </summary>
             internal uint stencilMaskBack;
 
-            
-			/// <summary>
-			/// The mask identifier.
-			/// </summary>
+
+            /// <summary>
+            /// The mask identifier.
+            /// </summary>
             internal int maskId;
- 
-			/// A unique ID incremented each time multiColorMask, colorMask, depthMask,
+
+            /// A unique ID incremented each time multiColorMask, colorMask, depthMask,
             /// stencilMaskFront or stencilMaskBack change.
             internal Parameters set(Parameters p)
             {
@@ -812,20 +812,17 @@ namespace Sxta.Render
                 if (stencilId != p.stencilId)
                 {
 #if OPENGL
-            glEnable(GL_STENCIL_TEST, p.enableStencil);
-            glStencilFuncSeparate(GL_FRONT, EnumConversion.getFunction(p.ffunc), p.fref, p.fmask);
-            glStencilFuncSeparate(GL_BACK, EnumConversion.getFunction(p.bfunc), p.bref, p.bmask);
-            glStencilOpSeparate(GL_FRONT, getStencilOperation(p.ffail), getStencilOperation(p.fdpfail), getStencilOperation(p.fdppass));
-            glStencilOpSeparate(GL_BACK, getStencilOperation(p.bfail), getStencilOperation(p.bdpfail), getStencilOperation(p.bdppass));
+                    glEnable(GL_STENCIL_TEST, p.enableStencil);
+                    glStencilFuncSeparate(GL_FRONT, EnumConversion.getFunction(p.ffunc), p.fref, p.fmask);
+                    glStencilFuncSeparate(GL_BACK, EnumConversion.getFunction(p.bfunc), p.bref, p.bmask);
+                    glStencilOpSeparate(GL_FRONT, getStencilOperation(p.ffail), getStencilOperation(p.fdpfail), getStencilOperation(p.fdppass));
+                    glStencilOpSeparate(GL_BACK, getStencilOperation(p.bfail), getStencilOperation(p.bdpfail), getStencilOperation(p.bdppass));
 #else
                     glEnable(EnableCap.StencilTest, p.enableStencil);
-#if TODO
-                    GL.StencilFuncSeparate(GL_FRONT, EnumConversion.getStencilFunction(p.ffunc), p.fref, p.fmask);
-                    GL.StencilFuncSeparate(GL_BACK, EnumConversion.getStencilFunction(p.bfunc), p.bref, p.bmask);
-                    GL.StencilOpSeparate(GL_FRONT, EnumConversion.getStencilOperation(p.ffail), EnumConversion.getStencilOperation(p.fdpfail), EnumConversion.getStencilOperation(p.fdppass));
-                    GL.StencilOpSeparate(GL_BACK, EnumConversion.getStencilOperation(p.bfail), EnumConversion.getStencilOperation(p.bdpfail), EnumConversion.getStencilOperation(p.bdppass));
-#endif
-                    throw new NotImplementedException();
+                    GL.StencilFuncSeparate(StencilFace.Front, EnumConversion.getStencilFunction(p.ffunc), p.fref, p.fmask);
+                    GL.StencilFuncSeparate(StencilFace.Back, EnumConversion.getStencilFunction(p.bfunc), p.bref, p.bmask);
+                    GL.StencilOpSeparate(StencilFace.Front, EnumConversion.getStencilOperation(p.ffail), EnumConversion.getStencilOperation(p.fdpfail), EnumConversion.getStencilOperation(p.fdppass));
+                    GL.StencilOpSeparate(StencilFace.Back, EnumConversion.getStencilOperation(p.bfail), EnumConversion.getStencilOperation(p.bdpfail), EnumConversion.getStencilOperation(p.bdppass));
 #endif
                 }
                 // DEPTH TEST -------------
@@ -864,7 +861,7 @@ namespace Sxta.Render
                     }
                     if (p.multiBlendEq && version >= 4)
                     {
-                        for (int i = 0; i < 4; ++i)
+                        for (int i = 0; i < 4; i++)
                         {
                             GL.BlendEquationSeparate(i, EnumConversion.getBlendEquation(p.rgb[i]), EnumConversion.getBlendEquation(p.alpha[i]));
 
@@ -993,7 +990,7 @@ namespace Sxta.Render
             }
 
             private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-           
+
             object IDeepCloneable.DeepClone()
             {
                 return this.DeepClone();
@@ -1021,12 +1018,12 @@ namespace Sxta.Render
             }
         }
 
-        
-		/// <summary>
-		/// Creates a new frambuffer. This creates an offsreen framebuffer. The
+
+        /// <summary>
+        /// Creates a new frambuffer. This creates an offsreen framebuffer. The
         /// default framebuffer can be retrieved with #getDefault.
-		/// Initializes a new instance of the <see cref="Sxta.Render.FrameBuffer"/> class.
-		/// </summary>
+        /// Initializes a new instance of the <see cref="Sxta.Render.FrameBuffer"/> class.
+        /// </summary>
         public FrameBuffer()
         {
             attachmentsChanged = false;
@@ -1052,13 +1049,13 @@ namespace Sxta.Render
             drawBuffers[0] = BufferId.COLOR0;
         }
 
-		/// <summary>
-		/// Creates a new framebuffer.
-		/// Initializes a new instance of the <see cref="Sxta.Render.FrameBuffer"/> class.
-		/// </summary>
-		/// <param name='main'>
-		/// Main true for the default framebuffer.
-		/// </param>
+        /// <summary>
+        /// Creates a new framebuffer.
+        /// Initializes a new instance of the <see cref="Sxta.Render.FrameBuffer"/> class.
+        /// </summary>
+        /// <param name='main'>
+        /// Main true for the default framebuffer.
+        /// </param>
         public FrameBuffer(bool main)
         {
             attachmentsChanged = false;
@@ -1082,12 +1079,12 @@ namespace Sxta.Render
             drawBufferCount = 1;
             drawBuffers[0] = BufferId.COLOR0;
         }
-        
-		/// <summary>
-		/// Deletes this framebuffer.
-		/// Releases unmanaged resources and performs other cleanup operations before the 
-		/// <see cref="Sxta.Render.FrameBuffer"/> is reclaimed by garbage collection.
-		/// </summary>
+
+        /// <summary>
+        /// Deletes this framebuffer.
+        /// Releases unmanaged resources and performs other cleanup operations before the 
+        /// <see cref="Sxta.Render.FrameBuffer"/> is reclaimed by garbage collection.
+        /// </summary>
         ~FrameBuffer()
         {
             // Do not re-create Dispose clean-up code here. 
@@ -1096,12 +1093,12 @@ namespace Sxta.Render
             Dispose(false);
         }
 
-		/// <summary>
-		/// Gets the default.
-		/// </summary>
-		/// <returns>
-		/// The default, onscreen framebuffer.
-		/// </returns>
+        /// <summary>
+        /// Gets the default.
+        /// </summary>
+        /// <returns>
+        /// The default, onscreen framebuffer.
+        /// </returns>
         public static FrameBuffer getDefault()
         {
             IGraphicsContext context;
@@ -1120,52 +1117,52 @@ namespace Sxta.Render
         }
 
 
-		/// <summary>
-		/// Returns the render buffer attached to the given attachment point.
-		/// </summary>
-		/// <returns>
-		/// the render buffer attached to the given attachment point,
+        /// <summary>
+        /// Returns the render buffer attached to the given attachment point.
+        /// </summary>
+        /// <returns>
+        /// the render buffer attached to the given attachment point,
         /// or null if there is no renderbuffer bound to this attachment
         /// point (either because nothing is attached, or because a texture
         /// is attached).
-		/// </returns>
-		/// <param name='b'>
-		/// B.
-		/// </param>
+        /// </returns>
+        /// <param name='b'>
+        /// B.
+        /// </param>
         public RenderBuffer getRenderBuffer(BufferId b)
         {
             return (RenderBuffer)textures[EnumConversion.getBufferId(b)];
         }
 
-		/// <summary>
-		/// the texture attached to the given attachment point,
+        /// <summary>
+        /// the texture attached to the given attachment point,
         /// or null if there is no texture bound to this attachment
         /// point (either because nothing is attached, or because a render
         /// buffer is attached).
-		/// </summary>
-		/// <returns>
-		/// The texture buffer.
-		/// </returns>
-		/// <param name='b'>
-		/// B.
-		/// </param>
+        /// </summary>
+        /// <returns>
+        /// The texture buffer.
+        /// </returns>
+        /// <param name='b'>
+        /// B.
+        /// </param>
         public Texture getTextureBuffer(BufferId b)
         {
             return (Texture)textures[EnumConversion.getBufferId(b)];
         }
 
-		/// <summary>
-		/// Sets an attachment of this framebuffer using a render buffer.
-		/// </summary>
-		/// <returns>
-		/// The render buffer.
-		/// </returns>
-		/// <param name='b'>
-		/// B an attachment point.
-		/// </param>
-		/// <param name='t'>
-		/// T e render buffer to be bound to this attachment point.
-		/// </param>
+        /// <summary>
+        /// Sets an attachment of this framebuffer using a render buffer.
+        /// </summary>
+        /// <returns>
+        /// The render buffer.
+        /// </returns>
+        /// <param name='b'>
+        /// B an attachment point.
+        /// </param>
+        /// <param name='t'>
+        /// T e render buffer to be bound to this attachment point.
+        /// </param>
         public void setRenderBuffer(BufferId b, RenderBuffer t)
         {
             Debug.Assert(framebufferId != 0);
@@ -1174,21 +1171,21 @@ namespace Sxta.Render
             attachmentsChanged = true;
         }
 
-		/// <summary>
-		/// Sets an attachment of this framebuffer using a texture.
-		/// </summary>
-		/// <returns>
-		/// The texture buffer.
-		/// </returns>
-		/// <param name='b'>
-		/// B an attachment point.
-		/// </param>
-		/// <param name='t'>
-		/// T the texture to be bound to this attachment point.
-		/// </param>
-		/// <param name='level'>
-		/// Level evel the LOD level to be attached.
-		/// </param>
+        /// <summary>
+        /// Sets an attachment of this framebuffer using a texture.
+        /// </summary>
+        /// <returns>
+        /// The texture buffer.
+        /// </returns>
+        /// <param name='b'>
+        /// B an attachment point.
+        /// </param>
+        /// <param name='t'>
+        /// T the texture to be bound to this attachment point.
+        /// </param>
+        /// <param name='level'>
+        /// Level evel the LOD level to be attached.
+        /// </param>
         public void setTextureBuffer(BufferId b, Texture1D t, int level)
         {
             Debug.Assert(framebufferId != 0);
@@ -1199,24 +1196,24 @@ namespace Sxta.Render
         }
 
 
-		/// <summary>
-		/// Sets an attachment of this framebuffer using a texture.
-		/// </summary>
-		/// <returns>
-		/// The texture buffer.
-		/// </returns>
-		/// <param name='b'>
-		/// B an attachment point.
-		/// </param>
-		/// <param name='t'>
-		/// T the texture to be bound to this attachment point.
-		/// </param>
-		/// <param name='level'>
-		/// Level the LOD level to be attached.
-		/// </param>
-		/// <param name='layer'>
-		/// Layer the layer to be attached (-1 to attach all layers).
-		/// </param>
+        /// <summary>
+        /// Sets an attachment of this framebuffer using a texture.
+        /// </summary>
+        /// <returns>
+        /// The texture buffer.
+        /// </returns>
+        /// <param name='b'>
+        /// B an attachment point.
+        /// </param>
+        /// <param name='t'>
+        /// T the texture to be bound to this attachment point.
+        /// </param>
+        /// <param name='level'>
+        /// Level the LOD level to be attached.
+        /// </param>
+        /// <param name='layer'>
+        /// Layer the layer to be attached (-1 to attach all layers).
+        /// </param>
         public void setTextureBuffer(BufferId b, Texture1DArray t, int level, int layer)
         {
             Debug.Assert(framebufferId != 0);
@@ -1228,21 +1225,21 @@ namespace Sxta.Render
         }
 
 
-		/// <summary>
-		/// Sets an attachment of this framebuffer using a texture.
-		/// </summary>
-		/// <returns>
-		/// The texture buffer.
-		/// </returns>
-		/// <param name='b'>
-		/// B an attachment point.
-		/// </param>
-		/// <param name='t'>
-		/// T the texture to be bound to this attachment point.
-		/// </param>
-		/// <param name='level'>
-		/// Level the LOD level to be attached.
-		/// </param>
+        /// <summary>
+        /// Sets an attachment of this framebuffer using a texture.
+        /// </summary>
+        /// <returns>
+        /// The texture buffer.
+        /// </returns>
+        /// <param name='b'>
+        /// B an attachment point.
+        /// </param>
+        /// <param name='t'>
+        /// T the texture to be bound to this attachment point.
+        /// </param>
+        /// <param name='level'>
+        /// Level the LOD level to be attached.
+        /// </param>
         public void setTextureBuffer(BufferId b, Texture2D t, int level)
         {
             Debug.Assert(framebufferId != 0);
@@ -1252,21 +1249,21 @@ namespace Sxta.Render
             attachmentsChanged = true;
         }
 
-		/// <summary>
-		/// Sets an attachment of this framebuffer using a texture.
-		/// </summary>
-		/// <returns>
-		/// The texture buffer.
-		/// </returns>
-		/// <param name='b'>
-		/// B an attachment point.
-		/// </param>
-		/// <param name='t'>
-		/// T the texture to be bound to this attachment point.
-		/// </param>
-		/// <param name='level'>
-		/// Level the LOD level to be attached.
-		/// </param>
+        /// <summary>
+        /// Sets an attachment of this framebuffer using a texture.
+        /// </summary>
+        /// <returns>
+        /// The texture buffer.
+        /// </returns>
+        /// <param name='b'>
+        /// B an attachment point.
+        /// </param>
+        /// <param name='t'>
+        /// T the texture to be bound to this attachment point.
+        /// </param>
+        /// <param name='level'>
+        /// Level the LOD level to be attached.
+        /// </param>
         public void setTextureBuffer(BufferId b, TextureRectangle t, int level)
         {
             Debug.Assert(framebufferId != 0);
@@ -1276,18 +1273,18 @@ namespace Sxta.Render
             attachmentsChanged = true;
         }
 
-		/// <summary>
-		/// Sets an attachment of this framebuffer using a texture.
-		/// </summary>
-		/// <returns>
-		/// The texture buffer.
-		/// </returns>
-		/// <param name='b'>
-		/// B an attachment point.
-		/// </param>
-		/// <param name='t'>
-		/// T the texture to be bound to this attachment point.
-		/// </param>
+        /// <summary>
+        /// Sets an attachment of this framebuffer using a texture.
+        /// </summary>
+        /// <returns>
+        /// The texture buffer.
+        /// </returns>
+        /// <param name='b'>
+        /// B an attachment point.
+        /// </param>
+        /// <param name='t'>
+        /// T the texture to be bound to this attachment point.
+        /// </param>
         public void setTextureBuffer(BufferId b, Texture2DMultisample t)
         {
             Debug.Assert(framebufferId != 0);
@@ -1298,24 +1295,24 @@ namespace Sxta.Render
         }
 
 
-		/// <summary>
-		/// Sets an attachment of this framebuffer using a texture.
-		/// </summary>
-		/// <returns>
-		/// The texture buffer.
-		/// </returns>
-		/// <param name='b'>
-		/// B an attachment point.
-		/// </param>
-		/// <param name='t'>
-		/// T the texture to be bound to this attachment point.
-		/// </param>
-		/// <param name='level'>
-		/// Level the LOD level to be attached.
-		/// </param>
-		/// <param name='layer'>
-		/// Layer the layer to be attached (-1 to attach all layers).
-		/// </param>
+        /// <summary>
+        /// Sets an attachment of this framebuffer using a texture.
+        /// </summary>
+        /// <returns>
+        /// The texture buffer.
+        /// </returns>
+        /// <param name='b'>
+        /// B an attachment point.
+        /// </param>
+        /// <param name='t'>
+        /// T the texture to be bound to this attachment point.
+        /// </param>
+        /// <param name='level'>
+        /// Level the LOD level to be attached.
+        /// </param>
+        /// <param name='layer'>
+        /// Layer the layer to be attached (-1 to attach all layers).
+        /// </param>
         public void setTextureBuffer(BufferId b, Texture2DArray t, int level, int layer)
         {
             Debug.Assert(framebufferId != 0);
@@ -1326,22 +1323,22 @@ namespace Sxta.Render
             attachmentsChanged = true;
         }
 
-   
-		/// <summary>
-		/// Sets an attachment of this framebuffer using a texture.
-		/// </summary>
-		/// <returns>
-		/// The texture buffer.
-		/// </returns>
-		/// <param name='b'>
-		/// B an attachment point.
-		/// </param>
-		/// <param name='t'>
-		/// T the texture to be bound to this attachment point.
-		/// </param>
-		/// <param name='layer'>
-		/// Layer the layer to be attached (-1 to attach all layers).
-		/// </param>
+
+        /// <summary>
+        /// Sets an attachment of this framebuffer using a texture.
+        /// </summary>
+        /// <returns>
+        /// The texture buffer.
+        /// </returns>
+        /// <param name='b'>
+        /// B an attachment point.
+        /// </param>
+        /// <param name='t'>
+        /// T the texture to be bound to this attachment point.
+        /// </param>
+        /// <param name='layer'>
+        /// Layer the layer to be attached (-1 to attach all layers).
+        /// </param>
         public void setTextureBuffer(BufferId b, Texture2DMultisampleArray t, int layer)
         {
             Debug.Assert(framebufferId != 0);
@@ -1352,24 +1349,24 @@ namespace Sxta.Render
             attachmentsChanged = true;
         }
 
-		/// <summary>
-		/// Sets an attachment of this framebuffer using a texture.
-		/// </summary>
-		/// <returns>
-		/// The texture buffer.
-		/// </returns>
-		/// <param name='b'>
-		/// B an attachment point.
-		/// </param>
-		/// <param name='t'>
-		/// T. the texture to be bound to this attachment point.
-		/// </param>
-		/// <param name='level'>
-		/// Level the LOD level to be attached.
-		/// </param>
-		/// <param name='layer'>
-		/// Layer the z slice to be attached (-1 to attach all the slices).
-		/// </param>
+        /// <summary>
+        /// Sets an attachment of this framebuffer using a texture.
+        /// </summary>
+        /// <returns>
+        /// The texture buffer.
+        /// </returns>
+        /// <param name='b'>
+        /// B an attachment point.
+        /// </param>
+        /// <param name='t'>
+        /// T. the texture to be bound to this attachment point.
+        /// </param>
+        /// <param name='level'>
+        /// Level the LOD level to be attached.
+        /// </param>
+        /// <param name='layer'>
+        /// Layer the z slice to be attached (-1 to attach all the slices).
+        /// </param>
         public void setTextureBuffer(BufferId b, Texture3D t, int level, int layer)
         {
             Debug.Assert(framebufferId != 0);
@@ -1381,24 +1378,24 @@ namespace Sxta.Render
         }
 
 
-		/// <summary>
-		/// Sets an attachment of this framebuffer using a texture.
-		/// </summary>
-		/// <returns>
-		/// The texture buffer.
-		/// </returns>
-		/// <param name='b'>
-		/// B an attachment point.
-		/// </param>
-		/// <param name='t'>
-		/// T. the texture to be bound to this attachment point.
-		/// </param>
-		/// <param name='level'>
-		/// Level the LOD level to be attached.
-		/// </param>
-		/// <param name='cf'>
-		/// Cf. the cube face to be attached (-1 to attach all the faces).
-		/// </param>
+        /// <summary>
+        /// Sets an attachment of this framebuffer using a texture.
+        /// </summary>
+        /// <returns>
+        /// The texture buffer.
+        /// </returns>
+        /// <param name='b'>
+        /// B an attachment point.
+        /// </param>
+        /// <param name='t'>
+        /// T. the texture to be bound to this attachment point.
+        /// </param>
+        /// <param name='level'>
+        /// Level the LOD level to be attached.
+        /// </param>
+        /// <param name='cf'>
+        /// Cf. the cube face to be attached (-1 to attach all the faces).
+        /// </param>
         public void setTextureBuffer(BufferId b, TextureCube t, int level, CubeFace cf)
         {
             Debug.Assert(framebufferId != 0);
@@ -1409,25 +1406,25 @@ namespace Sxta.Render
             attachmentsChanged = true;
         }
 
-		/// <summary>
-		/// Sets an attachment of this framebuffer using a texture.
-		/// </summary>
-		/// <returns>
-		/// The texture buffer.
-		/// </returns>
-		/// <param name='b'>
-		/// B. an attachment point.
-		/// </param>
-		/// <param name='t'>
-		/// T the texture to be bound to this attachment point.
-		/// </param>
-		/// <param name='level'>
-		/// Level the LOD level to be attached.
-		/// </param>
-		/// <param name='cf'>
-		/// Cf the cube face to be attached (all the layers for this face
+        /// <summary>
+        /// Sets an attachment of this framebuffer using a texture.
+        /// </summary>
+        /// <returns>
+        /// The texture buffer.
+        /// </returns>
+        /// <param name='b'>
+        /// B. an attachment point.
+        /// </param>
+        /// <param name='t'>
+        /// T the texture to be bound to this attachment point.
+        /// </param>
+        /// <param name='level'>
+        /// Level the LOD level to be attached.
+        /// </param>
+        /// <param name='cf'>
+        /// Cf the cube face to be attached (all the layers for this face
         ///  will be attached at once).
-		/// </param>
+        /// </param>
         public void setTextureBuffer(BufferId b, TextureCubeArray t, int level, CubeFace cf)
         {
             Debug.Assert(framebufferId != 0);
@@ -1438,31 +1435,31 @@ namespace Sxta.Render
             attachmentsChanged = true;
         }
 
-   
-		/// <summary>
-		/// Sets the read buffer for #readPixels and #copyPixels methods.
-		/// </summary>
-		/// <returns>
-		/// The read buffer.
-		/// </returns>
-		/// <param name='b'>
-		/// B one of the color buffer.
-		/// </param>
+
+        /// <summary>
+        /// Sets the read buffer for #readPixels and #copyPixels methods.
+        /// </summary>
+        /// <returns>
+        /// The read buffer.
+        /// </returns>
+        /// <param name='b'>
+        /// B one of the color buffer.
+        /// </param>
         public void setReadBuffer(BufferId b)
         {
             readBuffer = b;
             readDrawChanged = true;
         }
 
-		/// <summary>
-		/// Sets the draw buffer for #clear and #draw methods.
-		/// </summary>
-		/// <returns>
-		/// The draw buffer.
-		/// </returns>
-		/// <param name='b'>
-		/// B  one of the color buffer.
-		/// </param>
+        /// <summary>
+        /// Sets the draw buffer for #clear and #draw methods.
+        /// </summary>
+        /// <returns>
+        /// The draw buffer.
+        /// </returns>
+        /// <param name='b'>
+        /// B  one of the color buffer.
+        /// </param>
         public void setDrawBuffer(BufferId b)
         {
             drawBufferCount = 1;
@@ -1470,15 +1467,15 @@ namespace Sxta.Render
             readDrawChanged = true;
         }
 
-		/// <summary>
-		/// Sets the draw buffers for #clear and #draw methods.
-		/// </summary>
-		/// <returns>
-		/// The draw buffers.
-		/// </returns>
-		/// <param name='b'>
-		/// B a set of color buffers (ORed with each other).
-		/// </param>
+        /// <summary>
+        /// Sets the draw buffers for #clear and #draw methods.
+        /// </summary>
+        /// <returns>
+        /// The draw buffers.
+        /// </returns>
+        /// <param name='b'>
+        /// B a set of color buffers (ORed with each other).
+        /// </param>
         public void setDrawBuffers(BufferId b)
         {
             drawBufferCount = 0;
@@ -1501,347 +1498,347 @@ namespace Sxta.Render
             readDrawChanged = true;
         }
 
-		/// <summary>
-		///  Returns the current parameters of this framebuffer.
-		/// </summary>
-		/// <returns>
-		/// The parameters.
-		/// </returns>
+        /// <summary>
+        ///  Returns the current parameters of this framebuffer.
+        /// </summary>
+        /// <returns>
+        /// The parameters.
+        /// </returns>
         public Parameters getParameters()
         {
             return parameters;
         }
 
-		/// <summary>
-		/// Returns this framebuffer's viewport.
-		/// </summary>
-		/// <returns>
-		/// The viewport.
-		/// </returns>
+        /// <summary>
+        /// Returns this framebuffer's viewport.
+        /// </summary>
+        /// <returns>
+        /// The viewport.
+        /// </returns>
         public Vector4i getViewport()
         {
             return parameters.viewport;
         }
 
-      
-		/// <summary>
-		/// Returns this framebuffer's depth range.
-		/// </summary>
-		/// <returns>
-		/// The depth range.
-		/// </returns>
+
+        /// <summary>
+        /// Returns this framebuffer's depth range.
+        /// </summary>
+        /// <returns>
+        /// The depth range.
+        /// </returns>
         public Vector2f getDepthRange()
         {
             return parameters.depthRange;
         }
 
-    
-		/// <summary>
-		/// Returns this framebuffer's clip distances mask.
-		/// </summary>
-		/// <returns>
-		/// The clip distances.
-		/// </returns>
+
+        /// <summary>
+        /// Returns this framebuffer's clip distances mask.
+        /// </summary>
+        /// <returns>
+        /// The clip distances.
+        /// </returns>
         public int getClipDistances()
         {
             return parameters.clipDistances;
         }
 
-		/// <summary>
-		/// Returns the valueC used to clear the color buffer.
-		/// </summary>
-		/// <returns>
-		/// The clear color.
-		/// </returns>
+        /// <summary>
+        /// Returns the valueC used to clear the color buffer.
+        /// </summary>
+        /// <returns>
+        /// The clear color.
+        /// </returns>
         public Vector4f getClearColor()
         {
             return parameters.clearColor;
         }
 
- 
-		/// <summary>
-		///  Returns the valueC used to clear the depth buffer.
-		/// </summary>
-		/// <returns>
-		/// The clear depth.
-		/// </returns>
+
+        /// <summary>
+        ///  Returns the valueC used to clear the depth buffer.
+        /// </summary>
+        /// <returns>
+        /// The clear depth.
+        /// </returns>
         public double getClearDepth()
         {
             return parameters.clearDepth;
         }
 
-     
-		/// <summary>
-		/// Returns the valueC used to clear the stencil buffer.
-		/// </summary>
-		/// <returns>
-		/// The clear stencil.
-		/// </returns>
+
+        /// <summary>
+        /// Returns the valueC used to clear the stencil buffer.
+        /// </summary>
+        /// <returns>
+        /// The clear stencil.
+        /// </returns>
         public int getClearStencil()
         {
             return parameters.clearStencil;
         }
 
-  
-		/// <summary>
-		/// Returns the point primitive's size.
-		/// </summary>
-		/// <returns>
-		/// The point size.
-		/// </returns>
+
+        /// <summary>
+        /// Returns the point primitive's size.
+        /// </summary>
+        /// <returns>
+        /// The point size.
+        /// </returns>
         public float getPointSize()
         {
             return parameters.pointSize;
         }
-   
-		/// <summary>
-		/// Returns the point's fade threshold size
-		/// </summary>
-		/// <returns>
-		/// The point fade threshold size.
-		/// </returns>
+
+        /// <summary>
+        /// Returns the point's fade threshold size
+        /// </summary>
+        /// <returns>
+        /// The point fade threshold size.
+        /// </returns>
         public float getPointFadeThresholdSize()
         {
             return parameters.pointFadeThresholdSize;
         }
 
-     
-		/// <summary>
-		/// Returns the left origin of the point primitive.
-		/// </summary>
-		/// <returns>
-		/// The point lower left origin.
-		/// </returns>
+
+        /// <summary>
+        /// Returns the left origin of the point primitive.
+        /// </summary>
+        /// <returns>
+        /// The point lower left origin.
+        /// </returns>
         public bool getPointLowerLeftOrigin()
         {
             return parameters.pointLowerLeftOrigin;
         }
 
-       
-		/// <summary>
-		/// Returns the line primitive's width.
-		/// </summary>
-		/// <returns>
-		/// The line width.
-		/// </returns>
+
+        /// <summary>
+        /// Returns the line primitive's width.
+        /// </summary>
+        /// <returns>
+        /// The line width.
+        /// </returns>
         public float getLineWidth()
         {
             return parameters.lineWidth;
         }
 
-     
-		/// <summary>
-		/// Retursn true if AA is enabled for lines.
-		/// </summary>
-		/// <returns>
-		/// The line smooth.
-		/// </returns>
+
+        /// <summary>
+        /// Retursn true if AA is enabled for lines.
+        /// </summary>
+        /// <returns>
+        /// The line smooth.
+        /// </returns>
         public bool getLineSmooth()
         {
             return parameters.lineSmooth;
         }
 
-       
-		/// <summary>
-		/// Returns true if front faces are clockwise.
-		/// </summary>
-		/// <returns>
-		/// The front face C.
-		/// </returns>
+
+        /// <summary>
+        /// Returns true if front faces are clockwise.
+        /// </summary>
+        /// <returns>
+        /// The front face C.
+        /// </returns>
         public bool getFrontFaceCW()
         {
             return parameters.frontFaceCW;
         }
 
-		/// <summary>
-		/// Returns the polygon mode for front and back faces cull state.
-		/// </summary>
-		/// <returns>
-		/// The polygon mode.
-		/// </returns>
+        /// <summary>
+        /// Returns the polygon mode for front and back faces cull state.
+        /// </summary>
+        /// <returns>
+        /// The polygon mode.
+        /// </returns>
         public Vec2<PolygonMode> getPolygonMode()
         {
             return new Vec2<PolygonMode>(parameters.polygonFront, parameters.polygonBack);
         }
 
-      
-		/// <summary>
-		/// Returns true if AA is enabled for polygons.
-		/// </summary>
-		/// <returns>
-		/// The polygon smooth.
-		/// </returns>
+
+        /// <summary>
+        /// Returns true if AA is enabled for polygons.
+        /// </summary>
+        /// <returns>
+        /// The polygon smooth.
+        /// </returns>
         public bool getPolygonSmooth()
         {
             return parameters.polygonSmooth;
         }
 
-   
-		/// <summary>
-		/// Returns factor and units used to offset the depth valueC.
-		/// </summary>
-		/// <returns>
-		/// The polygon offset.
-		/// </returns>
+
+        /// <summary>
+        /// Returns factor and units used to offset the depth valueC.
+        /// </summary>
+        /// <returns>
+        /// The polygon offset.
+        /// </returns>
         public Vector2f getPolygonOffset()
         {
             return parameters.polygonOffset;
         }
 
-      
-		/// <summary>
-		/// Returns the types of primitives that must be offset (points, lines, and polygons).
-		/// </summary>
-		/// <returns>
-		/// The polygon offsets.
-		/// </returns>
+
+        /// <summary>
+        /// Returns the types of primitives that must be offset (points, lines, and polygons).
+        /// </summary>
+        /// <returns>
+        /// The polygon offsets.
+        /// </returns>
         public Vector3b getPolygonOffsets()
         {
             return parameters.polygonOffsets;
         }
 
-        
-		/// <summary>
-		/// Returns true if multisampling is enabled.
-		/// </summary>
-		/// <returns>
-		/// The multi sample.
-		/// </returns>
+
+        /// <summary>
+        /// Returns true if multisampling is enabled.
+        /// </summary>
+        /// <returns>
+        /// The multi sample.
+        /// </returns>
         public bool getMultiSample()
         {
             return parameters.multiSample;
         }
 
-       
-		/// <summary>
-		/// Returns the values for alpha sampling.
-		/// </summary>
-		/// <returns>
-		/// The sample alpha.
-		/// </returns>
+
+        /// <summary>
+        /// Returns the values for alpha sampling.
+        /// </summary>
+        /// <returns>
+        /// The sample alpha.
+        /// </returns>
         public Vector2b getSampleAlpha()
         {
             return new Vector2b(parameters.sampleAlphaToCoverage, parameters.sampleAlphaToOne);
         }
 
-       
-		/// <summary>
-		/// Returns the sample coverage.
-		/// </summary>
-		/// <returns>
-		/// The sample coverage.
-		/// </returns>
+
+        /// <summary>
+        /// Returns the sample coverage.
+        /// </summary>
+        /// <returns>
+        /// The sample coverage.
+        /// </returns>
         public float getSampleCoverage()
         {
             return parameters.sampleCoverage;
         }
 
-      
-		/// <summary>
-		/// Returns the sample mask.
-		/// </summary>
-		/// <returns>
-		/// The sample mask.
-		/// </returns>
+
+        /// <summary>
+        /// Returns the sample mask.
+        /// </summary>
+        /// <returns>
+        /// The sample mask.
+        /// </returns>
         public uint getSampleMask()
         {
             return parameters.sampleMask;
         }
 
-     
-		/// <summary>
-		///  Returns true if AA is enabled on multi-sampling.
-		/// </summary>
-		/// <returns>
-		/// The sample shading.
-		/// </returns>
-		/// <param name='minSamples'>
-		/// Minimum samples.
-		/// </param>
+
+        /// <summary>
+        ///  Returns true if AA is enabled on multi-sampling.
+        /// </summary>
+        /// <returns>
+        /// The sample shading.
+        /// </returns>
+        /// <param name='minSamples'>
+        /// Minimum samples.
+        /// </param>
         public bool getSampleShading(out float minSamples)
         {
             minSamples = parameters.samplesMin;
             return parameters.sampleShading;
         }
 
-       
-		/// <summary>
-		/// Returns the occlusion test and its mode.
-		/// </summary>
-		/// <returns>
-		/// The occlusion test.
-		/// </returns>
-		/// <param name='occlusionMode'>
-		/// Occlusion mode.
-		/// </param>
+
+        /// <summary>
+        /// Returns the occlusion test and its mode.
+        /// </summary>
+        /// <returns>
+        /// The occlusion test.
+        /// </returns>
+        /// <param name='occlusionMode'>
+        /// Occlusion mode.
+        /// </param>
         public Query getOcclusionTest(out QueryMode occlusionMode)
         {
             occlusionMode = parameters.occlusionMode;
             return parameters.occlusionQuery;
         }
 
-		/// <summary>
-		/// Returns True if Scissor test is enabled.
-		/// </summary>
-		/// <returns>
-		/// The scissor test.
-		/// </returns>
+        /// <summary>
+        /// Returns True if Scissor test is enabled.
+        /// </summary>
+        /// <returns>
+        /// The scissor test.
+        /// </returns>
         public bool getScissorTest()
         {
             return parameters.enableScissor;
         }
 
-		/// <summary>
-		/// Returns True if Scissor test is enabled.
-		/// </summary>
-		/// <returns>
-		/// The scissor test.
-		/// </returns>
-		/// <param name='scissor'>
-		/// Scissor the current scissor test viewport.
-		/// </param>
+        /// <summary>
+        /// Returns True if Scissor test is enabled.
+        /// </summary>
+        /// <returns>
+        /// The scissor test.
+        /// </returns>
+        /// <param name='scissor'>
+        /// Scissor the current scissor test viewport.
+        /// </param>
         public bool getScissorTest(out Vector4i scissor)
         {
             scissor = parameters.scissor;
             return parameters.enableScissor;
         }
 
-      
-		/// <summary>
-		/// Returns true if stencil test is enabled.
-		/// </summary>
-		/// <returns>
-		/// The stencil test.
-		/// </returns>
+
+        /// <summary>
+        /// Returns true if stencil test is enabled.
+        /// </summary>
+        /// <returns>
+        /// The stencil test.
+        /// </returns>
         public bool getStencilTest()
         {
             return parameters.enableStencil;
         }
 
-		/// <summary>
-		/// Returns true if stencil test is enabled.
-		/// </summary>
-		/// <returns>
-		/// The stencil test.
-		/// </returns>
-		/// <param name='ff'>
-		/// Ff the current front face function.
-		/// </param>
-		/// <param name='fref'>
-		/// Fref e current front face reference valueC.
-		/// </param>
-		/// <param name='fmask'>
-		/// Fmask the current front face stencil mask.
-		/// </param>
-		/// <param name='ffail'>
-		/// Ffail the current stencil operation used when failing stencil test on front faces.
-		/// </param>
-		/// <param name='fdpfail'>
-		/// Fdpfail the current stencil operation used when passing stencil test but failing depth test on front faces.
-		/// </param>
-		/// <param name='fdppass'>
-		/// Fdppass the current stencil operation used when passing both stencil and depth tests on front faces.
-		/// </param>
+        /// <summary>
+        /// Returns true if stencil test is enabled.
+        /// </summary>
+        /// <returns>
+        /// The stencil test.
+        /// </returns>
+        /// <param name='ff'>
+        /// Ff the current front face function.
+        /// </param>
+        /// <param name='fref'>
+        /// Fref e current front face reference valueC.
+        /// </param>
+        /// <param name='fmask'>
+        /// Fmask the current front face stencil mask.
+        /// </param>
+        /// <param name='ffail'>
+        /// Ffail the current stencil operation used when failing stencil test on front faces.
+        /// </param>
+        /// <param name='fdpfail'>
+        /// Fdpfail the current stencil operation used when passing stencil test but failing depth test on front faces.
+        /// </param>
+        /// <param name='fdppass'>
+        /// Fdppass the current stencil operation used when passing both stencil and depth tests on front faces.
+        /// </param>
         public bool getStencilTest(out Function ff, out int fref, out uint fmask, out StencilOperation ffail,
                                    out StencilOperation fdpfail, out StencilOperation fdppass)
         {
@@ -1856,52 +1853,52 @@ namespace Sxta.Render
         }
 
 
-		/// <summary>
-		/// Returns true if stencil test is enabled.
-		/// </summary>
-		/// <returns>
-		/// The stencil test.
-		/// </returns>
-		/// <param name='ff'>
-		/// Ff the current front face function.
-		/// </param>
-		/// <param name='fref'>
-		/// Fref the current front face reference valueC.
-		/// </param>
-		/// <param name='fmask'>
-		/// Fmask the current front face stencil mask.
-		/// </param>
-		/// <param name='ffail'>
-		/// Ffail the current stencil operation used when failing stencil test on front faces.
-		/// </param>
-		/// <param name='fdpfail'>
-		/// Fdpfail the current stencil operation used when passing stencil test but failing depth test on front faces.
-		/// </param>
-		/// <param name='fdppass'>
-		/// Fdppass the current stencil operation used when passing both stencil and depth tests on front faces.
-		/// </param>
-		/// <param name='bf'>
-		/// Bf the current back face function.
-		/// </param>
-		/// <param name='bref'>
-		/// Bref the current back face reference valueC.
-		/// </param>
-		/// <param name='bmask'>
-		/// Bmask the current back face stencil mask.
-		/// </param>
-		/// <param name='bfail'>
-		/// Bfail  the current stencil operation used when failing stencil test on back faces.
-		/// </param>
-		/// <param name='bdpfail'>
-		/// Bdpfail the current stencil operation used when passing stencil test but failing depth test on back faces.
-		/// </param>
-		/// <param name='bdppass'>
-		/// Bdppass the current stencil operation used when passing both stencil and depth tests on back faces.
-		/// </param>
+        /// <summary>
+        /// Returns true if stencil test is enabled.
+        /// </summary>
+        /// <returns>
+        /// The stencil test.
+        /// </returns>
+        /// <param name='ff'>
+        /// Ff the current front face function.
+        /// </param>
+        /// <param name='fref'>
+        /// Fref the current front face reference valueC.
+        /// </param>
+        /// <param name='fmask'>
+        /// Fmask the current front face stencil mask.
+        /// </param>
+        /// <param name='ffail'>
+        /// Ffail the current stencil operation used when failing stencil test on front faces.
+        /// </param>
+        /// <param name='fdpfail'>
+        /// Fdpfail the current stencil operation used when passing stencil test but failing depth test on front faces.
+        /// </param>
+        /// <param name='fdppass'>
+        /// Fdppass the current stencil operation used when passing both stencil and depth tests on front faces.
+        /// </param>
+        /// <param name='bf'>
+        /// Bf the current back face function.
+        /// </param>
+        /// <param name='bref'>
+        /// Bref the current back face reference valueC.
+        /// </param>
+        /// <param name='bmask'>
+        /// Bmask the current back face stencil mask.
+        /// </param>
+        /// <param name='bfail'>
+        /// Bfail  the current stencil operation used when failing stencil test on back faces.
+        /// </param>
+        /// <param name='bdpfail'>
+        /// Bdpfail the current stencil operation used when passing stencil test but failing depth test on back faces.
+        /// </param>
+        /// <param name='bdppass'>
+        /// Bdppass the current stencil operation used when passing both stencil and depth tests on back faces.
+        /// </param>
         public bool getStencilTest(out Function ff, out int fref, out uint fmask, out StencilOperation ffail,
                                    out StencilOperation fdpfail, out StencilOperation fdppass,
                                    out Function bf, out int bref, out uint bmask, out StencilOperation bfail,
-                                   out StencilOperation bdpfail, out  StencilOperation bdppass)
+                                   out StencilOperation bdpfail, out StencilOperation bdppass)
         {
             ff = parameters.ffunc;
             fref = parameters.fref;
@@ -1919,69 +1916,69 @@ namespace Sxta.Render
             return parameters.enableStencil;
         }
 
-		/// <summary>
-		/// Returns true if depth test is enabled.
-		/// </summary>
-		/// <returns>
-		/// The depth test.
-		/// </returns>
+        /// <summary>
+        /// Returns true if depth test is enabled.
+        /// </summary>
+        /// <returns>
+        /// The depth test.
+        /// </returns>
         public bool getDepthTest()
         {
             return parameters.enableDepth;
         }
 
-       
-		/// <summary>
-		/// Returns true if depth test is enabled.
-		/// </summary>
-		/// <returns>
-		/// The depth test.
-		/// </returns>
-		/// <param nhe current depth test function.ame='depth'>
-		/// Depth 
-		/// </param>
+
+        /// <summary>
+        /// Returns true if depth test is enabled.
+        /// </summary>
+        /// <returns>
+        /// The depth test.
+        /// </returns>
+        /// <param nhe current depth test function.ame='depth'>
+        /// Depth 
+        /// </param>
         public bool getDepthTest(out Function depth)
         {
             depth = parameters.depth;
             return parameters.enableDepth;
         }
-        
-		/// <summary>
-		/// Returns true if blending is enabled for specified buffer.
+
+        /// <summary>
+        /// Returns true if blending is enabled for specified buffer.
         /// If no buffer is specified, will use default buffer.
-		/// </summary>
-		/// <returns>
-		/// The blend.
-		/// </returns>
-		/// <param name='buffer'>
-		/// Buffer  an optionnal buffer id.
-		/// </param>
+        /// </summary>
+        /// <returns>
+        /// The blend.
+        /// </returns>
+        /// <param name='buffer'>
+        /// Buffer  an optionnal buffer id.
+        /// </param>
         public bool getBlend(BufferId buffer = BufferId.NOVALUE)
         {
             int id = buffer < 0 ? 0 : EnumConversion.getBufferId(buffer);
             return parameters.enableBlend[id];
         }
 
-        
-		/// <summary>
-		/// Returns true if blending is enabled for specified buffer.
+
+        /// <summary>
+        /// Returns true if blending is enabled for specified buffer.
         /// If no buffer is specified, will use default buffer.
-		/// </summary>
-		/// <returns>
-		/// The blend.
-		/// </returns>
-		/// <param name='buffer'>
-		/// Buffer an optionnal buffer id.
-		/// </param>
-		/// <param name='rgb'>
-		/// Rgb the current color blending equation.
-		/// </param>
-		/// <param name='srgb'>
-		/// Srgb the current source color blending argument.
-		/// </param>
-		/// <param name='drgb'>
-		/// Drgb the current destination color blending argument.
-		/// </param>
+        /// </summary>
+        /// <returns>
+        /// The blend.
+        /// </returns>
+        /// <param name='buffer'>
+        /// Buffer an optionnal buffer id.
+        /// </param>
+        /// <param name='rgb'>
+        /// Rgb the current color blending equation.
+        /// </param>
+        /// <param name='srgb'>
+        /// Srgb the current source color blending argument.
+        /// </param>
+        /// <param name='drgb'>
+        /// Drgb the current destination color blending argument.
+        /// </param>
         public bool getBlend(BufferId buffer, out BlendEquation rgb, out BlendArgument srgb, out BlendArgument drgb)
         {
             int id = buffer < 0 ? 0 : EnumConversion.getBufferId(buffer);
@@ -1992,34 +1989,34 @@ namespace Sxta.Render
         }
 
 
-		/// <summary>
-		/// Returns true if blending is enabled for specified buffer.
+        /// <summary>
+        /// Returns true if blending is enabled for specified buffer.
         /// If no buffer is specified, will use default buffer.
-		/// </summary>
-		/// <returns>
-		/// The blend.
-		/// </returns>
-		/// <param name='buffer'>
-		/// Buffer an optionnal buffer id.
-		/// </param>
-		/// <param name='rgb'>
-		/// Rgb the current color blending equation.
-		/// </param>
-		/// <param name='srgb'>
-		/// Srgb the current source color blending argument.
-		/// </param>
-		/// <param name='drgb'>
-		/// Drgb the current destination color blending argument.
-		/// </param>
-		/// <param name='alpha'>
-		/// Alpha the current alpha blending equation.
-		/// </param>
-		/// <param name='salpha'>
-		/// Salpha the current source alpha blending argument.
-		/// </param>
-		/// <param name='dalpha'>
-		/// Dalpha the current destination alpha blending argument.
-		/// </param>
+        /// </summary>
+        /// <returns>
+        /// The blend.
+        /// </returns>
+        /// <param name='buffer'>
+        /// Buffer an optionnal buffer id.
+        /// </param>
+        /// <param name='rgb'>
+        /// Rgb the current color blending equation.
+        /// </param>
+        /// <param name='srgb'>
+        /// Srgb the current source color blending argument.
+        /// </param>
+        /// <param name='drgb'>
+        /// Drgb the current destination color blending argument.
+        /// </param>
+        /// <param name='alpha'>
+        /// Alpha the current alpha blending equation.
+        /// </param>
+        /// <param name='salpha'>
+        /// Salpha the current source alpha blending argument.
+        /// </param>
+        /// <param name='dalpha'>
+        /// Dalpha the current destination alpha blending argument.
+        /// </param>
         public bool getBlend(BufferId buffer, out BlendEquation rgb, out BlendArgument srgb, out BlendArgument drgb,
                                         out BlendEquation alpha, out BlendArgument salpha, out BlendArgument dalpha)
         {
@@ -2033,121 +2030,121 @@ namespace Sxta.Render
             return parameters.enableBlend[id];
         }
 
-		/// <summary>
-		/// Returns the current blending color parameter.
-		/// </summary>
-		/// <returns>
-		/// The blend color.
-		/// </returns>
+        /// <summary>
+        /// Returns the current blending color parameter.
+        /// </summary>
+        /// <returns>
+        /// The blend color.
+        /// </returns>
         public Vector4f getBlendColor()
         {
             return parameters.color;
         }
 
 
-		/// <summary>
-		/// Returns true if dithering is enabled.
-		/// </summary>
-		/// <returns>
-		/// The dither.
-		/// </returns>
+        /// <summary>
+        /// Returns true if dithering is enabled.
+        /// </summary>
+        /// <returns>
+        /// The dither.
+        /// </returns>
         public bool getDither()
         {
             return parameters.enableDither;
         }
 
 
-		/// <summary>
-		/// Returns true if logical operation is enabled.
-		/// </summary>
-		/// <returns>
-		/// The logic op.
-		/// </returns>
+        /// <summary>
+        /// Returns true if logical operation is enabled.
+        /// </summary>
+        /// <returns>
+        /// The logic op.
+        /// </returns>
         public bool getLogicOp()
         {
             return parameters.enableLogic;
         }
 
- 
-		/// <summary>
-		/// Returns true if logical operation is enabled.
-		/// </summary>
-		/// <returns>
-		/// The logic op.
-		/// </returns>
-		/// <param name='logicOp'>
-		/// Logic op the current logical operation.
-		/// </param>
+
+        /// <summary>
+        /// Returns true if logical operation is enabled.
+        /// </summary>
+        /// <returns>
+        /// The logic op.
+        /// </returns>
+        /// <param name='logicOp'>
+        /// Logic op the current logical operation.
+        /// </param>
         public bool getLogicOp(out LogicOperation logicOp)
         {
             logicOp = parameters.logicOp;
             return parameters.enableLogic;
         }
 
-  
-		/// <summary>
-		/// Returns the color writing mask for the given buffer.
-		/// </summary>
-		/// <returns>
-		/// The color mask.
-		/// </returns>
-		/// <param name='buffer'>
-		/// Buffer.
-		/// </param>
+
+        /// <summary>
+        /// Returns the color writing mask for the given buffer.
+        /// </summary>
+        /// <returns>
+        /// The color mask.
+        /// </returns>
+        /// <param name='buffer'>
+        /// Buffer.
+        /// </param>
         public Vector4b getColorMask(BufferId buffer = BufferId.NOVALUE)
         {
             return parameters.colorMask[EnumConversion.getBufferId(buffer)];
         }
 
-  
-		/// <summary>
-		/// Returns the depth buffer writing mask.
-		/// </summary>
-		/// <returns>
-		/// The depth mask.
-		/// </returns>
+
+        /// <summary>
+        /// Returns the depth buffer writing mask.
+        /// </summary>
+        /// <returns>
+        /// The depth mask.
+        /// </returns>
         public bool getDepthMask()
         {
             return parameters.depthMask;
         }
 
-     
-		/// <summary>
-		/// Returns the stencil buffer writing mask.
-		/// </summary>
-		/// <returns>
-		/// The stencil mask.
-		/// </returns>
+
+        /// <summary>
+        /// Returns the stencil buffer writing mask.
+        /// </summary>
+        /// <returns>
+        /// The stencil mask.
+        /// </returns>
         public Vector2i getStencilMask()
         {
             return new Vector2i((int)parameters.stencilMaskFront, (int)parameters.stencilMaskBack);
         }
 
- 
-		/// <summary>
-		/// Sets all the parameters of this framebuffer at once.
-		/// </summary>
-		/// <returns>
-		/// The parameters.
-		/// </returns>
-		/// <param name='p'>
-		/// P a set of framebuffer parameters obtained via #getParameters().
-		/// </param>
+
+        /// <summary>
+        /// Sets all the parameters of this framebuffer at once.
+        /// </summary>
+        /// <returns>
+        /// The parameters.
+        /// </returns>
+        /// <param name='p'>
+        /// P a set of framebuffer parameters obtained via #getParameters().
+        /// </param>
         public void setParameters(Parameters p)
         {
             parameters = p;
             parametersChanged = true;
         }
 
-		/// <summary>
-		/// Sets the viewport for this framebuffer (up, down, left and right planes).
-		/// </summary>
-		/// <returns>
-		/// The viewport.
-		/// </returns>
-		/// <param name='viewport'>
-		/// Viewport the new viewport.
-		/// </param>
+        /// <summary>
+        /// Sets the viewport for this framebuffer (up, down, left and right planes).
+        /// </summary>
+        /// <returns>
+        /// The viewport.
+        /// </returns>
+        /// <param name='viewport'>
+        /// Viewport the new viewport.
+        /// </param>
         public void setViewport(Vector4i viewport)
         {
             parameters.viewport = viewport;
@@ -2156,18 +2153,18 @@ namespace Sxta.Render
         }
 
 
-		/// <summary>
-		/// Sets the depth range for this framebuffer (near and far planes).
-		/// </summary>
-		/// <returns>
-		/// The depth range.
-		/// </returns>
-		/// <param name='n'>
-		/// N  near plane.
-		/// </param>
-		/// <param name='f'>
-		/// F  far plane.
-		/// </param>
+        /// <summary>
+        /// Sets the depth range for this framebuffer (near and far planes).
+        /// </summary>
+        /// <returns>
+        /// The depth range.
+        /// </returns>
+        /// <param name='n'>
+        /// N  near plane.
+        /// </param>
+        /// <param name='f'>
+        /// F  far plane.
+        /// </param>
         public void setDepthRange(float n, float f)
         {
             parameters.depthRange = new Vector2f(n, f);
@@ -2176,15 +2173,15 @@ namespace Sxta.Render
         }
 
 
-		/// <summary>
-		/// Sets the clipping bit, used to determine which planes will be used for clipping.
-		/// </summary>
-		/// <returns>
-		/// The clip distances.
-		/// </returns>
-		/// <param name='clipDistances'>
-		/// Clip distances.
-		/// </param>
+        /// <summary>
+        /// Sets the clipping bit, used to determine which planes will be used for clipping.
+        /// </summary>
+        /// <returns>
+        /// The clip distances.
+        /// </returns>
+        /// <param name='clipDistances'>
+        /// Clip distances.
+        /// </param>
         public void setClipDistances(int clipDistances)
         {
             parameters.clipDistances = clipDistances;
@@ -2193,15 +2190,15 @@ namespace Sxta.Render
         }
 
 
-		/// <summary>
-		/// Sets the color used to clear the current draw buffer.
-		/// </summary>
-		/// <returns>
-		/// The clear color.
-		/// </returns>
-		/// <param name='clearColor'>
-		/// Clear color.
-		/// </param>
+        /// <summary>
+        /// Sets the color used to clear the current draw buffer.
+        /// </summary>
+        /// <returns>
+        /// The clear color.
+        /// </returns>
+        /// <param name='clearColor'>
+        /// Clear color.
+        /// </param>
         public void setClearColor(Vector4f clearColor)
         {
             parameters.clearColor = clearColor;
@@ -2213,16 +2210,16 @@ namespace Sxta.Render
             setClearColor(new Vector4f(color.R / 255.0f, color.G / 255.0f, color.B / 255.0f, color.A / 255.0f));
         }
 
- 
-		/// <summary>
-		/// Sets the depth used to clear the current depth buffer.
-		/// </summary>
-		/// <returns>
-		/// The clear depth.
-		/// </returns>
-		/// <param name='clearDepth'>
-		/// Clear depth.
-		/// </param>
+
+        /// <summary>
+        /// Sets the depth used to clear the current depth buffer.
+        /// </summary>
+        /// <returns>
+        /// The clear depth.
+        /// </returns>
+        /// <param name='clearDepth'>
+        /// Clear depth.
+        /// </param>
         public void setClearDepth(float clearDepth)
         {
             parameters.clearDepth = clearDepth;
@@ -2231,15 +2228,15 @@ namespace Sxta.Render
         }
 
 
-		/// <summary>
-		/// Sets the stencil used to clear the current stencil buffer.
-		/// </summary>
-		/// <returns>
-		/// The clear stencil.
-		/// </returns>
-		/// <param name='clearStencil'>
-		/// Clear stencil.
-		/// </param>
+        /// <summary>
+        /// Sets the stencil used to clear the current stencil buffer.
+        /// </summary>
+        /// <returns>
+        /// The clear stencil.
+        /// </returns>
+        /// <param name='clearStencil'>
+        /// Clear stencil.
+        /// </param>
         public void setClearStencil(int clearStencil)
         {
             parameters.clearStencil = clearStencil;
@@ -2247,16 +2244,16 @@ namespace Sxta.Render
             parametersChanged = true;
         }
 
-  
-		/// <summary>
-		/// Sets the point primitive's size.
-		/// </summary>
-		/// <returns>
-		/// The point size.
-		/// </returns>
-		/// <param name='pointSize'>
-		/// Point size.
-		/// </param>
+
+        /// <summary>
+        /// Sets the point primitive's size.
+        /// </summary>
+        /// <returns>
+        /// The point size.
+        /// </returns>
+        /// <param name='pointSize'>
+        /// Point size.
+        /// </param>
         public void setPointSize(float pointSize)
         {
             parameters.pointSize = pointSize;
@@ -2265,15 +2262,15 @@ namespace Sxta.Render
         }
 
 
-		/// <summary>
-		/// Sets the maximum size of a point.
-		/// </summary>
-		/// <returns>
-		/// The point fade threshold size.
-		/// </returns>
-		/// <param name='pointFadeThresholdSize'>
-		/// Point fade threshold size.
-		/// </param>
+        /// <summary>
+        /// Sets the maximum size of a point.
+        /// </summary>
+        /// <returns>
+        /// The point fade threshold size.
+        /// </returns>
+        /// <param name='pointFadeThresholdSize'>
+        /// Point fade threshold size.
+        /// </param>
         public void setPointFadeThresholdSize(float pointFadeThresholdSize)
         {
             parameters.pointFadeThresholdSize = pointFadeThresholdSize;
@@ -2282,15 +2279,15 @@ namespace Sxta.Render
         }
 
 
-		/// <summary>
-		/// Sets the origin corner of a point.
-		/// </summary>
-		/// <returns>
-		/// The point lower left origin.
-		/// </returns>
-		/// <param name='pointLowerLeftOrigin'>
-		/// Point lower left origin.
-		/// </param>
+        /// <summary>
+        /// Sets the origin corner of a point.
+        /// </summary>
+        /// <returns>
+        /// The point lower left origin.
+        /// </returns>
+        /// <param name='pointLowerLeftOrigin'>
+        /// Point lower left origin.
+        /// </param>
         public void setPointLowerLeftOrigin(bool pointLowerLeftOrigin)
         {
             parameters.pointLowerLeftOrigin = pointLowerLeftOrigin;
@@ -2299,15 +2296,15 @@ namespace Sxta.Render
         }
 
 
-		/// <summary>
-		/// Sets the line primitive's width.
-		/// </summary>
-		/// <returns>
-		/// The line width.
-		/// </returns>
-		/// <param name='lineWidth'>
-		/// Line width.
-		/// </param>
+        /// <summary>
+        /// Sets the line primitive's width.
+        /// </summary>
+        /// <returns>
+        /// The line width.
+        /// </returns>
+        /// <param name='lineWidth'>
+        /// Line width.
+        /// </param>
         public void setLineWidth(float lineWidth)
         {
             parameters.lineId = ++PARAMETER_ID;
@@ -2315,15 +2312,15 @@ namespace Sxta.Render
             parametersChanged = true;
         }
 
-		/// <summary>
-		///  Enables or disables the AA on line drawing.
-		/// </summary>
-		/// <returns>
-		/// The line smooth.
-		/// </returns>
-		/// <param name='lineSmooth'>
-		/// Line smooth.
-		/// </param>
+        /// <summary>
+        ///  Enables or disables the AA on line drawing.
+        /// </summary>
+        /// <returns>
+        /// The line smooth.
+        /// </returns>
+        /// <param name='lineSmooth'>
+        /// Line smooth.
+        /// </param>
         public void setLineSmooth(bool lineSmooth)
         {
             parameters.lineId = ++PARAMETER_ID;
@@ -2332,15 +2329,15 @@ namespace Sxta.Render
         }
 
 
-		/// <summary>
-		/// termines the orientation of front faces.
-		/// </summary>
-		/// <returns>
-		/// The front face C.
-		/// </returns>
-		/// <param name='frontFaceCW'>
-		/// Front face C if true, clockwise faces will be front faces.
-		/// </param>
+        /// <summary>
+        /// termines the orientation of front faces.
+        /// </summary>
+        /// <returns>
+        /// The front face C.
+        /// </returns>
+        /// <param name='frontFaceCW'>
+        /// Front face C if true, clockwise faces will be front faces.
+        /// </param>
         public void setFrontFaceCW(bool frontFaceCW)
         {
             parameters.frontFaceCW = frontFaceCW;
@@ -2349,18 +2346,18 @@ namespace Sxta.Render
         }
 
 
-		/// <summary>
-		/// Sets the polygon mode for front and back faces.
-		/// </summary>
-		/// <returns>
-		/// The polygon mode.
-		/// </returns>
-		/// <param name='polygonFront'>
-		/// Polygon front drawing mode for front faces.
-		/// </param>
-		/// <param name='polygonBack'>
-		/// Polygon back drawing mode for back faces.
-		/// </param>
+        /// <summary>
+        /// Sets the polygon mode for front and back faces.
+        /// </summary>
+        /// <returns>
+        /// The polygon mode.
+        /// </returns>
+        /// <param name='polygonFront'>
+        /// Polygon front drawing mode for front faces.
+        /// </param>
+        /// <param name='polygonBack'>
+        /// Polygon back drawing mode for back faces.
+        /// </param>
         public void setPolygonMode(PolygonMode polygonFront, PolygonMode polygonBack)
         {
             parameters.polygonFront = polygonFront;
@@ -2370,15 +2367,15 @@ namespace Sxta.Render
         }
 
 
-		/// <summary>
-		/// Enables or disables AA on polygon drawing.
-		/// </summary>
-		/// <returns>
-		/// The polygon smooth.
-		/// </returns>
-		/// <param name='polygonSmooth'>
-		/// Polygon smooth.
-		/// </param>
+        /// <summary>
+        /// Enables or disables AA on polygon drawing.
+        /// </summary>
+        /// <returns>
+        /// The polygon smooth.
+        /// </returns>
+        /// <param name='polygonSmooth'>
+        /// Polygon smooth.
+        /// </param>
         public void setPolygonSmooth(bool polygonSmooth)
         {
             parameters.polygonSmooth = polygonSmooth;
@@ -2386,19 +2383,19 @@ namespace Sxta.Render
             parametersChanged = true;
         }
 
-        
-		/// <summary>
-		/// Sets the factor and units when using offsets on primitives.
-		/// </summary>
-		/// <returns>
-		/// The polygon offset.
-		/// </returns>
-		/// <param name='factor'>
-		/// Factor.
-		/// </param>
-		/// <param name='units'>
-		/// Units.
-		/// </param>
+
+        /// <summary>
+        /// Sets the factor and units when using offsets on primitives.
+        /// </summary>
+        /// <returns>
+        /// The polygon offset.
+        /// </returns>
+        /// <param name='factor'>
+        /// Factor.
+        /// </param>
+        /// <param name='units'>
+        /// Units.
+        /// </param>
         public void setPolygonOffset(float factor, float units)
         {
             parameters.polygonOffset = new Vector2f(factor, units);
@@ -2406,22 +2403,22 @@ namespace Sxta.Render
             parametersChanged = true;
         }
 
-        
-		/// <summary>
-		/// Determines which primitives should be offset.
-		/// </summary>
-		/// <returns>
-		/// The polygon offset.
-		/// </returns>
-		/// <param name='pointOffset'>
-		/// Point offset.
-		/// </param>
-		/// <param name='lineOffset'>
-		/// Line offset.
-		/// </param>
-		/// <param name='polygonOffset'>
-		/// Polygon offset.
-		/// </param>
+
+        /// <summary>
+        /// Determines which primitives should be offset.
+        /// </summary>
+        /// <returns>
+        /// The polygon offset.
+        /// </returns>
+        /// <param name='pointOffset'>
+        /// Point offset.
+        /// </param>
+        /// <param name='lineOffset'>
+        /// Line offset.
+        /// </param>
+        /// <param name='polygonOffset'>
+        /// Polygon offset.
+        /// </param>
         public void setPolygonOffset(bool pointOffset, bool lineOffset, bool polygonOffset)
         {
             parameters.polygonOffsets = new Vector3b(pointOffset, lineOffset, polygonOffset);
@@ -2429,15 +2426,15 @@ namespace Sxta.Render
             parametersChanged = true;
         }
 
-		/// <summary>
-		/// Enables or disables multisampling.
-		/// </summary>
-		/// <returns>
-		/// The multisample.
-		/// </returns>
-		/// <param name='multiSample'>
-		/// Multi sample.
-		/// </param>
+        /// <summary>
+        /// Enables or disables multisampling.
+        /// </summary>
+        /// <returns>
+        /// The multisample.
+        /// </returns>
+        /// <param name='multiSample'>
+        /// Multi sample.
+        /// </param>
         public void setMultisample(bool multiSample)
         {
             parameters.multiSample = multiSample;
@@ -2445,19 +2442,19 @@ namespace Sxta.Render
             parametersChanged = true;
         }
 
-        
-		/// <summary>
-		/// Sets sampling filter options.
-		/// </summary>
-		/// <returns>
-		/// The sample alpha.
-		/// </returns>
-		/// <param name='sampleAlphaToCoverage'>
-		/// Sample alpha to coverage.
-		/// </param>
-		/// <param name='sampleAlphaToOne'>
-		/// Sample alpha to one.
-		/// </param>
+
+        /// <summary>
+        /// Sets sampling filter options.
+        /// </summary>
+        /// <returns>
+        /// The sample alpha.
+        /// </returns>
+        /// <param name='sampleAlphaToCoverage'>
+        /// Sample alpha to coverage.
+        /// </param>
+        /// <param name='sampleAlphaToOne'>
+        /// Sample alpha to one.
+        /// </param>
         public void setSampleAlpha(bool sampleAlphaToCoverage, bool sampleAlphaToOne)
         {
             parameters.sampleAlphaToCoverage = sampleAlphaToCoverage;
@@ -2466,15 +2463,15 @@ namespace Sxta.Render
             parametersChanged = true;
         }
 
-		/// <summary>
-		/// Sets sampling coverage.
-		/// </summary>
-		/// <returns>
-		/// The sample coverage.
-		/// </returns>
-		/// <param name='sampleCoverage'>
-		/// Sample coverage.
-		/// </param>
+        /// <summary>
+        /// Sets sampling coverage.
+        /// </summary>
+        /// <returns>
+        /// The sample coverage.
+        /// </returns>
+        /// <param name='sampleCoverage'>
+        /// Sample coverage.
+        /// </param>
         public void setSampleCoverage(float sampleCoverage)
         {
             parameters.sampleCoverage = sampleCoverage;
@@ -2482,16 +2479,16 @@ namespace Sxta.Render
             parametersChanged = true;
         }
 
-    
-		/// <summary>
-		/// Sets sampling mask.
-		/// </summary>
-		/// <returns>
-		/// The sample mask.
-		/// </returns>
-		/// <param name='sampleMask'>
-		/// Sample mask.
-		/// </param>
+
+        /// <summary>
+        /// Sets sampling mask.
+        /// </summary>
+        /// <returns>
+        /// The sample mask.
+        /// </returns>
+        /// <param name='sampleMask'>
+        /// Sample mask.
+        /// </param>
         public void setSampleMask(uint sampleMask)
         {
             parameters.sampleMask = sampleMask;
@@ -2499,18 +2496,18 @@ namespace Sxta.Render
             parametersChanged = true;
         }
 
-		/// <summary>
-		/// Enables or disables AA on multisampling.
-		/// </summary>
-		/// <returns>
-		/// The sample shading.
-		/// </returns>
-		/// <param name='sampleShading'>
-		/// Sample shading.
-		/// </param>
-		/// <param name='minSamples'>
-		/// Minimum samples.
-		/// </param>
+        /// <summary>
+        /// Enables or disables AA on multisampling.
+        /// </summary>
+        /// <returns>
+        /// The sample shading.
+        /// </returns>
+        /// <param name='sampleShading'>
+        /// Sample shading.
+        /// </param>
+        /// <param name='minSamples'>
+        /// Minimum samples.
+        /// </param>
         public void setSampleShading(bool sampleShading, float minSamples)
         {
             parameters.sampleShading = sampleShading;
@@ -2519,18 +2516,18 @@ namespace Sxta.Render
             parametersChanged = true;
         }
 
-		/// <summary>
-		/// Adds an occlusion query.
-		/// </summary>
-		/// <returns>
-		/// The occlusion test.
-		/// </returns>
-		/// <param name='occlusionQuery'>
-		/// Occlusion query.
-		/// </param>
-		/// <param name='occlusionMode'>
-		/// Occlusion mode.
-		/// </param>
+        /// <summary>
+        /// Adds an occlusion query.
+        /// </summary>
+        /// <returns>
+        /// The occlusion test.
+        /// </returns>
+        /// <param name='occlusionQuery'>
+        /// Occlusion query.
+        /// </param>
+        /// <param name='occlusionMode'>
+        /// Occlusion mode.
+        /// </param>
         public void setOcclusionTest(Query occlusionQuery, QueryMode occlusionMode)
         {
             Debug.Assert(occlusionQuery == null ||
@@ -2541,35 +2538,35 @@ namespace Sxta.Render
             parametersChanged = true;
         }
 
-     
-		/// <summary>
-		/// Enables or disables scissor test.
-		/// </summary>
-		/// <returns>
-		/// The scissor test.
-		/// </returns>
-		/// <param name='enableScissor'>
-		/// Enable scissor.
-		/// </param>
+
+        /// <summary>
+        /// Enables or disables scissor test.
+        /// </summary>
+        /// <returns>
+        /// The scissor test.
+        /// </returns>
+        /// <param name='enableScissor'>
+        /// Enable scissor.
+        /// </param>
         public void setScissorTest(bool enableScissor)
         {
             parameters.enableScissor = enableScissor;
             parametersChanged = true;
         }
 
-      
-		/// <summary>
-		/// Enables or disables scissor test.
-		/// </summary>
-		/// <returns>
-		/// The scissor test.
-		/// </returns>
-		/// <param name='enableScissor'>
-		/// Enable scissor.
-		/// </param>
-		/// <param name='scissor'>
-		/// Scissor.
-		/// </param>
+
+        /// <summary>
+        /// Enables or disables scissor test.
+        /// </summary>
+        /// <returns>
+        /// The scissor test.
+        /// </returns>
+        /// <param name='enableScissor'>
+        /// Enable scissor.
+        /// </param>
+        /// <param name='scissor'>
+        /// Scissor.
+        /// </param>
         public void setScissorTest(bool enableScissor, Vector4i scissor)
         {
             parameters.enableScissor = enableScissor;
@@ -2577,16 +2574,16 @@ namespace Sxta.Render
             parametersChanged = true;
         }
 
-        
-		/// <summary>
-		/// Enables or disables stencil test.
-		/// </summary>
-		/// <returns>
-		/// The stencil test.
-		/// </returns>
-		/// <param name='enableStencil'>
-		/// Enable stencil true to enable the stencil test.
-		/// </param>
+
+        /// <summary>
+        /// Enables or disables stencil test.
+        /// </summary>
+        /// <returns>
+        /// The stencil test.
+        /// </returns>
+        /// <param name='enableStencil'>
+        /// Enable stencil true to enable the stencil test.
+        /// </param>
         public void setStencilTest(bool enableStencil)
         {
             parameters.enableStencil = enableStencil;
@@ -2594,33 +2591,33 @@ namespace Sxta.Render
             parametersChanged = true;
         }
 
-		/// <summary>
-		/// Enables or disables stencil test.
-		/// </summary>
-		/// <returns>
-		/// The stencil test.
-		/// </returns>
-		/// <param name='enableStencil'>
-		/// Enable stencil. enableStencil true to enable the stencil test.
-		/// </param>
-		/// <param name='f'>
-		/// F. the front and back face function.
-		/// </param>
-		/// <param name='ref_'>
-		/// Ref_. the front and back face reference valueC.
-		/// </param>
-		/// <param name='mask'>
-		/// Mask the front and back face stencil mask.
-		/// </param>
-		/// <param name='sfail'>
-		/// Sfail the stencil operation used when failing stencil test on front or back faces.
-		/// </param>
-		/// <param name='dpfail'>
-		/// Dpfail the stencil operation used when passing stencil test but failing depth test on front or back faces.
-		/// </param>
-		/// <param name='dppass'>
-		/// Dppass the stencil operation used when passing both stencil and depth tests on front or back faces.
-		/// </param>
+        /// <summary>
+        /// Enables or disables stencil test.
+        /// </summary>
+        /// <returns>
+        /// The stencil test.
+        /// </returns>
+        /// <param name='enableStencil'>
+        /// Enable stencil. enableStencil true to enable the stencil test.
+        /// </param>
+        /// <param name='f'>
+        /// F. the front and back face function.
+        /// </param>
+        /// <param name='ref_'>
+        /// Ref_. the front and back face reference valueC.
+        /// </param>
+        /// <param name='mask'>
+        /// Mask the front and back face stencil mask.
+        /// </param>
+        /// <param name='sfail'>
+        /// Sfail the stencil operation used when failing stencil test on front or back faces.
+        /// </param>
+        /// <param name='dpfail'>
+        /// Dpfail the stencil operation used when passing stencil test but failing depth test on front or back faces.
+        /// </param>
+        /// <param name='dppass'>
+        /// Dppass the stencil operation used when passing both stencil and depth tests on front or back faces.
+        /// </param>
         public void setStencilTest(bool enableStencil,
              Function f, int ref_, uint mask, StencilOperation sfail, StencilOperation dpfail, StencilOperation dppass)
         {
@@ -2641,52 +2638,52 @@ namespace Sxta.Render
             parametersChanged = true;
         }
 
-		
-		/// <summary>
-		/// Enables or disables stencil test.
-		/// </summary>
-		/// <returns>
-		/// The stencil test.
-		/// </returns>
-		/// <param name='enableStencil'>
-		/// Enable stencil true to enable the stencil test.
-		/// </param>
-		/// <param name='ff'>
-		/// Ff the front face function.
-		/// </param>
-		/// <param name='fref'>
-		/// Fref the front face reference valueC.
-		/// </param>
-		/// <param name='fmask'>
-		/// Fmask the front face stencil mask.
-		/// </param>
-		/// <param name='ffail'>
-		/// Ffail the stencil operation used when failing stencil test on front faces.
-		/// </param>
-		/// <param name='fdpfail'>
-		/// Fdpfail the stencil operation used when passing stencil test but failing depth test on front faces.
-		/// </param>
-		/// <param name='fdppass'>
-		/// Fdppass the stencil operation used when passing both stencil and depth tests on front faces.
-		/// </param>
-		/// <param name='bf'>
-		/// Bf the back face function.
-		/// </param>
-		/// <param name='bref'>
-		/// Bref the back face reference valueC.
-		/// </param>
-		/// <param name='bmask'>
-		/// Bmask the back face stencil mask.
-		/// </param>
-		/// <param name='bfail'>
-		/// Bfail the stencil operation used when failing stencil test on back faces.
-		/// </param>
-		/// <param name='bdpfail'>
-		/// Bdpfail the stencil operation used when passing stencil test but failing depth test on back faces.
-		/// </param>
-		/// <param name='bdppass'>
-		/// Bdppass the stencil operation used when passing both stencil and depth tests on back faces.
-		/// </param>
+
+        /// <summary>
+        /// Enables or disables stencil test.
+        /// </summary>
+        /// <returns>
+        /// The stencil test.
+        /// </returns>
+        /// <param name='enableStencil'>
+        /// Enable stencil true to enable the stencil test.
+        /// </param>
+        /// <param name='ff'>
+        /// Ff the front face function.
+        /// </param>
+        /// <param name='fref'>
+        /// Fref the front face reference valueC.
+        /// </param>
+        /// <param name='fmask'>
+        /// Fmask the front face stencil mask.
+        /// </param>
+        /// <param name='ffail'>
+        /// Ffail the stencil operation used when failing stencil test on front faces.
+        /// </param>
+        /// <param name='fdpfail'>
+        /// Fdpfail the stencil operation used when passing stencil test but failing depth test on front faces.
+        /// </param>
+        /// <param name='fdppass'>
+        /// Fdppass the stencil operation used when passing both stencil and depth tests on front faces.
+        /// </param>
+        /// <param name='bf'>
+        /// Bf the back face function.
+        /// </param>
+        /// <param name='bref'>
+        /// Bref the back face reference valueC.
+        /// </param>
+        /// <param name='bmask'>
+        /// Bmask the back face stencil mask.
+        /// </param>
+        /// <param name='bfail'>
+        /// Bfail the stencil operation used when failing stencil test on back faces.
+        /// </param>
+        /// <param name='bdpfail'>
+        /// Bdpfail the stencil operation used when passing stencil test but failing depth test on back faces.
+        /// </param>
+        /// <param name='bdppass'>
+        /// Bdppass the stencil operation used when passing both stencil and depth tests on back faces.
+        /// </param>
         public void setStencilTest(bool enableStencil,
             Function ff, int fref, uint fmask, StencilOperation ffail, StencilOperation fdpfail, StencilOperation fdppass,
             Function bf, int bref, uint bmask, StencilOperation bfail, StencilOperation bdpfail, StencilOperation bdppass)
@@ -2708,15 +2705,15 @@ namespace Sxta.Render
             parametersChanged = true;
         }
 
-		/// <summary>
-		/// Enables or disables depth test.
-		/// </summary>
-		/// <returns>
-		/// The depth test.
-		/// </returns>
-		/// <param name='enableDepth'>
-		/// Enable depth.
-		/// </param>
+        /// <summary>
+        /// Enables or disables depth test.
+        /// </summary>
+        /// <returns>
+        /// The depth test.
+        /// </returns>
+        /// <param name='enableDepth'>
+        /// Enable depth.
+        /// </param>
         public void setDepthTest(bool enableDepth)
         {
             parameters.enableDepth = enableDepth;
@@ -2724,19 +2721,19 @@ namespace Sxta.Render
             parametersChanged = true;
         }
 
-        
-		/// <summary>
-		/// Enables or disables depth test.
-		/// </summary>
-		/// <returns>
-		/// The depth test.
-		/// </returns>
-		/// <param name='enableDepth'>
-		/// Enable depth.
-		/// </param>
-		/// <param name='depth'>
-		/// Depth.
-		/// </param>
+
+        /// <summary>
+        /// Enables or disables depth test.
+        /// </summary>
+        /// <returns>
+        /// The depth test.
+        /// </returns>
+        /// <param name='enableDepth'>
+        /// Enable depth.
+        /// </param>
+        /// <param name='depth'>
+        /// Depth.
+        /// </param>
         public void setDepthTest(bool enableDepth, Function depth)
         {
             parameters.enableDepth = enableDepth;
@@ -2745,16 +2742,16 @@ namespace Sxta.Render
             parametersChanged = true;
         }
 
- 
-		/// <summary>
-		/// Enables or disables blending.
-		/// </summary>
-		/// <returns>
-		/// The blend.
-		/// </returns>
-		/// <param name='enableBlend'>
-		/// Enable blend.
-		/// </param>
+
+        /// <summary>
+        /// Enables or disables blending.
+        /// </summary>
+        /// <returns>
+        /// The blend.
+        /// </returns>
+        /// <param name='enableBlend'>
+        /// Enable blend.
+        /// </param>
         public void setBlend(bool enableBlend)
         {
             parameters.multiBlendEnable = false;
@@ -2764,18 +2761,18 @@ namespace Sxta.Render
         }
 
 
-		/// <summary>
-		/// Enables or disables blending for a given buffer.
-		/// </summary>
-		/// <returns>
-		/// The blend.
-		/// </returns>
-		/// <param name='buffer'>
-		/// Buffer.
-		/// </param>
-		/// <param name='enableBlend'>
-		/// Enable blend.
-		/// </param>
+        /// <summary>
+        /// Enables or disables blending for a given buffer.
+        /// </summary>
+        /// <returns>
+        /// The blend.
+        /// </returns>
+        /// <param name='buffer'>
+        /// Buffer.
+        /// </param>
+        /// <param name='enableBlend'>
+        /// Enable blend.
+        /// </param>
         public void setBlend(BufferId buffer, bool enableBlend)
         {
             parameters.multiBlendEnable = true;
@@ -2784,24 +2781,24 @@ namespace Sxta.Render
             parametersChanged = true;
         }
 
-		/// <summary>
-		/// Enables or disables blending.
-		/// </summary>
-		/// <returns>
-		/// enableBlend 
-		/// </returns>
-		/// <param name='enableBlend'>
-		/// Enable blend true to enable blending.
-		/// </param>
-		/// <param name='e'>
-		/// E the color and alpha blending equation.
-		/// </param>
-		/// <param name='src'>
-		/// Source the source color and alpha blending argument.
-		/// </param>
-		/// <param name='dst'>
-		/// Dst the destination color and alpha blending argument.
-		/// </param>
+        /// <summary>
+        /// Enables or disables blending.
+        /// </summary>
+        /// <returns>
+        /// enableBlend 
+        /// </returns>
+        /// <param name='enableBlend'>
+        /// Enable blend true to enable blending.
+        /// </param>
+        /// <param name='e'>
+        /// E the color and alpha blending equation.
+        /// </param>
+        /// <param name='src'>
+        /// Source the source color and alpha blending argument.
+        /// </param>
+        /// <param name='dst'>
+        /// Dst the destination color and alpha blending argument.
+        /// </param>
         public void setBlend(bool enableBlend,
              BlendEquation e, BlendArgument src, BlendArgument dst)
         {
@@ -2818,27 +2815,27 @@ namespace Sxta.Render
             parametersChanged = true;
         }
 
-		/// <summary>
-		/// Enables or disables blending for a given buffer.
-		/// </summary>
-		/// <returns>
-		/// The blend.
-		/// </returns>
-		/// <param name='buffer'>
-		/// Buffer  the buffer whose blending options must be changed.
-		/// </param>
-		/// <param name='enableBlend'>
-		/// Enable blend true to enable blending.
-		/// </param>
-		/// <param name='e'>
-		/// E the color and alpha blending equation.
-		/// </param>
-		/// <param name='src'>
-		/// Source  the source color and alpha blending argument.
-		/// </param>
-		/// <param name='dst'>
-		/// Dst the destination color and alpha blending argument.
-		/// </param>
+        /// <summary>
+        /// Enables or disables blending for a given buffer.
+        /// </summary>
+        /// <returns>
+        /// The blend.
+        /// </returns>
+        /// <param name='buffer'>
+        /// Buffer  the buffer whose blending options must be changed.
+        /// </param>
+        /// <param name='enableBlend'>
+        /// Enable blend true to enable blending.
+        /// </param>
+        /// <param name='e'>
+        /// E the color and alpha blending equation.
+        /// </param>
+        /// <param name='src'>
+        /// Source  the source color and alpha blending argument.
+        /// </param>
+        /// <param name='dst'>
+        /// Dst the destination color and alpha blending argument.
+        /// </param>
         public void setBlend(BufferId buffer, bool enableBlend,
              BlendEquation e, BlendArgument src, BlendArgument dst)
         {
@@ -2856,34 +2853,34 @@ namespace Sxta.Render
             parametersChanged = true;
         }
 
-    
-		/// <summary>
-		/// Enables or disables blending.
-		/// </summary>
-		/// <returns>
-		/// The blend.
-		/// </returns>
-		/// <param name='enableBlend'>
-		/// Enable blend true to enable blending.
-		/// </param>
-		/// <param name='rgb'>
-		/// Rgb the color blending equation.
-		/// </param>
-		/// <param name='srgb'>
-		/// Srgb the source color blending argument.
-		/// </param>
-		/// <param name='drgb'>
-		/// Drgb the destination color blending argument.
-		/// </param>
-		/// <param name='alpha'>
-		/// Alpha the alpha blending equation.
-		/// </param>
-		/// <param name='salpha'>
-		/// Salpha the source alpha blending argument.
-		/// </param>
-		/// <param name='dalpha'>
-		/// Dalpha the destination alpha blending argument.
-		/// </param>
+
+        /// <summary>
+        /// Enables or disables blending.
+        /// </summary>
+        /// <returns>
+        /// The blend.
+        /// </returns>
+        /// <param name='enableBlend'>
+        /// Enable blend true to enable blending.
+        /// </param>
+        /// <param name='rgb'>
+        /// Rgb the color blending equation.
+        /// </param>
+        /// <param name='srgb'>
+        /// Srgb the source color blending argument.
+        /// </param>
+        /// <param name='drgb'>
+        /// Drgb the destination color blending argument.
+        /// </param>
+        /// <param name='alpha'>
+        /// Alpha the alpha blending equation.
+        /// </param>
+        /// <param name='salpha'>
+        /// Salpha the source alpha blending argument.
+        /// </param>
+        /// <param name='dalpha'>
+        /// Dalpha the destination alpha blending argument.
+        /// </param>
         public void setBlend(bool enableBlend,
                              BlendEquation rgb, BlendArgument srgb, BlendArgument drgb,
                              BlendEquation alpha, BlendArgument salpha, BlendArgument dalpha)
@@ -2902,36 +2899,36 @@ namespace Sxta.Render
         }
 
 
-		/// <summary>
-		/// Enables or disables blending for a given buffer.
-		/// </summary>
-		/// <returns>
-		/// The blend.
-		/// </returns>
-		/// <param name='buffer'>
-		/// Buffer the buffer whose blending options must be changed.
-		/// </param>
-		/// <param name='enableBlend'>
-		/// Enable blend  enableBlend true to enable blending.
-		/// </param>
-		/// <param name='rgb'>
-		/// Rgb he color blending equation.
-		/// </param>
-		/// <param name='srgb'>
-		/// Srgb the source color blending argument.
-		/// </param>
-		/// <param name='drgb'>
-		/// Drgb the destination color blending argument.
-		/// </param>
-		/// <param name='alpha'>
-		/// Alpha  the alpha blending equation.
-		/// </param>
-		/// <param name='salpha'>
-		/// Salpha the source alpha blending argument.
-		/// </param>
-		/// <param name='dalpha'>
-		/// Dalpha  the destination alpha blending argument.
-		/// </param>
+        /// <summary>
+        /// Enables or disables blending for a given buffer.
+        /// </summary>
+        /// <returns>
+        /// The blend.
+        /// </returns>
+        /// <param name='buffer'>
+        /// Buffer the buffer whose blending options must be changed.
+        /// </param>
+        /// <param name='enableBlend'>
+        /// Enable blend  enableBlend true to enable blending.
+        /// </param>
+        /// <param name='rgb'>
+        /// Rgb he color blending equation.
+        /// </param>
+        /// <param name='srgb'>
+        /// Srgb the source color blending argument.
+        /// </param>
+        /// <param name='drgb'>
+        /// Drgb the destination color blending argument.
+        /// </param>
+        /// <param name='alpha'>
+        /// Alpha  the alpha blending equation.
+        /// </param>
+        /// <param name='salpha'>
+        /// Salpha the source alpha blending argument.
+        /// </param>
+        /// <param name='dalpha'>
+        /// Dalpha  the destination alpha blending argument.
+        /// </param>
         public void setBlend(BufferId buffer, bool enableBlend,
              BlendEquation rgb, BlendArgument srgb, BlendArgument drgb,
              BlendEquation alpha, BlendArgument salpha, BlendArgument dalpha)
@@ -2950,16 +2947,16 @@ namespace Sxta.Render
             parametersChanged = true;
         }
 
-   
-		/// <summary>
-		/// Sets Blend color parameter.
-		/// </summary>
-		/// <returns>
-		/// The blend color.
-		/// </returns>
-		/// <param name='color'>
-		/// Color.
-		/// </param>
+
+        /// <summary>
+        /// Sets Blend color parameter.
+        /// </summary>
+        /// <returns>
+        /// The blend color.
+        /// </returns>
+        /// <param name='color'>
+        /// Color.
+        /// </param>
         public void setBlendColor(Vector4f color)
         {
             parameters.color = color;
@@ -2967,50 +2964,50 @@ namespace Sxta.Render
             parametersChanged = true;
         }
 
-    
-		/// <summary>
-		///  Enables or disables dithering.
-		/// </summary>
-		/// <returns>
-		/// The dither.
-		/// </returns>
-		/// <param name='enableDither'>
-		/// Enable dither.
-		/// </param>
+
+        /// <summary>
+        ///  Enables or disables dithering.
+        /// </summary>
+        /// <returns>
+        /// The dither.
+        /// </returns>
+        /// <param name='enableDither'>
+        /// Enable dither.
+        /// </param>
         public void setDither(bool enableDither)
         {
             parameters.enableDither = enableDither;
             parametersChanged = true;
         }
 
-		/// <summary>
-		/// Enables or disables logical operation.
-		/// </summary>
-		/// <returns>
-		/// The logic op.
-		/// </returns>
-		/// <param name='enableLogic'>
-		/// Enable logic.
-		/// </param>
+        /// <summary>
+        /// Enables or disables logical operation.
+        /// </summary>
+        /// <returns>
+        /// The logic op.
+        /// </returns>
+        /// <param name='enableLogic'>
+        /// Enable logic.
+        /// </param>
         public void setLogicOp(bool enableLogic)
         {
             parameters.enableLogic = enableLogic;
             parametersChanged = true;
         }
 
-       
-		/// <summary>
-		/// Enables or disables logical operation.
-		/// </summary>
-		/// <returns>
-		/// The logic op.
-		/// </returns>
-		/// <param name='enableLogic'>
-		/// Enable logic.
-		/// </param>
-		/// <param name='logicOp'>
-		/// Logic op.
-		/// </param>
+
+        /// <summary>
+        /// Enables or disables logical operation.
+        /// </summary>
+        /// <returns>
+        /// The logic op.
+        /// </returns>
+        /// <param name='enableLogic'>
+        /// Enable logic.
+        /// </param>
+        /// <param name='logicOp'>
+        /// Logic op.
+        /// </param>
         public void setLogicOp(bool enableLogic, LogicOperation logicOp)
         {
             parameters.enableLogic = enableLogic;
@@ -3018,25 +3015,25 @@ namespace Sxta.Render
             parametersChanged = true;
         }
 
-     
-		/// <summary>
-		/// Sets color buffer's writing mask.
-		/// </summary>
-		/// <returns>
-		/// The color mask.
-		/// </returns>
-		/// <param name='r'>
-		/// R.
-		/// </param>
-		/// <param name='g'>
-		/// G.
-		/// </param>
-		/// <param name='b'>
-		/// B.
-		/// </param>
-		/// <param name='a'>
-		/// A.
-		/// </param>
+
+        /// <summary>
+        /// Sets color buffer's writing mask.
+        /// </summary>
+        /// <returns>
+        /// The color mask.
+        /// </returns>
+        /// <param name='r'>
+        /// R.
+        /// </param>
+        /// <param name='g'>
+        /// G.
+        /// </param>
+        /// <param name='b'>
+        /// B.
+        /// </param>
+        /// <param name='a'>
+        /// A.
+        /// </param>
         public void setColorMask(bool r, bool g, bool b, bool a)
         {
             parameters.multiColorMask = false;
@@ -3045,27 +3042,27 @@ namespace Sxta.Render
             parametersChanged = true;
         }
 
-		/// <summary>
-		/// Sets color buffer's writing mask.
-		/// </summary>
-		/// <returns>
-		/// The color mask.
-		/// </returns>
-		/// <param name='buffer'>
-		/// Buffer.
-		/// </param>
-		/// <param name='r'>
-		/// R.
-		/// </param>
-		/// <param name='g'>
-		/// G.
-		/// </param>
-		/// <param name='b'>
-		/// B.
-		/// </param>
-		/// <param name='a'>
-		/// A.
-		/// </param>
+        /// <summary>
+        /// Sets color buffer's writing mask.
+        /// </summary>
+        /// <returns>
+        /// The color mask.
+        /// </returns>
+        /// <param name='buffer'>
+        /// Buffer.
+        /// </param>
+        /// <param name='r'>
+        /// R.
+        /// </param>
+        /// <param name='g'>
+        /// G.
+        /// </param>
+        /// <param name='b'>
+        /// B.
+        /// </param>
+        /// <param name='a'>
+        /// A.
+        /// </param>
         public void setColorMask(BufferId buffer, bool r, bool g, bool b, bool a)
         {
             parameters.multiColorMask = true;
@@ -3074,16 +3071,16 @@ namespace Sxta.Render
             parametersChanged = true;
         }
 
-   
-		/// <summary>
-		/// Sets depth buffer's writing mask.
-		/// </summary>
-		/// <returns>
-		/// The depth mask.
-		/// </returns>
-		/// <param name='d'>
-		/// D.
-		/// </param>
+
+        /// <summary>
+        /// Sets depth buffer's writing mask.
+        /// </summary>
+        /// <returns>
+        /// The depth mask.
+        /// </returns>
+        /// <param name='d'>
+        /// D.
+        /// </param>
         public void setDepthMask(bool d)
         {
             parameters.depthMask = d;
@@ -3091,19 +3088,25 @@ namespace Sxta.Render
             parametersChanged = true;
         }
 
-  
-		/// <summary>
-		/// Sets stencil buffer's writing mask.
-		/// </summary>
-		/// <returns>
-		/// The stencil mask.
-		/// </returns>
-		/// <param name='frontMask'>
-		/// Front mask.
-		/// </param>
-		/// <param name='backMask'>
-		/// Back mask.
-		/// </param>
+
+        /// <summary>
+        /// Sets stencil buffer's writing mask.
+        /// setStencilMask controls the writing of individual bits in the stencil planes. The least significant n bits of mask, where
+        /// n is the number of bits in the stencil buffer, specify a mask. Where a 1 appears in the mask, it's possible to write to the 
+        /// corresponding bit in the stencil buffer. Where a 0 appears, the corresponding bit is write-protected. Initially, all bits 
+        /// are enabled for writing. 
+        /// There can be two separate mask writemasks; one affects back-facing polygons, and the other affects front-facing polygons as 
+        /// well as other non-polygon primitives. setStencilMask with one parameter sets both front and back stencil writemasks to the same values.
+        /// </summary>
+        /// <returns>
+        /// The stencil mask.
+        /// </returns>
+        /// <param name='frontMask'>
+        /// Front mask.
+        /// </param>
+        /// <param name='backMask'>
+        /// Back mask.
+        /// </param>
         public void setStencilMask(uint frontMask, uint backMask)
         {
             parameters.stencilMaskFront = frontMask;
@@ -3112,18 +3115,44 @@ namespace Sxta.Render
             parametersChanged = true;
         }
 
-		/// <summary>
-		/// Clear the buffers attached to this framebuffer.
-		/// </summary>
-		/// <param name='color'>
-		/// Color true to clear the attached color buffers.
-		/// </param>
-		/// <param name='stencil'>
-		/// Stencil true to clear the attached stencil buffer.
-		/// </param>
-		/// <param name='depth'>
-		/// Depth true to clear the attached depth buffer.
-		/// </param>
+        /// <summary>
+        /// Sets stencil buffer's writing mask.
+        /// setStencilMask controls the writing of individual bits in the stencil planes. The least significant n bits of mask, where
+        /// n is the number of bits in the stencil buffer, specify a mask. Where a 1 appears in the mask, it's possible to write to the 
+        /// corresponding bit in the stencil buffer. Where a 0 appears, the corresponding bit is write-protected. Initially, all bits 
+        /// are enabled for writing. 
+        /// There can be two separate mask writemasks; one affects back-facing polygons, and the other affects front-facing polygons as 
+        /// well as other non-polygon primitives. setStencilMask with one parameter sets both front and back stencil writemasks to the same values.
+        /// </summary>
+        /// <returns>
+        /// The stencil mask.
+        /// </returns>
+        /// <param name='frontMask'>
+        /// Front mask.
+        /// </param>
+        /// <param name='backMask'>
+        /// Back mask.
+        /// </param>
+        public void setStencilMask(uint mask)
+        {
+            parameters.stencilMaskFront = mask;
+            parameters.stencilMaskBack = mask;
+            parameters.maskId = ++PARAMETER_ID;
+            parametersChanged = true;
+        }
+
+        /// <summary>
+        /// Clear the buffers attached to this framebuffer.
+        /// </summary>
+        /// <param name='color'>
+        /// Color true to clear the attached color buffers.
+        /// </param>
+        /// <param name='stencil'>
+        /// Stencil true to clear the attached stencil buffer.
+        /// </param>
+        /// <param name='depth'>
+        /// Depth true to clear the attached depth buffer.
+        /// </param>
         public void clear(bool color, bool stencil, bool depth)
         {
 #if DEBUG
@@ -3171,24 +3200,24 @@ namespace Sxta.Render
         }
 
 
-		/// <summary>
-		///Draws the given mesh.
-		/// </summary>
-		/// <param name='p'>
-		/// P the program to use to draw the mesh.
-		/// </param>
-		/// <param name='mesh'>
-		/// Mesh mesh the mesh to draw.
-		/// </param>
-		/// <param name='primCount'>
-		/// Prim count the number of times this mesh must be instanced.
-		/// </param>
-		/// <typeparam name='vertex'>
-		/// The 1st type parameter.
-		/// </typeparam>
-		/// <typeparam name='index'>
-		/// The 2nd type parameter.
-		/// </typeparam>
+        /// <summary>
+        ///Draws the given mesh.
+        /// </summary>
+        /// <param name='p'>
+        /// P the program to use to draw the mesh.
+        /// </param>
+        /// <param name='mesh'>
+        /// Mesh mesh the mesh to draw.
+        /// </param>
+        /// <param name='primCount'>
+        /// Prim count the number of times this mesh must be instanced.
+        /// </param>
+        /// <typeparam name='vertex'>
+        /// The 1st type parameter.
+        /// </typeparam>
+        /// <typeparam name='index'>
+        /// The 2nd type parameter.
+        /// </typeparam>
         public void draw<vertex, index>(Program p, Mesh<vertex, index> mesh, int primCount = 1)
             where vertex : struct
             where index : struct
@@ -3201,30 +3230,30 @@ namespace Sxta.Render
             endConditionalRender();
         }
 
-		/// <summary>
-		/// Draw  a part of a mesh one or more times.
-		/// </summary>
-		/// <param name='p'>
-		/// P  the program to use to draw the mesh.
-		/// </param>
-		/// <param name='mesh'>
-		/// Mesh the mesh to draw.
-		/// </param>
-		/// <param name='m'>
-		/// M  how the mesh vertices must be interpreted.
-		/// </param>
-		/// <param name='first'>
-		/// First the first vertex to draw, or the first indice to draw if this mesh has indices.
-		/// </param>
-		/// <param name='count'>
-		/// Count the number of vertices to draw, or the number of indices to draw if this mesh has indices.
-		/// </param>
-		/// <param name='primCount'>
-		/// Prim count the number of times this mesh must be drawn (with  geometry instancing).
-		/// </param>
-		/// <param name='base_'>
-		/// Base the base vertex to use. Only used for meshes with indices.
-		/// </param>
+        /// <summary>
+        /// Draw  a part of a mesh one or more times.
+        /// </summary>
+        /// <param name='p'>
+        /// P  the program to use to draw the mesh.
+        /// </param>
+        /// <param name='mesh'>
+        /// Mesh the mesh to draw.
+        /// </param>
+        /// <param name='m'>
+        /// M  how the mesh vertices must be interpreted.
+        /// </param>
+        /// <param name='first'>
+        /// First the first vertex to draw, or the first indice to draw if this mesh has indices.
+        /// </param>
+        /// <param name='count'>
+        /// Count the number of vertices to draw, or the number of indices to draw if this mesh has indices.
+        /// </param>
+        /// <param name='primCount'>
+        /// Prim count the number of times this mesh must be drawn (with  geometry instancing).
+        /// </param>
+        /// <param name='base_'>
+        /// Base the base vertex to use. Only used for meshes with indices.
+        /// </param>
         public void draw(Program p, MeshBuffers mesh, MeshMode m, int first, int count, int primCount = 1, int base_ = 0)
         {
             Debug.Assert(TransformFeedback.TRANSFORM == null);
@@ -3240,35 +3269,35 @@ namespace Sxta.Render
         }
 
 
-		/// <summary>
-		/// Draws several parts of a mesh. Each part is specified with a first
+        /// <summary>
+        /// Draws several parts of a mesh. Each part is specified with a first
         /// and count parameter as in #draw(). These values are passed in arrays
         /// of primCount values.
-		/// </summary>
-		/// <returns>
-		/// The draw.
-		/// </returns>
-		/// <param name='p'>
-		/// P the program to use to draw the mesh.
-		/// </param>
-		/// <param name='mesh'>
-		/// Mesh the mesh to draw.
-		/// </param>
-		/// <param name='m'>
-		/// M how the mesh vertices must be interpreted.
-		/// </param>
-		/// <param name='firsts'>
-		/// Firsts an array of primCount 'first vertex' to draw, or an array of 'first indice' to draw if this mesh has indices.
-		/// </param>
-		/// <param name='counts'>
-		/// Counts an array of number of vertices to draw, or an array of  number of indices to draw if this mesh has indices.
-		/// </param>
-		/// <param name='primCount'>
-		/// Prim count the number of parts of this mesh to draw.
-		/// </param>
-		/// <param name='bases'>
-		/// Bases the base vertices to use. Only used for meshes with indices.
-		/// </param>
+        /// </summary>
+        /// <returns>
+        /// The draw.
+        /// </returns>
+        /// <param name='p'>
+        /// P the program to use to draw the mesh.
+        /// </param>
+        /// <param name='mesh'>
+        /// Mesh the mesh to draw.
+        /// </param>
+        /// <param name='m'>
+        /// M how the mesh vertices must be interpreted.
+        /// </param>
+        /// <param name='firsts'>
+        /// Firsts an array of primCount 'first vertex' to draw, or an array of 'first indice' to draw if this mesh has indices.
+        /// </param>
+        /// <param name='counts'>
+        /// Counts an array of number of vertices to draw, or an array of  number of indices to draw if this mesh has indices.
+        /// </param>
+        /// <param name='primCount'>
+        /// Prim count the number of parts of this mesh to draw.
+        /// </param>
+        /// <param name='bases'>
+        /// Bases the base vertices to use. Only used for meshes with indices.
+        /// </param>
         public void multiDraw(Program p, MeshBuffers mesh, MeshMode m, int[] firsts, int[] counts, int primCount = 1, int[] bases = null)
         {
             Debug.Assert(TransformFeedback.TRANSFORM == null);
@@ -3283,28 +3312,28 @@ namespace Sxta.Render
             endConditionalRender();
         }
 
-		
-		/// <summary>
-		/// Draws a part of a mesh one or more times.
+
+        /// <summary>
+        /// Draws a part of a mesh one or more times.
         /// Only available with OpenGL 4.0 or more.
-		/// </summary>
-		/// <returns>
-		/// The indirect.
-		/// </returns>
-		/// <param name='p'>
-		/// P the program to use to draw the mesh.
-		/// </param>
-		/// <param name='mesh'>
-		/// Mesh the mesh to draw.
-		/// </param>
-		/// <param name='m'>
-		/// M how the mesh vertices must be interpreted.
-		/// </param>
-		/// <param name='buf'>
-		/// buf a CPU or GPU buffer containing the 'count', 'primCount',
+        /// </summary>
+        /// <returns>
+        /// The indirect.
+        /// </returns>
+        /// <param name='p'>
+        /// P the program to use to draw the mesh.
+        /// </param>
+        /// <param name='mesh'>
+        /// Mesh the mesh to draw.
+        /// </param>
+        /// <param name='m'>
+        /// M how the mesh vertices must be interpreted.
+        /// </param>
+        /// <param name='buf'>
+        /// buf a CPU or GPU buffer containing the 'count', 'primCount',
         /// 'first' and 'base' parameters, in this order, followed by '0',
         /// as 32 bit integers.
-		/// </param>
+        /// </param>
         public void drawIndirect(Program p, MeshBuffers mesh, MeshMode m, Buffer buf)
         {
             Debug.Assert(TransformFeedback.TRANSFORM == null);
@@ -3356,17 +3385,17 @@ namespace Sxta.Render
             endConditionalRender();
         }
 
-		/// <summary>
-		/// Draws a quad mesh. This mesh has a position attribute made of four
+        /// <summary>
+        /// Draws a quad mesh. This mesh has a position attribute made of four
         /// floats. xy coordinates vary between -1 and 1, while zw coordinates
         /// vary between 0 and 1.
-		/// </summary>
-		/// <returns>
-		/// The quad.
-		/// </returns>
-		/// <param name='p'>
-		/// P.
-		/// </param>
+        /// </summary>
+        /// <returns>
+        /// The quad.
+        /// </returns>
+        /// <param name='p'>
+        /// P.
+        /// </param>
         public void drawQuad(Program p)
         {
             if (QUAD == null)
@@ -3383,39 +3412,39 @@ namespace Sxta.Render
         }
 
 
-		/// <summary>
-		/// Reads pixels from the attached color buffers into the given buffer.
-		/// </summary>
-		/// <returns>
-		/// The pixels.
-		/// </returns>
-		/// <param name='x'>
-		/// X  lower left corner of the area where the pixels must be read.
-		/// </param>
-		/// <param name='y'>
-		/// Y  lower left corner of the area where the pixels must be read.
-		/// </param>
-		/// <param name='w'>
-		/// W width of the area where the pixels must be read.
-		/// </param>
-		/// <param name='h'>
-		/// H height of the area where the pixels must be read.
-		/// </param>
-		/// <param name='f'>
-		/// F the format of pixels to be stored in dstBuf.
-		/// </param>
-		/// <param name='t'>
-		/// T the type of pixel components in dstBuf.
-		/// </param>
-		/// <param name='s'>
-		/// S optional pixel storage parameters for dstBuf.
-		/// </param>
-		/// <param name='dstBuf'>
-		/// Dst buffer destination buffer for the read pixels.
-		/// </param>
-		/// <param name='clamp'>
-		/// Clamp true to clamp read colors to 0..1.
-		/// </param>
+        /// <summary>
+        /// Reads pixels from the attached color buffers into the given buffer.
+        /// </summary>
+        /// <returns>
+        /// The pixels.
+        /// </returns>
+        /// <param name='x'>
+        /// X  lower left corner of the area where the pixels must be read.
+        /// </param>
+        /// <param name='y'>
+        /// Y  lower left corner of the area where the pixels must be read.
+        /// </param>
+        /// <param name='w'>
+        /// W width of the area where the pixels must be read.
+        /// </param>
+        /// <param name='h'>
+        /// H height of the area where the pixels must be read.
+        /// </param>
+        /// <param name='f'>
+        /// F the format of pixels to be stored in dstBuf.
+        /// </param>
+        /// <param name='t'>
+        /// T the type of pixel components in dstBuf.
+        /// </param>
+        /// <param name='s'>
+        /// S optional pixel storage parameters for dstBuf.
+        /// </param>
+        /// <param name='dstBuf'>
+        /// Dst buffer destination buffer for the read pixels.
+        /// </param>
+        /// <param name='clamp'>
+        /// Clamp true to clamp read colors to 0..1.
+        /// </param>
         public void readPixels(int x, int y, int w, int h, TextureFormat f, PixelType t, Buffer.Parameters s, Buffer dstBuf, bool clamp = false)
         {
 #if DEBUG
@@ -3442,30 +3471,30 @@ namespace Sxta.Render
         }
 
 
-		/// <summary>
-		/// Copies pixels from the attached color buffers into the given texture.
-		/// </summary>
-		/// <returns>
-		/// The pixels.
-		/// </returns>
-		/// <param name='xoff'>
-		/// Xoff x offset in the destination texture.
-		/// </param>
-		/// <param name='x'>
-		/// X  lower left corner of the area where the pixels must be read.
-		/// </param>
-		/// <param name='y'>
-		/// Y lower left corner of the area where the pixels must be read.
-		/// </param>
-		/// <param name='w'>
-		/// W width of the area where the pixels must be read.
-		/// </param>
-		/// <param name='dst'>
-		/// Dst estination texture for the read pixels.
-		/// </param>
-		/// <param name='level'>
-		/// Level destination LOD level for the read pixels.
-		/// </param>
+        /// <summary>
+        /// Copies pixels from the attached color buffers into the given texture.
+        /// </summary>
+        /// <returns>
+        /// The pixels.
+        /// </returns>
+        /// <param name='xoff'>
+        /// Xoff x offset in the destination texture.
+        /// </param>
+        /// <param name='x'>
+        /// X  lower left corner of the area where the pixels must be read.
+        /// </param>
+        /// <param name='y'>
+        /// Y lower left corner of the area where the pixels must be read.
+        /// </param>
+        /// <param name='w'>
+        /// W width of the area where the pixels must be read.
+        /// </param>
+        /// <param name='dst'>
+        /// Dst estination texture for the read pixels.
+        /// </param>
+        /// <param name='level'>
+        /// Level destination LOD level for the read pixels.
+        /// </param>
         public void copyPixels(int xoff, int x, int y, int w, Texture1D dst, int level)
         {
             set();
@@ -3479,36 +3508,36 @@ namespace Sxta.Render
         }
 
 
-		/// <summary>
-		/// Copies the pixels  from the attached color buffers into the given texture.
-		/// </summary>
-		/// <returns>
-		/// The pixels.
-		/// </returns>
-		/// <param name='xoff'>
-		/// Xoff x offset in the destination texture.
-		/// </param>
-		/// <param name='layer'>
-		/// Layer  destination layer in the destination texture.
-		/// </param>
-		/// <param name='x'>
-		/// X lower left corner of the area where the pixels must be read.
-		/// </param>
-		/// <param name='y'>
-		/// Y  lower left corner of the area where the pixels must be read.
-		/// </param>
-		/// <param name='w'>
-		/// W width of the area where the pixels must be read.
-		/// </param>
-		/// <param name='d'>
-		/// D number of layers to read.
-		/// </param>
-		/// <param name='dst'>
-		/// Dst destination texture for the read pixels.
-		/// </param>
-		/// <param name='level'>
-		/// Level  destination LOD level for the read pixels.
-		/// </param>
+        /// <summary>
+        /// Copies the pixels  from the attached color buffers into the given texture.
+        /// </summary>
+        /// <returns>
+        /// The pixels.
+        /// </returns>
+        /// <param name='xoff'>
+        /// Xoff x offset in the destination texture.
+        /// </param>
+        /// <param name='layer'>
+        /// Layer  destination layer in the destination texture.
+        /// </param>
+        /// <param name='x'>
+        /// X lower left corner of the area where the pixels must be read.
+        /// </param>
+        /// <param name='y'>
+        /// Y  lower left corner of the area where the pixels must be read.
+        /// </param>
+        /// <param name='w'>
+        /// W width of the area where the pixels must be read.
+        /// </param>
+        /// <param name='d'>
+        /// D number of layers to read.
+        /// </param>
+        /// <param name='dst'>
+        /// Dst destination texture for the read pixels.
+        /// </param>
+        /// <param name='level'>
+        /// Level  destination LOD level for the read pixels.
+        /// </param>
         public void copyPixels(int xoff, int layer, int x, int y, int w, int d, Texture1DArray dst, int level)
         {
             set();
@@ -3522,36 +3551,36 @@ namespace Sxta.Render
         }
 
 
-		/// <summary>
-		/// Copies pixels from the attached color buffers into the given texture.
-		/// </summary>
-		/// <returns>
-		/// The pixels.
-		/// </returns>
-		/// <param name='xoff'>
-		/// Xoff  x offset in the destination texture.
-		/// </param>
-		/// <param name='yoff'>
-		/// Yoff  y offset in the destination texture.
-		/// </param>
-		/// <param name='x'>
-		/// X lower left corner of the area where the pixels must be read.
-		/// </param>
-		/// <param name='y'>
-		/// Y lower left corner of the area where the pixels must be read.
-		/// </param>
-		/// <param name='w'>
-		/// W width of the area where the pixels must be read.
-		/// </param>
-		/// <param name='h'>
-		/// H height of the area where the pixels must be read.
-		/// </param>
-		/// <param name='dst'>
-		/// Dst destination texture for the read pixels.
-		/// </param>
-		/// <param name='level'>
-		/// Level destination LOD level for the read pixels.
-		/// </param>
+        /// <summary>
+        /// Copies pixels from the attached color buffers into the given texture.
+        /// </summary>
+        /// <returns>
+        /// The pixels.
+        /// </returns>
+        /// <param name='xoff'>
+        /// Xoff  x offset in the destination texture.
+        /// </param>
+        /// <param name='yoff'>
+        /// Yoff  y offset in the destination texture.
+        /// </param>
+        /// <param name='x'>
+        /// X lower left corner of the area where the pixels must be read.
+        /// </param>
+        /// <param name='y'>
+        /// Y lower left corner of the area where the pixels must be read.
+        /// </param>
+        /// <param name='w'>
+        /// W width of the area where the pixels must be read.
+        /// </param>
+        /// <param name='h'>
+        /// H height of the area where the pixels must be read.
+        /// </param>
+        /// <param name='dst'>
+        /// Dst destination texture for the read pixels.
+        /// </param>
+        /// <param name='level'>
+        /// Level destination LOD level for the read pixels.
+        /// </param>
         public void copyPixels(int xoff, int yoff, int x, int y, int w, int h, Texture2D dst, int level)
         {
             set();
@@ -3565,39 +3594,39 @@ namespace Sxta.Render
         }
 
 
-		/// <summary>
-		/// Copies pixels from the attached color buffers into the given texture.
-		/// </summary>
-		/// <returns>
-		/// The pixels.
-		/// </returns>
-		/// <param name='xoff'>
-		/// Xoff x offset in the destination texture.
-		/// </param>
-		/// <param name='yoff'>
-		/// Yoff  y offset in the destination texture.
-		/// </param>
-		/// <param name='layer'>
-		/// Layer destination layer in the destination texture.
-		/// </param>
-		/// <param name='x'>
-		/// X lower left corner of the area where the pixels must be read.
-		/// </param>
-		/// <param name='y'>
-		/// Y lower left corner of the area where the pixels must be read.
-		/// </param>
-		/// <param name='w'>
-		/// W width of the area where the pixels must be read.
-		/// </param>
-		/// <param name='h'>
-		/// H height of the area where the pixels must be read.
-		/// </param>
-		/// <param name='dst'>
-		/// Dst destination texture for the read pixels.
-		/// </param>
-		/// <param name='level'>
-		/// Level destination LOD level for the read pixels.
-		/// </param>
+        /// <summary>
+        /// Copies pixels from the attached color buffers into the given texture.
+        /// </summary>
+        /// <returns>
+        /// The pixels.
+        /// </returns>
+        /// <param name='xoff'>
+        /// Xoff x offset in the destination texture.
+        /// </param>
+        /// <param name='yoff'>
+        /// Yoff  y offset in the destination texture.
+        /// </param>
+        /// <param name='layer'>
+        /// Layer destination layer in the destination texture.
+        /// </param>
+        /// <param name='x'>
+        /// X lower left corner of the area where the pixels must be read.
+        /// </param>
+        /// <param name='y'>
+        /// Y lower left corner of the area where the pixels must be read.
+        /// </param>
+        /// <param name='w'>
+        /// W width of the area where the pixels must be read.
+        /// </param>
+        /// <param name='h'>
+        /// H height of the area where the pixels must be read.
+        /// </param>
+        /// <param name='dst'>
+        /// Dst destination texture for the read pixels.
+        /// </param>
+        /// <param name='level'>
+        /// Level destination LOD level for the read pixels.
+        /// </param>
         public void copyPixels(int xoff, int yoff, int layer, int x, int y, int w, int h, Texture2DArray dst, int level)
         {
             set();
@@ -3611,39 +3640,39 @@ namespace Sxta.Render
         }
 
 
-		/// <summary>
-		/// Copies pixels from the attached color buffers into the given texture.
-		/// </summary>
-		/// <returns>
-		/// The pixels.
-		/// </returns>
-		/// <param name='xoff'>
-		/// Xoff x offset in the destination texture.
-		/// </param>
-		/// <param name='yoff'>
-		/// Yoff y offset in the destination texture.
-		/// </param>
-		/// <param name='zoff'>
-		/// Zoff  z offset in the destination texture.
-		/// </param>
-		/// <param name='x'>
-		/// X lower left corner of the area where the pixels must be read.
-		/// </param>
-		/// <param name='y'>
-		/// Y lower left corner of the area where the pixels must be read.
-		/// </param>
-		/// <param name='w'>
-		/// W width of the area where the pixels must be read.
-		/// </param>
-		/// <param name='h'>
-		/// H height of the area where the pixels must be read.
-		/// </param>
-		/// <param name='dst'>
-		/// Dst destination texture for the read pixels.
-		/// </param>
-		/// <param name='level'>
-		/// Level destination LOD level for the read pixels.
-		/// </param>
+        /// <summary>
+        /// Copies pixels from the attached color buffers into the given texture.
+        /// </summary>
+        /// <returns>
+        /// The pixels.
+        /// </returns>
+        /// <param name='xoff'>
+        /// Xoff x offset in the destination texture.
+        /// </param>
+        /// <param name='yoff'>
+        /// Yoff y offset in the destination texture.
+        /// </param>
+        /// <param name='zoff'>
+        /// Zoff  z offset in the destination texture.
+        /// </param>
+        /// <param name='x'>
+        /// X lower left corner of the area where the pixels must be read.
+        /// </param>
+        /// <param name='y'>
+        /// Y lower left corner of the area where the pixels must be read.
+        /// </param>
+        /// <param name='w'>
+        /// W width of the area where the pixels must be read.
+        /// </param>
+        /// <param name='h'>
+        /// H height of the area where the pixels must be read.
+        /// </param>
+        /// <param name='dst'>
+        /// Dst destination texture for the read pixels.
+        /// </param>
+        /// <param name='level'>
+        /// Level destination LOD level for the read pixels.
+        /// </param>
         public void copyPixels(int xoff, int yoff, int zoff, int x, int y, int w, int h, Texture3D dst, int level)
         {
             set();
@@ -3657,39 +3686,39 @@ namespace Sxta.Render
         }
 
 
-		/// <summary>
-		/// Copies pixels from the attached color buffers into the given texture.
-		/// </summary>
-		/// <returns>
-		/// The pixels.
-		/// </returns>
-		/// <param name='xoff'>
-		/// Xoff x offset in the destination texture.
-		/// </param>
-		/// <param name='yoff'>
-		/// Yoff  y offset in the destination texture.
-		/// </param>
-		/// <param name='x'>
-		/// X lower left corner of the area where the pixels must be read.
-		/// </param>
-		/// <param name='y'>
-		/// Y  lower left corner of the area where the pixels must be read.
-		/// </param>
-		/// <param name='w'>
-		/// W  width of the area where the pixels must be read.
-		/// </param>
-		/// <param name='h'>
-		/// H height of the area where the pixels must be read.
-		/// </param>
-		/// <param name='dst'>
-		/// Dst destination texture for the read pixels.
-		/// </param>
-		/// <param name='level'>
-		/// Level destination LOD level for the read pixels.
-		/// </param>
-		/// <param name='cf'>
-		/// Cf destination face for the read pixels.
-		/// </param>
+        /// <summary>
+        /// Copies pixels from the attached color buffers into the given texture.
+        /// </summary>
+        /// <returns>
+        /// The pixels.
+        /// </returns>
+        /// <param name='xoff'>
+        /// Xoff x offset in the destination texture.
+        /// </param>
+        /// <param name='yoff'>
+        /// Yoff  y offset in the destination texture.
+        /// </param>
+        /// <param name='x'>
+        /// X lower left corner of the area where the pixels must be read.
+        /// </param>
+        /// <param name='y'>
+        /// Y  lower left corner of the area where the pixels must be read.
+        /// </param>
+        /// <param name='w'>
+        /// W  width of the area where the pixels must be read.
+        /// </param>
+        /// <param name='h'>
+        /// H height of the area where the pixels must be read.
+        /// </param>
+        /// <param name='dst'>
+        /// Dst destination texture for the read pixels.
+        /// </param>
+        /// <param name='level'>
+        /// Level destination LOD level for the read pixels.
+        /// </param>
+        /// <param name='cf'>
+        /// Cf destination face for the read pixels.
+        /// </param>
         public void copyPixels(int xoff, int yoff, int x, int y, int w, int h, TextureCube dst, int level, CubeFace cf)
         {
             set();
@@ -3704,42 +3733,42 @@ namespace Sxta.Render
 
 
 
-		/// <summary>
-		/// Copies pixels from the attached color buffers into the given texture.
-		/// </summary>
-		/// <returns>
-		/// The pixels.
-		/// </returns>
-		/// <param name='xoff'>
-		/// Xoff x offset in the destination texture.
-		/// </param>
-		/// <param name='yoff'>
-		/// Yoff  y offset in the destination texture.
-		/// </param>
-		/// <param name='layer'>
-		/// Layer destination layer in the destination texture.
-		/// </param>
-		/// <param name='x'>
-		/// X  lower left corner of the area where the pixels must be read.
-		/// </param>
-		/// <param name='y'>
-		/// Y lower left corner of the area where the pixels must be read.
-		/// </param>
-		/// <param name='w'>
-		/// W width of the area where the pixels must be read.
-		/// </param>
-		/// <param name='h'>
-		/// H height of the area where the pixels must be read.
-		/// </param>
-		/// <param name='dst'>
-		/// Dst destination texture for the read pixels.
-		/// </param>
-		/// <param name='level'>
-		/// Level destination LOD level for the read pixels.
-		/// </param>
-		/// <param name='cf'>
-		/// Cf destination face for the read pixels.
-		/// </param>
+        /// <summary>
+        /// Copies pixels from the attached color buffers into the given texture.
+        /// </summary>
+        /// <returns>
+        /// The pixels.
+        /// </returns>
+        /// <param name='xoff'>
+        /// Xoff x offset in the destination texture.
+        /// </param>
+        /// <param name='yoff'>
+        /// Yoff  y offset in the destination texture.
+        /// </param>
+        /// <param name='layer'>
+        /// Layer destination layer in the destination texture.
+        /// </param>
+        /// <param name='x'>
+        /// X  lower left corner of the area where the pixels must be read.
+        /// </param>
+        /// <param name='y'>
+        /// Y lower left corner of the area where the pixels must be read.
+        /// </param>
+        /// <param name='w'>
+        /// W width of the area where the pixels must be read.
+        /// </param>
+        /// <param name='h'>
+        /// H height of the area where the pixels must be read.
+        /// </param>
+        /// <param name='dst'>
+        /// Dst destination texture for the read pixels.
+        /// </param>
+        /// <param name='level'>
+        /// Level destination LOD level for the read pixels.
+        /// </param>
+        /// <param name='cf'>
+        /// Cf destination face for the read pixels.
+        /// </param>
         public void copyPixels(int xoff, int yoff, int layer, int x, int y, int w, int h, TextureCubeArray dst, int level, CubeFace cf)
         {
             set();
@@ -3752,36 +3781,36 @@ namespace Sxta.Render
             Debug.Assert(getError() == ErrorCode.NoError);
         }
 
-		/// <summary>
-		/// Copies pixels from the attached color buffers into the given texture.
-		/// </summary>
-		/// <returns>
-		/// The pixels.
-		/// </returns>
-		/// <param name='xoff'>
-		/// Xoff x offset in the destination texture.
-		/// </param>
-		/// <param name='yoff'>
-		/// Yoff y offset in the destination texture.
-		/// </param>
-		/// <param name='x'>
-		/// X lower left corner of the area where the pixels must be read.
-		/// </param>
-		/// <param name='y'>
-		/// Y lower left corner of the area where the pixels must be read.
-		/// </param>
-		/// <param name='w'>
-		/// W width of the area where the pixels must be read.
-		/// </param>
-		/// <param name='h'>
-		/// H height of the area where the pixels must be read.
-		/// </param>
-		/// <param name='dst'>
-		/// Dst destination texture for the read pixels.
-		/// </param>
-		/// <param name='level'>
-		/// Level destination LOD level for the read pixels.
-		/// </param>
+        /// <summary>
+        /// Copies pixels from the attached color buffers into the given texture.
+        /// </summary>
+        /// <returns>
+        /// The pixels.
+        /// </returns>
+        /// <param name='xoff'>
+        /// Xoff x offset in the destination texture.
+        /// </param>
+        /// <param name='yoff'>
+        /// Yoff y offset in the destination texture.
+        /// </param>
+        /// <param name='x'>
+        /// X lower left corner of the area where the pixels must be read.
+        /// </param>
+        /// <param name='y'>
+        /// Y lower left corner of the area where the pixels must be read.
+        /// </param>
+        /// <param name='w'>
+        /// W width of the area where the pixels must be read.
+        /// </param>
+        /// <param name='h'>
+        /// H height of the area where the pixels must be read.
+        /// </param>
+        /// <param name='dst'>
+        /// Dst destination texture for the read pixels.
+        /// </param>
+        /// <param name='level'>
+        /// Level destination LOD level for the read pixels.
+        /// </param>
         public void copyPixels(int xoff, int yoff, int x, int y, int w, int h, TextureRectangle dst, int level)
         {
             set();
@@ -3794,13 +3823,13 @@ namespace Sxta.Render
             Debug.Assert(getError() == ErrorCode.NoError);
         }
 
-    
-		/// <summary>
-		/// Returns the OpenGL major version.
-		/// </summary>
-		/// <returns>
-		/// The major version.
-		/// </returns>
+
+        /// <summary>
+        /// Returns the OpenGL major version.
+        /// </summary>
+        /// <returns>
+        /// The major version.
+        /// </returns>
         public static int getMajorVersion()
         {
             int v;
@@ -3812,13 +3841,13 @@ namespace Sxta.Render
             return v;
         }
 
-     
-		/// <summary>
-		/// Returns the OpenGL minor version.
-		/// </summary>
-		/// <returns>
-		/// The minor version.
-		/// </returns>
+
+        /// <summary>
+        /// Returns the OpenGL minor version.
+        /// </summary>
+        /// <returns>
+        /// The minor version.
+        /// </returns>
         public static int getMinorVersion()
         {
             int v;
@@ -3831,13 +3860,13 @@ namespace Sxta.Render
         }
 
 
-		/// <summary>
-		/// Returns the OpenGL state.
-		/// </summary>
-		/// <returns>
-		/// the error code of the last invalid operation, or 0 if all
+        /// <summary>
+        /// Returns the OpenGL state.
+        /// </summary>
+        /// <returns>
+        /// the error code of the last invalid operation, or 0 if all
         /// operations executed normally.
-		/// </returns>
+        /// </returns>
         public static ErrorCode getError()
         {
             ErrorCode error = GL.GetError();
@@ -3848,13 +3877,13 @@ namespace Sxta.Render
             return error;
         }
 
-		/// <summary>
-		/// Resets all the internal Sxta.Render specific state.
+        /// <summary>
+        /// Resets all the internal Sxta.Render specific state.
         /// Call this method before and after using OpenGL API directly.
-		/// </summary>
-		/// <returns>
-		/// The all states.
-		/// </returns>
+        /// </summary>
+        /// <returns>
+        /// The all states.
+        /// </returns>
         public static void resetAllStates()
         {
 #if DEBUG
@@ -3904,98 +3933,98 @@ namespace Sxta.Render
             public IDictionary<object, FrameBuffer> buffers = new Dictionary<object, FrameBuffer>();
         }
 
-     
-		/// <summary>
-		/// The id of this framebuffer object. 0 for the default one.
-		/// </summary>
+
+        /// <summary>
+        /// The id of this framebuffer object. 0 for the default one.
+        /// </summary>
         private uint framebufferId;
 
-      
-		/// <summary>
-		/// The attachments of this framebuffer.
-		/// </summary>
+
+        /// <summary>
+        /// The attachments of this framebuffer.
+        /// </summary>
         private Object[] textures = new object[6];
 
-		/// <summary>
-		/// The levels specified for each attachments of this framebuffer.
-		/// </summary>
+        /// <summary>
+        /// The levels specified for each attachments of this framebuffer.
+        /// </summary>
         private int[] levels = new int[6];
 
-       
-		/// <summary>
-		/// The layers specified for each attachments of this framebuffer. Only used for
+
+        /// <summary>
+        /// The layers specified for each attachments of this framebuffer. Only used for
         /// Texture arrays, Texture Cube, and Texture 3D.
-		/// </summary>
+        /// </summary>
         private int[] layers = new int[6];
 
-    
-		/// <summary>
-		/// True if #textures, #levels or #layers has changed since the last call to #set().
-		/// </summary>
+
+        /// <summary>
+        /// True if #textures, #levels or #layers has changed since the last call to #set().
+        /// </summary>
         private bool attachmentsChanged;
 
-		/// <summary>
-		/// The read buffer.
-		/// </summary>
+        /// <summary>
+        /// The read buffer.
+        /// </summary>
         private BufferId readBuffer;
 
-     
-		/// <summary>
-		/// The number of draw buffers.
-		/// </summary>
+
+        /// <summary>
+        /// The number of draw buffers.
+        /// </summary>
         private int drawBufferCount;
 
-        
-		/// <summary>
-		/// The draw buffers.
-		/// </summary>
+
+        /// <summary>
+        /// The draw buffers.
+        /// </summary>
         private BufferId[] drawBuffers = new BufferId[4];
 
-		/// <summary>
-		/// True if #readBuffer, #drawBufferCount or #drawBuffers has changed since
+        /// <summary>
+        /// True if #readBuffer, #drawBufferCount or #drawBuffers has changed since
         ///  the last call to #set().
-		/// </summary>
+        /// </summary>
         private bool readDrawChanged;
 
-    
-		/// <summary>
-		/// The parameters of this framebuffer.
-		/// </summary>
+
+        /// <summary>
+        /// The parameters of this framebuffer.
+        /// </summary>
         private Parameters parameters = new Parameters();
 
-       
-		/// <summary>
-		/// True if #parameters has changed since the last call to #set().
-		/// </summary>
+
+        /// <summary>
+        /// True if #parameters has changed since the last call to #set().
+        /// </summary>
         private bool parametersChanged;
 
-    
-		/// <summary>
-		/// The default, onscreen framebuffer (one per OpenGL context).
-		/// </summary>
+
+        /// <summary>
+        /// The default, onscreen framebuffer (one per OpenGL context).
+        /// </summary>
         private static FrameBufferMap DEFAULT = new FrameBuffer.FrameBufferMap();
 
-      
-		/// <summary>
-		/// The current framebuffer.
-		/// </summary>
+
+        /// <summary>
+        /// The current framebuffer.
+        /// </summary>
         private static FrameBuffer CURRENT = null;
 
-       
-		/// <summary>
-		/// The current framebuffer parameters.
-		/// </summary>
+
+        /// <summary>
+        /// The current framebuffer parameters.
+        /// </summary>
         private static Parameters PARAMETERS = new Parameters();
 
-		/// <summary>
-		/// A quad mesh.
-		/// </summary>
+        /// <summary>
+        /// A quad mesh.
+        /// </summary>
         private Mesh<Vector4f, uint> QUAD = null;
 
 
-		/// <summary>
-		/// Sets this framebuffer as the current framebuffer.
-		/// </summary>
+        /// <summary>
+        /// Sets this framebuffer as the current framebuffer.
+        /// </summary>
         internal void set()
         {
             bool framebufferChanged = false;
@@ -4057,13 +4086,13 @@ namespace Sxta.Render
             }
         }
 
-    
-		/// <summary>
-		///  Sets the attachments of this framebuffer.
-		/// </summary>
-		/// <returns>
-		/// The attachments.
-		/// </returns>
+
+        /// <summary>
+        ///  Sets the attachments of this framebuffer.
+        /// </summary>
+        /// <returns>
+        /// The attachments.
+        /// </returns>
         private void setAttachments()
         {
 #if DEBUG
@@ -4187,13 +4216,13 @@ namespace Sxta.Render
             }
         }
 
-     
-		/// <summary>
-		/// Checks the attachments of this framebuffer.
-		/// </summary>
-		/// <returns>
-		/// The attachments.
-		/// </returns>
+
+        /// <summary>
+        /// Checks the attachments of this framebuffer.
+        /// </summary>
+        /// <returns>
+        /// The attachments.
+        /// </returns>
         private void checkAttachments()
         {
 #if OPENTK
@@ -4236,13 +4265,13 @@ namespace Sxta.Render
             Debug.Assert(false);
         }
 
-      
-		/// <summary>
-		/// Enables the conditional rendering mode.
-		/// </summary>
-		/// <returns>
-		/// The conditional render.
-		/// </returns>
+
+        /// <summary>
+        /// Enables the conditional rendering mode.
+        /// </summary>
+        /// <returns>
+        /// The conditional render.
+        /// </returns>
         internal void beginConditionalRender()
         {
             if (parameters.occlusionQuery != null)
@@ -4255,13 +4284,13 @@ namespace Sxta.Render
             }
         }
 
-     
-		/// <summary>
-		/// Disables the conditional rendering mode.
-		/// </summary>
-		/// <returns>
-		/// The conditional render.
-		/// </returns>
+
+        /// <summary>
+        /// Disables the conditional rendering mode.
+        /// </summary>
+        /// <returns>
+        /// The conditional render.
+        /// </returns>
         internal void endConditionalRender()
         {
             if (parameters.occlusionQuery != null)
@@ -4274,15 +4303,15 @@ namespace Sxta.Render
             }
         }
 
-		/// <summary>
-		/// Returns the id of the given framebuffer attachment point.
-		/// </summary>
-		/// <returns>
-		/// The buffer.
-		/// </returns>
-		/// <param name='b'>
-		/// B.
-		/// </param>
+        /// <summary>
+        /// Returns the id of the given framebuffer attachment point.
+        /// </summary>
+        /// <returns>
+        /// The buffer.
+        /// </returns>
+        /// <param name='b'>
+        /// B.
+        /// </param>
         private DrawBuffersEnum getBuffer(BufferId b)
         {
             switch (b & (BufferId.COLOR0 | BufferId.COLOR1 | BufferId.COLOR2 | BufferId.COLOR3))

@@ -49,7 +49,7 @@
 ** Java Port: Pepijn Van Eeckhoudt, July 2003
 ** Java Port: Nathan Parker Burg, August 2003*/
 using System;
-namespace Mogre.Utils.GluTesselator
+namespace Sxta.Render.Utils.GluTesselator
 {
 	
 	
@@ -61,10 +61,10 @@ namespace Mogre.Utils.GluTesselator
 		public GLUhalfEdge Onext; /* next edge CCW around origin */
 		public GLUhalfEdge Lnext; /* next edge CCW around left face */
 		public GLUvertex Org; /* origin vertex (Overtex too long) */
-		public Mogre.Utils.GluTesselator.GLUface Lface; /* left face */
+		public Sxta.Render.Utils.GluTesselator.GLUface Lface; /* left face */
 		
 		/* Internal data (keep hidden) */
-		public Mogre.Utils.GluTesselator.ActiveRegion activeRegion; /* a region with this upper edge (sweep.c) */
+		public Sxta.Render.Utils.GluTesselator.ActiveRegion activeRegion; /* a region with this upper edge (sweep.c) */
 		public int winding; /* change in winding number when crossing */
 		public bool first;
 		

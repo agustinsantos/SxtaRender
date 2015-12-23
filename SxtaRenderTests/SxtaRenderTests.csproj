@@ -69,6 +69,7 @@
     <Compile Include="OpenGLContextTest.cs" />
     <Compile Include="FrameBufferTest.cs" />
     <Compile Include="TestTools\RenderTestUtils.cs" />
+    <Compile Include="SxtaVGTest.cs" />
     <Compile Include="UniformTestb.cs" />
     <Compile Include="DrawTestf.cs" />
     <Compile Include="UniformTesti.cs" />
@@ -82,6 +83,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NanoVG\NanoVG.csproj">
+      <Project>{37f92520-6b40-44c5-8294-d588f74683d7}</Project>
+      <Name>NanoVG</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SxtaRender\SxtaRender.csproj">
       <Project>{2b803a3e-cc40-477b-a9cf-b1f2abdce6f3}</Project>
       <Name>SxtaRender</Name>
@@ -212,6 +217,42 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\ControlImages\Test02_Screenshot.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\ControlImages\VG\ScreenshotVG01.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\ControlImages\VG\ScreenshotVG02.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\ControlImages\VG\ScreenshotVG03.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\ControlImages\VG\ScreenshotVG04.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\ControlImages\VG\ScreenshotVG10.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\ControlImages\VG\ScreenshotVG05.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\ControlImages\VG\ScreenshotVG06.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\ControlImages\VG\ScreenshotVG07.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\ControlImages\VG\ScreenshotVG08.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\ControlImages\VG\ScreenshotVG09.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\ControlImages\VG\ScreenshotVG11.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\ControlImages\VG\ScreenshotVG12.bmp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\ImageFormat\DDS\Lenna.dds" />

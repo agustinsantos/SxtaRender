@@ -639,6 +639,8 @@ namespace Sxta.Render
         {
             if (usage == MeshUsage.GPU_STATIC || usage == MeshUsage.GPU_DYNAMIC || usage == MeshUsage.GPU_STREAM)
             {
+                if (vertexBuffer != null)
+                    ((GPUBuffer)vertexBuffer).Dispose();
                 vertexBuffer = new GPUBuffer();
                 if (usage == MeshUsage.GPU_STATIC)
                 {

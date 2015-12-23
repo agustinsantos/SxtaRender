@@ -51,7 +51,7 @@
 using System;
 using javax.media.opengl;
 using javax.media.opengl.glu;
-namespace Mogre.Utils.GluTesselator
+namespace Sxta.Render.Utils.GluTesselator
 {
 	
 	class Normal
@@ -98,17 +98,17 @@ namespace Mogre.Utils.GluTesselator
 		
 		internal static void  ComputeNormal(GLUtessellatorImpl tess, double[] norm)
 		{
-			Mogre.Utils.GluTesselator.GLUvertex v, v1, v2;
+			Sxta.Render.Utils.GluTesselator.GLUvertex v, v1, v2;
 			double c, tLen2, maxLen2;
 			double[] maxVal, minVal, d1, d2, tNorm;
-			Mogre.Utils.GluTesselator.GLUvertex[] maxVert, minVert;
-			Mogre.Utils.GluTesselator.GLUvertex vHead = tess.mesh.vHead;
+			Sxta.Render.Utils.GluTesselator.GLUvertex[] maxVert, minVert;
+			Sxta.Render.Utils.GluTesselator.GLUvertex vHead = tess.mesh.vHead;
 			int i;
 			
 			maxVal = new double[3];
 			minVal = new double[3];
-			minVert = new Mogre.Utils.GluTesselator.GLUvertex[3];
-			maxVert = new Mogre.Utils.GluTesselator.GLUvertex[3];
+			minVert = new Sxta.Render.Utils.GluTesselator.GLUvertex[3];
+			maxVert = new Sxta.Render.Utils.GluTesselator.GLUvertex[3];
 			d1 = new double[3];
 			d2 = new double[3];
 			tNorm = new double[3];
@@ -193,9 +193,9 @@ namespace Mogre.Utils.GluTesselator
 		internal static void  CheckOrientation(GLUtessellatorImpl tess)
 		{
 			double area;
-			Mogre.Utils.GluTesselator.GLUface f, fHead = tess.mesh.fHead;
-			Mogre.Utils.GluTesselator.GLUvertex v, vHead = tess.mesh.vHead;
-			Mogre.Utils.GluTesselator.GLUhalfEdge e;
+			Sxta.Render.Utils.GluTesselator.GLUface f, fHead = tess.mesh.fHead;
+			Sxta.Render.Utils.GluTesselator.GLUvertex v, vHead = tess.mesh.vHead;
+			Sxta.Render.Utils.GluTesselator.GLUhalfEdge e;
 			
 			/* When we compute the normal automatically, we choose the orientation
 			* so that the the sum of the signed areas of all contours is non-negative.
@@ -231,7 +231,7 @@ namespace Mogre.Utils.GluTesselator
 		*/
 		public static void  __gl_projectPolygon(GLUtessellatorImpl tess)
 		{
-			Mogre.Utils.GluTesselator.GLUvertex v, vHead = tess.mesh.vHead;
+			Sxta.Render.Utils.GluTesselator.GLUvertex v, vHead = tess.mesh.vHead;
 			double w;
 			double[] norm = new double[3];
 			double[] sUnit, tUnit;

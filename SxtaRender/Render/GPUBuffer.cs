@@ -142,7 +142,36 @@ namespace Sxta.Render
             }
 #endif
         }
+        public void setData<T>(int size, T data, BufferUsage u) where T : struct
+        {
+            Debug.Assert(mappedData == IntPtr.Zero);
+            this.size = size;
+#if OPENTK
+            GL.BindBuffer(BufferTarget.CopyWriteBuffer, bufferId);
+            GL.BufferData(BufferTarget.CopyWriteBuffer, (IntPtr)size, ref data, EnumConversion.getBufferUsage(u));
+            GL.BindBuffer(BufferTarget.CopyWriteBuffer, 0);
+#else
+            glBindBuffer(GL_COPY_WRITE_BUFFER, bufferId);
+            glBufferData(GL_COPY_WRITE_BUFFER, size, data, getBufferUsage(u));
+            glBindBuffer(GL_COPY_WRITE_BUFFER, 0);
+#endif
+            Debug.Assert(FrameBuffer.getError() == ErrorCode.NoError);
 
+            if (cpuData != null)
+            {
+                cpuData = null;
+            }
+#if  CUSTOM_MAP_BUFFER
+            if (size < 1024)
+            {
+                cpuData = new byte[size];
+                if (data != null)
+                {
+                    Array.Copy(data, cpuData, size);
+                }
+            }
+#endif
+        }
         public void setData(int size, IntPtr data, BufferUsage u)
         {
             Debug.Assert(mappedData == IntPtr.Zero);
@@ -398,7 +427,7 @@ namespace Sxta.Render
 		/// <summary>
 		/// The size of this buffer.
 		/// </summary>
-        private int size;
+        internal int size;
 
     
 		/// <summary>
@@ -712,7 +741,8 @@ namespace Sxta.Render
                 //glBindBufferRange(GL_UNIFORM_BUFFER, unit, buffer->getId(), offset, size);
                 glBindBufferBase(GL_UNIFORM_BUFFER, unit, buffer.getId());
 #else
-                GL.BindBufferBase(BufferTarget.UniformBuffer, unit, buffer.getId());
+                GL.BindBufferRange((BufferRangeTarget)BufferTarget.UniformBuffer, (int)unit, (int)buffer.getId(), (IntPtr)0, (IntPtr)buffer.size);
+                //GL.BindBufferBase(BufferTarget.UniformBuffer, unit, buffer.getId());
 #endif
             }
             Debug.Assert(FrameBuffer.getError() == ErrorCode.NoError);

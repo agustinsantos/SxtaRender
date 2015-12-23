@@ -49,7 +49,7 @@
 ** Java Port: Pepijn Van Eeckhoudt, July 2003
 ** Java Port: Nathan Parker Burg, August 2003*/
 using System;
-namespace Mogre.Utils.GluTesselator
+namespace Sxta.Render.Utils.GluTesselator
 {
 	
 	
@@ -57,8 +57,8 @@ namespace Mogre.Utils.GluTesselator
 	class GLUmesh
 	{
 		internal GLUvertex vHead = new GLUvertex(); /* dummy header for vertex list */
-		internal Mogre.Utils.GluTesselator.GLUface fHead = new GLUface(); /* dummy header for face list */
-		internal Mogre.Utils.GluTesselator.GLUhalfEdge eHead = new GLUhalfEdge(true); /* dummy header for edge list */
-		internal Mogre.Utils.GluTesselator.GLUhalfEdge eHeadSym = new GLUhalfEdge(false); /* and its symmetric counterpart */
+		internal Sxta.Render.Utils.GluTesselator.GLUface fHead = new GLUface(); /* dummy header for face list */
+		internal Sxta.Render.Utils.GluTesselator.GLUhalfEdge eHead = new GLUhalfEdge(true); /* dummy header for edge list */
+		internal Sxta.Render.Utils.GluTesselator.GLUhalfEdge eHeadSym = new GLUhalfEdge(false); /* and its symmetric counterpart */
 	}
 }
