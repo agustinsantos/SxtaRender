@@ -93,43 +93,58 @@ namespace Sxta.Render
             return h;
         }
 
- 
-		/// <summary>
-		/// Replaces a part of one face of this cube texture.
-		/// </summary>
-		/// <returns>
-		/// The sub image.
-		/// </returns>
-		/// <param name='cf'>
-		/// Cf the cube face to be set.
-		/// </param>
-		/// <param name='level'>
-		/// Level the LOD level to be changed.
-		/// </param>
-		/// <param name='x'>
-		/// X lower left corner of the part to be replaced, in pixels.
-		/// </param>
-		/// <param name='y'>
-		/// Y lower left corner of the part to be replaced, in pixels.
-		/// </param>
-		/// <param name='w'>
-		/// W the width of the part to be replaced, in pixels.
-		/// </param>
-		/// <param name='h'>
-		/// H the height of the part to be replaced, in pixels.
-		/// </param>
-		/// <param name='f'>
-		/// F the texture components in 'pixels'.
-		/// </param>
-		/// <param name='t'>
-		/// T the type of each component in 'pixels'.
-		/// </param>
-		/// <param name='s'>
-		/// S optional pixel storage parameters for 'pixels'.
-		/// </param>
-		/// <param name='pixels'>
-		/// Pixels the pixels to be written into this texture LOD level.
-		/// </param>
+        public override int Width
+        {
+            get
+            {
+                return w;
+            }
+        }
+
+        public override int Height
+        {
+            get
+            {
+                return h;
+            }
+        }
+
+        /// <summary>
+        /// Replaces a part of one face of this cube texture.
+        /// </summary>
+        /// <returns>
+        /// The sub image.
+        /// </returns>
+        /// <param name='cf'>
+        /// Cf the cube face to be set.
+        /// </param>
+        /// <param name='level'>
+        /// Level the LOD level to be changed.
+        /// </param>
+        /// <param name='x'>
+        /// X lower left corner of the part to be replaced, in pixels.
+        /// </param>
+        /// <param name='y'>
+        /// Y lower left corner of the part to be replaced, in pixels.
+        /// </param>
+        /// <param name='w'>
+        /// W the width of the part to be replaced, in pixels.
+        /// </param>
+        /// <param name='h'>
+        /// H the height of the part to be replaced, in pixels.
+        /// </param>
+        /// <param name='f'>
+        /// F the texture components in 'pixels'.
+        /// </param>
+        /// <param name='t'>
+        /// T the type of each component in 'pixels'.
+        /// </param>
+        /// <param name='s'>
+        /// S optional pixel storage parameters for 'pixels'.
+        /// </param>
+        /// <param name='pixels'>
+        /// Pixels the pixels to be written into this texture LOD level.
+        /// </param>
         public void setSubImage(CubeFace cf, int level, int x, int y, int w, int h, TextureFormat f, PixelType t, Buffer.Parameters s, Buffer pixels)
         {
 #if TODO

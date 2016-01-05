@@ -10,6 +10,22 @@ namespace Sxta.Render.OpenGLExt
     {
         ImageDDS imgdds;
 
+        public override int Height
+        {
+            get
+            {
+               return imgdds.Width;
+            }
+        }
+
+        public override int Width
+        {
+            get
+            {
+                return imgdds.Height;
+            }
+        }
+
         internal void init(ImageDDS img, Parameters params_)
         {
             this.imgdds = img;

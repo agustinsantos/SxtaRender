@@ -30,6 +30,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GluTessellator", "GluTessel
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NanoVG", "NanoVG\NanoVG.csproj", "{37F92520-6B40-44C5-8294-D588F74683D7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SxtaFont", "SxtaFont\SxtaFont.csproj", "{BE26D180-B28B-484D-AA09-9B0E0417EA2C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -76,6 +78,10 @@ Global
 		{37F92520-6B40-44C5-8294-D588F74683D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{37F92520-6B40-44C5-8294-D588F74683D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{37F92520-6B40-44C5-8294-D588F74683D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE26D180-B28B-484D-AA09-9B0E0417EA2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE26D180-B28B-484D-AA09-9B0E0417EA2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE26D180-B28B-484D-AA09-9B0E0417EA2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE26D180-B28B-484D-AA09-9B0E0417EA2C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

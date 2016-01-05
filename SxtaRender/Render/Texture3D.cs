@@ -83,14 +83,28 @@ namespace Sxta.Render
             return h;
         }
 
+        public override int Width
+        {
+            get
+            {
+                return w;
+            }
+        }
 
-       
-		/// <summary>
-		/// Returns the depth of this texture.
-		/// </summary>
-		/// <returns>
-		/// The depth.
-		/// </returns>
+        public override int Height
+        {
+            get
+            {
+                return h;
+            }
+        }
+
+        /// <summary>
+        /// Returns the depth of this texture.
+        /// </summary>
+        /// <returns>
+        /// The depth.
+        /// </returns>
         public int getDepth()
         {
             return d;

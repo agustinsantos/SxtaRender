@@ -38,86 +38,86 @@ namespace Sxta.Render
     /// </summary>
     public class Module : IDisposable, ISwappable<Module>
     {
-        
-		/// <summary>
-		/// Creates a new module whose parts are all grouped in a single compilation
+
+        /// <summary>
+        /// Creates a new module whose parts are all grouped in a single compilation
         /// unit, but separated with preprocessor directives (see #Module).
-		/// Initializes a new instance of the <see cref="Sxta.Render.Module"/> class.
-		/// </summary>
-		/// <param name='version'>
-		/// Version.
-		/// </param>
-		/// <param name='source'>
-		/// Source.
-		/// </param>
+        /// Initializes a new instance of the <see cref="Sxta.Render.Module"/> class.
+        /// </summary>
+        /// <param name='version'>
+        /// Version.
+        /// </param>
+        /// <param name='source'>
+        /// Source.
+        /// </param>
         public Module(int version, string source)
         {
             init(version, source);
         }
 
-   		/// <summary>
-		/// Creates a new module whose parts are defined in separate compilation units.
-		/// Initializes a new instance of the <see cref="Sxta.Render.Module"/> class.
-		/// </summary>
-		/// <param name='version'>
-		/// Version the GLSL version used for the source code.
-		/// </param>
-		/// <param name='vertex'>
-		/// Vertex shader source code (maybe null).
-		/// </param>
-		/// <param name='fragment'>
-		/// Fragment the fragment shader source code (maybe null)
-		/// </param>
+        /// <summary>
+        /// Creates a new module whose parts are defined in separate compilation units.
+        /// Initializes a new instance of the <see cref="Sxta.Render.Module"/> class.
+        /// </summary>
+        /// <param name='version'>
+        /// Version the GLSL version used for the source code.
+        /// </param>
+        /// <param name='vertex'>
+        /// Vertex shader source code (maybe null).
+        /// </param>
+        /// <param name='fragment'>
+        /// Fragment the fragment shader source code (maybe null)
+        /// </param>
         public Module(int version, string vertex, string fragment)
         {
             init(version, null, vertex, null, null, null, null, null, null, null, fragment);
         }
 
 
-		/// <summary>
-		/// Creates a new module whose parts are defined in separate compilation units.
-		/// Initializes a new instance of the <see cref="Sxta.Render.Module"/> class.
-		/// </summary>
-		/// <param name='version'>
-		/// Version GLSL version used for the source code.
-		/// </param>
-		/// <param name='vertex'>
-		/// Vertex shader source code (maybe null).
-		/// </param>
-		/// <param name='geometry'>
-		/// Geometry  shader source code (maybe null).
-		/// </param>
-		/// <param name='fragment'>
-		/// Fragment shader source code (maybe null).
-		/// </param>
+        /// <summary>
+        /// Creates a new module whose parts are defined in separate compilation units.
+        /// Initializes a new instance of the <see cref="Sxta.Render.Module"/> class.
+        /// </summary>
+        /// <param name='version'>
+        /// Version GLSL version used for the source code.
+        /// </param>
+        /// <param name='vertex'>
+        /// Vertex shader source code (maybe null).
+        /// </param>
+        /// <param name='geometry'>
+        /// Geometry  shader source code (maybe null).
+        /// </param>
+        /// <param name='fragment'>
+        /// Fragment shader source code (maybe null).
+        /// </param>
         public Module(int version, string vertex, string geometry, string fragment)
         {
             init(version, null, vertex, null, null, null, null, null, geometry, null, fragment);
         }
 
 
-		/// <summary>
-		/// Creates a new module whose parts are defined in separate compilation units.
-		/// Initializes a new instance of the <see cref="Sxta.Render.Module"/> class.
-		/// </summary>
-		/// <param name='version'>
-		/// Version the GLSL version used for the source code.
-		/// </param>
-		/// <param name='vertex'>
-		/// Vertex the vertex shader source code (maybe null).
-		/// </param>
-		/// <param name='tessControl'>
-		/// Tess control the tessellation control shader source code (maybe null).
-		/// </param>
-		/// <param name='tessEvaluation'>
-		/// Tess evaluation the tessellation evaluation shader source code (maybe null).
-		/// </param>
-		/// <param name='geometry'>
-		/// Geometry the geometry shader source code (maybe null).
-		/// </param>
-		/// <param name='fragment'>
-		/// Fragment  the fragment shader source code (maybe null).
-		/// </param>
+        /// <summary>
+        /// Creates a new module whose parts are defined in separate compilation units.
+        /// Initializes a new instance of the <see cref="Sxta.Render.Module"/> class.
+        /// </summary>
+        /// <param name='version'>
+        /// Version the GLSL version used for the source code.
+        /// </param>
+        /// <param name='vertex'>
+        /// Vertex the vertex shader source code (maybe null).
+        /// </param>
+        /// <param name='tessControl'>
+        /// Tess control the tessellation control shader source code (maybe null).
+        /// </param>
+        /// <param name='tessEvaluation'>
+        /// Tess evaluation the tessellation evaluation shader source code (maybe null).
+        /// </param>
+        /// <param name='geometry'>
+        /// Geometry the geometry shader source code (maybe null).
+        /// </param>
+        /// <param name='fragment'>
+        /// Fragment  the fragment shader source code (maybe null).
+        /// </param>
         public Module(int version, string vertex, string tessControl,
             string tessEvaluation, string geometry, string fragment)
         {
@@ -139,150 +139,150 @@ namespace Sxta.Render
         //Resource name if any
         public string Name { get; set; }
 
-        
-		/// <summary>
-		/// Returns the id of the vertex shader part of this module.
-		/// Gets the vertex shader identifier.
-		/// </summary>
-		/// <returns>
-		/// the id of the vertex shader part of this module, or -1
+
+        /// <summary>
+        /// Returns the id of the vertex shader part of this module.
+        /// Gets the vertex shader identifier.
+        /// </summary>
+        /// <returns>
+        /// the id of the vertex shader part of this module, or -1
         /// if this module does not have a vertex shader.
-		/// The vertex shader identifier.
-		/// </returns>
+        /// The vertex shader identifier.
+        /// </returns>
         public int getVertexShaderId()
         {
             return vertexShaderId;
         }
 
-        
-		/// <summary>
-		/// Returns the id of the tessellation control shader part of this shader.
-		/// Gets the tess control shader identifier.
-		/// </summary>
-		/// <returns>
-		/// The tess control shader identifier.
-		/// </returns>
+
+        /// <summary>
+        /// Returns the id of the tessellation control shader part of this shader.
+        /// Gets the tess control shader identifier.
+        /// </summary>
+        /// <returns>
+        /// The tess control shader identifier.
+        /// </returns>
         public int getTessControlShaderId()
         {
             return tessControlShaderId;
         }
 
- 
-		/// <summary>
-		/// Returns the id of the tessellation evaluation shader part of this shader.
-		/// </summary>
-		/// <returns>
-		/// The tess eval shader identifier.
-		/// </returns>
+
+        /// <summary>
+        /// Returns the id of the tessellation evaluation shader part of this shader.
+        /// </summary>
+        /// <returns>
+        /// The tess eval shader identifier.
+        /// </returns>
         public int getTessEvalShaderId()
         {
             return tessEvalShaderId;
         }
 
-       
-		/// <summary>
-		/// Gets the geometry shader identifier.
-		/// </summary>
-		/// <returns>
-		/// The geometry shader identifier.
-		/// </returns>
+
+        /// <summary>
+        /// Gets the geometry shader identifier.
+        /// </summary>
+        /// <returns>
+        /// The geometry shader identifier.
+        /// </returns>
         public int getGeometryShaderId()
         {
             return geometryShaderId;
         }
 
-        
-		/// <summary>
-		/// Returns the id of the fragment shader part of this shader.
-		/// </summary>
-		/// <returns>
-		/// The fragment shader identifier.
-		/// </returns>
+
+        /// <summary>
+        /// Returns the id of the fragment shader part of this shader.
+        /// </summary>
+        /// <returns>
+        /// The fragment shader identifier.
+        /// </returns>
         public int getFragmentShaderId()
         {
             return fragmentShaderId;
         }
 
-     
-		/// <summary>
-		/// Returns the programs that use this Module.
-		/// </summary>
-		/// <returns>
-		/// The users.
-		/// </returns>
+
+        /// <summary>
+        /// Returns the programs that use this Module.
+        /// </summary>
+        /// <returns>
+        /// The users.
+        /// </returns>
         public ISet<Program> getUsers()
         {
             return users;
         }
 
-        
-		/// <summary>
-		/// Sets the format to use when a Program using this module is
+
+        /// <summary>
+        /// Sets the format to use when a Program using this module is
         /// used in transform feedback.
-		/// </summary>
-		/// <returns>
-		/// The feedback mode.
-		/// </returns>
-		/// <param name='interleaved'>
-		/// Interleaved true to interleave the recorded output varying
+        /// </summary>
+        /// <returns>
+        /// The feedback mode.
+        /// </returns>
+        /// <param name='interleaved'>
+        /// Interleaved true to interleave the recorded output varying
         /// variables in a single buffer, or false to record each output
         /// variable in a separate buffer.
-		/// </param>
+        /// </param>
         public void setFeedbackMode(bool interleaved)
         {
             feedbackMode = interleaved ? 1 : 2;
         }
 
-		/// <summary>
-		/// Adds an output varying variable that must be recorded in transform
+        /// <summary>
+        /// Adds an output varying variable that must be recorded in transform
         /// feedback mode. The order of these variables is important: they are
         /// recorded in the same order as they as declared with this method.
-		/// </summary>
-		/// <returns>
-		/// The feedback varying.
-		/// </returns>
-		/// <param name='name'>
-		/// Name the name of an output varying variable to record.
-		/// </param>
+        /// </summary>
+        /// <returns>
+        /// The feedback varying.
+        /// </returns>
+        /// <param name='name'>
+        /// Name the name of an output varying variable to record.
+        /// </param>
         public void addFeedbackVarying(string name)
         {
             feedbackVaryings.Add(name);
         }
 
-    
-		/// <summary>
-		/// Adds an initial valueC for the given uniform variable.
-		/// </summary>
-		/// <returns>
-		/// The initial value.
-		/// </returns>
-		/// <param name='value'>
-		/// valueC an initial valueC for an uniform of this module.
-		/// </param>
+
+        /// <summary>
+        /// Adds an initial valueC for the given uniform variable.
+        /// </summary>
+        /// <returns>
+        /// The initial value.
+        /// </returns>
+        /// <param name='value'>
+        /// valueC an initial valueC for an uniform of this module.
+        /// </param>
         public void addInitialValue(Value value)
         {
             initialValues.Add(value.getName(), value);
         }
 
 
-    
-		/// <summary>
-		/// Creates an uninitialized module.
-		/// Initializes a new instance of the <see cref="Sxta.Render.Module"/> class.
-		/// </summary>
+
+        /// <summary>
+        /// Creates an uninitialized module.
+        /// Initializes a new instance of the <see cref="Sxta.Render.Module"/> class.
+        /// </summary>
         public Module() { }
 
-       
-		/// <summary>
-		/// Initializes this module, with parts that are all grouped in a single
+
+        /// <summary>
+        /// Initializes this module, with parts that are all grouped in a single
         /// compilation unit, but separated with preprocessor directives (see #Module).
-		/// </summary>
-		/// <param name='version'>
-		/// Version.
-		/// </param>
-		/// <param name='source'>
-		/// Source.
-		/// </param>
+        /// </summary>
+        /// <param name='version'>
+        /// Version.
+        /// </param>
+        /// <param name='source'>
+        /// Source.
+        /// </param>
         internal protected void init(int version, string source)
         {
             init(version,
@@ -293,49 +293,49 @@ namespace Sxta.Render
                 "#define _FRAGMENT_\n", source.Contains("_FRAGMENT_") ? source : null);
         }
 
-		/// <summary>
-		/// Initializes this module.
-		/// Init the specified version, vertexHeader, vertex, tessControlHeader, tessControl, tessEvaluationHeader,
-		/// tessEvaluation, geometryHeader, geometry, fragmentHeader and fragment.
-		/// </summary>
-		/// <param name='version'>
-		/// Version the GLSL version used for the source code.
-		/// </param>
-		/// <param name='vertexHeader'>
-		/// Vertex header an optional header for the the vertex shader source
+        /// <summary>
+        /// Initializes this module.
+        /// Init the specified version, vertexHeader, vertex, tessControlHeader, tessControl, tessEvaluationHeader,
+        /// tessEvaluation, geometryHeader, geometry, fragmentHeader and fragment.
+        /// </summary>
+        /// <param name='version'>
+        /// Version the GLSL version used for the source code.
+        /// </param>
+        /// <param name='vertexHeader'>
+        /// Vertex header an optional header for the the vertex shader source
         /// code (maybe null).
-		/// </param>
-		/// <param name='vertex'>
-		/// Vertex the vertex shader source code (maybe null).
-		/// </param>
-		/// <param name='tessControlHeader'>
-		/// Tess control header  an optional header for the the tessellation
+        /// </param>
+        /// <param name='vertex'>
+        /// Vertex the vertex shader source code (maybe null).
+        /// </param>
+        /// <param name='tessControlHeader'>
+        /// Tess control header  an optional header for the the tessellation
         /// control shader source code (maybe null).
-		/// </param>
-		/// <param name='tessControl'>
-		/// Tess control the tessellation control shader source code (maybe null).
-		/// </param>
-		/// <param name='tessEvaluationHeader'>
-		/// Tess evaluation header an optional header for the the tessellation
+        /// </param>
+        /// <param name='tessControl'>
+        /// Tess control the tessellation control shader source code (maybe null).
+        /// </param>
+        /// <param name='tessEvaluationHeader'>
+        /// Tess evaluation header an optional header for the the tessellation
         /// evaluation shader source code (maybe null).
-		/// </param>
-		/// <param name='tessEvaluation'>
-		/// Tess evaluation the tessellation evaluation shader source code (maybe null).
-		/// </param>
-		/// <param name='geometryHeader'>
-		/// Geometry header geometryHeader an optional header for the the geometry shader
+        /// </param>
+        /// <param name='tessEvaluation'>
+        /// Tess evaluation the tessellation evaluation shader source code (maybe null).
+        /// </param>
+        /// <param name='geometryHeader'>
+        /// Geometry header geometryHeader an optional header for the the geometry shader
         /// source code (maybe null).
-		/// </param>
-		/// <param name='geometry'>
-		/// Geometry, the geometry shader source code (maybe null).
-		/// </param>
-		/// <param name='fragmentHeader'>
-		/// Fragment header an optional header for the the fragment shader
+        /// </param>
+        /// <param name='geometry'>
+        /// Geometry, the geometry shader source code (maybe null).
+        /// </param>
+        /// <param name='fragmentHeader'>
+        /// Fragment header an optional header for the the fragment shader
         /// source code (maybe null).
-		/// </param>
-		/// <param name='fragment'>
-		/// Fragment the fragment shader source code (maybe null).
-		/// </param>
+        /// </param>
+        /// <param name='fragment'>
+        /// Fragment the fragment shader source code (maybe null).
+        /// </param>
         internal protected void init(int version,
             string vertexHeader, string vertex,
             string tessControlHeader, string tessControl,
@@ -366,10 +366,10 @@ namespace Sxta.Render
                 lines[2] = vertex;
 #if OPENTK
                 string source = "";
-                foreach (string l in lines)
-                    source += l;
+                for (int i = 0; i < lineCount; i++)
+                    source += lines[i];
                 vertexShaderId = GL.CreateShader(ShaderType.VertexShader);
-                GL.ShaderSource(vertexShaderId, source);//lineCount, lines, ref len);
+                GL.ShaderSource(vertexShaderId, source); //lineCount, lines, ref len);
                 GL.CompileShader(vertexShaderId);
 #else
                 vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
@@ -404,10 +404,10 @@ namespace Sxta.Render
                 lines[2] = tessControl;
 #if OPENTK
                 string source = "";
-                foreach (string l in lines)
-                    source += l;
+                for (int i = 0; i < lineCount; i++)
+                    source += lines[i];
                 tessControlShaderId = GL.CreateShader(ShaderType.TessControlShader);
-                GL.ShaderSource(tessControlShaderId, source); //lineCount, lines, ref len);
+                GL.ShaderSource(tessControlShaderId, source);// lineCount, lines, ref len);
                 GL.CompileShader(tessControlShaderId);
 #else
                 tessControlShaderId = glCreateShader(GL_TESS_CONTROL_SHADER);
@@ -452,10 +452,10 @@ namespace Sxta.Render
                 lines[2] = tessEvaluation;
 #if OPENTK
                 string source = "";
-                foreach (string l in lines)
-                    source += l;
+                for (int i = 0; i < lineCount; i++)
+                    source += lines[i];
                 tessEvalShaderId = GL.CreateShader(ShaderType.TessEvaluationShader);
-                GL.ShaderSource(tessEvalShaderId, source); //lineCount, lines, ref len);
+                GL.ShaderSource(tessEvalShaderId, source); // lineCount, lines, ref len);
                 GL.CompileShader(tessEvalShaderId);
 #else
                 tessEvalShaderId = glCreateShader(GL_TESS_EVALUATION_SHADER);
@@ -511,10 +511,10 @@ namespace Sxta.Render
                 lines[2] = geometry;
 #if OPENTK
                 string source = "";
-                foreach (string l in lines)
-                    source += l;
+                for (int i = 0; i < lineCount; i++)
+                    source += lines[i];
                 geometryShaderId = GL.CreateShader(ShaderType.GeometryShader);
-                GL.ShaderSource(geometryShaderId, source); //lineCount, lines, ref len);
+                GL.ShaderSource(geometryShaderId, source); // lineCount, lines, ref len);
                 GL.CompileShader(geometryShaderId);
 #else
                 geometryShaderId = glCreateShader(GL_GEOMETRY_SHADER);
@@ -580,10 +580,10 @@ namespace Sxta.Render
                 lines[2] = fragment;
 #if OPENTK
                 string source = "";
-                foreach (string l in lines)
-                    source += l;
+                for (int i = 0; i < lineCount; i++)
+                    source += lines[i];
                 fragmentShaderId = GL.CreateShader(ShaderType.FragmentShader);
-                GL.ShaderSource(fragmentShaderId, source); //lineCount, lines, ref len);
+                GL.ShaderSource(fragmentShaderId, source);// lineCount, lines, ref len);
                 GL.CompileShader(fragmentShaderId);
 #else
                 fragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);
@@ -670,75 +670,75 @@ namespace Sxta.Render
         public virtual void swap(Module s)
         {
             Std.Swap<int>(ref vertexShaderId, ref s.vertexShaderId);
-            Std.Swap<int>(ref tessControlShaderId, ref  s.tessControlShaderId);
+            Std.Swap<int>(ref tessControlShaderId, ref s.tessControlShaderId);
             Std.Swap<int>(ref tessEvalShaderId, ref s.tessEvalShaderId);
-            Std.Swap<int>(ref geometryShaderId, ref  s.geometryShaderId);
-            Std.Swap<int>(ref fragmentShaderId, ref  s.fragmentShaderId);
-            Std.Swap<IDictionary<string, Value>>(ref initialValues, ref  s.initialValues);
+            Std.Swap<int>(ref geometryShaderId, ref s.geometryShaderId);
+            Std.Swap<int>(ref fragmentShaderId, ref s.fragmentShaderId);
+            Std.Swap<IDictionary<string, Value>>(ref initialValues, ref s.initialValues);
         }
 
 
-		/// <summary>
-		/// The Program instances that use this Module.
-		/// </summary>
+        /// <summary>
+        /// The Program instances that use this Module.
+        /// </summary>
         internal ISet<Program> users = new HashSet<Program>();
 
-    
-		/// <summary>
-		/// The id of the vertex shader part of this shader.
-		/// </summary>
+
+        /// <summary>
+        /// The id of the vertex shader part of this shader.
+        /// </summary>
         internal int vertexShaderId;
 
- 
-		/// <summary>
-		/// The id of the tessellation control shader part of this shader.
-		/// </summary>
+
+        /// <summary>
+        /// The id of the tessellation control shader part of this shader.
+        /// </summary>
         internal int tessControlShaderId;
 
-   
-		/// <summary>
-		/// The id of the tessellation evaluation shader part of this shader.
-		/// </summary>
+
+        /// <summary>
+        /// The id of the tessellation evaluation shader part of this shader.
+        /// </summary>
         internal int tessEvalShaderId;
 
-    
-		/// <summary>
-		/// The id of the geometry shader part of this shader.
-		/// </summary>
+
+        /// <summary>
+        /// The id of the geometry shader part of this shader.
+        /// </summary>
         internal int geometryShaderId;
 
-    
-		/// <summary>
-		/// The id of the fragment shader part of this shader.
-		/// </summary>
+
+        /// <summary>
+        /// The id of the fragment shader part of this shader.
+        /// </summary>
         internal int fragmentShaderId;
 
-		/// <summary>
-		/// The transform feedback mode to use with this module.
+        /// <summary>
+        /// The transform feedback mode to use with this module.
         /// 0 means 'any mode', 1 means 'interleaved attribs', 2 means 'separate attribs'.
-		/// </summary>
+        /// </summary>
         internal int feedbackMode;
 
-    
-		/// <summary>
-		/// The output varying variables of this module that must be recorded in
+
+        /// <summary>
+        /// The output varying variables of this module that must be recorded in
         /// transform feedback mode.
-		/// </summary>
+        /// </summary>
         internal List<string> feedbackVaryings = new List<string>();
 
-      
-		/// <summary>
-		/// The initial values for the uniforms of the shaders of this module.
-		/// </summary>
+
+        /// <summary>
+        /// The initial values for the uniforms of the shaders of this module.
+        /// </summary>
         internal IDictionary<string, Value> initialValues = new Dictionary<string, Value>();
 
-   
-		/// <summary>
-		/// Checks if a shader part has been correctly compiled.
-		/// </summary>
-		/// <param name='shaderId'>
-		/// Shader identifierthe id the shader part to check.
-		/// </param>
+
+        /// <summary>
+        /// Checks if a shader part has been correctly compiled.
+        /// </summary>
+        /// <param name='shaderId'>
+        /// Shader identifierthe id the shader part to check.
+        /// </param>
         private bool check(int shaderId)
         {
             int compiled;
@@ -750,25 +750,25 @@ namespace Sxta.Render
             return compiled != 0;
         }
 
- 
-		/// <summary>
-		/// Logs the shader compiler output.
-		/// </summary>
-		/// <returns>
-		/// The log.
-		/// </returns>
-		/// <param name='shaderId'>
-		/// Shader identifier the id of the vertex, geometry or fragment part.
-		/// </param>
-		/// <param name='nlines'>
-		/// Nlines number of lines in the compiler output text.
-		/// </param>
-		/// <param name='lines'>
-		/// Lines the compiler output text.
-		/// </param>
-		/// <param name='error'>
-		/// Error true if the compiler found some errors.
-		/// </param>
+
+        /// <summary>
+        /// Logs the shader compiler output.
+        /// </summary>
+        /// <returns>
+        /// The log.
+        /// </returns>
+        /// <param name='shaderId'>
+        /// Shader identifier the id of the vertex, geometry or fragment part.
+        /// </param>
+        /// <param name='nlines'>
+        /// Nlines number of lines in the compiler output text.
+        /// </param>
+        /// <param name='lines'>
+        /// Lines the compiler output text.
+        /// </param>
+        /// <param name='error'>
+        /// Error true if the compiler found some errors.
+        /// </param>
         private string printLog(int shaderId, int nlines, string[] lines, bool error)
         {
             string shaderlog;
@@ -911,5 +911,5 @@ namespace Sxta.Render
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
     }
 
-  
+
 }

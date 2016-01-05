@@ -253,6 +253,10 @@ namespace Sxta.Render
         {
             buffers.addAttributeBuffer(id, size, vertexSize, type, norm);
         }
+        public void addAttributes(IEnumerable<AttributeBuffer> attrbs)
+        {
+            buffers.addAttributeBuffer(attrbs);
+        }
 
         /// <summary>
         /// Sets the capacity of the vertex and indice array of this mesh. Does
@@ -589,6 +593,7 @@ namespace Sxta.Render
 #if DEBUG
             log.Debug("Resize vertex array to new size = " + newSize);
 #endif
+            if (newSize <= verticesLength) return;
             vertex[] newVertices = new vertex[newSize];
             Array.Copy(vertices, newVertices, verticesLength);
             vertices = newVertices;
@@ -615,6 +620,7 @@ namespace Sxta.Render
 #if DEBUG
             log.Debug("Resize index array to new size = " + newSize);
 #endif
+            if (newSize <= indicesLength) return;
             index[] newIndices = new index[newSize];
             Array.Copy(indices, newIndices, indicesLength);
             indices = newIndices;

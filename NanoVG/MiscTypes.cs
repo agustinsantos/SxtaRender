@@ -15,6 +15,7 @@ namespace NanoVG
         NVG_WINDING = 4,
     }
 
+    [Flags]
     internal enum NVGpointFlags : byte
     {
         NVG_PT_CORNER = 0x01,
@@ -135,7 +136,7 @@ namespace NanoVG
 
     public class NVGcontext : IDisposable
     {
-        private const int NVG_MAX_STATES = 32;
+        public const int NVG_MAX_STATES = 32;
         private const int NVG_INIT_COMMANDS_SIZE = 256;
         internal const int NVG_MAX_FONTIMAGES = 4;
 
@@ -222,7 +223,7 @@ namespace NanoVG
         /// <summary>
         /// Pops and restores current render state.
         /// </summary>
-        public void RestoreState()
+        public void Restore()
         {
             if (this.nstates <= 1)
                 return;
@@ -557,9 +558,9 @@ namespace NanoVG
 
                     for (j = 0; j < path.count; ++j)
                     {
-                        if (this.cache.points[p1].flags.HasFlag(NVGpointFlags.NVG_PT_BEVEL | NVGpointFlags.NVG_PR_INNERBEVEL))
+                        if (this.cache.points[p1].flags.HasFlag(NVGpointFlags.NVG_PT_BEVEL) || this.cache.points[p1].flags.HasFlag(NVGpointFlags.NVG_PR_INNERBEVEL))
                         {
-                            dst = BevelJoin(dst, this.cache.points[p0], this.cache.points[p1], lw, rw, lu, ru, this.fringeWidth);
+                            dst = BevelJoin(this.cache.verts, dst, this.cache.points[p0], this.cache.points[p1], lw, rw, lu, ru, this.fringeWidth);
                         }
                         else
                         {
@@ -588,7 +589,6 @@ namespace NanoVG
         }
         public void ExpandStroke(float w, NVGlineCap lineCap, NVGlineJoin lineJoin, float miterLimit)
         {
-#if TODO
             NVGpathCache cache = this.cache;
             int verts;
             int dst;
@@ -640,7 +640,6 @@ namespace NanoVG
                 // Calculate fringe or stroke
                 loop =  path.closed;
                 dst = verts;
-                path.stroke = dst;
 
                 if (loop)
                 {
@@ -670,20 +669,20 @@ namespace NanoVG
                     else if (lineCap == NVGlineCap.NVG_BUTT || lineCap == NVGlineCap.NVG_SQUARE)
                         dst = ButtCapStart(this.cache.verts, dst, this.cache.points[p0], dx, dy, w, w - aa, aa);
                     else if (lineCap == NVGlineCap.NVG_ROUND)
-                        dst = RoundCapStart(dst, p0, dx, dy, w, ncap, aa);
+                        dst = RoundCapStart(this.cache.verts, dst, this.cache.points[p0], dx, dy, w, ncap, aa);
                 }
 
                 for (j = s; j < e; ++j)
                 {
-                    if ((this.cache.points[p1].flags.HasFlag(NVGpointFlags.NVG_PT_BEVEL | NVGpointFlags.NVG_PR_INNERBEVEL)))
+                    if ((this.cache.points[p1].flags.HasFlag(NVGpointFlags.NVG_PT_BEVEL) || this.cache.points[p1].flags.HasFlag(NVGpointFlags.NVG_PR_INNERBEVEL)))
                     {
                         if (lineJoin == NVGlineJoin.NVG_ROUND)
                         {
-                            dst = RoundJoin(dst, p0, p1, w, w, 0, 1, ncap, aa);
+                            dst = RoundJoin(this.cache.verts, dst, this.cache.points[p0], this.cache.points[p1], w, w, 0, 1, ncap, aa);
                         }
                         else
                         {
-                            dst = BevelJoin(dst, this.cache.points[p0], this.cache.points[p1], w, w, 0, 1, aa);
+                            dst = BevelJoin(this.cache.verts, dst, this.cache.points[p0], this.cache.points[p1], w, w, 0, 1, aa);
                         }
                     }
                     else
@@ -707,25 +706,165 @@ namespace NanoVG
                     dy = this.cache.points[p1].y - this.cache.points[p0].y;
                     NVGpoint.Normalize(ref dx, ref dy);
                     if (lineCap == NVGlineCap.NVG_BUTT)
-                        dst = ButtCapEnd(dst, p1, dx, dy, w, -aa * 0.5f, aa);
+                        dst = ButtCapEnd(this.cache.verts, dst, this.cache.points[p1], dx, dy, w, -aa * 0.5f, aa);
                     else if (lineCap == NVGlineCap.NVG_BUTT || lineCap == NVGlineCap.NVG_SQUARE)
-                        dst = ButtCapEnd(dst, p1, dx, dy, w, w - aa, aa);
+                        dst = ButtCapEnd(this.cache.verts, dst, this.cache.points[p1], dx, dy, w, w - aa, aa);
                     else if (lineCap == NVGlineCap.NVG_ROUND)
-                        dst = RoundCapEnd(dst, p1, dx, dy, w, ncap, aa);
+                        dst = RoundCapEnd(this.cache.verts, dst, this.cache.points[p1], dx, dy, w, ncap, aa);
                 }
 
                 path.nstroke = (int)(dst - verts);
+                //path.stroke = dst;
+                path.stroke = new NVGvertex[path.nstroke];
+                Array.Copy(this.cache.verts, verts, path.stroke, 0, path.nstroke);
 
                 verts = dst;
+                cache.paths[i] = path;
             }
-#endif 
-            throw new NotImplementedException();
         }
 
-        private int BevelJoin(int dst, NVGpoint p0, NVGpoint p1,
+        private static int BevelJoin(NVGvertex[] arr, int dst, NVGpoint p0, NVGpoint p1,
                               float lw, float rw, float lu, float ru, float fringe)
         {
-            throw new NotImplementedException();
+            float rx0, ry0, rx1, ry1;
+            float lx0, ly0, lx1, ly1;
+            float dlx0 = p0.dy;
+            float dly0 = -p0.dx;
+            float dlx1 = p1.dy;
+            float dly1 = -p1.dx;
+
+            if (p1.flags.HasFlag(NVGpointFlags.NVG_PT_LEFT))
+            {
+                ChooseBevel(p1.flags.HasFlag(NVGpointFlags.NVG_PR_INNERBEVEL), p0, p1, lw, out lx0, out ly0, out lx1, out ly1);
+
+                arr[dst].Set(lx0, ly0, lu, 1); dst++;
+                arr[dst].Set(p1.x - dlx0 * rw, p1.y - dly0 * rw, ru, 1); dst++;
+
+                if (p1.flags.HasFlag(NVGpointFlags.NVG_PT_BEVEL))
+                {
+                    arr[dst].Set(lx0, ly0, lu, 1); dst++;
+                    arr[dst].Set(p1.x - dlx0 * rw, p1.y - dly0 * rw, ru, 1); dst++;
+
+                    arr[dst].Set(lx1, ly1, lu, 1); dst++;
+                    arr[dst].Set(p1.x - dlx1 * rw, p1.y - dly1 * rw, ru, 1); dst++;
+                }
+                else
+                {
+                    rx0 = p1.x - p1.dmx * rw;
+                    ry0 = p1.y - p1.dmy * rw;
+
+                    arr[dst].Set(p1.x, p1.y, 0.5f, 1); dst++;
+                    arr[dst].Set(p1.x - dlx0 * rw, p1.y - dly0 * rw, ru, 1); dst++;
+
+                    arr[dst].Set(rx0, ry0, ru, 1); dst++;
+                    arr[dst].Set(rx0, ry0, ru, 1); dst++;
+
+                    arr[dst].Set(p1.x, p1.y, 0.5f, 1); dst++;
+                    arr[dst].Set(p1.x - dlx1 * rw, p1.y - dly1 * rw, ru, 1); dst++;
+                }
+
+                arr[dst].Set(lx1, ly1, lu, 1); dst++;
+                arr[dst].Set(p1.x - dlx1 * rw, p1.y - dly1 * rw, ru, 1); dst++;
+
+            }
+            else
+            {
+                ChooseBevel(p1.flags.HasFlag(NVGpointFlags.NVG_PR_INNERBEVEL), p0, p1, -rw, out rx0, out ry0, out rx1, out ry1);
+
+                arr[dst].Set(p1.x + dlx0 * lw, p1.y + dly0 * lw, lu, 1); dst++;
+                arr[dst].Set(rx0, ry0, ru, 1); dst++;
+
+                if (p1.flags.HasFlag(NVGpointFlags.NVG_PT_BEVEL))
+                {
+                    arr[dst].Set(p1.x + dlx0 * lw, p1.y + dly0 * lw, lu, 1); dst++;
+                    arr[dst].Set(rx0, ry0, ru, 1); dst++;
+
+                    arr[dst].Set(p1.x + dlx1 * lw, p1.y + dly1 * lw, lu, 1); dst++;
+                    arr[dst].Set(rx1, ry1, ru, 1); dst++;
+                }
+                else
+                {
+                    lx0 = p1.x + p1.dmx * lw;
+                    ly0 = p1.y + p1.dmy * lw;
+
+                    arr[dst].Set(p1.x + dlx0 * lw, p1.y + dly0 * lw, lu, 1); dst++;
+                    arr[dst].Set(p1.x, p1.y, 0.5f, 1); dst++;
+
+                    arr[dst].Set(lx0, ly0, lu, 1); dst++;
+                    arr[dst].Set(lx0, ly0, lu, 1); dst++;
+
+                    arr[dst].Set(p1.x + dlx1 * lw, p1.y + dly1 * lw, lu, 1); dst++;
+                    arr[dst].Set(p1.x, p1.y, 0.5f, 1); dst++;
+                }
+
+                arr[dst].Set(p1.x + dlx1 * lw, p1.y + dly1 * lw, lu, 1); dst++;
+                arr[dst].Set(rx1, ry1, ru, 1); dst++;
+            }
+
+            return dst;
+        }
+        private  static int RoundJoin(NVGvertex[] arr, int dst, NVGpoint  p0, NVGpoint  p1,
+                                      float lw, float rw, float lu, float ru, int ncap, float fringe)
+        {
+            int i, n;
+            float dlx0 = p0.dy;
+            float dly0 = -p0.dx;
+            float dlx1 = p1.dy;
+            float dly1 = -p1.dx;
+
+            if (p1.flags.HasFlag(NVGpointFlags.NVG_PT_LEFT))
+            {
+                float lx0, ly0, lx1, ly1, a0, a1;
+                ChooseBevel(p1.flags.HasFlag(NVGpointFlags.NVG_PR_INNERBEVEL), p0, p1, lw, out lx0, out ly0, out lx1, out ly1);
+                a0 = (float)Math.Atan2(-dly0, -dlx0);
+                a1 = (float)Math.Atan2(-dly1, -dlx1);
+                if (a1 > a0) a1 -= (float)Math.PI * 2;
+
+                arr[dst].Set(lx0, ly0, lu, 1); dst++;
+                arr[dst].Set(p1.x - dlx0 * rw, p1.y - dly0 * rw, ru, 1); dst++;
+
+                n = (int)MathHelper.Clamp(Math.Ceiling(((a0 - a1) / (float)Math.PI) * ncap), 2, ncap);
+                for (i = 0; i < n; i++)
+                {
+                    float u = i / (float)(n - 1);
+                    float a = a0 + u * (a1 - a0);
+                    float rx = p1.x + (float)Math.Cos(a) * rw;
+                    float ry = p1.y + (float)Math.Sin(a) * rw;
+                    arr[dst].Set(p1.x, p1.y, 0.5f, 1); dst++;
+                    arr[dst].Set(rx, ry, ru, 1); dst++;
+                }
+
+                arr[dst].Set(lx1, ly1, lu, 1); dst++;
+                arr[dst].Set(p1.x - dlx1 * rw, p1.y - dly1 * rw, ru, 1); dst++;
+
+            }
+            else
+            {
+                float rx0, ry0, rx1, ry1, a0, a1;
+                ChooseBevel(p1.flags.HasFlag(NVGpointFlags.NVG_PR_INNERBEVEL), p0, p1, -rw, out rx0, out ry0, out rx1, out ry1);
+                a0 = (float)Math.Atan2(dly0, dlx0);
+                a1 = (float)Math.Atan2(dly1, dlx1);
+                if (a1 < a0) a1 += (float)Math.PI * 2;
+
+                arr[dst].Set(p1.x + dlx0 * rw, p1.y + dly0 * rw, lu, 1); dst++;
+                arr[dst].Set(rx0, ry0, ru, 1); dst++;
+
+                n = (int)MathHelper.Clamp( Math.Ceiling(((a1 - a0) / (float)Math.PI) * ncap), 2, ncap);
+                for (i = 0; i < n; i++)
+                {
+                    float u = i / (float)(n - 1);
+                    float a = a0 + u * (a1 - a0);
+                    float lx = p1.x + (float)Math.Cos(a) * lw;
+                    float ly = p1.y + (float)Math.Sin(a) * lw;
+                    arr[dst].Set(lx, ly, lu, 1); dst++;
+                    arr[dst].Set(p1.x, p1.y, 0.5f, 1); dst++;
+                }
+
+                arr[dst].Set(p1.x + dlx1 * rw, p1.y + dly1 * rw, lu, 1); dst++;
+                arr[dst].Set(rx1, ry1, ru, 1); dst++;
+
+            }
+            return dst;
         }
 
         private void TesselateBezier(float x1, float y1, float x2, float y2,
@@ -799,8 +938,8 @@ namespace NanoVG
             int i = start + 0, j = start + npts - 1;
             while (i < j)
             {
-                tmp = pts[start + i];
-                pts[i] = pts[start + j];
+                tmp = pts[i];
+                pts[i] = pts[j];
                 pts[j] = tmp;
                 i++;
                 j--;
@@ -872,7 +1011,7 @@ namespace NanoVG
                         }
                     }
 
-                    if (this.cache.points[p1].flags.HasFlag(NVGpointFlags.NVG_PT_BEVEL | NVGpointFlags.NVG_PR_INNERBEVEL))
+                    if (this.cache.points[p1].flags.HasFlag(NVGpointFlags.NVG_PT_BEVEL) || this.cache.points[p1].flags.HasFlag(NVGpointFlags.NVG_PR_INNERBEVEL))
                         path.nbevel++;
                     p0 = pts + j;
                     p1 = pts + j + 1;
@@ -927,11 +1066,11 @@ namespace NanoVG
             arr[dst].Set(px - dlx * w + dx * aa, py - dly * w + dy * aa, 1, 0); dst++;
             return dst;
         }
+
         private static int RoundCapStart(NVGvertex[] arr, int dst, NVGpoint p,
                                             float dx, float dy, float w, int ncap, float aa)
         {
-#if TODO
-            int i;
+             int i;
             float px = p.x;
             float py = p.y;
             float dlx = dy;
@@ -939,17 +1078,52 @@ namespace NanoVG
             for (i = 0; i < ncap; i++)
             {
                 float a = (float)(i / (float)(ncap - 1) * Math.PI);
-                float ax = cosf(a) * w, ay = sinf(a) * w;
-                nvg__vset(dst, px - dlx * ax - dx * ay, py - dly * ax - dy * ay, 0, 1); dst++;
-                nvg__vset(dst, px, py, 0.5f, 1); dst++;
+                float ax = (float)(Math.Cos(a) * w), ay = (float)(Math.Sin(a) * w);
+                arr[dst].Set(px - dlx * ax - dx * ay, py - dly * ax - dy * ay, 0, 1); dst++;
+                arr[dst].Set(px, py, 0.5f, 1); dst++;
             }
-            nvg__vset(dst, px + dlx * w, py + dly * w, 0, 1); dst++;
-            nvg__vset(dst, px - dlx * w, py - dly * w, 1, 1); dst++;
+            arr[dst].Set(px + dlx * w, py + dly * w, 0, 1); dst++;
+            arr[dst].Set(px - dlx * w, py - dly * w, 1, 1); dst++;
             return dst;
-#endif
-            throw new NotImplementedException();
-        }
+         }
 
+        private static int RoundCapEnd(NVGvertex[] arr, int dst, NVGpoint p,
+                                       float dx, float dy, float w, int ncap, float aa)
+        {
+            int i;
+            float px = p.x;
+            float py = p.y;
+            float dlx = dy;
+            float dly = -dx;
+            arr[dst].Set(px + dlx * w, py + dly * w, 0, 1); dst++;
+            arr[dst].Set(px - dlx * w, py - dly * w, 1, 1); dst++;
+            for (i = 0; i < ncap; i++)
+            {
+                float a = (float)(i / (float)(ncap - 1) * Math.PI);
+                float ax = (float)(Math.Cos(a) * w), ay = (float)(Math.Sin(a) * w);
+                arr[dst].Set(px, py, 0.5f, 1); dst++;
+                arr[dst].Set(px - dlx * ax + dx * ay, py - dly * ax + dy * ay, 0, 1); dst++;
+            }
+            return dst;
+        }
+        private static void ChooseBevel(bool bevel, NVGpoint p0, NVGpoint p1, float w,
+                                        out float x0, out float y0, out float x1, out float y1)
+        {
+            if (bevel)
+            {
+                x0 = p1.x + p0.dy * w;
+                y0 = p1.y - p0.dx * w;
+                x1 = p1.x + p1.dy * w;
+                y1 = p1.y - p1.dx * w;
+            }
+            else
+            {
+                x0 = p1.x + p1.dmx * w;
+                y0 = p1.y + p1.dmy * w;
+                x1 = p1.x + p1.dmx * w;
+                y1 = p1.y + p1.dmy * w;
+            }
+        }
         // TODO.Put this in some utils class 
         // Reallocates an array with a new size, and copies the contents
         // of the old array to the new array.
@@ -1042,17 +1216,27 @@ namespace NanoVG
     {
         public object UserPtr { get; set; }
         public bool EdgeAntiAlias { get; set; }
-#if TODO
+
         public delegate void RenderCreateDelegate(object uptr);
-        public delegate void RenderCreateTextureDelegate(object uptr, int type, int w, int h, int imageFlags, byte[] data);
+        public delegate void RenderCreateTextureDelegate(object uptr, int type, int w, int h, NVGimageFlags imageFlags, byte[] data);
+        public delegate void RenderDeleteTextureDelegate(object uptr, int type);
+        public delegate void RenderUpdateTextureDelegate(object uptr, int image, int x, int y, int w, int h, byte[] data);
+        public delegate void RenderGetTextureSizeDelegate(object uptr, int image, out int x, out int y);
         public delegate void RenderViewportDelegate(object uptr, int width, int height);
         public delegate void RenderCancelDelegate(object uptr);
         public delegate void RenderFlushDelegate(object uptr);
+        public delegate void RenderFillDelegate(object uptr);
+        public delegate void RenderStrokeDelegate(object uptr);
+        public delegate void RenderTrianglesDelegate(object uptr);
+        public delegate void RenderDeleteDelegate(object uptr);
 
 
-        public RenderViewportDelegate renderViewport;
-        public RenderCancelDelegate renderCancel;
-        public RenderFlushDelegate renderFlush;
+        public RenderCreateDelegate RenderCreate;
+        public RenderCreateTextureDelegate RenderCreateTexture;
+        public RenderViewportDelegate RenderViewport;
+        public RenderCancelDelegate RenderCancel;
+        public RenderFlushDelegate RenderFlush;
+#if TODO
 	int (*renderCreate)(void* uptr);
 	int (*renderCreateTexture)(void* uptr, int type, int w, int h, int imageFlags, const unsigned char* data);
 	int (*renderDeleteTexture)(void* uptr, int image);

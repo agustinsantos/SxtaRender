@@ -559,7 +559,7 @@ namespace SxtaRenderTests
                     float ax = (float)(cx + Math.Cos(a0) * (r0 + r1) * 0.5f);
                     float ay = (float)(cy + Math.Sin(a0) * (r0 + r1) * 0.5f);
                     float bx = (float)(cx + Math.Cos(a1) * (r0 + r1) * 0.5f);
-                    float  by = (float)(cy + Math.Sin(a1) * (r0 + r1) * 0.5f);
+                    float by = (float)(cy + Math.Sin(a1) * (r0 + r1) * 0.5f);
                     NVGpaint gradient = Nvg.LinearGradient(nvg, ax, ay, bx, by, Nvg.RGBAf(0, 0.8f, 0, 1), Nvg.RGBAf(0, 0, 0, 1));
                     Nvg.FillPaint(nvg, gradient);
                     Nvg.Fill(nvg);
@@ -637,7 +637,7 @@ namespace SxtaRenderTests
 
                     Nvg.BeginPath(nvg);
                     Nvg.MoveTo(nvg, sx, sy);
-                    Nvg.BezierTo(nvg, sx + 150, sy+70, sx + 300, sy-50, sx + 400, sy);
+                    Nvg.BezierTo(nvg, sx + 150, sy + 70, sx + 300, sy - 50, sx + 400, sy);
                     Nvg.LineTo(nvg, sx + 200, sy - 200);
                     Nvg.FillColor(nvg, new Vector4f(1, 0.8f, 0, 1));
                     Nvg.Fill(nvg);
@@ -664,8 +664,8 @@ namespace SxtaRenderTests
         public void TestStrokeLine01()
         {
             Bitmap bmp;
-            int sx = 50;
-            int sy = 400;
+            int sx = 150;
+            int sy = 300;
 
             IGraphicsContext context = RenderTestUtils.PrepareContext();
             using (FrameBufferForTest fb = FrameBufferForTest.NewFrameBufferForTest(Width, Height))
@@ -676,8 +676,10 @@ namespace SxtaRenderTests
 
                     Nvg.BeginPath(nvg);
                     Nvg.MoveTo(nvg, sx, sy);
+                    Nvg.LineTo(nvg, sx, sy - 200);
                     Nvg.LineTo(nvg, sx + 200, sy - 200);
-                    Nvg.StrokeWidth(nvg, 10);
+                    Nvg.LineTo(nvg, sx + 200, sy);
+                    Nvg.StrokeWidth(nvg, 20);
                     Nvg.StrokeColor(nvg, new Vector4f(1, 0.8f, 0, 1));
                     Nvg.Stroke(nvg);
                     Nvg.EndFrame(nvg);
@@ -698,5 +700,164 @@ namespace SxtaRenderTests
 #endif
             Assert.AreEqual(0, dissimilarity, epsilonError);
         }
+
+        [TestMethod]
+        public void TestStrokeLineCaps01()
+        {
+            Bitmap bmp;
+            int sx = 150;
+            int sy = 100;
+
+            IGraphicsContext context = RenderTestUtils.PrepareContext();
+            using (FrameBufferForTest fb = FrameBufferForTest.NewFrameBufferForTest(Width, Height))
+            {
+                using (var nvg = Nvg.CreateContext(fb.FrameBuffer))
+                {
+                    Nvg.BeginFrame(nvg, Width, Height, (float)Width / (float)Height);
+
+                    Nvg.StrokeWidth(nvg, 20);
+                    Nvg.BeginPath(nvg);
+                    Nvg.MoveTo(nvg, sx, sy);
+                    Nvg.LineTo(nvg, sx + 200, sy);
+                    Nvg.LineCap(nvg, NVGlineCap.NVG_BUTT);
+                    Nvg.StrokeColor(nvg, new Vector4f(1, 0, 0, 1));
+                    Nvg.Stroke(nvg);
+
+                    Nvg.BeginPath(nvg);
+                    Nvg.MoveTo(nvg, sx, sy + 100);
+                    Nvg.LineTo(nvg, sx + 200, sy + 100);
+                    Nvg.LineCap(nvg, NVGlineCap.NVG_ROUND);
+                    Nvg.StrokeColor(nvg, new Vector4f(0, 1, 0, 1));
+                    Nvg.Stroke(nvg);
+
+                    Nvg.BeginPath(nvg);
+                    Nvg.MoveTo(nvg, sx, sy + 200);
+                    Nvg.LineTo(nvg, sx + 200, sy + 200);
+                    Nvg.LineCap(nvg, NVGlineCap.NVG_SQUARE);
+                    Nvg.StrokeColor(nvg, new Vector4f(0, 0, 1, 1));
+                    Nvg.Stroke(nvg);
+
+                    Nvg.EndFrame(nvg);
+
+                    bmp = RenderTestUtils.GetScreenshot(Width, Height);
+#if SAVE_RESULTS
+                    RenderTestUtils.SaveTestResult(TESTSNAME, "TestStrokeLineCaps01_Screenshot", bmp);
+#endif
+                }
+            }
+            context.MakeCurrent(null);
+
+            Image expectedImg = Image.FromFile("Resources/ControlImages/VG/ScreenshotVG12.bmp");
+            float dissimilarity;
+            Image diffResult = imageComparer.ComputeSimilarity(expectedImg, bmp, out dissimilarity);
+#if SAVE_RESULTS
+            RenderTestUtils.SaveTestResult(TESTSNAME, "TestStrokeLineCaps01_ImageDiff", diffResult);
+#endif
+            Assert.AreEqual(0, dissimilarity, epsilonError);
+        }
+
+        [TestMethod]
+        public void TestStrokeLineJoins01()
+        {
+            Bitmap bmp;
+            int sx = 150;
+            int sy = 100;
+
+            IGraphicsContext context = RenderTestUtils.PrepareContext();
+            using (FrameBufferForTest fb = FrameBufferForTest.NewFrameBufferForTest(Width, Height))
+            {
+                using (var nvg = Nvg.CreateContext(fb.FrameBuffer))
+                {
+                    Nvg.BeginFrame(nvg, Width, Height, (float)Width / (float)Height);
+
+                    Nvg.StrokeWidth(nvg, 20);
+                    Nvg.BeginPath(nvg);
+                    Nvg.MoveTo(nvg, sx, sy);
+                    Nvg.LineTo(nvg, sx, sy + 50);
+                    Nvg.LineTo(nvg, sx + 200, sy);
+                    Nvg.LineJoin(nvg, NVGlineJoin.NVG_MITER);
+                    Nvg.StrokeColor(nvg, new Vector4f(1, 0, 0, 1));
+                    Nvg.Stroke(nvg);
+
+                    Nvg.BeginPath(nvg);
+                    Nvg.MoveTo(nvg, sx, sy + 100);
+                    Nvg.LineTo(nvg, sx, sy + 150);
+                    Nvg.LineTo(nvg, sx + 200, sy + 100);
+                    Nvg.LineJoin(nvg, NVGlineJoin.NVG_ROUND);
+                    Nvg.StrokeColor(nvg, new Vector4f(0, 1, 0, 1));
+                    Nvg.Stroke(nvg);
+
+                    Nvg.BeginPath(nvg);
+                    Nvg.MoveTo(nvg, sx, sy + 200);
+                    Nvg.LineTo(nvg, sx, sy + 250);
+                    Nvg.LineTo(nvg, sx + 200, sy + 200);
+                    Nvg.LineJoin(nvg, NVGlineJoin.NVG_BEVEL);
+                    Nvg.StrokeColor(nvg, new Vector4f(0, 0, 1, 1));
+                    Nvg.Stroke(nvg);
+
+                    Nvg.EndFrame(nvg);
+
+                    bmp = RenderTestUtils.GetScreenshot(Width, Height);
+#if SAVE_RESULTS
+                    RenderTestUtils.SaveTestResult(TESTSNAME, "TestStrokeLineJoins01_Screenshot", bmp);
+#endif
+                }
+            }
+            context.MakeCurrent(null);
+
+            Image expectedImg = Image.FromFile("Resources/ControlImages/VG/ScreenshotVG12.bmp");
+            float dissimilarity;
+            Image diffResult = imageComparer.ComputeSimilarity(expectedImg, bmp, out dissimilarity);
+#if SAVE_RESULTS
+            RenderTestUtils.SaveTestResult(TESTSNAME, "TestStrokeLineJoins01_ImageDiff", diffResult);
+#endif
+            Assert.AreEqual(0, dissimilarity, epsilonError);
+        }
+
+        [TestMethod]
+        public void TestPathWinding01()
+        {
+            Bitmap bmp;
+            int x = 150;
+            int y = 100;
+            int w = 200;
+            int h = 100;
+            float cornerRadius = 10;
+
+            IGraphicsContext context = RenderTestUtils.PrepareContext();
+            using (FrameBufferForTest fb = FrameBufferForTest.NewFrameBufferForTest(Width, Height))
+            {
+                using (var nvg = Nvg.CreateContext(fb.FrameBuffer))
+                {
+                    Nvg.BeginFrame(nvg, Width, Height, (float)Width / (float)Height);
+
+                    NVGpaint shadowPaint = Nvg.BoxGradient(nvg, x, y + 2, w, h, cornerRadius * 2, 10, Nvg.RGBAf(0, 0.8f, 0, 1), Nvg.RGBAf(0, 0.2f, 0, 1));
+                    Nvg.BeginPath(nvg);
+                    Nvg.Rect(nvg, x - 10, y - 10, w + 20, h + 30);
+                    Nvg.RoundedRect(nvg, x, y, w, h, cornerRadius);
+                    Nvg.PathWinding(nvg, NVGsolidity.NVG_HOLE);
+                    Nvg.FillPaint(nvg, shadowPaint);
+                    Nvg.Fill(nvg);
+
+
+                    Nvg.EndFrame(nvg);
+
+                    bmp = RenderTestUtils.GetScreenshot(Width, Height);
+#if SAVE_RESULTS
+                    RenderTestUtils.SaveTestResult(TESTSNAME, "TestPathWinding01_Screenshot", bmp);
+#endif
+                }
+            }
+            context.MakeCurrent(null);
+
+            Image expectedImg = Image.FromFile("Resources/ControlImages/VG/ScreenshotVG12.bmp");
+            float dissimilarity;
+            Image diffResult = imageComparer.ComputeSimilarity(expectedImg, bmp, out dissimilarity);
+#if SAVE_RESULTS
+            RenderTestUtils.SaveTestResult(TESTSNAME, "TestPathWinding01_ImageDiff", diffResult);
+#endif
+            Assert.AreEqual(0, dissimilarity, epsilonError);
+        }
+
     }
 }

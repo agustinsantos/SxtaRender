@@ -155,11 +155,27 @@ namespace Sxta.Render
 		/// </summary>
         protected int w;
 
-      
-		/// <summary>
-		/// Creates a new unitialized 1D texture.
-		/// Initializes a new instance of the <see cref="Sxta.Render.Texture1D"/> class.
-		/// </summary>
+        public override int Width
+        {
+            get
+            {
+                return getWidth();
+            }
+        }
+
+        public override int Height
+        {
+            get
+            {
+                return 1;
+            }
+        }
+
+
+        /// <summary>
+        /// Creates a new unitialized 1D texture.
+        /// Initializes a new instance of the <see cref="Sxta.Render.Texture1D"/> class.
+        /// </summary>
         protected Texture1D()
             : base("Texture1D", TextureTarget.Texture1D)
         { }

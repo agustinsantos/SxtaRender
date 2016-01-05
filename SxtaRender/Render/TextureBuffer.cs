@@ -122,13 +122,28 @@ namespace Sxta.Render
             return w;
         }
 
-       
-		/// <summary>
-		/// Returns the buffer holding the texture's texel array.
-		/// </summary>
-		/// <returns>
-		/// The buffer.
-		/// </returns>
+        public override int Width
+        {
+            get
+            {
+                return w;
+            }
+        }
+
+        public override int Height
+        {
+            get
+            {
+                return 1;
+            }
+        }
+
+        /// <summary>
+        /// Returns the buffer holding the texture's texel array.
+        /// </summary>
+        /// <returns>
+        /// The buffer.
+        /// </returns>
         public GPUBuffer getBuffer()
         {
             return b;

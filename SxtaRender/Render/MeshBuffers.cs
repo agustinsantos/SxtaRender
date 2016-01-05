@@ -194,6 +194,11 @@ namespace Sxta.Render
             attributeBuffers.Add(a);
         }
 
+        public void addAttributeBuffer(IEnumerable<AttributeBuffer> attrbs)
+        {
+            attributeBuffers.AddRange(attrbs);
+        }
+
         /// <summary>
         /// Sets the indices array buffer of this mesh.
         /// </summary>

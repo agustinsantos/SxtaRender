@@ -1,6 +1,7 @@
 ﻿using OpenTK.Graphics.OpenGL;
 using Sxta.Core;
 using System;
+using System.Diagnostics;
 
 namespace Sxta.Render
 {
@@ -74,31 +75,45 @@ namespace Sxta.Render
             return h;
         }
 
-    
-		/// <summary>
-		/// Replaces the content of this texture.
-		/// </summary>
-		/// <returns>
-		/// The image.
-		/// </returns>
-		/// <param name='w'>
-		/// W. the width of the new texture content, in pixels.
-		/// </param>
-		/// <param name='h'>
-		/// H. the height of the new texture content, in pixels.
-		/// </param>
-		/// <param name='f'>
-		/// F. the texture components in 'pixels'.
-		/// </param>
-		/// <param name='t'>
-		/// T. the type of each component in 'pixels'.
-		/// </param>
-		/// <param name='pixels'>
-		/// Pixels. the pixels to be written into this texture.
-		/// </param>
+        public override int Width
+        {
+            get
+            {
+                return w;
+            }
+        }
+
+        public override int Height
+        {
+            get
+            {
+                return h;
+            }
+        }
+
+        /// <summary>
+        /// Replaces the content of this texture.
+        /// </summary>
+        /// <returns>
+        /// The image.
+        /// </returns>
+        /// <param name='w'>
+        /// W. the width of the new texture content, in pixels.
+        /// </param>
+        /// <param name='h'>
+        /// H. the height of the new texture content, in pixels.
+        /// </param>
+        /// <param name='f'>
+        /// F. the texture components in 'pixels'.
+        /// </param>
+        /// <param name='t'>
+        /// T. the type of each component in 'pixels'.
+        /// </param>
+        /// <param name='pixels'>
+        /// Pixels. the pixels to be written into this texture.
+        /// </param>
         public void setImage(int w, int h, TextureFormat f, PixelType t, Buffer pixels)
         {
-#if TODO
             this.w = w;
             this.h = h;
             bindToTextureUnit();
@@ -113,8 +128,6 @@ namespace Sxta.Render
             generateMipMap();
 
             Debug.Assert(FrameBuffer.getError() == ErrorCode.NoError);  
-#endif
-            throw new NotImplementedException();
         }
 
 
@@ -153,7 +166,6 @@ namespace Sxta.Render
 		/// </param>
         public void setSubImage(int level, int x, int y, int w, int h, TextureFormat f, PixelType t, Buffer.Parameters s, Buffer pixels)
         {
-#if TODO
             bindToTextureUnit();
             pixels.bind(BufferTarget.PixelUnpackBuffer);
             s.set();
@@ -167,52 +179,64 @@ namespace Sxta.Render
             pixels.unbind(BufferTarget.PixelUnpackBuffer);
 
             Debug.Assert(FrameBuffer.getError() == ErrorCode.NoError);  
-#endif
-            throw new NotImplementedException();
         }
-   
-		/// <summary>
-		/// Replaces a part of the content of this texture.
-		/// </summary>
-		/// <returns>
-		/// The compressed sub image.
-		/// </returns>
-		/// <param name='level'>
-		/// Level. the LOD level to be changed.
-		/// </param>
-		/// <param name='x'>
-		/// X. lower left corner of the part to be replaced, in pixels.
-		/// </param>
-		/// <param name='y'>
-		/// Y. lower left corner of the part to be replaced, in pixels.
-		/// </param>
-		/// <param name='w'>
-		/// W. the width of the part to be replaced, in pixels.
-		/// </param>
-		/// <param name='h'>
-		/// H. the height of the part to be replaced, in pixels.
-		/// </param>
-		/// <param name='s'>
-		/// S. the size of 'pixels' in bytes.
-		/// </param>
-		/// <param name='pixels'>
-		/// Pixels.  pixels to be written into this texture LOD level.
-		/// </param>
-        public void setCompressedSubImage(int level, int x, int y, int w, int h, int s, Buffer pixels)
+        public void setSubImage(int level, int x, int y, int w, int h, Buffer.Parameters s, byte[] pixels)
         {
 #if TODO
             bindToTextureUnit();
+            s.set();
+#if OPENTK
+            GL.TexSubImage2D(this.textureTarget, level, x, y, w, h, this.internalFormat, this.pEnumConversion.getTextureFormat(f), EnumConversion.getPixelType(t), pixels.data(0));
+#else
+            glTexSubImage2D(this.textureTarget, level, x, y, w, h, EnumConversion.getTextureFormat(f), EnumConversion.getPixelType(t), pixels.data(0));
+#endif
+
+            s.unset();
+
+            Debug.Assert(FrameBuffer.getError() == ErrorCode.NoError);
+#endif
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Replaces a part of the content of this texture.
+        /// </summary>
+        /// <returns>
+        /// The compressed sub image.
+        /// </returns>
+        /// <param name='level'>
+        /// Level. the LOD level to be changed.
+        /// </param>
+        /// <param name='x'>
+        /// X. lower left corner of the part to be replaced, in pixels.
+        /// </param>
+        /// <param name='y'>
+        /// Y. lower left corner of the part to be replaced, in pixels.
+        /// </param>
+        /// <param name='w'>
+        /// W. the width of the part to be replaced, in pixels.
+        /// </param>
+        /// <param name='h'>
+        /// H. the height of the part to be replaced, in pixels.
+        /// </param>
+        /// <param name='s'>
+        /// S. the size of 'pixels' in bytes.
+        /// </param>
+        /// <param name='pixels'>
+        /// Pixels.  pixels to be written into this texture LOD level.
+        /// </param>
+        public void setCompressedSubImage(int level, int x, int y, int w, int h, int s, Buffer pixels)
+        {
+            bindToTextureUnit();
             pixels.bind(BufferTarget.PixelUnpackBuffer);
 #if OPENTK
-            GL.CompressedTexSubImage2D(this.textureTarget, level, x, y, w, h, EnumConversion.getTextureInternalFormat(internalFormat), s, pixels.data(0));
+            GL.CompressedTexSubImage2D(this.textureTarget, level, x, y, w, h, (PixelFormat)internalFormat, s, pixels.data(0));
 #else
             glCompressedTexSubImage2D(this.textureTarget, level, x, y, w, h, EnumConversion.getTextureInternalFormat(internalFormat), s, pixels.data(0));
 #endif
 
             pixels.unbind(BufferTarget.PixelUnpackBuffer);
             Debug.Assert(FrameBuffer.getError() == ErrorCode.NoError);  
-#endif
-            throw new NotImplementedException();
         }
 
 

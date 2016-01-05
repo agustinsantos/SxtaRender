@@ -31,7 +31,8 @@ namespace NanoVG
     public struct GLNVGtexture
     {
         public int id;
-        public uint tex;
+        public Texture tex;
+        //public uint tex;
         public int width, height;
         public NVGtexture type;
         public NVGimageFlags flags;
@@ -141,13 +142,12 @@ namespace NanoVG
             this.nuniforms = 0;
         }
 
-        public void RenderStroke(NVGpaint paint, NVGscissor scissor, float fringe, float strokeWidth, NVGpath[] paths)
+        public void RenderStroke(NVGpaint paint, NVGscissor scissor, float fringe, float strokeWidth, NVGpath[] paths, int npaths)
         {
-            GLNVGcall call = new GLNVGcall();
+            GLNVGcall call = AllocCall();
             int i, maxverts, offset;
-            int npaths = paths.Length;
             call.type = GLNVGcallType.GLNVG_STROKE;
-            call.pathOffset = this.paths.Length;
+            call.pathOffset = AllocPaths(npaths);
             call.pathCount = npaths;
             call.image = paint.image;
 
@@ -163,7 +163,7 @@ namespace NanoVG
                 {
                     copy.strokeOffset = offset;
                     copy.strokeCount = path.nstroke;
-                    Array.Copy(this.verts, offset, path.stroke, 0, path.nstroke);
+                    Array.Copy(path.stroke, 0, this.verts, offset, path.nstroke);
                     offset += path.nstroke;
                 }
                 this.paths[call.pathOffset + i] = copy;
@@ -390,6 +390,27 @@ namespace NanoVG
             this.nuniforms = 0;
         }
 
+        public int RenderCreateTexture(Texture tex, NVGtexture type, NVGimageFlags imageFlags)
+        {
+            int pos = AllocTexture();
+            this.textures[pos].tex = tex;
+            this.textures[pos].width = tex.Width;
+            this.textures[pos].height = tex.Height;
+            this.textures[pos].type = type;
+            this.textures[pos].flags = imageFlags;
+
+            return pos;
+        }
+
+        public void RenderUpdateTexture(int image, int x, int y, int w, int h, byte[] data)
+        {
+            int texPos = FindTexture(image);
+            if (texPos < 0) return;
+            GLNVGtexture tex = this.textures[texPos];
+            throw new NotImplementedException();
+            //((Texture2D)tex.tex).setSubImage(0,x,y,w,h,data);
+        }
+
         public void RenderGetTextureSize(int image, out int w, out int h)
         {
             int t = FindTexture(image);
@@ -400,8 +421,8 @@ namespace NanoVG
                 return;
             }
             GLNVGtexture tex = this.textures[t];
-            w = tex.width;
-            h = tex.height;
+            w = tex.tex.Width;
+            h = tex.tex.Height;
             return;
         }
         public void RenderDeleteTexture(int image)
@@ -418,8 +439,8 @@ namespace NanoVG
         private void DrawFill(GLNVGcall call)
         {
             /*
-            	GLNVGpath* paths = &gl->paths[call->pathOffset];
-	            int i, npaths = call->pathCount;
+            	GLNVGpath* paths = &gl.paths[call.pathOffset];
+	            int i, npaths = call.pathCount;
 
 	            // Draw shapes
 	            glEnable(GL_STENCIL_TEST);
@@ -428,7 +449,7 @@ namespace NanoVG
 	            glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
 
 	            // set bindpoint for solid loc
-	            glnvg__setUniforms(gl, call->uniformOffset, 0);
+	            glnvg__setUniforms(gl, call.uniformOffset, 0);
 	            glnvg__checkError(gl, "fill simple");
 
 	            glStencilOpSeparate(GL_FRONT, GL_KEEP, GL_KEEP, GL_INCR_WRAP);
@@ -441,10 +462,10 @@ namespace NanoVG
 	            // Draw anti-aliased pixels
 	            glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 
-	            glnvg__setUniforms(gl, call->uniformOffset + gl->fragSize, call->image);
+	            glnvg__setUniforms(gl, call.uniformOffset + gl.fragSize, call.image);
 	            glnvg__checkError(gl, "fill fill");
 
-	            if (gl->flags & NVG_ANTIALIAS) {
+	            if (gl.flags & NVG_ANTIALIAS) {
 		            glnvg__stencilFunc(gl, GL_EQUAL, 0x00, 0xff);
 		            glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
 		            // Draw fringes
@@ -455,7 +476,7 @@ namespace NanoVG
 	            // Draw fill
 	            glnvg__stencilFunc(gl, GL_NOTEQUAL, 0x0, 0xff);
 	            glStencilOp(GL_ZERO, GL_ZERO, GL_ZERO);
-	            glDrawArrays(GL_TRIANGLES, call->triangleOffset, call->triangleCount);
+	            glDrawArrays(GL_TRIANGLES, call.triangleOffset, call.triangleCount);
 
 	            glDisable(GL_STENCIL_TEST);
             */
@@ -508,7 +529,62 @@ namespace NanoVG
         }
         private void DrawStroke(GLNVGcall call)
         {
-            throw new NotImplementedException();
+            int npaths = call.pathCount, i;
+
+            if (this.Flags.HasFlag(NVGcreateFlags.NVG_STENCIL_STROKES))
+            {
+                // Fill the stroke base without overlap
+                //glEnable(GL_STENCIL_TEST);
+                //glnvg__stencilMask(gl, 0xff);
+                //glnvg__stencilFunc(gl, GL_EQUAL, 0x0, 0xff);
+                //glStencilOp(GL_KEEP, GL_KEEP, GL_INCR);
+                this.fb.setStencilMask(0xff);
+                this.fb.setStencilTest(true, Function.EQUAL, 0, 0xff, StencilOperation.KEEP, StencilOperation.KEEP, StencilOperation.INCR_WRAP);
+
+
+                SetUniforms(call.uniformOffset + this.fragSize, call.image);
+                for (i = 0; i < npaths; i++)
+                    // glDrawArrays(GL_TRIANGLE_STRIP, paths[i].strokeOffset, paths[i].strokeCount);
+                    this.fb.draw(this.Shader.Prog, data.getBuffers(), MeshMode.TRIANGLE_STRIP, this.paths[call.pathOffset + i].strokeOffset, this.paths[call.pathOffset + i].strokeCount);
+
+                // Draw anti-aliased pixels.
+                SetUniforms(call.uniformOffset, call.image);
+                //glnvg__stencilFunc(gl, GL_EQUAL, 0x00, 0xff);
+                //glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+                this.fb.setStencilTest(true, Function.EQUAL, 0, 0xff, StencilOperation.KEEP, StencilOperation.KEEP, StencilOperation.KEEP);
+
+                for (i = 0; i < npaths; i++)
+                    //glDrawArrays(GL_TRIANGLE_STRIP, paths[i].strokeOffset, paths[i].strokeCount);
+                    this.fb.draw(this.Shader.Prog, data.getBuffers(), MeshMode.TRIANGLE_STRIP, this.paths[call.pathOffset + i].strokeOffset, this.paths[call.pathOffset + i].strokeCount);
+
+                // Clear stencil buffer.		
+                //glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+                this.fb.setColorMask(false, false, false, false);
+                //glnvg__stencilFunc(gl, GL_ALWAYS, 0x0, 0xff);
+                //glStencilOp(GL_ZERO, GL_ZERO, GL_ZERO);
+                this.fb.setStencilTest(true, Function.EQUAL, 0, 0xff, StencilOperation.RESET, StencilOperation.RESET, StencilOperation.RESET);
+                for (i = 0; i < npaths; i++)
+                    // glDrawArrays(GL_TRIANGLE_STRIP, paths[i].strokeOffset, paths[i].strokeCount);
+                    this.fb.draw(this.Shader.Prog, data.getBuffers(), MeshMode.TRIANGLE_STRIP, this.paths[call.pathOffset + i].strokeOffset, this.paths[call.pathOffset + i].strokeCount);
+
+                //glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+                this.fb.setColorMask(true, true, true, true);
+
+                //glDisable(GL_STENCIL_TEST);
+                fb.setStencilTest(false);
+
+                //		glnvg__convertPaint(gl, nvg__fragUniformPtr(gl, call.uniformOffset + gl.fragSize), paint, scissor, strokeWidth, fringe, 1.0f - 0.5f/255.0f);
+
+            }
+            else
+            {
+                SetUniforms(call.uniformOffset, call.image);
+                // Draw Strokes
+                for (i = 0; i < npaths; i++)
+                    //glDrawArrays(GL_TRIANGLE_STRIP, paths[i].strokeOffset, paths[i].strokeCount);
+                    this.fb.draw(this.Shader.Prog, data.getBuffers(), MeshMode.TRIANGLE_STRIP, this.paths[call.pathOffset + i].strokeOffset, this.paths[call.pathOffset + i].strokeCount);
+
+            }
         }
         private void DrawTriangles(GLNVGcall call)
         {
@@ -521,12 +597,12 @@ namespace NanoVG
         {
             this.Shader.FragUniform.set(this.uniforms[uniformOffset], BufferUsage.STREAM_DRAW);
             /*
-                        glBindBufferRange(GL_UNIFORM_BUFFER, GLNVG_FRAG_BINDING, gl->fragBuf, uniformOffset, sizeof(GLNVGfragUniforms));
+                        glBindBufferRange(GL_UNIFORM_BUFFER, GLNVG_FRAG_BINDING, gl.fragBuf, uniformOffset, sizeof(GLNVGfragUniforms));
 
                         if (image != 0)
                         {
                             GLNVGtexture* tex = glnvg__findTexture(gl, image);
-                            glnvg__bindTexture(gl, tex != NULL ? tex->tex : 0);
+                            glnvg__bindTexture(gl, tex != NULL ? tex.tex : 0);
                             glnvg__checkError(gl, "tex paint tex");
                         }
                         else
@@ -660,6 +736,36 @@ namespace NanoVG
             this.nverts += n;
             return ret;
         }
+
+        private int AllocTexture()
+        {
+            int pos = this.ntextures;
+
+            for (int i = 0; i < this.ntextures; i++)
+            {
+                if (this.textures[i].id == 0)
+                {
+                    pos = i;
+                    break;
+                }
+            }
+            if (pos == this.ntextures) // not free space found
+            {
+                if (this.ntextures + 1 > this.ctextures)
+                {
+                    int ctextures = Math.Max(this.ntextures + 1, 4) + this.ctextures / 2; // 1.5x Overallocate
+                    this.textures = NVGcontext.ResizeArray(this.textures, ctextures); ;
+                    this.ctextures = ctextures;
+                }
+                this.ntextures++;
+            }
+
+            this.textures[pos] = new GLNVGtexture();
+            this.textures[pos].id = ++this.textureId;
+
+            return pos;
+        }
+
         private int AllocFragUniforms(int n)
         {
             int ret = 0, structSize = this.fragSize;

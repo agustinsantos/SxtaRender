@@ -4,29 +4,26 @@ using Sxta.Render.Resources;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Sxta.Render.OpenGLExt
 {
 
-	/// <summary>
-	/// Helper class to draw text in a given font.
+    /// <summary>
+    /// Helper class to draw text in a given font.
     /// A Font allows to easily write a line of text directly in a FrameBuffer
     /// at a given position. It has a texture containing ascii chars, and knows
     /// which can be displayed. Any character outside its range will be displayed
     /// as a blank character defined in the texture (for example a square, or a
     /// question mark).
-	/// </summary>
-    public class Font: ISwappable<Font>
+    /// </summary>
+    public class Font : ISwappable<Font>
     {
 
-		/// <summary>
-		/// Vertex format for a text mesh.
-		/// </summary>
+        /// <summary>
+        /// Vertex format for a text mesh.
+        /// </summary>
         public struct Vertex
-        {	
+        {
 
             public Vector4f pos_uv;
 
@@ -47,85 +44,85 @@ namespace Sxta.Render.OpenGLExt
         }
 
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="Sxta.Render.OpenGLExt.Font"/> class.
-		/// </summary>
-		/// <param name='fontTex'>
-		/// fontTex the Texture2D which contains the images of the font.
-		/// </param>
-		/// <param name='nCols'>
-		/// nCols the number of characters columns in the texture.
-		/// </param>
-		/// <param name='nRows'>
-		/// nRows the number of characters rows in the texture.
-		/// </param>
-		/// <param name='minChar'>
-		/// minChar the first ascii char code to take into account.
-		/// </param>
-		/// <param name='maxChar'>
-		/// maxChar the last ascii char code to take into account.
-		/// </param>
-		/// <param name='invalidChar'>
-		/// invalidChar the character to be used to display invalid characters.
-		/// </param>
-		/// <param name='fixedWidth'>
-		/// fixedWidth whether the font is fixed-width (faster draw call, disallow overlapping characters)
-		/// </param>
-		/// <param name='charWidths'>
-		/// charWidths an array of (maxChar - minChar + 1) character widths in texel
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Sxta.Render.OpenGLExt.Font"/> class.
+        /// </summary>
+        /// <param name='fontTex'>
+        /// fontTex the Texture2D which contains the images of the font.
+        /// </param>
+        /// <param name='nCols'>
+        /// nCols the number of characters columns in the texture.
+        /// </param>
+        /// <param name='nRows'>
+        /// nRows the number of characters rows in the texture.
+        /// </param>
+        /// <param name='minChar'>
+        /// minChar the first ascii char code to take into account.
+        /// </param>
+        /// <param name='maxChar'>
+        /// maxChar the last ascii char code to take into account.
+        /// </param>
+        /// <param name='invalidChar'>
+        /// invalidChar the character to be used to display invalid characters.
+        /// </param>
+        /// <param name='fixedWidth'>
+        /// fixedWidth whether the font is fixed-width (faster draw call, disallow overlapping characters)
+        /// </param>
+        /// <param name='charWidths'>
+        /// charWidths an array of (maxChar - minChar + 1) character widths in texel
         /// NOTE: charWidth does NOT give texture coordinates, it gives spaces between characters.
-		/// Lower chars will be replaced with 'invalidChar'.
+        /// Lower chars will be replaced with 'invalidChar'.
         /// Higher chars will be replaced with 'invalidChar'.
-		/// </param>
+        /// </param>
         public Font(Texture2D fontTex, int nCols, int nRows, int minChar, int maxChar, int invalidChar, bool fixedWidth, List<int> charWidths)
         {
             init(fontTex, nCols, nRows, minChar, maxChar, invalidChar, fixedWidth, charWidths);
         }
 
 
-		/// <summary>
-		/// Deletes this Font.
-		/// </summary>
-		/// <returns>
-		/// Returns the texture containing the image of this font.
-		/// </returns>
+        /// <summary>
+        /// Deletes this Font.
+        /// </summary>
+        /// <returns>
+        /// Returns the texture containing the image of this font.
+        /// </returns>
         public Texture2D getImage()
         {
             return fontTex;
         }
 
-       
-		/// <summary>
-		/// Returns the width of a character tile.
-		/// </summary>
-		/// <returns>
-		/// The tile width.
-		/// </returns>
-		public float getTileWidth()
+
+        /// <summary>
+        /// Returns the width of a character tile.
+        /// </summary>
+        /// <returns>
+        /// The tile width.
+        /// </returns>
+        public float getTileWidth()
         {
             return (float)fontTex.getWidth() / nCols;
         }
 
-        
-		/// <summary>
-		/// Gets the height of the tile.
-		/// </summary>
-		/// <returns>
-		/// Returns the height of a character tile.
-		/// </returns>
-		public float getTileHeight()
+
+        /// <summary>
+        /// Gets the height of the tile.
+        /// </summary>
+        /// <returns>
+        /// Returns the height of a character tile.
+        /// </returns>
+        public float getTileHeight()
         {
             return (float)fontTex.getHeight() / nRows;
         }
 
-      
-		/// <summary>
-		/// Returns the aspect ratio of a character tile.
-		/// </summary>
-		/// <returns>
-		/// The tile aspect ratio.
-		/// </returns>
-		public float getTileAspectRatio()
+
+        /// <summary>
+        /// Returns the aspect ratio of a character tile.
+        /// </summary>
+        /// <returns>
+        /// The tile aspect ratio.
+        /// </returns>
+        public float getTileAspectRatio()
         {
             return getTileWidth() / getTileHeight();
         }
@@ -145,26 +142,19 @@ namespace Sxta.Render.OpenGLExt
             return charWidths[charCount(c)];
         }
 
-        /**
-         * Returns the size of a given line of text.
-         *
-         * @param line the line of text.
-         * @param height the height of output text in pixels
-         */
-        
-		/// <summary>
-		/// Gets the size.
-		/// </summary>
-		/// <returns>
-		/// The size.
-		/// </returns>
-		/// <param name='line'>
-		/// Line.
-		/// </param>
-		/// <param name='height'>
-		/// Height.
-		/// </param>
-		public Vector2f getSize(string line, float height)
+        /// <summary>
+        /// Returns the size of a given line of text.
+        /// </summary>
+        /// <returns>
+        /// The size.
+        /// </returns>
+        /// <param name='line'>
+        /// The line of text.
+        /// </param>
+        /// <param name='height'>
+        /// the height of output text in pixels
+        /// </param>
+        public Vector2f getSize(string line, float height)
         {
             float res = 0.0f;
             int lineSize = line.Length;
@@ -179,36 +169,36 @@ namespace Sxta.Render.OpenGLExt
         }
 
 
-        
-		/// <summary>
-		///Add a given line of text in a given Mesh and returns the final
-        ///  position of the line.
-		/// </summary>
-		/// <returns>
-		/// The line.
-		/// </returns>
-		/// <param name='v'>
-		/// viewport the framebuffer viewport, in pixels.
-		/// </param>
-		/// <param name='xs'>
-		/// xs the x coordinate of the first character to display.
-		/// </param>
-		/// <param name='ys'>
-		/// ys the y coordinate of the first character to display.
-		/// </param>
-		/// <param name='line'>
-		/// line the line of text to display.
-		/// </param>
-		/// <param name='height'>
-		/// height height of a char in pixels.
-		/// </param>
-		/// <param name='color'>
-		/// Color color of this line of text (in RGBA8 format).
-		/// </param>
-		/// <param name='textMesh'>
-		/// Text meshthe mesh to write into.
-		/// </param>
-		public Vector2f addLine(Vector4i v, float xs, float ys, string line, float height,
+
+        /// <summary>
+        /// Add a given line of text in a given Mesh and returns the final
+        /// position of the line.
+        /// </summary>
+        /// <returns>
+        /// The line.
+        /// </returns>
+        /// <param name='v'>
+        /// viewport the framebuffer viewport, in pixels.
+        /// </param>
+        /// <param name='xs'>
+        /// xs the x coordinate of the first character to display.
+        /// </param>
+        /// <param name='ys'>
+        /// ys the y coordinate of the first character to display.
+        /// </param>
+        /// <param name='line'>
+        /// line the line of text to display.
+        /// </param>
+        /// <param name='height'>
+        /// height height of a char in pixels.
+        /// </param>
+        /// <param name='color'>
+        /// Color color of this line of text (in RGBA8 format).
+        /// </param>
+        /// <param name='textMesh'>
+        /// Text meshthe mesh to write into.
+        /// </param>
+        public Vector2f addLine(Vector4i v, float xs, float ys, string line, float height,
         int color, Mesh<Vertex, uint> textMesh)
         {
             return addLine(new Vector4f(v.X, v.Y, v.Z, v.W), xs, ys, line, height, color, textMesh);
@@ -225,8 +215,8 @@ namespace Sxta.Render.OpenGLExt
                 // use isFixedSize to determine
                 // If isFixedSize == true, draw smaller non-overlapping quads
                 //                == false, draw overlapping quads to allow overlapping characters
-         
-				float charRatio = fixedWidth ? (width / (float)getTileWidth()) : 1.0f;
+
+                float charRatio = fixedWidth ? (width / (float)getTileWidth()) : 1.0f;
 
                 int x = index % nCols;
                 int y = index / nCols;
@@ -262,36 +252,36 @@ namespace Sxta.Render.OpenGLExt
             return new Vector2f(xs, ys);
         }
 
-        
-		/// <summary>
-		/// Add a given line of text in a given Mesh centered at a given
+
+        /// <summary>
+        /// Add a given line of text in a given Mesh centered at a given
         /// position and returns the size of the line.
-		/// </summary>
-		/// <returns>
-		/// The centered line.
-		/// </returns>
-		/// <param name='viewport'>
-		/// Viewport the framebuffer viewport, in pixels.
-		/// </param>
-		/// <param name='xs'>
-		/// Xs the x coordinate of the center of the line to display.
-		/// </param>
-		/// <param name='ys'>
-		/// Ys the y coordinate of the center of the line to display.
-		/// </param>
-		/// <param name='line'>
-		/// Line the line of text to display.
-		/// </param>
-		/// <param name='height'>
-		/// Height of a char in pixels.
-		/// </param>
-		/// <param name='color'>
-		/// Color of this line of text (in RGBA8 format).
-		/// </param>
-		/// <param name='textMesh'>
-		/// TextMesh the mesh to write into.
-		/// </param>
-		public Vector2f addCenteredLine(Vector4f viewport, float xs, float ys, string line, float height,
+        /// </summary>
+        /// <returns>
+        /// The centered line.
+        /// </returns>
+        /// <param name='viewport'>
+        /// Viewport the framebuffer viewport, in pixels.
+        /// </param>
+        /// <param name='xs'>
+        /// Xs the x coordinate of the center of the line to display.
+        /// </param>
+        /// <param name='ys'>
+        /// Ys the y coordinate of the center of the line to display.
+        /// </param>
+        /// <param name='line'>
+        /// Line the line of text to display.
+        /// </param>
+        /// <param name='height'>
+        /// Height of a char in pixels.
+        /// </param>
+        /// <param name='color'>
+        /// Color of this line of text (in RGBA8 format).
+        /// </param>
+        /// <param name='textMesh'>
+        /// TextMesh the mesh to write into.
+        /// </param>
+        public Vector2f addCenteredLine(Vector4f viewport, float xs, float ys, string line, float height,
                 int color, Mesh<Vertex, uint> textMesh)
         {
             Vector2f size = getSize(line, height);
@@ -301,47 +291,47 @@ namespace Sxta.Render.OpenGLExt
         }
 
 
-		/// <summary>
-		/// The Texture2D which contains the images of the font.
+        /// <summary>
+        /// The Texture2D which contains the images of the font.
         /// This texture is splitted in rows and colums which form "tiles".
-		/// </summary>
-		protected Texture2D fontTex;
+        /// </summary>
+        protected Texture2D fontTex;
 
-		/// <summary>
-		/// The number of character columns in the texture.
-		/// </summary>
-		protected int nCols;
+        /// <summary>
+        /// The number of character columns in the texture.
+        /// </summary>
+        protected int nCols;
 
-		/// <summary>
-		/// The number of character rows in the texture.
-		/// </summary>
-		protected int nRows;
+        /// <summary>
+        /// The number of character rows in the texture.
+        /// </summary>
+        protected int nRows;
 
-		/// <summary>
-		/// The first ascii char code to take into account.
+        /// <summary>
+        /// The first ascii char code to take into account.
         /// Lower chars will be replaced with #invalidChar.
-		/// </summary>
+        /// </summary>
         protected int minChar;
 
-     
-		/// <summary>
-		/// The last ascii char code to take into account.
-        /// Higher chars will be replaced with #invalidChar.
-		/// </summary>
-		protected int maxChar;
 
-        
+        /// <summary>
+        /// The last ascii char code to take into account.
+        /// Higher chars will be replaced with #invalidChar.
+        /// </summary>
+        protected int maxChar;
+
+
         /// <summary>
         /// The character to be used to display invalid characters.
         /// Must be between #minChar and #maxChar.
         /// </summary>
-		protected int invalidChar;
+        protected int invalidChar;
 
-      
+
         /// <summary>
         /// If the font has fixed-width characters.
         /// </summary>
-		protected bool fixedWidth;
+        protected bool fixedWidth;
 
         /// <summary>
         /// The width of a char (in texels).
@@ -350,43 +340,43 @@ namespace Sxta.Render.OpenGLExt
         /// </summary>
 		protected List<int> charWidths;
 
-		/// <summary> 
-		/// Creates an uninitialized Font.
-		/// Initializes a new instance of the <see cref="Sxta.Render.OpenGLExt.Font"/> class.
-		/// </summary>
+        /// <summary> 
+        /// Creates an uninitialized Font.
+        /// Initializes a new instance of the <see cref="Sxta.Render.OpenGLExt.Font"/> class.
+        /// </summary>
         public Font() { }
 
 
-		/// <summary>
-		/// Init the specified fontTex, nCols, nRows, minChar, maxChar, invalidChar, fixedWidth and charWidths.
-		/// </summary>
-		/// <param name='fontTex'>
-		/// fontTex the Texture2D which contains the images of the font.
-		/// </param>
-		/// <param name='nCols'>
-		/// N cols the number of characters columns in the texture.
-		/// </param>
-		/// <param name='nRows'>
-		/// N rows the number of characters rows in the texture.
-		/// </param>
-		/// <param name='minChar'>
-		/// Minimum char the first ascii char code to take into account.
-		/// Lower chars will be replaced with 'invalidChar'.
-		/// </param>
-		/// <param name='maxChar'>
-		/// Max char the last ascii char code to take into account.
-		/// Higher chars will be replaced with 'invalidChar'.
-		/// </param>
-		/// <param name='invalidChar'>
-		/// Invalid char the character to be used to display invalid characters.
-		/// </param>
-		/// <param name='fixedWidth'>
-		/// Fixed width whether the font is fixed-width (faster draw call, disallow overlapping characters)
-		/// </param>
-		/// <param name='charWidths'>
-		/// Char widths an array of (maxChar - minChar + 1) character widths in texel
-		/// NOTE: charWidth does NOT give texture coordinates, it gives spaces between characters.
-		/// </param>
+        /// <summary>
+        /// Init the specified fontTex, nCols, nRows, minChar, maxChar, invalidChar, fixedWidth and charWidths.
+        /// </summary>
+        /// <param name='fontTex'>
+        /// fontTex the Texture2D which contains the images of the font.
+        /// </param>
+        /// <param name='nCols'>
+        /// N cols the number of characters columns in the texture.
+        /// </param>
+        /// <param name='nRows'>
+        /// N rows the number of characters rows in the texture.
+        /// </param>
+        /// <param name='minChar'>
+        /// Minimum char the first ascii char code to take into account.
+        /// Lower chars will be replaced with 'invalidChar'.
+        /// </param>
+        /// <param name='maxChar'>
+        /// Max char the last ascii char code to take into account.
+        /// Higher chars will be replaced with 'invalidChar'.
+        /// </param>
+        /// <param name='invalidChar'>
+        /// Invalid char the character to be used to display invalid characters.
+        /// </param>
+        /// <param name='fixedWidth'>
+        /// Fixed width whether the font is fixed-width (faster draw call, disallow overlapping characters)
+        /// </param>
+        /// <param name='charWidths'>
+        /// Char widths an array of (maxChar - minChar + 1) character widths in texel
+        /// NOTE: charWidth does NOT give texture coordinates, it gives spaces between characters.
+        /// </param>
         public virtual void init(Texture2D fontTex, int nCols, int nRows, int minChar, int maxChar, int invalidChar, bool fixedWidth, List<int> charWidths)
         {
             this.fontTex = fontTex;
@@ -401,16 +391,16 @@ namespace Sxta.Render.OpenGLExt
         }
 
 
-		/// <summary>
-		/// Get the tile index for this character.
+        /// <summary>
+        /// Get the tile index for this character.
         /// Force the last character if c is not supported by this Font.
-		/// </summary>
-		/// <returns>
-		/// The count.
-		/// </returns>
-		/// <param name='c'>
-		/// C.
-		/// </param>
+        /// </summary>
+        /// <returns>
+        /// The count.
+        /// </returns>
+        /// <param name='c'>
+        /// C.
+        /// </param>
         protected int charCount(char c)
         {
             int i = c;
@@ -432,7 +422,7 @@ namespace Sxta.Render.OpenGLExt
             Std.Swap(ref nRows, ref t.nRows);
             Std.Swap(ref minChar, ref t.minChar);
             Std.Swap(ref maxChar, ref t.maxChar);
-            Std.Swap(ref invalidChar, ref  t.invalidChar);
+            Std.Swap(ref invalidChar, ref t.invalidChar);
             Std.Swap(ref fixedWidth, ref t.fixedWidth);
             Std.Swap(ref charWidths, ref t.charWidths);
         }

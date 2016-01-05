@@ -14,7 +14,7 @@ namespace Sxta.Render
     /// <summary>
     /// An abstract texture.
     /// </summary>
-    public class Texture : ISwappable<Texture>, IDisposable
+    public abstract class Texture : ISwappable<Texture>, IDisposable
     {
         // conservative estimation of the true maximum number of texture units,
         // used to allocate static arrays for storing texture unit states
@@ -22,11 +22,11 @@ namespace Sxta.Render
 
         public class Parameters : Sampler.Parameters
         {
-            
-			/// <summary>
-			/// Creates a new set of texture parameters with default values.
-			/// Initializes a new instance of the <see cref="Sxta.Render.Texture+Parameters"/> class.
-			/// </summary>
+
+            /// <summary>
+            /// Creates a new set of texture parameters with default values.
+            /// Initializes a new instance of the <see cref="Sxta.Render.Texture+Parameters"/> class.
+            /// </summary>
             public Parameters()
                 : base()
             {
@@ -40,34 +40,34 @@ namespace Sxta.Render
              * Deletes this set of texture parameters.
              */
             //public virtual ~Parameters() { }
-           
-			/// <summary>
-			/// Returns the current texture swizzling order.
-			/// </summary>
+
+            /// <summary>
+            /// Returns the current texture swizzling order.
+            /// </summary>
             public string swizzle()
             {
                 return _swizzle;
             }
 
-          
-			/// <summary>
-			/// Returns the index of the lowest defined mipmap level.
-			/// </summary>
-			/// <returns>
-			/// The level.
-			/// </returns>
+
+            /// <summary>
+            /// Returns the index of the lowest defined mipmap level.
+            /// </summary>
+            /// <returns>
+            /// The level.
+            /// </returns>
             public int minLevel()
             {
                 return _minLevel;
             }
 
-          
-			/// <summary>
-			/// Returns the index of the highest defined mipmap level.
-			/// </summary>
-			/// <returns>
-			/// The level.
-			/// </returns>
+
+            /// <summary>
+            /// Returns the index of the highest defined mipmap level.
+            /// </summary>
+            /// <returns>
+            /// The level.
+            /// </returns>
             public int maxLevel()
             {
                 return _maxLevel;
@@ -188,31 +188,31 @@ namespace Sxta.Render
                 return this;
             }
 
-			/// <summary>
-			/// MSets the index of the lowest defined mipmap level.
-			/// </summary>
-			/// <returns>
-			/// The level.
-			/// </returns>
-			/// <param name='minLevel'>
-			/// Minimum level.
-			/// </param>
+            /// <summary>
+            /// MSets the index of the lowest defined mipmap level.
+            /// </summary>
+            /// <returns>
+            /// The level.
+            /// </returns>
+            /// <param name='minLevel'>
+            /// Minimum level.
+            /// </param>
             public virtual Parameters minLevel(int minLevel)
             {
                 _minLevel = minLevel;
                 return this;
             }
 
-          
-			/// <summary>
-			/// Sets the index of the highest defined mipmap level.
-			/// </summary>
-			/// <returns>
-			/// The level.
-			/// </returns>
-			/// <param name='maxLevel'>
-			/// Max level.
-			/// </param>
+
+            /// <summary>
+            /// Sets the index of the highest defined mipmap level.
+            /// </summary>
+            /// <returns>
+            /// The level.
+            /// </returns>
+            /// <param name='maxLevel'>
+            /// Max level.
+            /// </param>
             public virtual Parameters maxLevel(int maxLevel)
             {
                 _maxLevel = maxLevel;
@@ -227,11 +227,11 @@ namespace Sxta.Render
             private int _maxLevel;
         }
 
-		/// <summary>
-		/// Destroys this texture.
-		/// Releases unmanaged resources and performs other cleanup operations before the <see cref="Sxta.Render.Texture"/> is
-		/// reclaimed by garbage collection.
-		/// </summary>
+        /// <summary>
+        /// Destroys this texture.
+        /// Releases unmanaged resources and performs other cleanup operations before the <see cref="Sxta.Render.Texture"/> is
+        /// reclaimed by garbage collection.
+        /// </summary>
         ~Texture()
         {
             // Do not re-create Dispose clean-up code here. 
@@ -242,62 +242,64 @@ namespace Sxta.Render
 
         public string Name { get; set; }
 
-       
-		/// <summary>
-		/// Returns the identifier of this texture.
-		/// </summary>
-		/// <returns>
-		/// The identifier.
-		/// </returns>
+
+        /// <summary>
+        /// Returns the identifier of this texture.
+        /// </summary>
+        /// <returns>
+        /// The identifier.
+        /// </returns>
         public uint getId()
         {
             return textureId;
         }
 
-        
-		/// <summary>
-		/// Returns the number of components in the texture's internal format.
-		/// </summary>
-		/// <returns>
-		/// The components.
-		/// </returns>
+
+        /// <summary>
+        /// Returns the number of components in the texture's internal format.
+        /// </summary>
+        /// <returns>
+        /// The components.
+        /// </returns>
         public int getComponents()
         {
             return EnumConversion.getTextureComponents(getFormat());
         }
 
+        public abstract int Width { get; }
+        public abstract int Height { get; }
 
-        
-		/// <summary>
-		/// Returns the name of the texture's internal format.
-		/// </summary>
-		/// <returns>
-		/// The internal format name.
-		/// </returns>
+
+        /// <summary>
+        /// Returns the name of the texture's internal format.
+        /// </summary>
+        /// <returns>
+        /// The internal format name.
+        /// </returns>
         public string getInternalFormatName()
         {
             return EnumConversion.getTextureInternalFormatName(internalFormat);
         }
 
-      
-		/// <summary>
-		/// Returns the internal format of this texture.
-		/// </summary>
-		/// <returns>
-		/// The internal format.
-		/// </returns>
+
+        /// <summary>
+        /// Returns the internal format of this texture.
+        /// </summary>
+        /// <returns>
+        /// The internal format.
+        /// </returns>
         public TextureInternalFormat getInternalFormat()
         {
             return internalFormat;
         }
 
-        
-		/// <summary>
-		/// Returns a Format compatible with the internal format of this Texture.
-		/// </summary>
-		/// <returns>
-		/// The format.
-		/// </returns>
+
+        /// <summary>
+        /// Returns a Format compatible with the internal format of this Texture.
+        /// </summary>
+        /// <returns>
+        /// The format.
+        /// </returns>
         public TextureFormat getFormat()
         {
             switch (internalFormat)
@@ -403,27 +405,27 @@ namespace Sxta.Render
             throw new Exception();
         }
 
-        
-		/// <summary>
-		/// True if this texture has any mipmap level above 0.
+
+        /// <summary>
+        /// True if this texture has any mipmap level above 0.
         /// False if this texture has only a base level.
-		/// </summary>
-		/// <returns>
-		/// The mipmaps.
-		/// </returns>
+        /// </summary>
+        /// <returns>
+        /// The mipmaps.
+        /// </returns>
         public bool hasMipmaps()
         {
             return params_.min() != TextureFilter.NEAREST && params_.min() != TextureFilter.LINEAR;
         }
 
 
-       
-		/// <summary>
-		/// Returns true if this texture is in a compressed format on GPU.
-		/// </summary>
-		/// <returns>
-		/// The compressed.
-		/// </returns>
+
+        /// <summary>
+        /// Returns true if this texture is in a compressed format on GPU.
+        /// </summary>
+        /// <returns>
+        /// The compressed.
+        /// </returns>
         public bool isCompressed()
         {
             switch (internalFormat)
@@ -520,17 +522,17 @@ namespace Sxta.Render
             throw new Exception();
         }
 
-       
-		/// <summary>
-		/// Returns the size of the compressed data of this texture. Must be used
+
+        /// <summary>
+        /// Returns the size of the compressed data of this texture. Must be used
         /// only for a compressed texture (see #isCompressed).
-		/// </summary>
-		/// <returns>
-		/// The compressed size.
-		/// </returns>
-		/// <param name='level'>
-		/// Level.
-		/// </param>
+        /// </summary>
+        /// <returns>
+        /// The compressed size.
+        /// </returns>
+        /// <param name='level'>
+        /// Level.
+        /// </param>
         public int getCompressedSize(int level)
         {
             int size;
@@ -544,25 +546,25 @@ namespace Sxta.Render
             return size;
         }
 
-      
-		/// <summary>
-		/// Returns the texture pixels in the specified format.
-		/// </summary>
-		/// <returns>
-		/// The image.
-		/// </returns>
-		/// <param name='level'>
-		/// Level. the texture LOD level to be read.
-		/// </param>
-		/// <param name='f'>
-		/// F. the format in which data must be returned.
-		/// </param>
-		/// <param name='t'>
-		/// T. the type in which pixel components must be returned.
-		/// </param>
-		/// <param name='pixels'>
-		/// Pixels pixels the returned data.
-		/// </param>
+
+        /// <summary>
+        /// Returns the texture pixels in the specified format.
+        /// </summary>
+        /// <returns>
+        /// The image.
+        /// </returns>
+        /// <param name='level'>
+        /// Level. the texture LOD level to be read.
+        /// </param>
+        /// <param name='f'>
+        /// F. the format in which data must be returned.
+        /// </param>
+        /// <param name='t'>
+        /// T. the type in which pixel components must be returned.
+        /// </param>
+        /// <param name='pixels'>
+        /// Pixels pixels the returned data.
+        /// </param>
         public void getImage(int level, TextureFormat f, PixelType t, out byte[] pixels)
         {
             bindToTextureUnit();
@@ -576,20 +578,20 @@ namespace Sxta.Render
             Debug.Assert(FrameBuffer.getError() == ErrorCode.NoError);
         }
 
-        
-		/// <summary>
-		/// Returns the compressed data of this texture. Must be used only for a
+
+        /// <summary>
+        /// Returns the compressed data of this texture. Must be used only for a
         /// compressed texture (see #isCompressed).
-		/// </summary>
-		/// <returns>
-		/// The compressed image.
-		/// </returns>
-		/// <param name='level'>
-		/// Level the texture LOD level to be read.
-		/// </param>
-		/// <param name='pixels'>
-		/// Pixels. the returned compressed data.
-		/// </param>
+        /// </summary>
+        /// <returns>
+        /// The compressed image.
+        /// </returns>
+        /// <param name='level'>
+        /// Level the texture LOD level to be read.
+        /// </param>
+        /// <param name='pixels'>
+        /// Pixels. the returned compressed data.
+        /// </param>
         public void getCompressedImage(int level, out byte[] pixels)
         {
             bindToTextureUnit();
@@ -602,13 +604,13 @@ namespace Sxta.Render
             Debug.Assert(FrameBuffer.getError() == ErrorCode.NoError);
         }
 
-       
-		/// <summary>
-		/// Generates the mipmap levels for this texture.
-		/// </summary>
-		/// <returns>
-		/// The mip map.
-		/// </returns>
+
+        /// <summary>
+        /// Generates the mipmap levels for this texture.
+        /// </summary>
+        /// <returns>
+        /// The mip map.
+        /// </returns>
         public void generateMipMap()
         {
             if (hasMipmaps())
@@ -629,26 +631,26 @@ namespace Sxta.Render
 
 
 
-        
-		/// <summary>
-		/// Creates a new unitialized texture.
-		/// Initializes a new instance of the <see cref="Sxta.Render.Texture"/> class.
-		/// </summary>
-		/// <param name='type'>
-		/// Type. the texture class name.
-		/// </param>
-		/// <param name='target'>
-		/// Target. a texture type (1D, 2D, 3D, etc).
-		/// </param>
+
+        /// <summary>
+        /// Creates a new unitialized texture.
+        /// Initializes a new instance of the <see cref="Sxta.Render.Texture"/> class.
+        /// </summary>
+        /// <param name='type'>
+        /// Type. the texture class name.
+        /// </param>
+        /// <param name='target'>
+        /// Target. a texture type (1D, 2D, 3D, etc).
+        /// </param>
         protected Texture(string type, TextureTarget target)
         {
             textureTarget = target;
         }
 
         /// <summary>
-		/// Creates a new unitialized texture.
-		/// Initializes a new instance of the <see cref="Sxta.Render.Texture"/> class.
-		/// </summary>
+        /// Creates a new unitialized texture.
+        /// Initializes a new instance of the <see cref="Sxta.Render.Texture"/> class.
+        /// </summary>
         protected Texture()
         {
         }
@@ -681,7 +683,7 @@ namespace Sxta.Render
                 Debug.Assert(FrameBuffer.getError() == ErrorCode.NoError);
                 return;
             }
-            
+
 #if OPENTK
             GL.TexParameter(textureTarget, TextureParameterName.TextureWrapS, EnumConversion.getTextureWrap(params_.wrapS()));
             GL.TexParameter(textureTarget, TextureParameterName.TextureWrapT, EnumConversion.getTextureWrap(params_.wrapT()));
@@ -784,23 +786,23 @@ namespace Sxta.Render
             Debug.Assert(FrameBuffer.getError() == ErrorCode.NoError);
         }
 
-        
-		/// <summary>
-		/// Binds this texture and the given sampler to a texture unit, for the
+
+        /// <summary>
+        /// Binds this texture and the given sampler to a texture unit, for the
         /// given program. If there is a texture unit to which no texture is
         /// currently bound the texture is bound to this unit. Otherwise the
         /// least recently used texture unit that is not used by the given program
         /// is unbound, and this texture is bound instead.
-		/// </summary>
-		/// <returns>
-		/// The to texture unit. to which the texture has been bound, or -1
-		/// </returns>
-		/// <param name='sampler'>
-		/// Sampler. s a sampler object to sample this texture. May be null.
-		/// </param>
-		/// <param name='programId'>
-		/// Program identifier. the program for which this texture must be bound.
-		/// </param>
+        /// </summary>
+        /// <returns>
+        /// The to texture unit. to which the texture has been bound, or -1
+        /// </returns>
+        /// <param name='sampler'>
+        /// Sampler. s a sampler object to sample this texture. May be null.
+        /// </param>
+        /// <param name='programId'>
+        /// Program identifier. the program for which this texture must be bound.
+        /// </param>
         internal protected int bindToTextureUnit(Sampler sampler, uint programId)
         {
             Debug.Assert(programId != 0);
@@ -822,15 +824,15 @@ namespace Sxta.Render
             return (int)unit;
         }
 
-		/// <summary>
-		/// Binds this texture to a texture unit. If there is a texture unit
+        /// <summary>
+        /// Binds this texture to a texture unit. If there is a texture unit
         /// to which no texture is currently bound the texture is bound to this
         /// unit. Otherwise the least recently used texture unit is unbound, and
         /// this texture is bound instead.
-		/// </summary>
-		/// <returns>
-		/// The to texture unit.
-		/// </returns>
+        /// </summary>
+        /// <returns>
+        /// The to texture unit.
+        /// </returns>
         internal protected int bindToTextureUnit()
         {
             if (currentTextureUnits.Count == 0)
@@ -859,13 +861,13 @@ namespace Sxta.Render
             // return -1;
         }
 
-        
-		/// <summary>
-		/// Swaps this texture with the given one.
-		/// </summary>
-		/// <param name='t'>
-		/// T.
-		/// </param>
+
+        /// <summary>
+        /// Swaps this texture with the given one.
+        /// </summary>
+        /// <param name='t'>
+        /// T.
+        /// </param>
         public virtual void swap(Texture t)
         {
             TextureUnitManager.TEXTURE_UNIT_MANAGER.unbind(this);
@@ -882,75 +884,75 @@ namespace Sxta.Render
                 }
             }
             Debug.Assert(textureTarget == t.textureTarget);
-            Std.Swap<uint>(ref textureId, ref  t.textureId);
-            Std.Swap<TextureInternalFormat>(ref internalFormat, ref  t.internalFormat);
-            Std.Swap<Parameters>(ref params_, ref  t.params_);
+            Std.Swap<uint>(ref textureId, ref t.textureId);
+            Std.Swap<TextureInternalFormat>(ref internalFormat, ref t.internalFormat);
+            Std.Swap<Parameters>(ref params_, ref t.params_);
         }
 
 
-       
-		/// <summary>
-		/// The OpenGL texture identifier (as returned by glGenTextures).
-		/// </summary>
+
+        /// <summary>
+        /// The OpenGL texture identifier (as returned by glGenTextures).
+        /// </summary>
         internal uint textureId;
 
-       
-		/// <summary>
-		/// The OpenGL texture target type of this texture (GL_TEXTURE_1D, GL_TEXTURE_2D, etc...).
-		/// </summary>
+
+        /// <summary>
+        /// The OpenGL texture target type of this texture (GL_TEXTURE_1D, GL_TEXTURE_2D, etc...).
+        /// </summary>
         internal TextureTarget textureTarget;
 
-        
-		/// <summary>
-		/// The OpenGL texture internal format (GL_RGB8, GL_RGBA8, etc).
-		/// </summary>
+
+        /// <summary>
+        /// The OpenGL texture internal format (GL_RGB8, GL_RGBA8, etc).
+        /// </summary>
         internal TextureInternalFormat internalFormat;
 
-        
-		/// <summary>
-		/// The texture parameters.
-		/// </summary>
+
+        /// <summary>
+        /// The texture parameters.
+        /// </summary>
         internal Parameters params_;
 
-        
-		/// <summary>
-		/// The OpenGL texture units where this texture is currently bound.
+
+        /// <summary>
+        /// The OpenGL texture units where this texture is currently bound.
         /// There is one possible binding per sampler object (a texture can be
         /// bound to several units with different sampler objects).
-		/// </summary>
+        /// </summary>
         internal IDictionary<uint, uint> currentTextureUnits = new Dictionary<uint, uint>();
 
-       
-		/// <summary>
-		/// Identifiers of the programs that use this texture.
-		/// </summary>
+
+        /// <summary>
+        /// Identifiers of the programs that use this texture.
+        /// </summary>
         internal List<int> programIds = new List<int>();
 
-        
-		/// <summary>
-		/// Adds the given program as a user of this texture.
-		/// </summary>
-		/// <returns>
-		/// The user.
-		/// </returns>
-		/// <param name='programId'>
-		/// Program identifier.
-		/// </param>
+
+        /// <summary>
+        /// Adds the given program as a user of this texture.
+        /// </summary>
+        /// <returns>
+        /// The user.
+        /// </returns>
+        /// <param name='programId'>
+        /// Program identifier.
+        /// </param>
         internal void addUser(int programId)
         {
             Debug.Assert(!isUsedBy(programId));
             programIds.Add(programId);
         }
 
-		/// <summary>
-		/// Removes the given program as a user of this texture.
-		/// </summary>
-		/// <returns>
-		/// The user.
-		/// </returns>
-		/// <param name='programId'>
-		/// Program identifier.
-		/// </param>
+        /// <summary>
+        /// Removes the given program as a user of this texture.
+        /// </summary>
+        /// <returns>
+        /// The user.
+        /// </returns>
+        /// <param name='programId'>
+        /// Program identifier.
+        /// </param>
         internal void removeUser(int programId)
         {
             bool contains = programIds.Contains(programId);
@@ -958,55 +960,55 @@ namespace Sxta.Render
             programIds.Remove(programId);
         }
 
-        
-		/// <summary>
-		///  Returns true if the given program uses this texture.
-		/// </summary>
-		/// <returns>
-		/// The used by.
-		/// </returns>
-		/// <param name='programId'>
-		/// Program identifier.
-		/// </param>
+
+        /// <summary>
+        ///  Returns true if the given program uses this texture.
+        /// </summary>
+        /// <returns>
+        /// The used by.
+        /// </returns>
+        /// <param name='programId'>
+        /// Program identifier.
+        /// </param>
         internal bool isUsedBy(int programId)
         {
             return programIds.Contains(programId);
         }
 
-        
-		/// <summary>
-		/// Returns the actual maximum number of texture units.
-		/// </summary>
-		/// <returns>
-		/// The max texture units.
-		/// </returns>
+
+        /// <summary>
+        /// Returns the actual maximum number of texture units.
+        /// </summary>
+        /// <returns>
+        /// The max texture units.
+        /// </returns>
         private static uint getMaxTextureUnits()
         {
             return TextureUnitManager.getMaxTextureUnits();
         }
 
-        
-		/// <summary>
-		/// Unbinds the texture units using the given Sampler.
-		/// </summary>
-		/// <returns>
-		/// The sampler.
-		/// </returns>
-		/// <param name='sampler'>
-		/// Sampler.
-		/// </param>
+
+        /// <summary>
+        /// Unbinds the texture units using the given Sampler.
+        /// </summary>
+        /// <returns>
+        /// The sampler.
+        /// </returns>
+        /// <param name='sampler'>
+        /// Sampler.
+        /// </param>
         internal static void unbindSampler(Sampler sampler)
         {
             TextureUnitManager.TEXTURE_UNIT_MANAGER.unbind(sampler);
         }
 
-       
-		/// <summary>
-		/// Unbinds all the texture units.
-		/// </summary>
-		/// <returns>
-		/// The all.
-		/// </returns>
+
+        /// <summary>
+        /// Unbinds all the texture units.
+        /// </summary>
+        /// <returns>
+        /// The all.
+        /// </returns>
         internal static void unbindAll()
         {
             TextureUnitManager.TEXTURE_UNIT_MANAGER.unbindAll();
@@ -1065,21 +1067,21 @@ namespace Sxta.Render
         }
     }
 
-   
-	/// <summary>
-	/// A texture unit.
-	/// </summary>
+
+    /// <summary>
+    /// A texture unit.
+    /// </summary>
     internal class TextureUnit
     {
 
-     
-		/// <summary>
-		/// Creates a new texture unit.
-		/// Initializes a new instance of the <see cref="Sxta.Render.TextureUnit"/> class.
-		/// </summary>
-		/// <param name='unit'>
-		/// Unit. the index of this texture unit.
-		/// </param>
+
+        /// <summary>
+        /// Creates a new texture unit.
+        /// Initializes a new instance of the <see cref="Sxta.Render.TextureUnit"/> class.
+        /// </summary>
+        /// <param name='unit'>
+        /// Unit. the index of this texture unit.
+        /// </param>
         public TextureUnit(uint unit)
         {
             this.unit = unit;
@@ -1171,36 +1173,36 @@ namespace Sxta.Render
             return currentTextureBinding;
         }
 
-        
-		/// <summary>
-		/// The index of this texture unit (between 0 ... MAX_TEXTURE_UNITS).
-		/// </summary>
+
+        /// <summary>
+        /// The index of this texture unit (between 0 ... MAX_TEXTURE_UNITS).
+        /// </summary>
         private uint unit;
 
-        
-		/// <summary>
-		/// The 'time' at which the textures currently bound to the OpenGL texture
+
+        /// <summary>
+        /// The 'time' at which the textures currently bound to the OpenGL texture
         /// unit were bound. This time is used to find the last recently bound
         /// texture when a texture must be unbound to bind a new one.
-		/// </summary>
+        /// </summary>
         private uint lastBindingTime;
 
-		/// <summary>
-		/// The sampler currently bound to this texture unit.
-		/// </summary>
+        /// <summary>
+        /// The sampler currently bound to this texture unit.
+        /// </summary>
         private Sampler currentSamplerBinding;
 
-       
-		/// <summary>
-		/// The texture currently bound to this texture unit.
-		/// </summary>
+
+        /// <summary>
+        /// The texture currently bound to this texture unit.
+        /// </summary>
         private Texture currentTextureBinding;
     }
 
 
-	/// <summary>
-	/// Manages texture units.
-	/// </summary>
+    /// <summary>
+    /// Manages texture units.
+    /// </summary>
     internal class TextureUnitManager
     {
 
@@ -1216,11 +1218,11 @@ namespace Sxta.Render
             }
         }
 
-        
-		/// <summary>
-		/// Creates a new TextureUnitManager.
-		/// Initializes a new instance of the <see cref="Sxta.Render.TextureUnitManager"/> class.
-		/// </summary>
+
+        /// <summary>
+        /// Creates a new TextureUnitManager.
+        /// Initializes a new instance of the <see cref="Sxta.Render.TextureUnitManager"/> class.
+        /// </summary>
         private TextureUnitManager()
         {
             uint maxUnits = getMaxTextureUnits();
@@ -1232,19 +1234,19 @@ namespace Sxta.Render
             time = 0;
         }
 
-        
-		/// <summary>
-		/// Finds a free texture unit and return its index. If no texture unit is
+
+        /// <summary>
+        /// Finds a free texture unit and return its index. If no texture unit is
         /// free, evicts the least recently bound texture not used in the given
         /// program.
-		/// </summary>
-		/// <returns>
-		/// The free texture unit. or -1 if all units are used by the given
+        /// </summary>
+        /// <returns>
+        /// The free texture unit. or -1 if all units are used by the given
         ///  program.
-		/// </returns>
-		/// <param name='programId'>
-		/// Program identifier.
-		/// </param>
+        /// </returns>
+        /// <param name='programId'>
+        /// Program identifier.
+        /// </param>
         public int findFreeTextureUnit(int programId)
         {
             // we first try to find an unused texture unit
@@ -1283,19 +1285,19 @@ namespace Sxta.Render
             return bestUnit;
         }
 
-        
-		/// <summary>
-		/// Binds a sampler and a texture to a given texture unit.
-		/// </summary>
-		/// <param name='i'>
-		/// I.
-		/// </param>
-		/// <param name='sampler'>
-		/// Sampler.
-		/// </param>
-		/// <param name='tex'>
-		/// Tex.
-		/// </param>
+
+        /// <summary>
+        /// Binds a sampler and a texture to a given texture unit.
+        /// </summary>
+        /// <param name='i'>
+        /// I.
+        /// </param>
+        /// <param name='sampler'>
+        /// Sampler.
+        /// </param>
+        /// <param name='tex'>
+        /// Tex.
+        /// </param>
         public void bind(uint i, Sampler sampler, Texture tex)
         {
             units[i].bind(sampler, tex, time++);
@@ -1361,23 +1363,23 @@ namespace Sxta.Render
         }
 
 
-        
-		/// <summary>
-		/// The state of all texture units maxUnits elements.
-		/// </summary>
+
+        /// <summary>
+        /// The state of all texture units maxUnits elements.
+        /// </summary>
         private TextureUnit[] units = new TextureUnit[Texture.MAX_TEXTURE_UNITS];
 
-        
-		/// <summary>
-		/// The 'time' used to measure the texture binding times. This abstract time
+
+        /// <summary>
+        /// The 'time' used to measure the texture binding times. This abstract time
         /// is an integer that is incremented each time a texture is bound.
-		/// </summary>
+        /// </summary>
         private uint time;
 
-        
-		/// <summary>
-		/// Maximum number of texture units on the current graphics card.
-		/// </summary>
+
+        /// <summary>
+        /// Maximum number of texture units on the current graphics card.
+        /// </summary>
         private static int maxUnits = 0;
 
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);

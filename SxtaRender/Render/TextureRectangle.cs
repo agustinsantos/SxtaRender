@@ -13,35 +13,35 @@ namespace Sxta.Render
     /// </summary>
     public class TextureRectangle : Texture
     {
-        
-		/// <summary>
-		/// Creates a new rectangle texture.
-		/// Initializes a new instance of the <see cref="Sxta.Render.TextureRectangle"/> class.
-		/// </summary>
-		/// <param name='w'>
-		/// W the width of this texture in pixels.
-		/// </param>
-		/// <param name='h'>
-		/// H the height of this texture in pixels.
-		/// </param>
-		/// <param name='tf'>
-		/// Tf texture data format on GPU.
-		/// </param>
-		/// <param name='f'>
-		/// F the texture components in 'pixels'.
-		/// </param>
-		/// <param name='t'>
-		/// T the type of each component in 'pixels'.
-		/// </param>
-		/// <param name='params'>
-		/// Parameters optional additional texture parameters.
-		/// </param>
-		/// <param name='s'>
-		/// S optional pixel storage parameters for 'pixels'.
-		/// </param>
-		/// <param name='pixels'>
-		/// Pixels the pixels to be written into this texture.
-		/// </param>
+
+        /// <summary>
+        /// Creates a new rectangle texture.
+        /// Initializes a new instance of the <see cref="Sxta.Render.TextureRectangle"/> class.
+        /// </summary>
+        /// <param name='w'>
+        /// W the width of this texture in pixels.
+        /// </param>
+        /// <param name='h'>
+        /// H the height of this texture in pixels.
+        /// </param>
+        /// <param name='tf'>
+        /// Tf texture data format on GPU.
+        /// </param>
+        /// <param name='f'>
+        /// F the texture components in 'pixels'.
+        /// </param>
+        /// <param name='t'>
+        /// T the type of each component in 'pixels'.
+        /// </param>
+        /// <param name='params'>
+        /// Parameters optional additional texture parameters.
+        /// </param>
+        /// <param name='s'>
+        /// S optional pixel storage parameters for 'pixels'.
+        /// </param>
+        /// <param name='pixels'>
+        /// Pixels the pixels to be written into this texture.
+        /// </param>
         public TextureRectangle(int w, int h, TextureInternalFormat tf, TextureFormat f, PixelType t,
             Parameters @params, Buffer.Parameters s, Buffer pixels)
             : this()
@@ -54,64 +54,79 @@ namespace Sxta.Render
          */
         //~TextureRectangle();
 
-       
-		/// <summary>
-		/// Returns the width of this texture.
-		/// </summary>
-		/// <returns>
-		/// The width.
-		/// </returns>
+
+        /// <summary>
+        /// Returns the width of this texture.
+        /// </summary>
+        /// <returns>
+        /// The width.
+        /// </returns>
         public virtual int getWidth()
         {
             return w;
         }
 
-       
-		/// <summary>
-		/// Returns the height of this texture.
-		/// </summary>
-		/// <returns>
-		/// The height.
-		/// </returns>
+
+        /// <summary>
+        /// Returns the height of this texture.
+        /// </summary>
+        /// <returns>
+        /// The height.
+        /// </returns>
         public virtual int getHeight()
         {
             return h;
         }
 
-      
-		/// <summary>
-		/// Replaces a part of the content of this texture.
-		/// </summary>
-		/// <returns>
-		/// The sub image.
-		/// </returns>
-		/// <param name='level'>
-		/// Level the LOD level to be changed.
-		/// </param>
-		/// <param name='x'>
-		/// X lower left corner of the part to be replaced, in pixels.
-		/// </param>
-		/// <param name='y'>
-		/// Y lower left corner of the part to be replaced, in pixels.
-		/// </param>
-		/// <param name='w'>
-		/// W the width of the part to be replaced, in pixels.
-		/// </param>
-		/// <param name='h'>
-		/// H the height of the part to be replaced, in pixels.
-		/// </param>
-		/// <param name='f'>
-		/// F the texture components in 'pixels'.
-		/// </param>
-		/// <param name='t'>
-		/// T the type of each component in 'pixels'.
-		/// </param>
-		/// <param name='s'>
-		/// S optional pixel storage parameters for 'pixels'.
-		/// </param>
-		/// <param name='pixels'>
-		/// Pixels the pixels to be written into this texture LOD level.
-		/// </param>
+        public override int Width
+        {
+            get
+            {
+                return w;
+            }
+        }
+
+        public override int Height
+        {
+            get
+            {
+                return h;
+            }
+        }
+
+        /// <summary>
+        /// Replaces a part of the content of this texture.
+        /// </summary>
+        /// <returns>
+        /// The sub image.
+        /// </returns>
+        /// <param name='level'>
+        /// Level the LOD level to be changed.
+        /// </param>
+        /// <param name='x'>
+        /// X lower left corner of the part to be replaced, in pixels.
+        /// </param>
+        /// <param name='y'>
+        /// Y lower left corner of the part to be replaced, in pixels.
+        /// </param>
+        /// <param name='w'>
+        /// W the width of the part to be replaced, in pixels.
+        /// </param>
+        /// <param name='h'>
+        /// H the height of the part to be replaced, in pixels.
+        /// </param>
+        /// <param name='f'>
+        /// F the texture components in 'pixels'.
+        /// </param>
+        /// <param name='t'>
+        /// T the type of each component in 'pixels'.
+        /// </param>
+        /// <param name='s'>
+        /// S optional pixel storage parameters for 'pixels'.
+        /// </param>
+        /// <param name='pixels'>
+        /// Pixels the pixels to be written into this texture LOD level.
+        /// </param>
         public virtual void setSubImage(int level, int x, int y, int w, int h, TextureFormat f, PixelType t, Buffer.Parameters s, Buffer pixels)
         {
 #if TODO
@@ -131,33 +146,33 @@ namespace Sxta.Render
         }
 
 
-		/// <summary>
-		/// Replaces a part of the content of this texture.
-		/// </summary>
-		/// <returns>
-		/// The compressed sub image.
-		/// </returns>
-		/// <param name='level'>
-		/// Level the LOD level to be changed.
-		/// </param>
-		/// <param name='x'>
-		/// X lower left corner of the part to be replaced, in pixels.
-		/// </param>
-		/// <param name='y'>
-		/// Y lower left corner of the part to be replaced, in pixels.
-		/// </param>
-		/// <param name='w'>
-		/// W the width of the part to be replaced, in pixels.
-		/// </param>
-		/// <param name='h'>
-		/// H the height of the part to be replaced, in pixels.
-		/// </param>
-		/// <param name='s'>
-		/// S the size of 'pixels' in bytes.
-		/// </param>
-		/// <param name='pixels'>
-		/// Pixels the pixels to be written into this texture LOD level.
-		/// </param>
+        /// <summary>
+        /// Replaces a part of the content of this texture.
+        /// </summary>
+        /// <returns>
+        /// The compressed sub image.
+        /// </returns>
+        /// <param name='level'>
+        /// Level the LOD level to be changed.
+        /// </param>
+        /// <param name='x'>
+        /// X lower left corner of the part to be replaced, in pixels.
+        /// </param>
+        /// <param name='y'>
+        /// Y lower left corner of the part to be replaced, in pixels.
+        /// </param>
+        /// <param name='w'>
+        /// W the width of the part to be replaced, in pixels.
+        /// </param>
+        /// <param name='h'>
+        /// H the height of the part to be replaced, in pixels.
+        /// </param>
+        /// <param name='s'>
+        /// S the size of 'pixels' in bytes.
+        /// </param>
+        /// <param name='pixels'>
+        /// Pixels the pixels to be written into this texture LOD level.
+        /// </param>
         public virtual void setCompressedSubImage(int level, int x, int y, int w, int h, int s, Buffer pixels)
         {
 #if TODO
@@ -176,56 +191,56 @@ namespace Sxta.Render
         }
 
 
-       
-		/// <summary>
-		/// The width of this texture.
-		/// </summary>
+
+        /// <summary>
+        /// The width of this texture.
+        /// </summary>
         protected int w;
 
-      
-		/// <summary>
-		/// The height of this texture.
-		/// </summary>
+
+        /// <summary>
+        /// The height of this texture.
+        /// </summary>
         protected int h;
 
-       
-		/// <summary>
-		/// Creates a new unitialized rectangle texture.
-		/// Initializes a new instance of the <see cref="Sxta.Render.TextureRectangle"/> class.
-		/// </summary>
+
+        /// <summary>
+        /// Creates a new unitialized rectangle texture.
+        /// Initializes a new instance of the <see cref="Sxta.Render.TextureRectangle"/> class.
+        /// </summary>
         protected TextureRectangle()
             : base("TextureRectangle", TextureTarget.TextureRectangle)
         {
         }
 
-		/// <summary>
-		/// Initializes this texture.
-		/// Init the specified w, h, tf, f, t, params, s and pixels.
-		/// </summary>
-		/// <param name='w'>
-		/// W the width of this texture in pixels.
-		/// </param>
-		/// <param name='h'>
-		/// H the height of this texture in pixels.
-		/// </param>
-		/// <param name='tf'>
-		/// Tf texture data format on GPU.
-		/// </param>
-		/// <param name='f'>
-		/// F  the texture components in 'pixels'.
-		/// </param>
-		/// <param name='t'>
-		/// T the type of each component in 'pixels'.
-		/// </param>
-		/// <param name='params'>
-		/// Parameters optional additional texture parameters.
-		/// </param>
-		/// <param name='s'>
-		/// S optional pixel storage parameters for 'pixels'.
-		/// </param>
-		/// <param name='pixels'>
-		/// Pixels the pixels to be written into this texture.
-		/// </param>
+        /// <summary>
+        /// Initializes this texture.
+        /// Init the specified w, h, tf, f, t, params, s and pixels.
+        /// </summary>
+        /// <param name='w'>
+        /// W the width of this texture in pixels.
+        /// </param>
+        /// <param name='h'>
+        /// H the height of this texture in pixels.
+        /// </param>
+        /// <param name='tf'>
+        /// Tf texture data format on GPU.
+        /// </param>
+        /// <param name='f'>
+        /// F  the texture components in 'pixels'.
+        /// </param>
+        /// <param name='t'>
+        /// T the type of each component in 'pixels'.
+        /// </param>
+        /// <param name='params'>
+        /// Parameters optional additional texture parameters.
+        /// </param>
+        /// <param name='s'>
+        /// S optional pixel storage parameters for 'pixels'.
+        /// </param>
+        /// <param name='pixels'>
+        /// Pixels the pixels to be written into this texture.
+        /// </param>
         public void init(int w, int h, TextureInternalFormat tf, TextureFormat f, PixelType t,
             Parameters @params, Buffer.Parameters s, Buffer pixels)
         {

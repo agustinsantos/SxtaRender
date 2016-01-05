@@ -100,13 +100,28 @@ namespace Sxta.Render
             return h;
         }
 
-       
-		/// <summary>
-		/// Returns the number of layers of this texture.
-		/// </summary>
-		/// <returns>
-		/// The layers.
-		/// </returns>
+        public override int Width
+        {
+            get
+            {
+                return w;
+            }
+        }
+
+        public override int Height
+        {
+            get
+            {
+                return h;
+            }
+        }
+
+        /// <summary>
+        /// Returns the number of layers of this texture.
+        /// </summary>
+        /// <returns>
+        /// The layers.
+        /// </returns>
         public int getLayers()
         {
             return l;

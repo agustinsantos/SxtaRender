@@ -2133,6 +2133,21 @@ namespace Sxta.Render.OpenGLExt
         private ImageKTX img;
         private PixelFormat glFormat;
         private PixelInternalFormat glInternalFormat;
+        public override int Height
+        {
+            get
+            {
+                return img.Width;
+            }
+        }
+
+        public override int Width
+        {
+            get
+            {
+                return img.Height;
+            }
+        }
 
         internal void init(ImageKTX imgktx, Parameters params_)
         {

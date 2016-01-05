@@ -1,5 +1,4 @@
-﻿using Sxta.Math;
-using Sxta.Render;
+﻿using Sxta.Render;
 using System;
 using NVGcolor = Sxta.Math.Vector4f;
 
@@ -49,8 +48,8 @@ namespace NanoVG
 
     public enum NVGsolidity
     {
-        NVG_SOLID = 1,			// CCW
-        NVG_HOLE = 2,			// CW
+        NVG_SOLID = NVGwinding.NVG_CCW,			// CCW
+        NVG_HOLE = NVGwinding.NVG_CW,			// CW
     }
 
     /// <summary>
@@ -200,15 +199,15 @@ namespace NanoVG
                 // delete images that smaller than current one
                 if (fontImage == 0)
                     return;
-                nvgImageSize(ctx, fontImage, out iw, out ih);
+                ImageSize(ctx, fontImage, out iw, out ih);
                 for (i = j = 0; i < ctx.fontImageIdx; i++)
                 {
                     if (ctx.fontImages[i] != 0)
                     {
                         int nw, nh;
-                        nvgImageSize(ctx, ctx.fontImages[i], out nw, out nh);
+                        ImageSize(ctx, ctx.fontImages[i], out nw, out nh);
                         if (nw < iw || nh < ih)
-                            nvgDeleteImage(ctx, ctx.fontImages[i]);
+                            DeleteImage(ctx, ctx.fontImages[i]);
                         else
                             ctx.fontImages[j++] = ctx.fontImages[i];
                     }
@@ -322,18 +321,43 @@ namespace NanoVG
             return c0;
         }
 
-        // Returns color value specified by hue, saturation and lightness.
-        // HSL values are all in range [0..1], alpha will be set to 255.
-        public Vector3f nvgHSL(float h, float s, float l)
+        /// <summary>
+        /// Returns color value specified by hue, saturation and lightness.
+        /// HSL values are all in range [0..1], alpha will be set to 255.
+        /// </summary>
+        /// <param name="h"></param>
+        /// <param name="s"></param>
+        /// <param name="l"></param>
+        /// <returns></returns>
+        public static NVGcolor HSL(float h, float s, float l)
         {
-            throw new NotImplementedException();
+            return HSLA(h, s, l, 255);
         }
 
-        // Returns color value specified by hue, saturation and lightness and alpha.
-        // HSL values are all in range [0..1], alpha in range [0..255]
-        public Vector3f nvgHSLA(float h, float s, float l, byte a)
+        /// <summary>
+        /// Returns color value specified by hue, saturation and lightness and alpha.
+        /// HSL values are all in range [0..1], alpha in range [0..255]
+        /// </summary>
+        /// <param name="h"></param>
+        /// <param name="s"></param>
+        /// <param name="l"></param>
+        /// <param name="a"></param>
+        /// <returns></returns>
+        public static NVGcolor HSLA(float h, float s, float l, byte a)
         {
-            throw new NotImplementedException();
+            float m1, m2;
+            NVGcolor col = new NVGcolor();
+            h = h % 1.0f;
+            if (h < 0.0f) h += 1.0f;
+            s = Clampf(s, 0.0f, 1.0f);
+            l = Clampf(l, 0.0f, 1.0f);
+            m2 = l <= 0.5f ? (l * (1 + s)) : (l + s - l * s);
+            m1 = 2 * l - m2;
+            col.X = Clampf(Hue(h + 1.0f / 3.0f, m1, m2), 0.0f, 1.0f);
+            col.Y = Clampf(Hue(h, m1, m2), 0.0f, 1.0f);
+            col.Z = Clampf(Hue(h - 1.0f / 3.0f, m1, m2), 0.0f, 1.0f);
+            col.W = a / 255.0f;
+            return col;
         }
 
         //
@@ -343,13 +367,34 @@ namespace NanoVG
         // The state contains transform, fill and stroke styles, text and font styles,
         // and scissor clipping.
 
-        // Pushes and saves the current render state into a state stack.
-        // A matching nvgRestore() must be used to restore the state.
-        public void nvgSave(NVGcontext ctx)
+        /// <summary>
+        /// Pushes and saves the current render state into a state stack.
+        /// A matching nvgRestore() must be used to restore the state.
+        /// </summary>
+        /// <param name="ctx"></param>
+        public static void Save(NVGcontext ctx)
         {
-            throw new NotImplementedException();
+            ctx.SaveState();
         }
 
+
+        /// <summary>
+        /// Pops and restores current render state.
+        /// </summary>
+        /// <param name="ctx"></param>
+        public static void Restore(NVGcontext ctx)
+        {
+            ctx.Restore();
+        }
+
+        /// <summary>
+        /// Resets current render state to default values. Does not affect the render state stack.
+        /// </summary>
+        /// <param name="ctx"></param>
+        public static void Reset(NVGcontext ctx)
+        {
+            ctx.Reset();
+        }
 
         //
         // Render styles
@@ -491,10 +536,14 @@ namespace NanoVG
         //
         // Current coordinate system (transformation) can be saved and restored using nvgSave() and nvgRestore(). 
 
-        // Resets current transform to a identity matrix.
-        public void nvgResetTransform(NVGcontext ctx)
+        /// <summary>
+        /// Resets current transform to a identity matrix.
+        /// </summary>
+        /// <param name="ctx"></param>
+        public static void ResetTransform(NVGcontext ctx)
         {
-            throw new NotImplementedException();
+            NVGstate state = ctx.GetState();
+            TransformIdentity(state.xform);
         }
 
         // Premultiplies current coordinate system by specified matrix.
@@ -502,39 +551,76 @@ namespace NanoVG
         //   [a c e]
         //   [b d f]
         //   [0 0 1]
-        public void nvgTransform(NVGcontext ctx, float a, float b, float c, float d, float e, float f)
+        public static void nvgTransform(NVGcontext ctx, float a, float b, float c, float d, float e, float f)
         {
             throw new NotImplementedException();
         }
 
-        // Translates current coordinate system.
-        public void nvgTranslate(NVGcontext ctx, float x, float y)
+        /// <summary>
+        /// Translates current coordinate system. 
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        public static void nvgTranslate(NVGcontext ctx, float x, float y)
         {
-            throw new NotImplementedException();
+            NVGstate state = ctx.GetState();
+            float[] t = new float[6];
+            TransformTranslate(t, x, y);
+            TransformPremultiply(state.xform, t);
         }
 
-        // Rotates current coordinate system. Angle is specified in radians.
-        public void nvgRotate(NVGcontext ctx, float angle)
+        /// <summary>
+        /// Rotates current coordinate system. Angle is specified in radians.
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="angle"></param>
+        public static void Rotate(NVGcontext ctx, float angle)
         {
-            throw new NotImplementedException();
+            NVGstate state = ctx.GetState();
+            float[] t = new float[6];
+            TransformRotate(t, angle);
+            TransformPremultiply(state.xform, t);
         }
 
-        // Skews the current coordinate system along X axis. Angle is specified in radians.
-        public void nvgSkewX(NVGcontext ctx, float angle)
+        /// <summary>
+        /// Skews the current coordinate system along X axis. Angle is specified in radians.
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="angle"></param>
+        public static void SkewX(NVGcontext ctx, float angle)
         {
-            throw new NotImplementedException();
+            NVGstate state = ctx.GetState();
+            float[] t = new float[6];
+            TransformSkewX(t, angle);
+            TransformPremultiply(state.xform, t);
         }
 
-        // Skews the current coordinate system along Y axis. Angle is specified in radians.
-        public void nvgSkewY(NVGcontext ctx, float angle)
+        /// <summary>
+        /// Skews the current coordinate system along Y axis. Angle is specified in radians.
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="angle"></param>
+        public static void SkewY(NVGcontext ctx, float angle)
         {
-            throw new NotImplementedException();
+            NVGstate state = ctx.GetState();
+            float[] t = new float[6];
+            TransformSkewY(t, angle);
+            TransformPremultiply(state.xform, t);
         }
 
-        // Scales the current coordinate system.
-        public void nvgScale(NVGcontext ctx, float x, float y)
+        /// <summary>
+        /// Scales the current coordinate system.
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        public static void Scale(NVGcontext ctx, float x, float y)
         {
-            throw new NotImplementedException();
+            NVGstate state = ctx.GetState();
+            float[] t = new float[6];
+            TransformScale(t, x, y);
+            TransformPremultiply(state.xform, t);
         }
 
         // Stores the top part (a-f) of the current transformation matrix in to the specified buffer.
@@ -542,9 +628,11 @@ namespace NanoVG
         //   [b d f]
         //   [0 0 1]
         // There should be space for 6 floats in the return buffer for the values a-f.
-        public void nvgCurrentTransform(NVGcontext ctx, Matrix3f xform)
+        public static void CurrentTransform(NVGcontext ctx, float[] xform)
         {
-            throw new NotImplementedException();
+            NVGstate state = ctx.GetState();
+            if (xform == null) return;
+            state.xform.CopyTo(xform, 6);
         }
 
 
@@ -562,10 +650,17 @@ namespace NanoVG
             t[4] = 0.0f; t[5] = 0.0f;
         }
 
-        // Sets the transform to translation matrix matrix.
-        public void nvgTransformTranslate(float[] dst, float tx, float ty)
+        /// <summary>
+        /// Sets the transform to translation matrix matrix.
+        /// </summary>
+        /// <param name="t"></param>
+        /// <param name="tx"></param>
+        /// <param name="ty"></param>
+        public static void TransformTranslate(float[] t, float tx, float ty)
         {
-            throw new NotImplementedException();
+            t[0] = 1.0f; t[1] = 0.0f;
+            t[2] = 0.0f; t[3] = 1.0f;
+            t[4] = tx; t[5] = ty;
         }
 
         /// <summary>
@@ -581,22 +676,41 @@ namespace NanoVG
             t[4] = 0.0f; t[5] = 0.0f;
         }
 
-        // Sets the transform to rotate matrix. Angle is specified in radians.
-        public void nvgTransformRotate(float[] dst, float a)
+        /// <summary>
+        /// Sets the transform to rotate matrix. Angle is specified in radians.
+        /// </summary>
+        /// <param name="dst"></param>
+        /// <param name="a"></param>
+        public static void TransformRotate(float[] t, float a)
         {
-            throw new NotImplementedException();
+            float cs = (float)Math.Cos(a), sn = (float)Math.Sin(a);
+            t[0] = cs; t[1] = sn;
+            t[2] = -sn; t[3] = cs;
+            t[4] = 0.0f; t[5] = 0.0f;
         }
 
-        // Sets the transform to skew-x matrix. Angle is specified in radians.
-        public void nvgTransformSkewX(float[] dst, float a)
+        /// <summary>
+        /// Sets the transform to skew-x matrix. Angle is specified in radians.
+        /// </summary>
+        /// <param name="t"></param>
+        /// <param name="a"></param>
+        public static void TransformSkewX(float[] t, float a)
         {
-            throw new NotImplementedException();
+            t[0] = 1.0f; t[1] = 0.0f;
+            t[2] = (float)Math.Tan(a); t[3] = 1.0f;
+            t[4] = 0.0f; t[5] = 0.0f;
         }
 
-        // Sets the transform to skew-y matrix. Angle is specified in radians.
-        public void nvgTransformSkewY(float[] dst, float a)
+        /// <summary>
+        /// Sets the transform to skew-y matrix. Angle is specified in radians.
+        /// </summary>
+        /// <param name="dst"></param>
+        /// <param name="a"></param>
+        public static void TransformSkewY(float[] t, float a)
         {
-            throw new NotImplementedException();
+            t[0] = 1.0f; t[1] = (float)Math.Tan(a);
+            t[2] = 0.0f; t[3] = 1.0f;
+            t[4] = 0.0f; t[5] = 0.0f;
         }
 
         /// <summary>
@@ -622,9 +736,11 @@ namespace NanoVG
         /// </summary>
         /// <param name="dst"></param>
         /// <param name="src"></param>
-        public void nvgTransformPremultiply(float[] dst, float[] src)
+        public static void TransformPremultiply(float[] dst, float[] src)
         {
-            throw new NotImplementedException();
+            float[] s2 = new float[6];
+            TransformMultiply(s2, dst);
+            s2.CopyTo(dst, 6);
         }
 
         /// <summary>
@@ -684,41 +800,70 @@ namespace NanoVG
         // In addition you can upload your own image. The image loading is provided by stb_image.
         // The parameter imageFlags is combination of flags defined in NVGimageFlags.
 
-        // Creates image by loading it from the disk from specified file name.
-        // Returns handle to the image.
-        public int nvgCreateImage(NVGcontext ctx, string filename, int imageFlags)
+        /// <summary>
+        /// Creates image by loading it from the disk from specified file name.
+        /// Returns handle to the image.
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="filename"></param>
+        /// <param name="imageFlags"></param>
+        /// <returns></returns>
+        public static int CreateImage(NVGcontext ctx, string filename, NVGimageFlags imageFlags)
         {
             throw new NotImplementedException();
         }
 
         // Creates image by loading it from the specified chunk of memory.
         // Returns handle to the image.
-        public int nvgCreateImageMem(NVGcontext ctx, int imageFlags, byte[] data, int ndata)
+        public static int CreateImageMem(NVGcontext ctx, NVGimageFlags imageFlags, byte[] data, int ndata)
         {
             throw new NotImplementedException();
         }
 
-        // Creates image from specified image data.
-        // Returns handle to the image.
-        public int nvgCreateImageRGBA(NVGcontext ctx, int w, int h, int imageFlags, byte[] data)
+        /// <summary>
+        /// Creates image from specified image data.
+        /// Returns handle to the image.
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="w"></param>
+        /// <param name="h"></param>
+        /// <param name="imageFlags"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static int CreateImageRGBA(NVGcontext ctx, int w, int h, int imageFlags, byte[] data)
         {
             throw new NotImplementedException();
         }
 
-        // Updates image data specified by image handle.
-        public void nvgUpdateImage(NVGcontext ctx, int image, byte[] data)
+        /// <summary>
+        /// Updates image data specified by image handle.
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="image"></param>
+        /// <param name="data"></param>
+        public static void UpdateImage(NVGcontext ctx, int image, byte[] data)
         {
             throw new NotImplementedException();
         }
 
-        // Returns the dimensions of a created image.
-        public static void nvgImageSize(NVGcontext ctx, int image, out int w, out int h)
+        /// <summary>
+        ///  Returns the dimensions of a created image.
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="image"></param>
+        /// <param name="w"></param>
+        /// <param name="h"></param>
+        public static void ImageSize(NVGcontext ctx, int image, out int w, out int h)
         {
             ctx.glctx.RenderGetTextureSize(image, out w, out h);
         }
 
-        // Deletes created image.
-        public static void nvgDeleteImage(NVGcontext ctx, int image)
+        /// <summary>
+        ///  Deletes created image.
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="image"></param>
+        public static void DeleteImage(NVGcontext ctx, int image)
         {
             ctx.glctx.RenderDeleteTexture(image);
         }
@@ -870,28 +1015,102 @@ namespace NanoVG
         // Scissoring allows you to clip the rendering into a rectangle. This is useful for various
         // user interface cases like rendering a text edit or a timeline. 
 
-        // Sets the current scissor rectangle.
-        // The scissor rectangle is transformed by the current transform.
-        public void nvgScissor(NVGcontext ctx, float x, float y, float w, float h)
+        /// <summary>
+        /// Sets the current scissor rectangle.
+        /// The scissor rectangle is transformed by the current transform.
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="w"></param>
+        /// <param name="h"></param>
+        public static void Scissor(NVGcontext ctx, float x, float y, float w, float h)
         {
-            throw new NotImplementedException();
+            NVGstate state = ctx.GetState();
+
+            w = Math.Max(0.0f, w);
+            h = Math.Max(0.0f, h);
+
+            TransformIdentity(state.scissor.xform);
+            state.scissor.xform[4] = x + w * 0.5f;
+            state.scissor.xform[5] = y + h * 0.5f;
+            TransformMultiply(state.scissor.xform, state.xform);
+
+            state.scissor.extent[0] = w * 0.5f;
+            state.scissor.extent[1] = h * 0.5f;
+
+            ctx.SetState(state);
         }
 
-        // Intersects current scissor rectangle with the specified rectangle.
-        // The scissor rectangle is transformed by the current transform.
-        // Note: in case the rotation of previous scissor rect differs from
-        // the current one, the intersection will be done between the specified
-        // rectangle and the previous scissor rectangle transformed in the current
-        // transform space. The resulting shape is always rectangle.
-        public void nvgIntersectScissor(NVGcontext ctx, float x, float y, float w, float h)
+        /// <summary>
+        /// Intersects current scissor rectangle with the specified rectangle.
+        /// The scissor rectangle is transformed by the current transform.
+        /// Note: in case the rotation of previous scissor rect differs from
+        /// the current one, the intersection will be done between the specified
+        /// rectangle and the previous scissor rectangle transformed in the current
+        /// transform space. The resulting shape is always rectangle.
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="w"></param>
+        /// <param name="h"></param>
+        public static void IntersectScissor(NVGcontext ctx, float x, float y, float w, float h)
         {
-            throw new NotImplementedException();
+            NVGstate state = ctx.GetState();
+            float[] pxform = new float[6], invxorm = new float[6];
+            float[] rect = new float[4];
+            float ex, ey, tex, tey;
+
+            // If no previous scissor has been set, set the scissor as current scissor.
+            if (state.scissor.extent[0] < 0)
+            {
+                Scissor(ctx, x, y, w, h);
+                return;
+            }
+
+            // Transform the current scissor rect into current transform space.
+            // If there is difference in rotation, this will be approximation. 
+            state.scissor.xform.CopyTo(pxform, 6);
+            ex = state.scissor.extent[0];
+            ey = state.scissor.extent[1];
+            TransformInverse(invxorm, state.xform);
+            TransformMultiply(pxform, invxorm);
+            tex = ex * Math.Abs(pxform[0]) + ey * Math.Abs(pxform[2]);
+            tey = ex * Math.Abs(pxform[1]) + ey * Math.Abs(pxform[3]);
+
+            // Intersect rects.
+            IsectRects(rect, pxform[4] - tex, pxform[5] - tey, tex * 2, tey * 2, x, y, w, h);
+
+            Scissor(ctx, rect[0], rect[1], rect[2], rect[3]);
+
+            ctx.SetState(state);
         }
 
-        // Reset and disables scissoring.
-        public void nvgResetScissor(NVGcontext ctx)
+        /// <summary>
+        /// Reset and disables scissoring.
+        /// </summary>
+        /// <param name="ctx"></param>
+        public static void ResetScissor(NVGcontext ctx)
         {
-            throw new NotImplementedException();
+            NVGstate state = ctx.GetState();
+            state.scissor.xform.Initialize();
+            state.scissor.extent[0] = -1.0f;
+            state.scissor.extent[1] = -1.0f;
+        }
+
+        private static void IsectRects(float[] dst,
+                            float ax, float ay, float aw, float ah,
+                            float bx, float by, float bw, float bh)
+        {
+            float minx = Math.Max(ax, bx);
+            float miny = Math.Max(ay, by);
+            float maxx = Math.Min(ax + aw, bx + bw);
+            float maxy = Math.Min(ay + ah, by + bh);
+            dst[0] = minx;
+            dst[1] = miny;
+            dst[2] = Math.Max(0.0f, maxx - minx);
+            dst[3] = Math.Max(0.0f, maxy - miny);
         }
 
         //
@@ -1066,11 +1285,17 @@ namespace NanoVG
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="dir"></param>
-        public static void PathWinding(NVGcontext ctx, int dir)
+        public static void PathWinding(NVGcontext ctx, NVGsolidity dir)
         {
             float[] vals = { (float)NVGcommands.NVG_WINDING, (float)dir };
             AppendCommands(ctx, vals);
         }
+        public static void PathWinding(NVGcontext ctx, NVGwinding dir)
+        {
+            float[] vals = { (float)NVGcommands.NVG_WINDING, (float)dir };
+            AppendCommands(ctx, vals);
+        }
+
 
         /// <summary>
         /// Creates new circle arc shaped sub-path. The arc center is at cx,cy, the arc radius is r,
@@ -1313,7 +1538,7 @@ namespace NanoVG
             else
                 ctx.ExpandStroke(strokeWidth * 0.5f, state.lineCap, state.lineJoin, state.miterLimit);
 
-            ctx.glctx.RenderStroke(strokePaint, state.scissor, ctx.fringeWidth, strokeWidth, ctx.cache.paths);
+            ctx.glctx.RenderStroke(strokePaint, state.scissor, ctx.fringeWidth, strokeWidth, ctx.cache.paths, ctx.cache.npaths);
 
             // Count triangles
             for (int i = 0; i < ctx.cache.npaths; i++)
@@ -1563,6 +1788,18 @@ namespace NanoVG
 
             Array.Copy(vals, 0, ctx.commands, ctx.ncommands, nvals);
             ctx.ncommands += nvals;
+        }
+        private static float Hue(float h, float m1, float m2)
+        {
+            if (h < 0) h += 1;
+            if (h > 1) h -= 1;
+            if (h < 1.0f / 6.0f)
+                return m1 + (m2 - m1) * h * 6.0f;
+            else if (h < 3.0f / 6.0f)
+                return m2;
+            else if (h < 4.0f / 6.0f)
+                return m1 + (m2 - m1) * (2.0f / 3.0f - h) * 6.0f;
+            return m1;
         }
 
         private static float Clampf(float a, float mn, float mx) { return a < mn ? mn : (a > mx ? mx : a); }
