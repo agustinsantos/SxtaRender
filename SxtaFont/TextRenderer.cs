@@ -79,7 +79,7 @@ namespace SxtaRender.Fonts
             shader.Texture = tex;
             shader.TexSize = new Vector2f(tex.Width, tex.Height);
             shader.Color = new Vector4f(0.0f, 0.2f, 0.2f, 1.0f);
-            shader.Buffer = 0.40f; // range [0.1, 0.7]
+            shader.Buffer = 0.47f; // range [0.1, 0.7]
             shader.Gamma = 0.4f; // range [0, 4]
 
             mesh = new Mesh<SdfVertexStruct, uint>(SdfVertexStruct.SizeInBytes, sizeof(uint), MeshMode.TRIANGLES, MeshUsage.GPU_STATIC, 3);
@@ -540,7 +540,7 @@ namespace SxtaRender.Fonts
 #endif
         }
 
-        public void RenderGlyph(float x, float y, char c, bool isDropShadow, float scale = 0.5f)
+        public void RenderGlyph(float x, float y, char c, bool isDropShadow, float scale = 0.3f)
         {
             TextureGlyph glyph = fontData.CharSetMapping[c];
 

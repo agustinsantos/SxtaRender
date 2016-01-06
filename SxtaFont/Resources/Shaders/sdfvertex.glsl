@@ -17,9 +17,9 @@ uniform bool u_skewed;
 
 uniform vec2 u_texsize;
 
-varying  vec2 v_tex;
-varying  float v_alpha;
-varying  float v_gamma_scale;
+out  vec2 v_tex;
+out  float v_alpha;
+out  float v_gamma_scale;
 
 void main() {
     vec2 a_tex = a_data1.xy;

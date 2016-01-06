@@ -3,9 +3,9 @@ uniform vec4 u_color;
 uniform float u_buffer;
 uniform float u_gamma;
 
-varying  vec2 v_tex;
-varying  float v_alpha;
-varying  float v_gamma_scale;
+in  vec2 v_tex;
+in  float v_alpha;
+in  float v_gamma_scale;
 
 void main() {
     float dist = texture2D(u_texture, v_tex).r;

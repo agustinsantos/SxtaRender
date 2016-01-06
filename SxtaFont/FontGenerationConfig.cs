@@ -50,7 +50,7 @@ namespace SxtaRender.Fonts
         /// <summary>
         ///  Which render hint to use when rendering the ttf character set to create the texture
         /// </summary>
-        public TextRenderingHint RenderHint = TextRenderingHint.SingleBitPerPixel;
+        public TextRenderingHint RenderHint = TextRenderingHint.AntiAliasGridFit;
 
         /// <summary>
         /// Set of characters to support

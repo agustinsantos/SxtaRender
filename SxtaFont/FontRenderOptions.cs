@@ -18,7 +18,7 @@ namespace SxtaRender.Fonts
         /// <summary>
         /// Spacing between characters in units of average glyph width
         /// </summary>
-        public float CharacterSpacing = 0.05f;
+        public float CharacterSpacing = 0.06f;
 
         /// <summary>
         /// Spacing between words in units of average glyph width

@@ -41,10 +41,10 @@ namespace SxtaRenderTests
         {
             Font font = new Font(FontFamily.GenericSansSerif, 64, FontStyle.Regular);
             FontGenerationConfig config = new FontGenerationConfig();
-            config.RenderHint = TextRenderingHint.AntiAliasGridFit;
+            config.RenderHint = TextRenderingHint.ClearTypeGridFit;
             config.PageWidth = 0;
             config.PageHeight = 0;
-            config.GlyphMargin = 4;
+            config.GlyphMargin = 6;
             config.ForcePowerOfTwo = true;
             TextureFont textFont = TextureFont.CreateNew(font, config);
             textFont.Save("GenericSansSerif-Regular-32");
@@ -87,7 +87,6 @@ namespace SxtaRenderTests
                 TextRenderer renderer = new TextRenderer(fb, textFont, new FontRenderOptions());
                 renderer.Init();
                 renderer.SetViewport(fb.getViewport());
-                //string sourcestring = "hi!\r\nI am  \r    a\twonderful56 text... \r\nyeah...";
                 var text = renderer.ProcessText("Hello World!\rNew line..\rAnother line.\rBye, bye....", new SizeF(500, 500), FontAlignment.ALIGN_LEFT);
                 renderer.PreRenderText(20, 450, text);
                 renderer.Draw();

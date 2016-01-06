@@ -7,11 +7,10 @@ using System.Drawing.Text;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using TextFormatFlags = System.Windows.Forms.TextFormatFlags;
-namespace SxtaRender.Fonts
+ namespace SxtaRender.Fonts
 {
     /// <summary>
-    /// The texture-font structure is in charge of creating bitmap glyphs and to upload them to the texture atlas.
+    /// The texture-font class is in charge of creating bitmap glyphs and to upload them to the texture atlas.
     /// </summary>
     public class TextureFont
     {
@@ -26,6 +25,7 @@ namespace SxtaRender.Fonts
         /// Bitmap atlas structure to store glyphs data.
         /// </summary>
         private Bitmap atlas;
+
         /// <summary>
         /// Bitmap atlas structure to store glyphs data in SDF.
         /// </summary>
@@ -77,65 +77,9 @@ namespace SxtaRender.Fonts
         private int emHeight;
 
         private int margin;
-
-#if TODO
+ 
         /// <summary>
-        /// Whether to use autohint when rendering font
-        /// </summary>
-        private int hinting;
-
-        /// <summary>
-        /// Outline type (0 = None, 1 = line, 2 = inner, 3 = outer)
-        /// </summary>
-        private int outline_type;
-
-        /// <summary>
-        /// Outline thickness
-        /// </summary>
-        private float outline_thickness;
-
-        /// <summary>
-        /// Whether to use our own lcd filter.
-        /// </summary>
-        private int filtering;
-
-        /// <summary>
-        /// Whether to use kerning if available
-        /// </summary>
-        private int kerning;
-
-        /// <summary>
-        /// LCD filter weights
-        /// </summary>
-        private int[] lcd_weights = new int[5];
-
-
-
-        /// <summary>
-        /// This field is the distance that must be placed between two lines of
-        /// text. The baseline-to-baseline distance should be computed as:
-        /// ascender - descender + linegap
-        /// </summary>
-        private float linegap;
-
-        
-
-        /// <summary>
-        /// The position of the underline line for this face. It is the center of
-        /// the underlining stem. Only relevant for scalable formats.
-        /// </summary>
-        private float underline_position;
-
-        /// <summary>
-        /// The thickness of the underline for this face. Only relevant for scalable
-        /// formats.
-        /// </summary>
-        private float underline_thickness;
-#endif
-
-
-        /// <summary>
-        /// Whether the original font (from ttf) was detected to be monospaced
+        /// Whether the original font was detected to be monospaced
         /// </summary>
         private bool naturallyMonospaced = false;
 
@@ -234,7 +178,7 @@ namespace SxtaRender.Fonts
             SizeStatistics stats = new SizeStatistics();
             rstFont.atlas = TextureFont.CreateBitmap(font, config, out rstFont.glyphs, out stats, out rstFont.bmpSdf);
             rstFont.naturallyMonospaced = IsMonospaced(stats.MaxSize, stats.MinSize);
-            rstFont.meanGlyphWidth = stats.SumSize.Width / (float)rstFont.glyphs.Length;
+            rstFont.meanGlyphWidth = stats.SumSize.Width / (float)rstFont.glyphs.Length + 2*config.GlyphMargin;
             rstFont.CalculateKerning(config);
             return rstFont;
         }
@@ -249,8 +193,8 @@ namespace SxtaRender.Fonts
             {
                 this.Serialize(fileStream);
             }
-            this.atlas.Save(nameWithoutExt + ".png", ImageFormat.Png);
-            this.bmpSdf.Save(nameWithoutExt + "SDF.png", ImageFormat.Png);
+            this.atlas.Save(nameWithoutExt + "Normal.png", ImageFormat.Png);
+            this.bmpSdf.Save(nameWithoutExt + ".png", ImageFormat.Png);
         }
 
         private static SizeF GetMaxGlyphSize(Font font, char[] charset)
@@ -289,7 +233,7 @@ namespace SxtaRender.Fonts
             int spacing = (int)Math.Ceiling(maxGlyphSize.Width) + 2 * initialMargin;
             Bitmap bmp = new Bitmap(spacing * charSet.Length, (int)Math.Ceiling(maxGlyphSize.Height) + 2 * initialMargin, PixelFormat.Format24bppRgb);
             Graphics graph = Graphics.FromImage(bmp);
-
+            graph.TextRenderingHint = renderHint;
 
             int xOffset = initialMargin;
             for (int i = 0; i < charSet.Length; i++)
@@ -312,7 +256,9 @@ namespace SxtaRender.Fonts
 
             graph.Flush();
             graph.Dispose();
-
+#if DEBUG
+            bmp.Save("InitialBmp.png", ImageFormat.Png);
+#endif
             // Compute stadistics 
             var initialBitmapData = bmp.LockBits(new Rectangle(0, 0, bmp.Width, bmp.Height), ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
             int minYOffset = int.MaxValue;
@@ -381,7 +327,6 @@ namespace SxtaRender.Fonts
             FastBitmap fastbmp = new FastBitmap(bmp);
             fastbmp.LockBitmap();
             Graphics graph = Graphics.FromImage(bmp);
-            graph.TextRenderingHint = config.RenderHint;
 
             var initialBitmapData = initialBmp.LockBits(new Rectangle(0, 0, initialBmp.Width, initialBmp.Height), ImageLockMode.ReadOnly, initialBmp.PixelFormat);
             int xOffset = initialMargin;
@@ -394,7 +339,7 @@ namespace SxtaRender.Fonts
                 {
                     charcode = charSet[i],
                     id = 0,
-                    Rect = new Rectangle(dstrec.X + margin, dstrec.Y + margin, charSize.Width, charSize.Height),
+                    Rect = dstrec, // new Rectangle(dstrec.X + margin, dstrec.Y + margin, charSize.Width, charSize.Height),
                     offset_x = initialGlyphs[i].offset_x,
                     offset_y = initialGlyphs[i].offset_y,
                 };
@@ -404,10 +349,10 @@ namespace SxtaRender.Fonts
             graph.Dispose();
             bmpSdf = fastbmp.MakeDistanceMap();
             fastbmp.UnlockBitmap();
-            //Channel ch = new Channel(atlas);
-            //Channel ch2 = ch.Transform(2, 6);
-            // TextureAtlas newAtlas = ch2.BuildAtlas();
-            // newAtlas.GetImage().Save("GenericSansSerifDF.png", ImageFormat.Png);
+#if DEBUG
+            bmp.Save("PackedAtlas.png", ImageFormat.Png);
+            bmpSdf.Save("SdfAtlas.png", ImageFormat.Png);
+#endif
             return bmp;
         }
 
@@ -424,10 +369,10 @@ namespace SxtaRender.Fonts
             buff.setData(Data.Width * Data.Height * size, Data.Scan0, BufferUsage.STATIC_DRAW);
             img.UnlockBits(Data);
             Texture.Parameters params_ = new Texture.Parameters();
-            //params_.min(TextureFilter.LINEAR);
-            //params_.mag(TextureFilter.LINEAR);
-            params_.min(TextureFilter.NEAREST);
-            params_.mag(TextureFilter.NEAREST);
+            params_.min(TextureFilter.LINEAR);
+            params_.mag(TextureFilter.LINEAR);
+            //params_.min(TextureFilter.NEAREST);
+            //params_.mag(TextureFilter.NEAREST);
             params_.wrapS(TextureWrap.CLAMP_TO_EDGE);
             params_.wrapT(TextureWrap.CLAMP_TO_EDGE);
             Sxta.Render.Buffer.Parameters s = new Sxta.Render.Buffer.Parameters();
