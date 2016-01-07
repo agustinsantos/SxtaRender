@@ -133,6 +133,8 @@ namespace SxtaRender.Fonts
         /// </summary>
         public bool UseDefaultBlendFunction = true;
 
+        public bool UseSDF = true;
+
         /// <summary>
         /// Wrap word to next line if max width hit
         /// </summary>

@@ -4,6 +4,7 @@ using Sxta.Render;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -62,7 +63,10 @@ namespace SxtaRender.Fonts
             this.Options = options;
             this.fb = fb;
             this.fontData = fontData;
-            tex = fontData.Texture;
+            if (this.Options.UseSDF && fontData.HasSDFTexture)
+                tex = this.SdfTexture;
+            else
+                tex = this.NormalTexture;
         }
 
         public void Init()
@@ -108,6 +112,27 @@ namespace SxtaRender.Fonts
         {
             if (mesh != null)
                 mesh.clear();
+        }
+        public Texture NormalTexture
+        {
+            get
+            {
+                return CreateTexture(fontData.NormalBitmap);
+            }
+        }
+        public Texture SdfTexture
+        {
+            get
+            {
+                return CreateTexture(fontData.SdfBitmap);
+            }
+        }
+        public Texture ShadowTexture
+        {
+            get
+            {
+                return CreateTexture(fontData.ShadowBitmap);
+            }
         }
 
         public void Draw()
@@ -525,10 +550,10 @@ namespace SxtaRender.Fonts
 
         private void RenderDropShadow(float x, float y, char c, TextureGlyph nonShadowGlyph)
         {
-#if TODO
             //note can cast drop shadow offset to int, but then you can't move the shadow smoothly...
-            if (fontData.dropShadow != null && Options.DropShadowActive)
+            if (fontData.HasShadowTexture && Options.DropShadowActive)
             {
+#if TODO
                 //make sure fontdata font's options are synced with the actual options
                 if (fontData.dropShadow.Options != Options)
                     fontData.dropShadow.Options = Options;
@@ -536,8 +561,8 @@ namespace SxtaRender.Fonts
                 fontData.dropShadow.RenderGlyph(
                     x + (fontData.meanGlyphWidth * Options.DropShadowOffset.X + nonShadowGlyph.rect.Width * 0.5f),
                     y + (fontData.meanGlyphWidth * Options.DropShadowOffset.Y + nonShadowGlyph.rect.Height * 0.5f + nonShadowGlyph.yOffset), c, true);
-            }
 #endif
+            }
         }
 
         public void RenderGlyph(float x, float y, char c, bool isDropShadow, float scale = 0.3f)
@@ -555,9 +580,6 @@ namespace SxtaRender.Fonts
 
             RenderDropShadow(x, y, c, glyph);
 
-            //TexturePage sheet = fontData.Pages[glyph.page];
-            var sheet = tex;
-            //int fontMargin =  fontData.Margin;
             float tx1 = glyph.X;
             float ty1 = glyph.Y;
             float tx2 = glyph.X + glyph.Width;
@@ -568,6 +590,7 @@ namespace SxtaRender.Fonts
             var tv2 = new Vector2f(tx1, ty2);
             var tv3 = new Vector2f(tx2, ty2);
             float ybase = y - glyph.offset_y;
+
             var v0 = PrintOffset + new Vector2f(x, ybase) * scale; // top-left
             var v1 = PrintOffset + new Vector2f(x + glyph.Width, ybase) * scale; // top-right
             var v2 = PrintOffset + new Vector2f(x, ybase - glyph.Height) * scale;// bottom-left
@@ -615,12 +638,10 @@ namespace SxtaRender.Fonts
 
                     RenderGlyph(x, y, c, false);
 
-#if TODO
-                    if (IsMonospacingActive)
-                        x += MonoSpaceWidth;
+                    if (this.fontData.IsMonospacingActive(this.Options))
+                        x += this.fontData.GetMonoSpaceWidth(this.Options);
                     else
-#endif
-                    x += (int)Math.Ceiling(glyph.Width + fontData.meanGlyphWidth * Options.CharacterSpacing + fontData.GetKerningPairCorrection(i, text));
+                        x += (int)Math.Ceiling(glyph.Width + fontData.MeanGlyphWidth * Options.CharacterSpacing + fontData.GetKerningPairCorrection(i, text));
 
                     x += pixelsPerGap;
                     if (leftOverPixels > 0)
@@ -641,6 +662,30 @@ namespace SxtaRender.Fonts
             return (node.Value.Type == TextNodeType.Word && node.Next != null && node.Next.Value.Type == TextNodeType.Word);
         }
 
+        private Texture CreateTexture(Bitmap img)
+        {
+            TextureInternalFormat pif;
+            TextureFormat pf;
+            Sxta.Render.PixelType pt;
+            int size;
+            EnumConversion.ConvertPixelFormat(img.PixelFormat, out pif, out pf, out pt, out size);
+            //img.RotateFlip(RotateFlipType.RotateNoneFlipY);
+            BitmapData Data = img.LockBits(new System.Drawing.Rectangle(0, 0, img.Width, img.Height), ImageLockMode.ReadOnly, img.PixelFormat);
+            GPUBuffer buff = new GPUBuffer();
+            buff.setData(Data.Width * Data.Height * size, Data.Scan0, BufferUsage.STATIC_DRAW);
+            img.UnlockBits(Data);
+            Texture.Parameters params_ = new Texture.Parameters();
+            params_.min(TextureFilter.LINEAR);
+            params_.mag(TextureFilter.LINEAR);
+            //params_.min(TextureFilter.NEAREST);
+            //params_.mag(TextureFilter.NEAREST);
+            params_.wrapS(TextureWrap.CLAMP_TO_EDGE);
+            params_.wrapT(TextureWrap.CLAMP_TO_EDGE);
+            Sxta.Render.Buffer.Parameters s = new Sxta.Render.Buffer.Parameters();
+            Texture texture = new Texture2D(img.Width, img.Height, pif, pf, pt, params_, s, buff);
+            buff.Dispose();
+            return texture;
+        }
         public void Dispose()
         {
             if (tex != null)

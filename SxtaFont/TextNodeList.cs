@@ -77,7 +77,7 @@ namespace SxtaRender.Fonts
                 if (monospaced)
                     return monospaceWidth;
 
-                return (float)Math.Ceiling(fontData.meanGlyphWidth * options.WordSpacing);
+                return (float)Math.Ceiling(fontData.MeanGlyphWidth * options.WordSpacing);
             }
 
             float length = 0f;
@@ -92,7 +92,7 @@ namespace SxtaRender.Fonts
                         if (monospaced)
                             length += monospaceWidth;
                         else
-                            length += (float)Math.Ceiling(fontData.CharSetMapping[c].Rect.Width + fontData.meanGlyphWidth * options.CharacterSpacing + GetKerningPairCorrection(fontData, i, node.Value.Text, node));
+                            length += (float)Math.Ceiling(fontData.CharSetMapping[c].Rect.Width + fontData.MeanGlyphWidth * options.CharacterSpacing + GetKerningPairCorrection(fontData, i, node.Value.Text, node));
                     }
                 }
             }

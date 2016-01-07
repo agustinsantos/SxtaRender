@@ -45,28 +45,34 @@ namespace SxtaRenderTests
             config.PageWidth = 0;
             config.PageHeight = 0;
             config.GlyphMargin = 6;
+            config.BlurRadius = 5;
             config.ForcePowerOfTwo = true;
-            TextureFont textFont = TextureFont.CreateNew(font, config);
-            textFont.Save("GenericSansSerif-Regular-32");
-
-            TextureFont textFont2 = TextureFont.FromFile("GenericSansSerif-Regular-32");
-        }
-
-        [TestMethod]
-        public void TestFontGenerator02()
-        {
-            Font font = new Font(FontFamily.GenericSansSerif, 64, FontStyle.Regular);
-            FontGenerationConfig config = new FontGenerationConfig();
-            config.RenderHint = TextRenderingHint.SingleBitPerPixel;
-            config.PageWidth = 1024;
-            config.PageHeight = 1024;
-            config.GlyphMargin = 4;
-
             TextureFont textFont = TextureFont.CreateNew(font, config);
             textFont.Save("GenericSansSerif-Regular-64");
 
             TextureFont textFont2 = TextureFont.FromFile("GenericSansSerif-Regular-64");
+
+            Assert.IsNotNull(textFont2);
+            Assert.IsNotNull(textFont2.NormalBitmap);
+            Assert.IsNotNull(textFont2.SdfBitmap);
+            Assert.IsNotNull(textFont2.ShadowBitmap);
         }
+
+        //[TestMethod]
+        //public void TestFontGenerator02()
+        //{
+        //    Font font = new Font(FontFamily.GenericSansSerif, 64, FontStyle.Regular);
+        //    FontGenerationConfig config = new FontGenerationConfig();
+        //    config.RenderHint = TextRenderingHint.SingleBitPerPixel;
+        //    config.PageWidth = 1024;
+        //    config.PageHeight = 1024;
+        //    config.GlyphMargin = 4;
+
+        //    TextureFont textFont = TextureFont.CreateNew(font, config);
+        //    textFont.Save("GenericSansSerif-Regular-64");
+
+        //    TextureFont textFont2 = TextureFont.FromFile("GenericSansSerif-Regular-64");
+        //}
 
         [TestMethod]
         public void TestDrawText01()
@@ -83,12 +89,12 @@ namespace SxtaRenderTests
                 fb.setBlend(true, BlendEquation.ADD, BlendArgument.SRC_ALPHA, BlendArgument.ONE_MINUS_SRC_ALPHA);
                 fb.clear(true, false, false);
 
-                TextureFont textFont = TextureFont.FromFile("GenericSansSerif-Regular-32");
+                TextureFont textFont = TextureFont.FromFile("GenericSansSerif-Regular-64");
                 TextRenderer renderer = new TextRenderer(fb, textFont, new FontRenderOptions());
                 renderer.Init();
                 renderer.SetViewport(fb.getViewport());
                 var text = renderer.ProcessText("Hello World!\rNew line..\rAnother line.\rBye, bye....", new SizeF(500, 500), FontAlignment.ALIGN_LEFT);
-                renderer.PreRenderText(20, 450, text);
+                renderer.PreRenderText(20, 1500, text);
                 renderer.Draw();
 
                 bmp = RenderTestUtils.GetScreenshot(Width, Height);

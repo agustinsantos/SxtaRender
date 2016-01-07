@@ -7,7 +7,7 @@ using System.Drawing.Text;
 using System.Globalization;
 using System.IO;
 using System.Linq;
- namespace SxtaRender.Fonts
+namespace SxtaRender.Fonts
 {
     /// <summary>
     /// The texture-font class is in charge of creating bitmap glyphs and to upload them to the texture atlas.
@@ -24,12 +24,17 @@ using System.Linq;
         /// <summary>
         /// Bitmap atlas structure to store glyphs data.
         /// </summary>
-        private Bitmap atlas;
+        private Bitmap normalBmp;
 
         /// <summary>
         /// Bitmap atlas structure to store glyphs data in SDF.
         /// </summary>
-        private Bitmap bmpSdf;
+        private Bitmap sdfBmp;
+
+        /// <summary>
+        /// Bitmap atlas structure to store glyphs shadows.
+        /// </summary>
+        private Bitmap shadowBmp;
 
         private Dictionary<String, int> kerningPairs;
 
@@ -77,13 +82,13 @@ using System.Linq;
         private int emHeight;
 
         private int margin;
- 
+
         /// <summary>
         /// Whether the original font was detected to be monospaced
         /// </summary>
         private bool naturallyMonospaced = false;
 
-        internal float meanGlyphWidth;
+        private float meanGlyphWidth;
 
         private Dictionary<char, TextureGlyph> charSetMapping = null;
         public Dictionary<char, TextureGlyph> CharSetMapping
@@ -105,11 +110,40 @@ using System.Linq;
             get { return kerningPairs; }
         }
 
-        public Texture Texture
+        public Bitmap NormalBitmap
         {
             get
             {
-                return CreateTexture(this.atlas);
+                return this.normalBmp;
+            }
+        }
+        public Bitmap SdfBitmap
+        {
+            get
+            {
+                return this.sdfBmp;
+            }
+        }
+        public Bitmap ShadowBitmap
+        {
+            get
+            {
+                return this.shadowBmp;
+            }
+        }
+
+        public bool HasSDFTexture
+        {
+            get
+            {
+                return this.sdfBmp != null;
+            }
+        }
+        public bool HasShadowTexture
+        {
+            get
+            {
+                return this.shadowBmp != null;
             }
         }
 
@@ -151,17 +185,43 @@ using System.Linq;
 
         public int Margin { get { return margin; } }
 
-        public static TextureFont FromFile(string filename)
+        public bool IsNaturallyMonospaced
+        {
+            get
+            {
+                return naturallyMonospaced;
+            }
+        }
+
+        public float MeanGlyphWidth
+        {
+            get
+            {
+                return meanGlyphWidth;
+            }
+        }
+
+        public static TextureFont FromFile(string filename, string dirName = "Resources/Fonts", string imageExtension = "png")
         {
             TextureFont rstFont = new TextureFont();
             if (string.IsNullOrWhiteSpace(filename))
                 throw new ArgumentException("Filename is null or empty.");
             string nameWithoutExt = Path.GetFileNameWithoutExtension(filename);
-            using (StreamReader fileStream = File.OpenText(nameWithoutExt + ".fnt"))
+            using (StreamReader fileStream = File.OpenText(Path.Combine(dirName, nameWithoutExt + ".fnt")))
             {
                 rstFont.Deserialize(fileStream);
             }
-            rstFont.atlas = new Bitmap(nameWithoutExt + ".png");
+            string bitmapFilename = Path.Combine(dirName, nameWithoutExt + "-Normal." + imageExtension);
+            rstFont.normalBmp = new Bitmap(bitmapFilename);
+
+            bitmapFilename = Path.Combine(dirName, nameWithoutExt + "-Sdf." + imageExtension);
+            if (File.Exists(bitmapFilename))
+                rstFont.sdfBmp = new Bitmap(bitmapFilename);
+
+            bitmapFilename = Path.Combine(dirName, nameWithoutExt + "-Shadow." + imageExtension);
+            if (File.Exists(bitmapFilename))
+                rstFont.shadowBmp = new Bitmap(bitmapFilename);
+
             return rstFont;
         }
 
@@ -176,25 +236,37 @@ using System.Linq;
             rstFont.size = font.Size;
             rstFont.margin = config.GlyphMargin;
             SizeStatistics stats = new SizeStatistics();
-            rstFont.atlas = TextureFont.CreateBitmap(font, config, out rstFont.glyphs, out stats, out rstFont.bmpSdf);
+            rstFont.normalBmp = TextureFont.CreateBitmap(font, config, out rstFont.glyphs, out stats, out rstFont.sdfBmp);
             rstFont.naturallyMonospaced = IsMonospaced(stats.MaxSize, stats.MinSize);
-            rstFont.meanGlyphWidth = stats.SumSize.Width / (float)rstFont.glyphs.Length + 2*config.GlyphMargin;
+            rstFont.meanGlyphWidth = stats.SumSize.Width / (float)rstFont.glyphs.Length + 2 * config.GlyphMargin;
             rstFont.CalculateKerning(config);
+            rstFont.CreateShadowBitmap(config.BlurRadius, config.BlurPasses);
             return rstFont;
         }
 
-        
-        public void Save(string filename)
+
+        public void Save(string filename, string dirName = "Resources/Fonts", ImageFormat format = null)
         {
+            if (format == null)
+                format = ImageFormat.Png;
+            string fileExtension = format.ToString().ToLower();
+
             if (string.IsNullOrWhiteSpace(filename))
                 throw new ArgumentException("Filename is null or empty.");
             string nameWithoutExt = Path.GetFileNameWithoutExtension(filename);
-            using (StreamWriter fileStream = File.CreateText(nameWithoutExt + ".fnt"))
+            if (!Directory.Exists(dirName)) Directory.CreateDirectory(dirName);
+
+            using (StreamWriter fileStream = File.CreateText(Path.Combine(dirName, nameWithoutExt + ".fnt")))
             {
                 this.Serialize(fileStream);
             }
-            this.atlas.Save(nameWithoutExt + "Normal.png", ImageFormat.Png);
-            this.bmpSdf.Save(nameWithoutExt + ".png", ImageFormat.Png);
+            this.normalBmp.Save(Path.Combine(dirName, nameWithoutExt + "-Normal." + fileExtension), format);
+
+            if (this.sdfBmp != null)
+                this.sdfBmp.Save(Path.Combine(dirName, nameWithoutExt + "-Sdf." + fileExtension), format);
+
+            if (this.shadowBmp != null)
+                this.shadowBmp.Save(Path.Combine(dirName, nameWithoutExt + "-Shadow." + fileExtension), format);
         }
 
         private static SizeF GetMaxGlyphSize(Font font, char[] charset)
@@ -356,30 +428,18 @@ using System.Linq;
             return bmp;
         }
 
-        private Texture CreateTexture(Bitmap img)
+        private void CreateShadowBitmap(int radius, int passes)
         {
-            TextureInternalFormat pif;
-            TextureFormat pf;
-            Sxta.Render.PixelType pt;
-            int size;
-            EnumConversion.ConvertPixelFormat(img.PixelFormat, out pif, out pf, out pt, out size);
-            //img.RotateFlip(RotateFlipType.RotateNoneFlipY);
-            BitmapData Data = img.LockBits(new System.Drawing.Rectangle(0, 0, img.Width, img.Height), ImageLockMode.ReadOnly, img.PixelFormat);
-            GPUBuffer buff = new GPUBuffer();
-            buff.setData(Data.Width * Data.Height * size, Data.Scan0, BufferUsage.STATIC_DRAW);
-            img.UnlockBits(Data);
-            Texture.Parameters params_ = new Texture.Parameters();
-            params_.min(TextureFilter.LINEAR);
-            params_.mag(TextureFilter.LINEAR);
-            //params_.min(TextureFilter.NEAREST);
-            //params_.mag(TextureFilter.NEAREST);
-            params_.wrapS(TextureWrap.CLAMP_TO_EDGE);
-            params_.wrapT(TextureWrap.CLAMP_TO_EDGE);
-            Sxta.Render.Buffer.Parameters s = new Sxta.Render.Buffer.Parameters();
-            Texture texture = new Texture2D(img.Width, img.Height, pif, pf, pt, params_, s, buff);
-            buff.Dispose();
-            return texture;
+            this.shadowBmp = this.normalBmp.Clone(new Rectangle(0, 0, this.normalBmp.Width, this.normalBmp.Height), this.normalBmp.PixelFormat);
+            FastBitmap fastbmp = new FastBitmap(this.shadowBmp);
+            fastbmp.BlurImage(radius, passes);
+#if DEBUG
+            this.shadowBmp.Save("ShadowAtlas.png", ImageFormat.Png);
+#endif
+
         }
+
+       
 
         private delegate bool EmptyDel(BitmapData data, int x, int y);
         private static Rectangle ComputeGlyphRectangle(BitmapData bitmapData, TextureGlyph glyph, bool setYOffset, byte alphaTolerance)
@@ -438,37 +498,13 @@ using System.Linq;
             return rectRst;
         }
 
-        #region Monospacing Methods
 
-        public bool IsMonospacingActive(FontRenderOptions options)
-        {
-            return (options.Monospacing == FontMonospacing.Natural && naturallyMonospaced) || options.Monospacing == FontMonospacing.Yes;
-        }
-
-        public float GetMonoSpaceWidth(FontRenderOptions options)
-        {
-            return (float)Math.Ceiling(1 + (1 + options.CharacterSpacing) * meanGlyphWidth);
-        }
-
-        /// <summary>
-        /// Returns true if all glyph widths are within 5% of each other
-        /// </summary>
-        /// <param name="sizes"></param>
-        /// <returns></returns>
-        private static bool IsMonospaced(SizeF max, SizeF min)
-        {
-            if (max.Width - min.Width < max.Width * 0.05f)
-                return true;
-
-            return false;
-        }
-        #endregion
 
         #region Kerning Methods
         private void CalculateKerning(FontGenerationConfig config)
         {
             kerningPairs = new Dictionary<String, int>();
-            var page = new FastBitmap(atlas);
+            var page = new FastBitmap(normalBmp);
             page.LockBitmap();
             //we start by computing the index of the first and last non-empty pixel in each row of each glyph
             XLimits[][] limits = new XLimits[glyphs.Length][];
@@ -628,6 +664,31 @@ using System.Linq;
             v++;
             return v;
         }
+        #region Monospacing Methods
+
+        public bool IsMonospacingActive(FontRenderOptions options)
+        {
+            return (options.Monospacing == FontMonospacing.Natural && this.IsNaturallyMonospaced) || options.Monospacing == FontMonospacing.Yes;
+        }
+
+        public float GetMonoSpaceWidth(FontRenderOptions options)
+        {
+            return (float)Math.Ceiling(1 + (1 + options.CharacterSpacing) * this.MeanGlyphWidth);
+        }
+
+        /// <summary>
+        /// Returns true if all glyph widths are within 5% of each other
+        /// </summary>
+        /// <param name="sizes"></param>
+        /// <returns></returns>
+        private static bool IsMonospaced(SizeF max, SizeF min)
+        {
+            if (max.Width - min.Width < max.Width * 0.05f)
+                return true;
+
+            return false;
+        }
+        #endregion
 
         #region Serialization Methods
         private void Serialize(TextWriter stream)
