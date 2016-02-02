@@ -3,10 +3,382 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Sxta.Render.Resources;
+using Sxta.Render;
+using System.Diagnostics;
+using System.Xml;
 
+namespace Sxta.Render
+{
+        //void getParameters(ResourceDescriptor desc, XmlElement e, TextureInternalFormat ff, TextureFormat f, PixelType t);
+
+        //void getParameters(ResourceDescriptor desc, XmlElement e, Texture.Parameters _params);
+}
 namespace Sxta.Proland.Core.Producer
 {
-    public class GPUTileStorage<T> : TileStorage
+    public class GPUTileStorage<T> : TileStorage, ISwappable<GPUTileStorage<T>>
     {
+
+        const string mipmapShader = @"
+uniform ivec4 bufferLayerLevelWidth;
+#ifdef _VERTEX_
+layout(location= 0) in vec4 vertex;
+void main() { gl_Position = vertex; }
+#endif
+#ifdef _GEOMETRY_
+#extension GL_EXT_geometry_shader4 : enable
+layout(triangles) in;
+layout(triangle_strip, max_vertices= 3) out;n
+void main() { gl_Layer = bufferLayerLevelWidth.y; gl_Position = gl_PositionIn[0]; EmitVertex(); gl_Position = gl_PositionIn[1]; EmitVertex(); gl_Position = gl_PositionIn[2]; EmitVertex(); EndPrimitive(); }
+#endif
+#ifdef _FRAGMENT_
+uniform sampler2DArray input_[8];
+layout(location= 0) out vec4 output_;
+void main()
+    {
+vec2 xy = floor(gl_FragCoord.xy);
+vec4 uv = vec4(xy + vec2(0.25), xy + vec2(0.75)) / float(bufferLayerLevelWidth.w);
+      vec4 result;
+      switch (bufferLayerLevelWidth.x) {
+      case 0:
+          result = texture(input_[0], vec3(uv.zw, bufferLayerLevelWidth.y), bufferLayerLevelWidth.z);
+          result += texture(input_[0], vec3(uv.xw, bufferLayerLevelWidth.y), bufferLayerLevelWidth.z);
+          result += texture(input_[0], vec3(uv.zy, bufferLayerLevelWidth.y), bufferLayerLevelWidth.z);
+          result += texture(input_[0], vec3(uv.zw, bufferLayerLevelWidth.y), bufferLayerLevelWidth.z);
+          break;
+      case 1:
+          result = texture(input_[1], vec3(uv.zw, bufferLayerLevelWidth.y), bufferLayerLevelWidth.z);
+          result += texture(input_[1], vec3(uv.xw, bufferLayerLevelWidth.y), bufferLayerLevelWidth.z);
+          result += texture(input_[1], vec3(uv.zy, bufferLayerLevelWidth.y), bufferLayerLevelWidth.z);
+         result += texture(input_[1], vec3(uv.zw, bufferLayerLevelWidth.y), bufferLayerLevelWidth.z);
+          break;
+      case 2:
+          result = texture(input_[2], vec3(uv.zw, bufferLayerLevelWidth.y), bufferLayerLevelWidth.z);
+          result += texture(input_[2], vec3(uv.xw, bufferLayerLevelWidth.y), bufferLayerLevelWidth.z);
+          result += texture(input_[2], vec3(uv.zy, bufferLayerLevelWidth.y), bufferLayerLevelWidth.z);
+         result += texture(input_[2], vec3(uv.zw, bufferLayerLevelWidth.y), bufferLayerLevelWidth.z);
+         break;
+     case 3:
+         result = texture(input_[3], vec3(uv.zw, bufferLayerLevelWidth.y), bufferLayerLevelWidth.z);
+         result += texture(input_[3], vec3(uv.xw, bufferLayerLevelWidth.y), bufferLayerLevelWidth.z);
+         result += texture(input_[3], vec3(uv.zy, bufferLayerLevelWidth.y), bufferLayerLevelWidth.z);
+         result += texture(input_[3], vec3(uv.zw, bufferLayerLevelWidth.y), bufferLayerLevelWidth.z);
+         break;
+     case 4:
+         result = texture(input_[4], vec3(uv.zw, bufferLayerLevelWidth.y), bufferLayerLevelWidth.z);
+         result += texture(input_[4], vec3(uv.xw, bufferLayerLevelWidth.y), bufferLayerLevelWidth.z);
+         result += texture(input_[4], vec3(uv.zy, bufferLayerLevelWidth.y), bufferLayerLevelWidth.z);
+         result += texture(input_[4], vec3(uv.zw, bufferLayerLevelWidth.y), bufferLayerLevelWidth.z);
+         break;
+     case 5:
+         result = texture(input_[5], vec3(uv.zw, bufferLayerLevelWidth.y), bufferLayerLevelWidth.z);
+         result += texture(input_[5], vec3(uv.xw, bufferLayerLevelWidth.y), bufferLayerLevelWidth.z);
+         result += texture(input_[5], vec3(uv.zy, bufferLayerLevelWidth.y), bufferLayerLevelWidth.z);
+         result += texture(input_[5], vec3(uv.zw, bufferLayerLevelWidth.y), bufferLayerLevelWidth.z);
+         break;
+     case 6:
+         result = texture(input_[6], vec3(uv.zw, bufferLayerLevelWidth.y), bufferLayerLevelWidth.z);
+         result += texture(input_[6], vec3(uv.xw, bufferLayerLevelWidth.y), bufferLayerLevelWidth.z);
+         result += texture(input_[6], vec3(uv.zy, bufferLayerLevelWidth.y), bufferLayerLevelWidth.z);
+         result += texture(input_[6], vec3(uv.zw, bufferLayerLevelWidth.y), bufferLayerLevelWidth.z);
+         break;
+     case 7:
+         result = texture(input_[7], vec3(uv.zw, bufferLayerLevelWidth.y), bufferLayerLevelWidth.z);
+         result += texture(input_[7], vec3(uv.xw, bufferLayerLevelWidth.y), bufferLayerLevelWidth.z);
+         result += texture(input_[7], vec3(uv.zy, bufferLayerLevelWidth.y), bufferLayerLevelWidth.z);
+         result += texture(input_[7], vec3(uv.zw, bufferLayerLevelWidth.y), bufferLayerLevelWidth.z);
+         break;
+     }
+	    output_ = result* 0.25;
+}
+#endif";
+
+        /// <summary>
+        /// A slot managed by a GPUTileStorage. Corresponds to a layer of a texture.
+        /// </summary>
+        public class GPUSlot : Slot
+        {
+            /// <summary>
+            /// The 2D array texture containing the tile stored in this slot.
+            /// </summary>
+
+            public Texture2DArray t;
+            /// <summary>
+            /// The layer of the tile in the 2D texture array 't'.
+            /// </summary>
+
+            public const int l = 1;
+            /// <summary>
+            /// Creates a new GPUSlot.
+            /// </summary>
+            /*
+	         * @param owner the TileStorage that manages this slot.
+	         * @param index the index of t in the list of textures managed by the
+	         *      tile storage.
+	         * @param t the 2D array texture in which the tile is stored.
+	         * @param l the layer of the tile in the 2D texture array t.
+             */
+            public GPUSlot(TileStorage owner, int index, Texture2DArray t, int l) : base(owner)
+            {
+                l = 1;
+                this.index = index;
+            }
+
+            public int getIndex()
+            {
+                return index;
+            }
+            public int getwidth()
+            {
+                return t.getWidth();
+            }
+            public int getHeight()
+            {
+                return t.getHeight();
+            }
+            /// <summary>
+            /// CCopies a region of the given frame buffer into this slot. 
+            /// </summary>
+            /**
+            * @param fb a frame buffer.
+            * @param x lower left corner of the area where the pixels must be read.
+            * @param y lower left corner of the area where the pixels must be read.
+            * @param w width of the area where the pixels must be read.
+            * @param h height of the area where the pixels must be read.
+            */
+            public virtual void copyPixels(FrameBuffer fb, int x, int y, int w, int h)
+            {
+                fb.copyPixels(0, 0, 1, x, y, w, h, t, 0);
+            }
+
+            /// <summary>
+            /// Copies a region of the given pixel buffer into this slot. The region
+            /// Coordinates are relative to the lower left corner of the slot. 
+            /// </summary>
+            /**
+            *@param x lower left corner of the part to be replaced in this slot.
+            * @param y lower left corner of the part to be replaced in this slot.
+            * @param w the width of the part to be replaced in this slot.
+            * @param h the height of the part to be replaced in this slot.
+            * @param f the texture components in 'pixels'.
+            * @param t the type of each component in 'pixels'.
+            * @param pixels the pixels to be copied into this slot.
+            */
+            public virtual void setSubImage(int x, int y, int w, int h, TextureFormat f, PixelType t, Sxta.Render.Buffer.Parameters s, Sxta.Render.Buffer pixels)
+            {
+                this.t.setSubImage(0, x, y, 1, w, h, 1, f, t, s, pixels);
+            }
+            /// <summary>
+            /// The index of 't' in the list of textures managed by the tile storage.
+            /// </summary>
+            internal int index;
+
+
+
+        }
+
+        /// <summary>
+        /// Creates a new GPUTileStorage. See #init.
+        /// </summary>
+        GPUTileStorage(int tileSize, int nTiles, TextureInternalFormat internalf, TextureFormat f, PixelType t, Texture.Parameters _params, bool useTileMap = false) : base(tileSize, nTiles)
+        {
+            init(tileSize, nTiles, internalf, f, t, _params, useTileMap);
+        }
+
+        /// <summary>
+        /// Returns the texture storage whose index is given.
+        /// </summary>
+        /// <param name="index">index an index between 0 and #getTextureCount (excluded).</param>
+        /// <returns></returns>
+        public Texture2DArray getTexture(int index)
+        {
+            return textures[index];
+        }
+        /// <summary>
+        /// Returns the number of textures used to store the tiles.
+        /// </summary>
+        /// <returns></returns>
+        public int getTextureCount()
+        {
+            return textures.Count();
+        }
+        /// <summary>
+        /// Returns the tile map that stores the mapping between logical tile coordinates(level, tx, ty)
+        /// and storage tile coordinates in this storage.This mapping texture can be used as an indirection
+        /// texture on GPU to find the content of a tile from its logical coordinates.May be NULL.
+        /// </summary>
+        /// <returns></returns>
+        public Texture2D getTileMap()
+        {
+            return tileMap;
+        }
+        /// <summary>
+        /// Notifies this manager that the content of the given slot has changed.
+        /// </summary>
+        /// <param name="s">a slot whose content has changed</param>
+        public void notifyChange(GPUSlot s)
+        {
+            if (needMipmaps)
+            {
+                dirtySlots[s.index].Add(s);
+                changes = true;
+            }
+        }
+        /// <summary>
+        /// Generates the mipmap levels of the storage textures. This method only
+        /// updates the textures whose content has changed since the last call to
+        /// this method.Changes must be notified with #notifyChange.
+        /// </summary>
+        public void generateMipMap()
+        {
+            if (changes)
+            {
+                int level = 1;
+                int width = tileSize / 2;
+                while (width >= 1)
+                {
+                    fbo.setViewport(new Math.Vector4i(0, 0, width, width));
+                    for (int n = 0; n < textures.Count(); n++)
+                    {
+                        fbo.setTextureBuffer((BufferId)(1 << n),textures[n],level, -1);
+                    }
+                    for (int n = 0; n < textures.Count(); n++)
+                    {
+                        fbo.setDrawBuffer((BufferId)(1<<n));
+                        foreach (GPUSlot s in dirtySlots[n])
+                        {
+                            mipmapParams.set(new Math.Vector4i(s.index, GPUSlot.l, level - 1, width));
+                            fbo.drawQuad(mipmapProg);
+                        }
+                    }
+                    width /= 2;
+                    level += 1;
+                }
+                for (int n = 0; n < textures.Count(); n++)
+                {
+                    dirtySlots[n].Clear();
+                }
+                changes = false;
+            }
+        }
+
+        internal void init(int tileSize, int nTiles, TextureInternalFormat internalf, TextureFormat f, PixelType t, Texture.Parameters _params, bool useTileMap)
+        {
+            init(tileSize, nTiles);
+
+            int maxLayers = Texture2DArray.getMaxLayers();
+            int nTextures = nTiles / maxLayers + (nTiles % maxLayers == 0 ? 0 : 1);
+            needMipmaps = false;
+
+            for (int i = 0; i < nTextures; i++)
+            {
+                int nLayers = i == nTextures - 1 && nTiles % maxLayers != 0 ? nTiles % maxLayers : maxLayers;
+                Texture2DArray tex = new Texture2DArray(tileSize, tileSize, nLayers, internalf, f, t, _params, new Sxta.Render.Buffer.Parameters(), new CPUBuffer<byte>());
+                needMipmaps = needMipmaps || (tex.hasMipmaps());
+                textures.Add(tex);
+                tex.generateMipMap();
+                for (int j = 0; j < nLayers; j++) {
+                    freeSlots.Add(new GPUSlot(this, i, textures[i],j));
+                }
+            }
+
+            if (needMipmaps)
+            {
+                Debug.Assert(nTextures <= 8);
+                dirtySlots = new SortedSet<GPUSlot>[nTextures];
+                fbo = new FrameBuffer();
+                fbo.setReadBuffer(BufferId.DEFAULT);
+                fbo.setDrawBuffers(BufferId.COLOR0 | BufferId.COLOR1);
+                mipmapProg = new Program(new Module(330, mipmapShader));
+                Sampler s = new Sampler(new Sampler.Parameters().min(TextureFilter.NEAREST).mag(TextureFilter.NEAREST).wrapS(TextureWrap.CLAMP_TO_EDGE).wrapT(TextureWrap.CLAMP_TO_EDGE)); 
+                for (int i = 0; i < nTextures; i++)
+                {
+                    string buf = String.Format("input_[{0}]", i);
+                    mipmapProg.getUniformSampler(buf).set(textures[i]);
+                    mipmapProg.getUniformSampler(buf).setSampler(s);
+                }
+                mipmapParams = mipmapProg.getUniform4i("bufferLayerLevelWidth");
+            }
+            else
+            {
+                dirtySlots = null;
+            }
+            changes = false;
+            if (useTileMap)
+            {
+                Debug.Assert(nTextures == 1);
+                tileMap = new Texture2D(4096, 8, TextureInternalFormat.RG8, TextureFormat.RG, PixelType.UNSIGNED_BYTE, 
+                    new Texture.Parameters().wrapS(TextureWrap.CLAMP_TO_EDGE).wrapT(TextureWrap.CLAMP_TO_EDGE).min(TextureFilter.NEAREST).mag(TextureFilter.NEAREST), 
+                    new Sxta.Render.Buffer.Parameters(), new CPUBuffer<byte>());
+            }
+        }
+
+        public void swap(GPUTileStorage<T> s)
+        {
+            Debug.Assert(false);
+        }
+
+        /// <summary>
+        /// The storage textures used to store the tiles.
+        /// </summary>
+        private List<Texture2DArray> textures;
+        /// <summary>
+        /// True if the storage texture format needs mipmaping.
+        /// </summary>
+        private bool needMipmaps;
+        /// <summary>
+        /// True if a least one storage texture has changed since the last call to #generateMipMap.
+        /// </summary>
+        private bool changes;
+        /// <summary>
+        /// The slots whose mipmap levels are not up to date (one set per texture).
+        /// </summary>
+        private SortedSet<GPUSlot>[] dirtySlots;
+        /// <summary>
+        /// Framebuffer used to generate mipmaps.
+        /// </summary>
+        private FrameBuffer fbo;
+        /// <summary>
+        /// Program used to generate mipmaps
+        /// </summary>
+        private Program mipmapProg;
+        /// <summary>
+        /// Parameters used to generate a mipmap level.
+        /// </summary>
+        private Uniform4i mipmapParams;
+        /// <summary>
+        /// The tile map that stores the mapping between logical tile coordinates (level,tx,ty) 
+        /// and storage tile coordinates(u, v) in this storage.May be NULL.
+        /// </summary>
+        private Texture2D tileMap;
+
     }
+
+    public class GPUTileStorageResource<T> : ResourceTemplate<GPUTileStorage<T>>
+    {
+        public GPUTileStorageResource(ResourceManager manager, string name, ResourceDescriptor desc, XmlElement e = null) :
+            base(20, manager, name, desc)
+        {
+            e = e == null ? desc.descriptor : e;
+            int tileSize;
+            int nTiles;
+            TextureInternalFormat tf;
+            TextureFormat f;
+            PixelType t;
+            Texture.Parameters _params;
+            bool useTileMap = false;
+            checkParameters(desc, e, "name,tileSize,nTiles,tileMap,internalformat,format,type,min,mag,minLod,maxLod,minLevel,maxLevel,swizzle,anisotropy,");
+            //getParameters();
+            //getParameters(desc, e, _params);
+            getIntParameter(desc, e, "tileSize", out tileSize);
+            getIntParameter(desc, e, "nTiles", out nTiles);
+            if (e.GetAttribute("tileMap") != null)
+            {
+                useTileMap = String.Equals(e.GetAttribute("tileMap"), "true"); // == 0???
+            }
+            //valueC.init(tileSize, nTiles, tf, f, t, _params, useTileMap);
+
+        }
+    }
+
 }
