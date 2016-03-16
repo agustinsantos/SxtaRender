@@ -1,4 +1,11 @@
-﻿#region --- License ---
+﻿
+
+
+
+
+
+
+#region --- License ---
 /*
 Copyright (c) 2008 - 2016 The Sxta Render library.
 
@@ -31,6 +38,7 @@ using OpenTK;
 
 namespace Sxta.Math
 {
+
       /// <summary>Represents a 2D vector using two int-precision floating-point numbers.</summary>
     [Serializable]
     [StructLayout(LayoutKind.Sequential)]
@@ -793,6 +801,7 @@ namespace Sxta.Math
         #endregion
 
 
+
         #endregion
 
         #region Operators
@@ -912,6 +921,30 @@ namespace Sxta.Math
         {
             return new Vector2((float)v2d.X, (float)v2d.Y);
         }
+
+		
+		/// <summary>Converts Vector2i to Vector2f.</summary>
+        /// <param name="v2d">The Vector2i to convert.</param>
+        /// <returns>The resulting Vector2f.</returns>
+        public static explicit operator Vector2f(Vector2i v2)
+        {
+            return new Vector2f((float)v2.X, (float)v2.Y);
+        }
+
+
+		
+
+		
+		/// <summary>Converts Vector2i to Vector2d.</summary>
+        /// <param name="v2d">The Vector2i to convert.</param>
+        /// <returns>The resulting Vector2d.</returns>
+        public static explicit operator Vector2d(Vector2i v2)
+        {
+            return new Vector2d(v2.X, v2.Y);
+        }
+
+
+		
 
 		public static bool operator <(Vector2i l, Vector2i r)
         {
@@ -1081,6 +1114,7 @@ namespace Sxta.Math
             Z = v.Z;
         }
 
+
         /// <summary>
         /// Constructs a new instance from the given Vector4i.
         /// </summary>
@@ -1091,6 +1125,7 @@ namespace Sxta.Math
             Y = (int)v.Y;
             Z = (int)v.Z;
         }
+
 
         #endregion
 
@@ -1519,6 +1554,7 @@ namespace Sxta.Math
             return vector;
         }
 
+
         /// <summary>
         /// Multiplies a vector by a scalar.
         /// </summary>
@@ -1531,6 +1567,7 @@ namespace Sxta.Math
             return vector;
         }
 
+
         /// <summary>
         /// Multiplies a vector by a scalar.
         /// </summary>
@@ -1541,6 +1578,7 @@ namespace Sxta.Math
         {
             result = new Vector3i(vector.X * scale, vector.Y * scale, vector.Z * scale);
         }
+
 
         /// <summary>
         /// Multiplies a vector by a scalar.
@@ -1554,6 +1592,7 @@ namespace Sxta.Math
 			                            (int)(vector.Y * scale),
 			                            (int)(vector.Z * scale));
         }
+
 
         /// <summary>
         /// Multiplies a vector by the components a vector (scale).
@@ -1947,6 +1986,7 @@ namespace Sxta.Math
 
         #endregion
 
+
         #region CalculateAngle
 
         /// <summary>
@@ -2104,7 +2144,8 @@ namespace Sxta.Math
         }
 
 		 
-				 
+		
+		 
         /// <summary>Converts Vector3i to OpenTK.Vector3.</summary>
         /// <param name="v3d">The Vector3i to convert.</param>
         /// <returns>The resulting Vector3.</returns>
@@ -2972,6 +3013,7 @@ namespace Sxta.Math
 
         #endregion
 
+
         #endregion
 
         #region Swizzle
@@ -3246,7 +3288,8 @@ namespace Sxta.Math
         #endregion
     }
 
-	      /// <summary>Represents a 2D vector using two uint-precision floating-point numbers.</summary>
+	
+      /// <summary>Represents a 2D vector using two uint-precision floating-point numbers.</summary>
     [Serializable]
     [StructLayout(LayoutKind.Sequential)]
     public struct Vector2ui : IEquatable<Vector2ui>
@@ -4008,6 +4051,7 @@ namespace Sxta.Math
         #endregion
 
 
+
         #endregion
 
         #region Operators
@@ -4127,6 +4171,30 @@ namespace Sxta.Math
         {
             return new Vector2((float)v2d.X, (float)v2d.Y);
         }
+
+		
+		/// <summary>Converts Vector2ui to Vector2f.</summary>
+        /// <param name="v2d">The Vector2ui to convert.</param>
+        /// <returns>The resulting Vector2f.</returns>
+        public static explicit operator Vector2f(Vector2ui v2)
+        {
+            return new Vector2f((float)v2.X, (float)v2.Y);
+        }
+
+
+		
+
+		
+		/// <summary>Converts Vector2ui to Vector2d.</summary>
+        /// <param name="v2d">The Vector2ui to convert.</param>
+        /// <returns>The resulting Vector2d.</returns>
+        public static explicit operator Vector2d(Vector2ui v2)
+        {
+            return new Vector2d(v2.X, v2.Y);
+        }
+
+
+		
 
 		public static bool operator <(Vector2ui l, Vector2ui r)
         {
@@ -4296,6 +4364,7 @@ namespace Sxta.Math
             Z = v.Z;
         }
 
+
         /// <summary>
         /// Constructs a new instance from the given Vector4ui.
         /// </summary>
@@ -4306,6 +4375,7 @@ namespace Sxta.Math
             Y = (uint)v.Y;
             Z = (uint)v.Z;
         }
+
 
         #endregion
 
@@ -4734,6 +4804,7 @@ namespace Sxta.Math
             return vector;
         }
 
+
         /// <summary>
         /// Multiplies a vector by a scalar.
         /// </summary>
@@ -4746,6 +4817,7 @@ namespace Sxta.Math
             return vector;
         }
 
+
         /// <summary>
         /// Multiplies a vector by a scalar.
         /// </summary>
@@ -4756,6 +4828,7 @@ namespace Sxta.Math
         {
             result = new Vector3ui(vector.X * scale, vector.Y * scale, vector.Z * scale);
         }
+
 
         /// <summary>
         /// Multiplies a vector by a scalar.
@@ -4769,6 +4842,7 @@ namespace Sxta.Math
 			                            (uint)(vector.Y * scale),
 			                            (uint)(vector.Z * scale));
         }
+
 
         /// <summary>
         /// Multiplies a vector by the components a vector (scale).
@@ -5162,6 +5236,7 @@ namespace Sxta.Math
 
         #endregion
 
+
         #region CalculateAngle
 
         /// <summary>
@@ -5319,7 +5394,8 @@ namespace Sxta.Math
         }
 
 		 
-				 
+		
+		 
         /// <summary>Converts Vector3ui to OpenTK.Vector3.</summary>
         /// <param name="v3d">The Vector3ui to convert.</param>
         /// <returns>The resulting Vector3.</returns>
@@ -6187,6 +6263,7 @@ namespace Sxta.Math
 
         #endregion
 
+
         #endregion
 
         #region Swizzle
@@ -6461,7 +6538,8 @@ namespace Sxta.Math
         #endregion
     }
 
-	      /// <summary>Represents a 2D vector using two float-precision floating-point numbers.</summary>
+	
+      /// <summary>Represents a 2D vector using two float-precision floating-point numbers.</summary>
     [Serializable]
     [StructLayout(LayoutKind.Sequential)]
     public struct Vector2f : IEquatable<Vector2f>
@@ -7222,6 +7300,7 @@ namespace Sxta.Math
 
         #endregion
 
+
         #region Transform
 
         /// <summary>
@@ -7254,6 +7333,7 @@ namespace Sxta.Math
         }
 
         #endregion
+
 
         #endregion
 
@@ -7374,6 +7454,20 @@ namespace Sxta.Math
         {
             return new Vector2((float)v2d.X, (float)v2d.Y);
         }
+
+		
+
+		
+		/// <summary>Converts Vector2f to Vector2d.</summary>
+        /// <param name="v2d">The Vector2f to convert.</param>
+        /// <returns>The resulting Vector2d.</returns>
+        public static explicit operator Vector2d(Vector2f v2)
+        {
+            return new Vector2d(v2.X, v2.Y);
+        }
+
+
+		
 
 		public static bool operator <(Vector2f l, Vector2f r)
         {
@@ -7543,6 +7637,7 @@ namespace Sxta.Math
             Z = v.Z;
         }
 
+
         /// <summary>
         /// Constructs a new instance from the given Vector4f.
         /// </summary>
@@ -7553,6 +7648,7 @@ namespace Sxta.Math
             Y = (float)v.Y;
             Z = (float)v.Z;
         }
+
 
         #endregion
 
@@ -7981,6 +8077,7 @@ namespace Sxta.Math
             return vector;
         }
 
+
         /// <summary>
         /// Multiplies a vector by a scalar.
         /// </summary>
@@ -7993,6 +8090,7 @@ namespace Sxta.Math
             return vector;
         }
 
+
         /// <summary>
         /// Multiplies a vector by a scalar.
         /// </summary>
@@ -8003,6 +8101,7 @@ namespace Sxta.Math
         {
             result = new Vector3f(vector.X * scale, vector.Y * scale, vector.Z * scale);
         }
+
 
         /// <summary>
         /// Multiplies a vector by a scalar.
@@ -8016,6 +8115,7 @@ namespace Sxta.Math
 			                            (float)(vector.Y * scale),
 			                            (float)(vector.Z * scale));
         }
+
 
         /// <summary>
         /// Multiplies a vector by the components a vector (scale).
@@ -8408,6 +8508,7 @@ namespace Sxta.Math
         }
 
         #endregion
+
         #region Transform
 
         /// <summary>Transform a direction vector by the given Matrix
@@ -8628,6 +8729,7 @@ namespace Sxta.Math
 
         #endregion
 
+
         #region CalculateAngle
 
         /// <summary>
@@ -8785,7 +8887,8 @@ namespace Sxta.Math
         }
 
 		 
-				/// <summary>Converts Vector3d to Vector3f.</summary>
+		
+		/// <summary>Converts Vector3d to Vector3f.</summary>
         /// <param name="v3">The Vector3d to convert.</param>
         /// <returns>The resulting Vector3f.</returns>
         public static explicit operator Vector3f(Vector3d v3)
@@ -8793,7 +8896,8 @@ namespace Sxta.Math
             return new Vector3f((float)v3.X, (float)v3.Y, (float)v3.Z);
         }
 
-				 
+		
+		 
         /// <summary>Converts Vector3f to OpenTK.Vector3.</summary>
         /// <param name="v3d">The Vector3f to convert.</param>
         /// <returns>The resulting Vector3.</returns>
@@ -9661,6 +9765,7 @@ namespace Sxta.Math
 
         #endregion
 
+
         #region Transform
 
         /// <summary>Transform a Vector by the given Matrix</summary>
@@ -9717,6 +9822,7 @@ namespace Sxta.Math
         }
 
         #endregion
+
 
         #endregion
 
@@ -9992,7 +10098,8 @@ namespace Sxta.Math
         #endregion
     }
 
-	      /// <summary>Represents a 2D vector using two double-precision floating-point numbers.</summary>
+	
+      /// <summary>Represents a 2D vector using two double-precision floating-point numbers.</summary>
     [Serializable]
     [StructLayout(LayoutKind.Sequential)]
     public struct Vector2d : IEquatable<Vector2d>
@@ -10753,6 +10860,7 @@ namespace Sxta.Math
 
         #endregion
 
+
         #region Transform
 
         /// <summary>
@@ -10785,6 +10893,7 @@ namespace Sxta.Math
         }
 
         #endregion
+
 
         #endregion
 
@@ -10905,6 +11014,20 @@ namespace Sxta.Math
         {
             return new Vector2((float)v2d.X, (float)v2d.Y);
         }
+
+		
+		/// <summary>Converts Vector2d to Vector2f.</summary>
+        /// <param name="v2d">The Vector2d to convert.</param>
+        /// <returns>The resulting Vector2f.</returns>
+        public static explicit operator Vector2f(Vector2d v2)
+        {
+            return new Vector2f((float)v2.X, (float)v2.Y);
+        }
+
+
+		
+
+		
 
 		public static bool operator <(Vector2d l, Vector2d r)
         {
@@ -11073,6 +11196,7 @@ namespace Sxta.Math
             Y = v.Y;
             Z = v.Z;
         }
+
 
         #endregion
 
@@ -11501,6 +11625,7 @@ namespace Sxta.Math
             return vector;
         }
 
+
         /// <summary>
         /// Multiplies a vector by a scalar.
         /// </summary>
@@ -11511,6 +11636,7 @@ namespace Sxta.Math
         {
             result = new Vector3d(vector.X * scale, vector.Y * scale, vector.Z * scale);
         }
+
 
         /// <summary>
         /// Multiplies a vector by the components a vector (scale).
@@ -11903,6 +12029,7 @@ namespace Sxta.Math
         }
 
         #endregion
+
         #region Transform
 
         /// <summary>Transform a direction vector by the given Matrix
@@ -12123,6 +12250,7 @@ namespace Sxta.Math
 
         #endregion
 
+
         #region CalculateAngle
 
         /// <summary>
@@ -12280,7 +12408,8 @@ namespace Sxta.Math
         }
 
 		 
-				 
+		
+		 
         /// <summary>Converts Vector3d to OpenTK.Vector3.</summary>
         /// <param name="v3d">The Vector3d to convert.</param>
         /// <returns>The resulting Vector3.</returns>
@@ -13148,6 +13277,7 @@ namespace Sxta.Math
 
         #endregion
 
+
         #region Transform
 
         /// <summary>Transform a Vector by the given Matrix</summary>
@@ -13204,6 +13334,7 @@ namespace Sxta.Math
         }
 
         #endregion
+
 
         #endregion
 
@@ -13479,4 +13610,5 @@ namespace Sxta.Math
         #endregion
     }
 
-	}
+	
+}

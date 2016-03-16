@@ -50,6 +50,5 @@ namespace Sxta.Math
             this.x = v.x;
             this.y = v.y;
         }
-
     }
 }

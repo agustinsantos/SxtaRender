@@ -1,4 +1,11 @@
-﻿#region --- License ---
+﻿
+
+
+
+
+
+
+#region --- License ---
 /*
 Copyright (c) 2008 - 2016 The Sxta Render library.
 
@@ -32,6 +39,7 @@ using Sxta.Core;
 
 namespace Sxta.Math
 {
+
 
 	[Serializable]
     [StructLayout(LayoutKind.Sequential)]
@@ -354,6 +362,22 @@ namespace Sxta.Math
             result.R1C1 = left.R1C1 + right.R1C1;
         }
 
+		/// <summary>
+        /// Matrix multiplication
+        /// </summary>
+        /// <param name="left">left-hand operand</param>
+        /// <param name="right">right-hand operand</param>
+        /// <returns>A new Vector3i which holds the result of the multiplication</returns>
+        public static Vector2i operator *(Matrix2i left, Vector2i right)
+		{
+			Vector2i r;
+
+			double fInv = 1.0 / (left.R1C0 * right.X + left.R1C1 * right.Y);
+
+			r.X =  (int)((left.R0C0 * right.X + left.R0C1 * right.Y) * fInv);
+			r.Y =  (int)((left.R1C0 * right.X + left.R1C1 * right.Y) * fInv);
+			return r;
+		}
 
         /// <summary>Multiply left martix times this matrix.</summary>
         /// <param name="matrix">The matrix to multiply.</param>
@@ -1068,6 +1092,23 @@ namespace Sxta.Math
             result.R2C2 = left.R2C2 + right.R2C2;
         }
 
+		/// <summary>
+        /// Matrix multiplication
+        /// </summary>
+        /// <param name="left">left-hand operand</param>
+        /// <param name="right">right-hand operand</param>
+        /// <returns>A new Vector3i which holds the result of the multiplication</returns>
+        public static Vector3i operator *(Matrix3i left, Vector3i right)
+		{
+			Vector3i r;
+
+			double fInv = 1.0 / (left.R2C0 * right.X + left.R2C1 * right.Y + left.R2C2 * right.Z);
+
+			r.X =  (int)((left.R0C0 * right.X + left.R0C1 * right.Y + left.R0C2 * right.Z) * fInv);
+			r.Y =  (int)((left.R1C0 * right.X + left.R1C1 * right.Y + left.R1C2 * right.Z) * fInv);
+			r.Z =  (int)((left.R2C0 * right.X + left.R2C1 * right.Y + left.R2C2 * right.Z) * fInv);
+			return r;
+		}
 
         /// <summary>Multiply left martix times this matrix.</summary>
         /// <param name="matrix">The matrix to multiply.</param>
@@ -1714,7 +1755,9 @@ namespace Sxta.Math
         #endregion
 
         #region Static
-		                #region Multiply Functions
+		
+        
+        #region Multiply Functions
 
         /// <summary>
         /// Multiplies two instances.
@@ -1953,6 +1996,7 @@ namespace Sxta.Math
 			return r;
 		}
 
+
         /// <summary>
         /// Compares two instances for equality.
         /// </summary>
@@ -2042,6 +2086,7 @@ namespace Sxta.Math
 
         #endregion
     }
+
 
 	[Serializable]
     [StructLayout(LayoutKind.Sequential)]
@@ -2364,6 +2409,22 @@ namespace Sxta.Math
             result.R1C1 = left.R1C1 + right.R1C1;
         }
 
+		/// <summary>
+        /// Matrix multiplication
+        /// </summary>
+        /// <param name="left">left-hand operand</param>
+        /// <param name="right">right-hand operand</param>
+        /// <returns>A new Vector3ui which holds the result of the multiplication</returns>
+        public static Vector2ui operator *(Matrix2ui left, Vector2ui right)
+		{
+			Vector2ui r;
+
+			double fInv = 1.0 / (left.R1C0 * right.X + left.R1C1 * right.Y);
+
+			r.X =  (uint)((left.R0C0 * right.X + left.R0C1 * right.Y) * fInv);
+			r.Y =  (uint)((left.R1C0 * right.X + left.R1C1 * right.Y) * fInv);
+			return r;
+		}
 
         /// <summary>Multiply left martix times this matrix.</summary>
         /// <param name="matrix">The matrix to multiply.</param>
@@ -3078,6 +3139,23 @@ namespace Sxta.Math
             result.R2C2 = left.R2C2 + right.R2C2;
         }
 
+		/// <summary>
+        /// Matrix multiplication
+        /// </summary>
+        /// <param name="left">left-hand operand</param>
+        /// <param name="right">right-hand operand</param>
+        /// <returns>A new Vector3ui which holds the result of the multiplication</returns>
+        public static Vector3ui operator *(Matrix3ui left, Vector3ui right)
+		{
+			Vector3ui r;
+
+			double fInv = 1.0 / (left.R2C0 * right.X + left.R2C1 * right.Y + left.R2C2 * right.Z);
+
+			r.X =  (uint)((left.R0C0 * right.X + left.R0C1 * right.Y + left.R0C2 * right.Z) * fInv);
+			r.Y =  (uint)((left.R1C0 * right.X + left.R1C1 * right.Y + left.R1C2 * right.Z) * fInv);
+			r.Z =  (uint)((left.R2C0 * right.X + left.R2C1 * right.Y + left.R2C2 * right.Z) * fInv);
+			return r;
+		}
 
         /// <summary>Multiply left martix times this matrix.</summary>
         /// <param name="matrix">The matrix to multiply.</param>
@@ -3724,7 +3802,9 @@ namespace Sxta.Math
         #endregion
 
         #region Static
-		                #region Multiply Functions
+		
+        
+        #region Multiply Functions
 
         /// <summary>
         /// Multiplies two instances.
@@ -3963,6 +4043,7 @@ namespace Sxta.Math
 			return r;
 		}
 
+
         /// <summary>
         /// Compares two instances for equality.
         /// </summary>
@@ -4052,6 +4133,7 @@ namespace Sxta.Math
 
         #endregion
     }
+
 
 	[Serializable]
     [StructLayout(LayoutKind.Sequential)]
@@ -4374,6 +4456,22 @@ namespace Sxta.Math
             result.R1C1 = left.R1C1 + right.R1C1;
         }
 
+		/// <summary>
+        /// Matrix multiplication
+        /// </summary>
+        /// <param name="left">left-hand operand</param>
+        /// <param name="right">right-hand operand</param>
+        /// <returns>A new Vector3f which holds the result of the multiplication</returns>
+        public static Vector2f operator *(Matrix2f left, Vector2f right)
+		{
+			Vector2f r;
+
+			double fInv = 1.0 / (left.R1C0 * right.X + left.R1C1 * right.Y);
+
+			r.X =  (float)((left.R0C0 * right.X + left.R0C1 * right.Y) * fInv);
+			r.Y =  (float)((left.R1C0 * right.X + left.R1C1 * right.Y) * fInv);
+			return r;
+		}
 
         /// <summary>Multiply left martix times this matrix.</summary>
         /// <param name="matrix">The matrix to multiply.</param>
@@ -5088,6 +5186,23 @@ namespace Sxta.Math
             result.R2C2 = left.R2C2 + right.R2C2;
         }
 
+		/// <summary>
+        /// Matrix multiplication
+        /// </summary>
+        /// <param name="left">left-hand operand</param>
+        /// <param name="right">right-hand operand</param>
+        /// <returns>A new Vector3f which holds the result of the multiplication</returns>
+        public static Vector3f operator *(Matrix3f left, Vector3f right)
+		{
+			Vector3f r;
+
+			double fInv = 1.0 / (left.R2C0 * right.X + left.R2C1 * right.Y + left.R2C2 * right.Z);
+
+			r.X =  (float)((left.R0C0 * right.X + left.R0C1 * right.Y + left.R0C2 * right.Z) * fInv);
+			r.Y =  (float)((left.R1C0 * right.X + left.R1C1 * right.Y + left.R1C2 * right.Z) * fInv);
+			r.Z =  (float)((left.R2C0 * right.X + left.R2C1 * right.Y + left.R2C2 * right.Z) * fInv);
+			return r;
+		}
 
         /// <summary>Multiply left martix times this matrix.</summary>
         /// <param name="matrix">The matrix to multiply.</param>
@@ -5349,33 +5464,10 @@ namespace Sxta.Math
 
         #endregion
 
-        /// <summary>
-        /// Returns the inverse of the matrix
-        /// </summary>
-        public static Matrix3f Invert(Matrix3f m)
-        {
-            // Compute determinant as early as possible using these cofactors.      
-            float d = m.Determinant;
-
-            if (System.Math.Abs(d) <= 0.0000000001f)
-                throw new DivideByZeroException("Matrix is singular. Inversion impossible.");
-
-            Matrix3f I = new Matrix3f();
-            I.R0C0 = (m.R1C1 * m.R2C2 - m.R1C2 * m.R2C1) / d;
-            I.R1C0 = (m.R1C2 * m.R2C0 - m.R1C0 * m.R2C2) / d;
-            I.R2C0 = (m.R1C0 * m.R2C1 - m.R1C1 * m.R2C0) / d;
-            I.R0C1 = (m.R0C2 * m.R2C1 - m.R0C1 * m.R2C2) / d;
-            I.R1C1 = (m.R0C0 * m.R2C2 - m.R0C2 * m.R2C0) / d;
-            I.R2C1 = (m.R0C1 * m.R2C0 - m.R0C0 * m.R2C1) / d;
-            I.R0C2 = (m.R0C1 * m.R1C2 - m.R0C2 * m.R1C1) / d;
-            I.R1C2 = (m.R0C2 * m.R1C0 - m.R0C0 * m.R1C2) / d;
-            I.R2C2 = (m.R0C0 * m.R1C1 - m.R0C1 * m.R1C0) / d;
-            return I;
-        }
         #region Constants
 
-
-        /// <summary>
+		
+		/// <summary>
         /// Defines the size of the Matrix3f struct in bytes.
         /// </summary>
         public static readonly int SizeInBytes = Marshal.SizeOf(new Matrix3f());
@@ -5757,7 +5849,8 @@ namespace Sxta.Math
         #endregion
 
         #region Static
-				/// <summary>Converts Matrix4d to Matrix4f.</summary>
+		
+		/// <summary>Converts Matrix4d to Matrix4f.</summary>
         /// <param name="m">The Matrix4d to convert.</param>
         /// <returns>The resulting Matrix4f.</returns>
         public static explicit operator Matrix4f(Matrix4d m)
@@ -5777,7 +5870,9 @@ namespace Sxta.Math
                                 (float)m.Row1.X, (float)m.Row1.Y, (float)m.Row1.Z,
                                 (float)m.Row2.X, (float)m.Row2.Y, (float)m.Row2.Z);
         }
-		                #region CreateFromAxisAngle
+		
+        
+        #region CreateFromAxisAngle
         
         /// <summary>
         /// Build a rotation matrix from the specified axis/angle rotation.
@@ -6481,6 +6576,7 @@ namespace Sxta.Math
 
 		
         #endregion
+
         #region Multiply Functions
 
         /// <summary>
@@ -6720,6 +6816,7 @@ namespace Sxta.Math
 			return r;
 		}
 
+
         /// <summary>
         /// Compares two instances for equality.
         /// </summary>
@@ -6809,6 +6906,7 @@ namespace Sxta.Math
 
         #endregion
     }
+
 
 	[Serializable]
     [StructLayout(LayoutKind.Sequential)]
@@ -7131,6 +7229,22 @@ namespace Sxta.Math
             result.R1C1 = left.R1C1 + right.R1C1;
         }
 
+		/// <summary>
+        /// Matrix multiplication
+        /// </summary>
+        /// <param name="left">left-hand operand</param>
+        /// <param name="right">right-hand operand</param>
+        /// <returns>A new Vector3d which holds the result of the multiplication</returns>
+        public static Vector2d operator *(Matrix2d left, Vector2d right)
+		{
+			Vector2d r;
+
+			double fInv = 1.0 / (left.R1C0 * right.X + left.R1C1 * right.Y);
+
+			r.X =  (double)((left.R0C0 * right.X + left.R0C1 * right.Y) * fInv);
+			r.Y =  (double)((left.R1C0 * right.X + left.R1C1 * right.Y) * fInv);
+			return r;
+		}
 
         /// <summary>Multiply left martix times this matrix.</summary>
         /// <param name="matrix">The matrix to multiply.</param>
@@ -7845,6 +7959,23 @@ namespace Sxta.Math
             result.R2C2 = left.R2C2 + right.R2C2;
         }
 
+		/// <summary>
+        /// Matrix multiplication
+        /// </summary>
+        /// <param name="left">left-hand operand</param>
+        /// <param name="right">right-hand operand</param>
+        /// <returns>A new Vector3d which holds the result of the multiplication</returns>
+        public static Vector3d operator *(Matrix3d left, Vector3d right)
+		{
+			Vector3d r;
+
+			double fInv = 1.0 / (left.R2C0 * right.X + left.R2C1 * right.Y + left.R2C2 * right.Z);
+
+			r.X =  (double)((left.R0C0 * right.X + left.R0C1 * right.Y + left.R0C2 * right.Z) * fInv);
+			r.Y =  (double)((left.R1C0 * right.X + left.R1C1 * right.Y + left.R1C2 * right.Z) * fInv);
+			r.Z =  (double)((left.R2C0 * right.X + left.R2C1 * right.Y + left.R2C2 * right.Z) * fInv);
+			return r;
+		}
 
         /// <summary>Multiply left martix times this matrix.</summary>
         /// <param name="matrix">The matrix to multiply.</param>
@@ -8491,7 +8622,9 @@ namespace Sxta.Math
         #endregion
 
         #region Static
-		                #region CreateFromAxisAngle
+		
+        
+        #region CreateFromAxisAngle
         
         /// <summary>
         /// Build a rotation matrix from the specified axis/angle rotation.
@@ -9195,6 +9328,7 @@ namespace Sxta.Math
 
 		
         #endregion
+
         #region Multiply Functions
 
         /// <summary>
@@ -9433,6 +9567,7 @@ namespace Sxta.Math
 			r.W =  (double)((left.Row3.X * right.X + left.Row3.Y * right.Y + left.Row3.Z * right.Z + left.Row3.W * right.W) * fInvW);
 			return r;
 		}
+
 		/// <summary>
         /// Matrix multiplication
         /// </summary>
@@ -9452,6 +9587,7 @@ namespace Sxta.Math
 				b = b.enlarge(left*(new Vector3d(right.xmax, right.ymax, right.zmax)));
 				return b;
 		}
+
 
         /// <summary>
         /// Compares two instances for equality.
@@ -9542,4 +9678,5 @@ namespace Sxta.Math
 
         #endregion
     }
+
 }

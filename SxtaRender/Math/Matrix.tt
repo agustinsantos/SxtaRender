@@ -384,6 +384,22 @@ namespace Sxta.Math
             result.R1C1 = left.R1C1 + right.R1C1;
         }
 
+		/// <summary>
+        /// Matrix multiplication
+        /// </summary>
+        /// <param name="left">left-hand operand</param>
+        /// <param name="right">right-hand operand</param>
+        /// <returns>A new <#= vec3Name #> which holds the result of the multiplication</returns>
+        public static <#= vec2Name #> operator *(<#= mat2Name #> left, <#= vec2Name #> right)
+		{
+			<#= vec2Name #> r;
+
+			double fInv = 1.0 / (left.R1C0 * right.X + left.R1C1 * right.Y);
+
+			r.X =  (<#= typeName #>)((left.R0C0 * right.X + left.R0C1 * right.Y) * fInv);
+			r.Y =  (<#= typeName #>)((left.R1C0 * right.X + left.R1C1 * right.Y) * fInv);
+			return r;
+		}
 
         /// <summary>Multiply left martix times this matrix.</summary>
         /// <param name="matrix">The matrix to multiply.</param>
@@ -1098,6 +1114,23 @@ namespace Sxta.Math
             result.R2C2 = left.R2C2 + right.R2C2;
         }
 
+		/// <summary>
+        /// Matrix multiplication
+        /// </summary>
+        /// <param name="left">left-hand operand</param>
+        /// <param name="right">right-hand operand</param>
+        /// <returns>A new <#= vec3Name #> which holds the result of the multiplication</returns>
+        public static <#= vec3Name #> operator *(<#= mat3Name #> left, <#= vec3Name #> right)
+		{
+			<#= vec3Name #> r;
+
+			double fInv = 1.0 / (left.R2C0 * right.X + left.R2C1 * right.Y + left.R2C2 * right.Z);
+
+			r.X =  (<#= typeName #>)((left.R0C0 * right.X + left.R0C1 * right.Y + left.R0C2 * right.Z) * fInv);
+			r.Y =  (<#= typeName #>)((left.R1C0 * right.X + left.R1C1 * right.Y + left.R1C2 * right.Z) * fInv);
+			r.Z =  (<#= typeName #>)((left.R2C0 * right.X + left.R2C1 * right.Y + left.R2C2 * right.Z) * fInv);
+			return r;
+		}
 
         /// <summary>Multiply left martix times this matrix.</summary>
         /// <param name="matrix">The matrix to multiply.</param>

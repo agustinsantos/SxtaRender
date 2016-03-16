@@ -970,6 +970,30 @@ namespace Sxta.Math
             return new Vector2((float)v2d.X, (float)v2d.Y);
         }
 
+		<# if (typeName != "float"){#>
+		/// <summary>Converts <#= vec2Name #> to Vector2f.</summary>
+        /// <param name="v2d">The <#= vec2Name #> to convert.</param>
+        /// <returns>The resulting Vector2f.</returns>
+        public static explicit operator Vector2f(<#= vec2Name #> v2)
+        {
+            return new Vector2f((float)v2.X, (float)v2.Y);
+        }
+
+
+		<#}#>
+
+		<# if (typeName != "double"){#>
+		/// <summary>Converts <#= vec2Name #> to Vector2d.</summary>
+        /// <param name="v2d">The <#= vec2Name #> to convert.</param>
+        /// <returns>The resulting Vector2d.</returns>
+        public static explicit operator Vector2d(<#= vec2Name #> v2)
+        {
+            return new Vector2d(v2.X, v2.Y);
+        }
+
+
+		<#}#>
+
 		public static bool operator <(<#= vec2Name #> l, <#= vec2Name #> r)
         {
 			if (l.X != r.X) return l.X < r.X;
