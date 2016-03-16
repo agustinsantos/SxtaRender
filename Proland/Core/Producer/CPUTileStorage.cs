@@ -1,7 +1,7 @@
 ﻿using Sxta.Render.Resources;
 using System.Xml;
 
-namespace Sxta.Proland.Core.Producer
+namespace proland
 {
     /// <summary>
     ///  A TileStorage that store tiles on CPU.
@@ -115,7 +115,7 @@ namespace Sxta.Proland.Core.Producer
         private int channels;
 
     }
-
+    //Definimos el tipo en T en CPUTileStorageResource??????
     public class CPUTileStorageResource<T> : ResourceTemplate<CPUTileStorage<T>>
     {
         public CPUTileStorageResource(ResourceManager manager, string name, ResourceDescriptor desc, XmlElement e = null) :

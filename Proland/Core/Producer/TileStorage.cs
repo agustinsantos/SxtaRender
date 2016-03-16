@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
-namespace Sxta.Proland.Core.Producer
+namespace proland
 {
     /// <summary>
     ///  A shared storage to store tiles of the same kind. This abstract class defines
@@ -45,7 +46,7 @@ namespace Sxta.Proland.Core.Producer
              */
             public Slot(TileStorage owner)
             {
-                throw new NotImplementedException();
+                Mutex mutex = new Mutex(true, "Mutex");
             }
 
             /*
@@ -59,7 +60,7 @@ namespace Sxta.Proland.Core.Producer
              */
             public TileStorage getOwner()
             {
-                throw new NotImplementedException();
+                return owner;
             }
 
             /*
@@ -72,7 +73,14 @@ namespace Sxta.Proland.Core.Producer
              */
             public void lock_(bool lock_)
             {
-                throw new NotImplementedException();
+                if (lock_)
+                {
+                    //lock (mutex)
+                }
+                else
+                {
+                    //unlock(mutex)
+                }
             }
 
 
@@ -98,7 +106,7 @@ namespace Sxta.Proland.Core.Producer
          */
         public TileStorage(int tileSize, int capacity)
         {
-            throw new NotImplementedException();
+            init(tileSize, capacity);
         }
 
         /*
@@ -116,7 +124,17 @@ namespace Sxta.Proland.Core.Producer
          */
         public Slot newSlot()
         {
-            throw new NotImplementedException();
+            Slot i = freeSlots.First();
+            if (freeSlots.Contains(i))
+            {
+                Slot s = i;
+                freeSlots.Remove(i);
+                return s;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         /*
@@ -128,7 +146,7 @@ namespace Sxta.Proland.Core.Producer
          */
         public void deleteSlot(Slot t)
         {
-            throw new NotImplementedException();
+            freeSlots.Remove(t);
         }
 
         /*
@@ -138,7 +156,7 @@ namespace Sxta.Proland.Core.Producer
          */
         public int getTileSize()
         {
-            throw new NotImplementedException();
+            return tileSize;
         }
 
         /*
@@ -147,7 +165,7 @@ namespace Sxta.Proland.Core.Producer
          */
         public int getCapacity()
         {
-            throw new NotImplementedException();
+            return capacity;
         }
 
         /*
@@ -155,7 +173,7 @@ namespace Sxta.Proland.Core.Producer
          */
         public int getFreeSlots()
         {
-            throw new NotImplementedException();
+            return freeSlots.Count();
         }
 
 
@@ -180,9 +198,9 @@ namespace Sxta.Proland.Core.Producer
         /*
          * Creates a new uninitialized TileStorage.
          */
-        protected TileStorage()
+        internal TileStorage()
         {
-            throw new NotImplementedException();
+            
         }
 
         /*
@@ -196,7 +214,8 @@ namespace Sxta.Proland.Core.Producer
          */
         protected void init(int tileSize, int capacity)
         {
-            throw new NotImplementedException();
+            this.tileSize = tileSize;
+            this.capacity = capacity;
         }
     }
 

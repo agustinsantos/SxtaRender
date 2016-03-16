@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 
-namespace Sxta.Proland.Core.Producer
+namespace proland
 {
     /// <summary>
     /// 
@@ -19,7 +19,7 @@ namespace Sxta.Proland.Core.Producer
     /// </summary>
     public class TileProducer
     {
-#if DANIEL
+//#if DANIEL
 
         /////////////////////////////////PARTE 2/////////////////////////////////////
 
@@ -196,7 +196,7 @@ namespace Sxta.Proland.Core.Producer
         public virtual TileCache.Tile getTile(int level, int tx, int ty, uint deadline)
         {
             int users = 0;
-            TileCache.Tile t = cache.getTile(id, level, tx, ty, deadline, &users);
+            TileCache.Tile t = cache.getTile(id, level, tx, ty, deadline, users);
             if (users == 0)
             {
                 for (int i = 0; i < layers.Count; i++)
@@ -271,7 +271,7 @@ namespace Sxta.Proland.Core.Producer
             {
                 t = tile;
             }
-
+            ///////////////////////////////////////////////////////////////////////////////////////////////////////
             GPUTileStorage.GPUSlot gput = (GPUTileStorage.GPUSlot)(t.getData());
             Debug.Assert(gput != null);
 
@@ -281,11 +281,11 @@ namespace Sxta.Proland.Core.Producer
 
             if (s % 2 == 0)
             {
-                return new Vector4f((dx + b) / w, (dy + b) / h, (float)(gput.l), ds / w);
+                return new Vector4f((dx + b) / w, (dy + b) / h, (float)(GPUTileStorage.GPUSlot.l), ds / w);
             }
             else
             {
-                return new Vector4f((dx + b + 0.5f) / w, (dy + b + 0.5f) / h, (float)(gput.l), ds / w);
+                return new Vector4f((dx + b + 0.5f) / w, (dy + b + 0.5f) / h, (float)(GPUTileStorage.GPUSlot.l), ds / w);
             }
         }
 
@@ -448,8 +448,8 @@ namespace Sxta.Proland.Core.Producer
                                 }
                                 else
                                 {
-                                    x = gpuData.l % 256;
-                                    y = gpuData.l / 256 + 1;
+                                    x = GPUTileStorage.GPUSlot.l % 256;
+                                    y = GPUTileStorage.GPUSlot.l / 256 + 1;
                                 }
                                 if (y != 0 && tileMap[2 * key + 1] != 0)
                                 {
@@ -507,8 +507,8 @@ namespace Sxta.Proland.Core.Producer
                             }
                             else
                             {
-                                x = gpuData.l % 256;
-                                y = gpuData.l / 256 + 1;
+                                x = GPUTileStorage.GPUSlot.l % 256;
+                                y = GPUTileStorage.GPUSlot.l / 256 + 1;
                             }
                             tileMap[2 * n] = x;
                             tileMap[2 * n + 1] = y;
@@ -615,9 +615,9 @@ namespace Sxta.Proland.Core.Producer
           * This is only needed for GPU tasks (see Task#getContext).
           * The default implementation of this method does nothing and returns null.
           */
-        protected internal virtual object getContext()
+        protected internal virtual ulong getContext()
         {
-            return null;
+            return 0;
         }
 
         /*
@@ -827,7 +827,7 @@ namespace Sxta.Proland.Core.Producer
           *      the current frame.
           * @param t the existing task to create this tile if it still exists, or null.
           */
-        private Task createTile(int level, int tx, int ty, TileStorage.Slot data, uint deadline, Task old)
+        internal Task createTile(int level, int tx, int ty, TileStorage.Slot data, uint deadline, Task old)
         {
             Debug.Assert(data != null);
             if (old != null)
@@ -902,7 +902,7 @@ namespace Sxta.Proland.Core.Producer
         /**
          * Cache last result from getContext.
          */
-        public object cachedContext;
+        public ulong cachedContext;
 
         /**
          * True is the tiles needed to create this tile have been acquired with
@@ -956,7 +956,8 @@ namespace Sxta.Proland.Core.Producer
         /**
          * Overrides Task#getContext.
          */
-        public virtual object getContext()
+        //---------------------TODO Review context definition---------------------------------------------------------------
+        public virtual ulong getContext()
         {
             // combines the context returned by the producer with the producer type
             // to ensure that two tasks from two producers with the same context
@@ -964,13 +965,13 @@ namespace Sxta.Proland.Core.Producer
 
             if (owner != null)
             { // the owner exists
-                cachedContext = (void*)((size_t)typeid(*owner).name() + (size_t)owner.getContext());
+                cachedContext = ((ulong)owner.GetType().FullName.GetHashCode() + owner.getContext());
                 return cachedContext;
             }
             else
             {
                 // the owner may have been destroyed, this is a workaround
-                Debug.Assert(cachedContext != null);
+                Debug.Assert(cachedContext != 0);
                 return cachedContext; // return last successful result
             }
         }
@@ -1052,7 +1053,9 @@ namespace Sxta.Proland.Core.Producer
                 // task). In this case we do not execute the task, otherwise it
                 // could override data already produced for the reaffected tile.
                 changes = owner.doCreateTile(level, tx, ty, data);
-                data.id = TileCache.Tile.getTId(owner.getId(), level, tx, ty);
+
+                //data.id = TileCache.Tile.getTId(owner.getId(), level, tx, ty);
+                data.id = Tuple.Create(owner.getId(), Tuple.Create(level, Tuple.Create(tx, ty)));
             }
             data.lock_(false);
             return changes;
@@ -1197,6 +1200,5 @@ namespace Sxta.Proland.Core.Producer
                 addDependency(root, dst);
             }
         }
-#endif
     }
 }

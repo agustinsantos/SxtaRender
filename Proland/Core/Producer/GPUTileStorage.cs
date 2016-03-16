@@ -7,16 +7,12 @@ using Sxta.Render.Resources;
 using Sxta.Render;
 using System.Diagnostics;
 using System.Xml;
+using Sxta.Render.Resources.XmlResources;
 
-namespace Sxta.Render
-{
-        //void getParameters(ResourceDescriptor desc, XmlElement e, TextureInternalFormat ff, TextureFormat f, PixelType t);
 
-        //void getParameters(ResourceDescriptor desc, XmlElement e, Texture.Parameters _params);
-}
-namespace Sxta.Proland.Core.Producer
+namespace proland
 {
-    public class GPUTileStorage<T> : TileStorage, ISwappable<GPUTileStorage<T>>
+    public class GPUTileStorage : TileStorage, ISwappable<GPUTileStorage>
     {
 
         const string mipmapShader = @"
@@ -128,7 +124,7 @@ vec4 uv = vec4(xy + vec2(0.25), xy + vec2(0.75)) / float(bufferLayerLevelWidth.w
             {
                 return index;
             }
-            public int getwidth()
+            public int getWidth()
             {
                 return t.getWidth();
             }
@@ -237,7 +233,7 @@ vec4 uv = vec4(xy + vec2(0.25), xy + vec2(0.75)) / float(bufferLayerLevelWidth.w
                 int width = tileSize / 2;
                 while (width >= 1)
                 {
-                    fbo.setViewport(new Math.Vector4i(0, 0, width, width));
+                    fbo.setViewport(new Sxta.Math.Vector4i(0, 0, width, width));
                     for (int n = 0; n < textures.Count(); n++)
                     {
                         fbo.setTextureBuffer((BufferId)(1 << n),textures[n],level, -1);
@@ -247,7 +243,7 @@ vec4 uv = vec4(xy + vec2(0.25), xy + vec2(0.75)) / float(bufferLayerLevelWidth.w
                         fbo.setDrawBuffer((BufferId)(1<<n));
                         foreach (GPUSlot s in dirtySlots[n])
                         {
-                            mipmapParams.set(new Math.Vector4i(s.index, GPUSlot.l, level - 1, width));
+                            mipmapParams.set(new Sxta.Math.Vector4i(s.index, GPUSlot.l, level - 1, width));
                             fbo.drawQuad(mipmapProg);
                         }
                     }
@@ -313,7 +309,7 @@ vec4 uv = vec4(xy + vec2(0.25), xy + vec2(0.75)) / float(bufferLayerLevelWidth.w
             }
         }
 
-        public void swap(GPUTileStorage<T> s)
+        public void swap(GPUTileStorage s)
         {
             Debug.Assert(false);
         }
@@ -354,7 +350,7 @@ vec4 uv = vec4(xy + vec2(0.25), xy + vec2(0.75)) / float(bufferLayerLevelWidth.w
 
     }
 
-    public class GPUTileStorageResource<T> : ResourceTemplate<GPUTileStorage<T>>
+    public class GPUTileStorageResource : ResourceTemplate<GPUTileStorage>
     {
         public GPUTileStorageResource(ResourceManager manager, string name, ResourceDescriptor desc, XmlElement e = null) :
             base(20, manager, name, desc)
@@ -365,20 +361,19 @@ vec4 uv = vec4(xy + vec2(0.25), xy + vec2(0.75)) / float(bufferLayerLevelWidth.w
             TextureInternalFormat tf;
             TextureFormat f;
             PixelType t;
-            Texture.Parameters _params;
+            Texture.Parameters _params = null;
             bool useTileMap = false;
             checkParameters(desc, e, "name,tileSize,nTiles,tileMap,internalformat,format,type,min,mag,minLod,maxLod,minLevel,maxLevel,swizzle,anisotropy,");
-            //getParameters();
-            //getParameters(desc, e, _params);
+            TextureResource.getParameters(desc, e, out tf, out f, out t);
+            TextureResource.getParameters(desc, e, ref _params);
             getIntParameter(desc, e, "tileSize", out tileSize);
             getIntParameter(desc, e, "nTiles", out nTiles);
             if (e.GetAttribute("tileMap") != null)
             {
-                useTileMap = String.Equals(e.GetAttribute("tileMap"), "true"); // == 0???
+                useTileMap = e.GetAttribute("tileMap") == "true"; // == 0???
             }
-            //valueC.init(tileSize, nTiles, tf, f, t, _params, useTileMap);
+            valueC.init(tileSize, nTiles, tf, f, t, _params, useTileMap);
 
         }
     }
-
 }
