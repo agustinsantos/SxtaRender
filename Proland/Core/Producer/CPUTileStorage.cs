@@ -36,17 +36,6 @@ namespace proland
                 this.size = size;
             }
 
-            /**
-              * Deletes this CPUSlot. This deletes the #data array.
-              */
-            //~CPUSlot()
-            //{
-            //    if (data != null)
-            //    {
-            //        //delete[] data;  //Delete process?????
-            //        data = null;
-            //    }
-            //}
         }
 
         /// <summary>
