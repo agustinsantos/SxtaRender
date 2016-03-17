@@ -2440,15 +2440,17 @@ namespace Sxta.Math
         {
             return new <#= vec3Name #>((<#= typeName #>)v3.X, (<#= typeName #>)v3.Y, (<#= typeName #>)v3.Z);
         }
-
+		<# if (vec3Name != "Vector3d")
+		{
+		#>
         /// <summary>Converts <#= vec3Name #> to OpenTK.Vector3d.</summary>
         /// <param name="v3d">The <#= vec3Name #> to convert.</param>
         /// <returns>The resulting Vector3d.</returns>
-        public static explicit operator OpenTK.Vector3d(<#= vec3Name #> v3d)
+        public static explicit operator Vector3d(<#= vec3Name #> v3d)
         {
-            return new OpenTK.Vector3d((float)v3d.X, (float)v3d.Y, (float)v3d.Z);
+            return new Vector3d((float)v3d.X, (float)v3d.Y, (float)v3d.Z);
         }
-
+		<# } #>
 		
 		public static bool operator <(<#= vec3Name #> l, <#= vec3Name #> r)
         {

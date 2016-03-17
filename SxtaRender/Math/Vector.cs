@@ -2161,15 +2161,15 @@ namespace Sxta.Math
         {
             return new Vector3i((int)v3.X, (int)v3.Y, (int)v3.Z);
         }
-
+		
         /// <summary>Converts Vector3i to OpenTK.Vector3d.</summary>
         /// <param name="v3d">The Vector3i to convert.</param>
         /// <returns>The resulting Vector3d.</returns>
-        public static explicit operator OpenTK.Vector3d(Vector3i v3d)
+        public static explicit operator Vector3d(Vector3i v3d)
         {
-            return new OpenTK.Vector3d((float)v3d.X, (float)v3d.Y, (float)v3d.Z);
+            return new Vector3d((float)v3d.X, (float)v3d.Y, (float)v3d.Z);
         }
-
+		
 		
 		public static bool operator <(Vector3i l, Vector3i r)
         {
@@ -5411,15 +5411,15 @@ namespace Sxta.Math
         {
             return new Vector3ui((uint)v3.X, (uint)v3.Y, (uint)v3.Z);
         }
-
+		
         /// <summary>Converts Vector3ui to OpenTK.Vector3d.</summary>
         /// <param name="v3d">The Vector3ui to convert.</param>
         /// <returns>The resulting Vector3d.</returns>
-        public static explicit operator OpenTK.Vector3d(Vector3ui v3d)
+        public static explicit operator Vector3d(Vector3ui v3d)
         {
-            return new OpenTK.Vector3d((float)v3d.X, (float)v3d.Y, (float)v3d.Z);
+            return new Vector3d((float)v3d.X, (float)v3d.Y, (float)v3d.Z);
         }
-
+		
 		
 		public static bool operator <(Vector3ui l, Vector3ui r)
         {
@@ -8913,15 +8913,15 @@ namespace Sxta.Math
         {
             return new Vector3f((float)v3.X, (float)v3.Y, (float)v3.Z);
         }
-
+		
         /// <summary>Converts Vector3f to OpenTK.Vector3d.</summary>
         /// <param name="v3d">The Vector3f to convert.</param>
         /// <returns>The resulting Vector3d.</returns>
-        public static explicit operator OpenTK.Vector3d(Vector3f v3d)
+        public static explicit operator Vector3d(Vector3f v3d)
         {
-            return new OpenTK.Vector3d((float)v3d.X, (float)v3d.Y, (float)v3d.Z);
+            return new Vector3d((float)v3d.X, (float)v3d.Y, (float)v3d.Z);
         }
-
+		
 		
 		public static bool operator <(Vector3f l, Vector3f r)
         {
@@ -12425,15 +12425,7 @@ namespace Sxta.Math
         {
             return new Vector3d((double)v3.X, (double)v3.Y, (double)v3.Z);
         }
-
-        /// <summary>Converts Vector3d to OpenTK.Vector3d.</summary>
-        /// <param name="v3d">The Vector3d to convert.</param>
-        /// <returns>The resulting Vector3d.</returns>
-        public static explicit operator OpenTK.Vector3d(Vector3d v3d)
-        {
-            return new OpenTK.Vector3d((float)v3d.X, (float)v3d.Y, (float)v3d.Z);
-        }
-
+		
 		
 		public static bool operator <(Vector3d l, Vector3d r)
         {
