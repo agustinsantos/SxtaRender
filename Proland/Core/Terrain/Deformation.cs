@@ -11,7 +11,7 @@ using Sxta.Render.Scenegraph;
 
 namespace proland
 {
-    class Deformation// : Object
+    public class Deformation// : Object
     {
         /// <summary>
         /// Creates a new Deformation.

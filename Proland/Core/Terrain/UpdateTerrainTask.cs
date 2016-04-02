@@ -10,7 +10,7 @@ using Sxta.Core;
 
 namespace proland
 {
-    class UpdateTerrainTask : AbstractTask
+    public class UpdateTerrainTask : AbstractTask
     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 

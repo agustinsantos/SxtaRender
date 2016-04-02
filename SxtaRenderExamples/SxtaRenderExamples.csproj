@@ -120,6 +120,8 @@
     <Compile Include="Tutorials\SceneGraph\TutorialSG01_1.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Tutorials\Testing\Tutorial08_1.cs" />
+    <Compile Include="Tutorials\Testing\Tutorial08_2.cs" />
     <EmbeddedResource Include="ExampleBrowser.resx">
       <DependentUpon>ExampleBrowser.cs</DependentUpon>
     </EmbeddedResource>
@@ -208,6 +210,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Resources\Meshes\plane.mesh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\Meshes\quad2.mesh">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Resources\Meshes\quad.mesh">
@@ -359,6 +364,10 @@
     <ProjectReference Include="..\ObjLoader\ObjLoader.csproj">
       <Project>{9b86ebeb-4d3a-4136-a90b-5c26e88b4656}</Project>
       <Name>ObjLoader</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Proland\Proland.csproj">
+      <Project>{a2033fea-1c1a-4afb-9c88-53df36ff53e0}</Project>
+      <Name>Proland</Name>
     </ProjectReference>
     <ProjectReference Include="..\SxtaRender\SxtaRender.csproj">
       <Project>{2b803a3e-cc40-477b-a9cf-b1f2abdce6f3}</Project>
@@ -541,6 +550,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\Textures\verasansmono.png" />
+    <Content Include="Tutorials\Testing\helloworld.xml" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

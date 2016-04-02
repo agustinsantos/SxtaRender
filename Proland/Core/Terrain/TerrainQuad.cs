@@ -11,7 +11,7 @@ using System.Diagnostics;
 
 namespace proland
 {
-    class TerrainQuad : TerrainNode
+    public class TerrainQuad : TerrainNode
     {
 
         /// <summary>

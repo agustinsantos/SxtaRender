@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace proland
 {
-    class SphericalDeformation : Deformation
+    public class SphericalDeformation : Deformation
     {
 
         /**

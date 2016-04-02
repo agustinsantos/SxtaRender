@@ -20,7 +20,7 @@ namespace proland
      * @ingroup terrain
      * @authors Eric Bruneton, Antoine Begault
      */
-    class CylindricalDeformation : Deformation
+    public class CylindricalDeformation : Deformation
     {
         /**
         * The radius of the cylinder into which the plane z=0 must be deformed.

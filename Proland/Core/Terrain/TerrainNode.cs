@@ -33,7 +33,7 @@ namespace proland
      * @ingroup terrain
      * @authors Eric Bruneton, Antoine Begault, Guillaume Piolat
      */
-    class TerrainNode : Object
+    public class TerrainNode : Object
     {
         int HORIZON_SIZE = 256;
 

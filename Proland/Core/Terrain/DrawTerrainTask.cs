@@ -12,7 +12,7 @@ using System.Diagnostics;
 
 namespace proland
 {
-    class DrawTerrainTask : AbstractTask
+    public class DrawTerrainTask : AbstractTask
     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         /// <summary>
@@ -187,7 +187,7 @@ namespace proland
             }
 
 
-            public virtual bool run()
+            public override bool run()
             {
                 if (t != null)
                 {
