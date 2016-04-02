@@ -123,12 +123,12 @@ namespace proland
             Vector3d cy = -px * sp * ct + py * cp * ct + pz * st;
             Vector3d cz = px * sp * st - py * cp * st + pz * ct;
             position = po + cz * d * zoom;
-
+#if TODO
             if (position.Length < R + 0.5 + groundHeight)
             {
-                //TOSEEposition = position.Normalize(R + 0.5 + groundHeight);
+                position = position.Normalize(R + 0.5 + groundHeight);
             }
-
+#endif
             Matrix4d view = new Matrix4d(cx.X, cx.Y, cx.Z, 0.0,
                     cy.X, cy.Y, cy.Z, 0.0,
                     cz.X, cz.Y, cz.Z, 0.0,

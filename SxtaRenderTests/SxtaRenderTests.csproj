@@ -60,6 +60,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="ImageDDSTest.cs" />
+    <Compile Include="TerrainSquareTest.cs" />
     <Compile Include="TextureFormatsTest.cs" />
     <Compile Include="DrawTextureTest.cs" />
     <Compile Include="TestTools\Color32.cs" />

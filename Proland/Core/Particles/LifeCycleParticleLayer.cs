@@ -10,149 +10,155 @@ using Sxta.Render.Resources.XmlResources;
 
 namespace proland
 {
-    class LifeCycleParticleLayer : ParticleLayer, ISwappable<LifeCycleParticleLayer>
+    public class LifeCycleParticleLayer : ParticleLayer, ISwappable<LifeCycleParticleLayer>
     {
 
-        /**
-        * Layer specific particle data for managing the lifecycle of %particles.
-        */
+        /// <summary>
+        /// Layer specific particle data for managing the lifecycle of %particles.
+        /// </summary>
         public struct LifeCycleParticle
-            {
-                /**
-                * The birth date of this particle, in microseconds. This birth date
-                * allows one to compute the age of the particle. If this age is
-                * between 0 and fadeInDelay the particle is fading in. If this age is
-                * between fadeInDelay and fadeInDelay + activeDelay, the particle
-                * is active. Otherwise it is fading out. Note that we do not store the
-                * particle's age directly to avoid updating it at each frame.
-                */
-                internal float birthDate;
-            };
+        {
+            /// <summary>
+            /// The birth date of this particle, in microseconds. This birth date
+            /// allows one to compute the age of the particle. If this age is
+            /// between 0 and fadeInDelay the particle is fading in. If this age is
+            /// between fadeInDelay and fadeInDelay + activeDelay, the particle
+            /// is active. Otherwise it is fading out. Note that we do not store the
+            /// particle's age directly to avoid updating it at each frame.
+            /// </summary>
+            internal float birthDate;
+        };
 
-        /**
-         * Creates a new LifeCycleParticleLayer.
-         *
-         * @param fadeInDelay the fade in delay of %particles, in microseconds.
-         *      0 means that %particles are created directly in active state.
-         * @param activeDelay the active delay of %particles, in microseconds.
-         * @param fadeOutDelay the fade out delay of %particles, in microseconds.
-         *      0 means that %particles are deleted when the become inactive.
-         */
-        public LifeCycleParticleLayer(float fadeInDelay, float activeDelay, float fadeOutDelay)
+        /// <summary>
+        /// Creates a new LifeCycleParticleLayer.
+        ///
+        /// @param fadeInDelay the fade in delay of %particles, in microseconds.
+        ///      0 means that %particles are created directly in active state.
+        /// @param activeDelay the active delay of %particles, in microseconds.
+        /// @param fadeOutDelay the fade out delay of %particles, in microseconds.
+        ///      0 means that %particles are deleted when the become inactive.
+        /// </summary>
+        public LifeCycleParticleLayer(float fadeInDelay, float activeDelay, float fadeOutDelay) : base("LifeCycleParticleLayer", sizeof(LifeCycleParticle))
         {
             init(fadeInDelay, activeDelay, fadeOutDelay);
         }
+        /// <summary>
+        /// Creates an uninitialized LifeCycleParticleLayer.
+        /// </summary>
+        protected LifeCycleParticleLayer() : base("LifeCycleParticleLayer", sizeof(LifeCycleParticle))
+        {
 
+        }
 
-        /**
-         * Returns the fade in delay of %particles, in microseconds.
-         * 0 means that %particles are created directly in active state.
-         */
+        /// <summary>
+        /// Returns the fade in delay of %particles, in microseconds.
+        /// 0 means that %particles are created directly in active state.
+        /// </summary>
         public float getFadeInDelay()
         {
             return fadeInDelay;
         }
 
-        /**
-         * Sets the fade in delay of %particles, in microseconds.
-         * 0 means that %particles are created directly in active state.
-         *
-         * @param delay the new fade in delay.
-         */
+        /// <summary>
+        /// Sets the fade in delay of %particles, in microseconds.
+        /// 0 means that %particles are created directly in active state.
+        ///
+        /// @param delay the new fade in delay.
+        /// </summary>
         public void setFadeInDelay(float delay)
         {
             fadeInDelay = delay;
         }
 
-        /**
-         * Returns the active delay of %particles, in microseconds.
-         */
+        /// <summary>
+        /// Returns the active delay of %particles, in microseconds.
+        /// </summary>
         public float getActiveDelay()
         {
             return activeDelay;
         }
 
-        /**
-         * Sets the active delay of %particles, in microseconds.
-         *
-         * @param delay the new active delay.
-         */
+        /// <summary>
+        /// Sets the active delay of %particles, in microseconds.
+        ///
+        /// @param delay the new active delay.
+        /// </summary>
         public void setActiveDelay(float delay)
         {
             activeDelay = delay;
         }
 
-        /**
-         * Returns the fade out delay of %particles, in microseconds.
-         * 0 means that %particles are deleted when they become inactive.
-         */
+        /// <summary>
+        /// Returns the fade out delay of %particles, in microseconds.
+        /// 0 means that %particles are deleted when they become inactive.
+        /// </summary>
         public float getFadeOutDelay()
         {
             return fadeOutDelay;
         }
 
-        /**
-         * Sets the fade out delay of %particles, in microseconds.
-         * 0 means that %particles are deleted when they become inactive.
-         *
-         * @param delay the new fade out delay.
-         */
+        /// <summary>
+        /// Sets the fade out delay of %particles, in microseconds.
+        /// 0 means that %particles are deleted when they become inactive.
+        ///
+        /// @param delay the new fade out delay.
+        /// </summary>
         public void setFadeOutDelay(float delay)
         {
             fadeOutDelay = delay;
         }
 
-        /**
-         * Returns the lifecycle specific data of the given particle.
-         *
-         * @param p a particle.
-         */
+        /// <summary>
+        /// Returns the lifecycle specific data of the given particle.
+        ///
+        /// @param p a particle.
+        /// </summary>
         public LifeCycleParticle getLifeCycle(ParticleStorage.Particle p)
         {
             return (LifeCycleParticle)getParticleData(p);
         }
 
-        /**
-         * Returns the birth date of the given particle.
-         *
-         * @param p a particle.
-         * @return the birth date of the given particle, in microseconds.
-         */
+        /// <summary>
+        /// Returns the birth date of the given particle.
+        ///
+        /// @param p a particle.
+        /// @return the birth date of the given particle, in microseconds.
+        /// </summary>
         public float getBirthDate(ParticleStorage.Particle p)
         {
             return getLifeCycle(p).birthDate;
         }
 
-        /**
-         * Returns true if the given particle is fading in.
-         */
+        /// <summary>
+        /// Returns true if the given particle is fading in.
+        /// </summary>
         public bool isFadingIn(ParticleStorage.Particle p)
         {
             float age = time - getBirthDate(p);
             return age < fadeInDelay;
         }
 
-        /**
-         * Returns true if the given particle is active.
-         */
+        /// <summary>
+        /// Returns true if the given particle is active.
+        /// </summary>
         public bool isActive(ParticleStorage.Particle p)
         {
             float age = time - getBirthDate(p);
             return age >= fadeInDelay && age < fadeInDelay + activeDelay;
         }
 
-        /**
-         * Returns true if the given particle is fading out.
-         */
+        /// <summary>
+        /// Returns true if the given particle is fading out.
+        /// </summary>
         public bool isFadingOut(ParticleStorage.Particle p)
         {
             float age = time - getBirthDate(p);
             return age >= fadeInDelay + activeDelay;
         }
 
-        /**
-         * Forces the given particle to start fading out.
-         */
+        /// <summary>
+        /// Forces the given particle to start fading out.
+        /// </summary>
         public void setFadingOut(ParticleStorage.Particle p)
         {
             // making sure that the intensity won't pop to 1.0 when deleting a fading in particle
@@ -163,20 +169,20 @@ namespace proland
             }
         }
 
-        /**
-         * Forces the given particle to be deleted immediatly.
-         */
+        /// <summary>
+        /// Forces the given particle to be deleted immediatly.
+        /// </summary>
         public void killParticle(ParticleStorage.Particle p)
         {
             float minBirthDate = time - (fadeInDelay + activeDelay + fadeOutDelay);
             getLifeCycle(p).birthDate = minBirthDate - 1.0f;
         }
 
-        /**
-         * Returns an intensity for the given particle, based on its current
-         * state. This intensity varies between 0 to 1 during fade in, stays equal
-         * to 1 when the particle is active, and varies from 1 to 0 during fade out.
-         */
+        /// <summary>
+        /// Returns an intensity for the given particle, based on its current
+        /// state. This intensity varies between 0 to 1 during fade in, stays equal
+        /// to 1 when the particle is active, and varies from 1 to 0 during fade out.
+        /// </summary>
         public float getIntensity(ParticleStorage.Particle p)
         {
             float t = time - getBirthDate(p);
@@ -199,18 +205,18 @@ namespace proland
             }
         }
 
-        /**
-         * Updates the current time. We don't need to update the %particles
-         * because we store their birth date instead of their age.
-         */
-        public virtual void moveParticles(float dt)
+        /// <summary>
+        /// Updates the current time. We don't need to update the %particles
+        /// because we store their birth date instead of their age.
+        /// </summary>
+        public virtual void moveParticles(double dt)
         {
-            time += dt;ojear
+            time += (float)dt; //TOSEE
         }
 
-        /**
-         * Deletes the %particles that have completely faded out.
-         */
+        /// <summary>
+        /// Deletes the %particles that have completely faded out.
+        /// </summary>
         public virtual void removeOldParticles()
         {
             // all particles with a birth date less than minBirthDate must be deleted
@@ -219,7 +225,7 @@ namespace proland
             ParticleStorage s = getOwner().getStorage();
             //vector<ParticleStorage::Particle*>::iterator i = s->getParticles();
             //vector<ParticleStorage::Particle*>::iterator end = s->end();
-            foreach (ParticleStorage.Particle i in s)
+            foreach (ParticleStorage.Particle i in s.getParticles())
             {
                 ParticleStorage.Particle p = i;
                 if (getBirthDate(p) <= minBirthDate)
@@ -229,17 +235,10 @@ namespace proland
             }
         }
 
-        /**
-         * Creates an uninitialized LifeCycleParticleLayer.
-         */
-        protected LifeCycleParticleLayer() :
-        {
 
-        }
-
-        /**
-         * Initializes this LifeCycleParticleLayer. See #LifeCycleParticleLayer.
-         */
+        /// <summary>
+        /// Initializes this LifeCycleParticleLayer. See #LifeCycleParticleLayer.
+        /// </summary>
         internal void init(float fadeInDelay, float activeDelay, float fadeOutDelay)
         {
             this.fadeInDelay = fadeInDelay;
@@ -248,9 +247,9 @@ namespace proland
             this.time = 0.0f;
         }
 
-        /**
-         * Initializes the birth date of the given particle to #time.
-         */
+        /// <summary>
+        /// Initializes the birth date of the given particle to #time.
+        /// </summary>
         protected virtual void initParticle(ParticleStorage.Particle p)
         {
             getLifeCycle(p).birthDate = time;
@@ -258,40 +257,40 @@ namespace proland
 
         public virtual void swap(LifeCycleParticleLayer p)
         {
-            ParticleLayer.Swap(p);
+            ParticleLayer.swap(p);
             Std.Swap(ref fadeInDelay, ref p.fadeInDelay);
             Std.Swap(ref fadeOutDelay, ref p.fadeOutDelay);
             Std.Swap(ref activeDelay, ref p.activeDelay);
             Std.Swap(ref time, ref p.time);
         }
 
-        /**
-         * The fade in delay of %particles, in microseconds. 0 means that
-         * %particles are created directly in active state.
-         */
+        /// <summary>
+        /// The fade in delay of %particles, in microseconds. 0 means that
+        /// %particles are created directly in active state.
+        /// </summary>
         private float fadeInDelay;
 
-        /**
-         * The active delay of %particles, in microseconds.
-         */
+        /// <summary>
+        /// The active delay of %particles, in microseconds.
+        /// </summary>
         private float activeDelay;
 
-        /**
-         * The fade out delay of %particles, in microseconds. 0 means that
-         * %particles are deleted when the become inactive.
-         */
+        /// <summary>
+        /// The fade out delay of %particles, in microseconds. 0 means that
+        /// %particles are deleted when the become inactive.
+        /// </summary>
         private float fadeOutDelay;
 
-        /**
-         * The current time, in microseconds. This time is updated in
-         * #moveParticles and used to set the birth date of particles in
-         * #initParticle.
-         */
+        /// <summary>
+        /// The current time, in microseconds. This time is updated in
+        /// #moveParticles and used to set the birth date of particles in
+        /// #initParticle.
+        /// </summary>
         private float time;
     }
     class LifeCycleParticleLayerResource : ResourceTemplate<LifeCycleParticleLayer>
     {
-        public LifeCycleParticleLayerResource(ResourceManager manager, string name, ResourceDescriptor desc, XmlElement e = null) : base(20,manager, name, desc)
+        public LifeCycleParticleLayerResource(ResourceManager manager, string name, ResourceDescriptor desc, XmlElement e = null) : base(20, manager, name, desc)
         {
             e = e == null ? desc.descriptor : e;
             checkParameters(desc, e, "name,fadeInDelay,fadeOutDelay,activeDelay,unit,");
@@ -326,7 +325,7 @@ namespace proland
             valueC.init(fadeInDelay * unit, activeDelay * unit, fadeOutDelay * unit);
         }
 
-        virtual bool prepareUpdate()
+        public virtual bool prepareUpdate()
         {
             oldValue = null;
             newDesc = null;

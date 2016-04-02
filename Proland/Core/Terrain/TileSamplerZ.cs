@@ -160,7 +160,7 @@ void main() {
                 camera = state.cameraOffset;
                 state.cameraSlot = null;
             }
-#if TODO
+
             Dictionary<TreeZ, TreeZSort>.iterator i = State.needReadback;
             foreach (KeyValuePair<TreeZ, TreeZSort> i in state.needReadback && gpuTiles.Count() < MAX_MIPMAP_PER_FRAME)
             {
@@ -182,7 +182,7 @@ void main() {
                     }
                 }
             }
-#endif
+
             if (!gpuTiles.Any())
             {
                 return result;
@@ -287,7 +287,7 @@ void main() {
             }
             if ((t).t != null && (t).t.task.isDone() && (!((TreeZ)(t)).readback || ((TreeZ)(t)).readbackDate < (t).t.task.getCompletionDate()))
             {
-                //TODOstate.needReadback.insert((TreeZ)(t));
+                state.needReadback.insert((TreeZ)(t));
                 ((TreeZ)(t)).readback = true;
                 ((TreeZ)(t)).readbackDate = (t).t.task.getCompletionDate();
             }
@@ -354,7 +354,7 @@ void main() {
         ///A sort operator to sort TreeZ elements. It is used to read back
         ///coarsest tiles first (i.e. those whose level is minimal).
         /// </summary>
-#if TODO
+
         private struct TreeZSort : Std.less<TreeZ>
         {
             /// <summary>
@@ -362,7 +362,7 @@ void main() {
             /// </summary>
             bool operator <(TreeZ x, TreeZ y);
         };
-#endif
+
         /// <summary>
         ///A ork.ReadbackManager.Callback to readback an
         ///elevation tile and to update the zmin and zmax fields
@@ -412,7 +412,7 @@ void main() {
                     targets[i].zmax = values[2 * i + 1];
                 }
             }
-        };
+        }
 
         /// <summary>
         ///A state object to share the readback managers between all
@@ -459,7 +459,7 @@ void main() {
             /// <summary>
             ///The set of texture tile that need to be read back.
             /// </summary>
-            //TODOinternal SortedSet<TreeZ, TreeZSort> needReadback;
+            internal SortedSet<TreeZ, TreeZSort> needReadback;
 
             /// <summary>
             ///The slot of #storage corresponding to the quad below the camera.

@@ -262,10 +262,11 @@ namespace proland
                 znear = (float)(d * zoom * Math.Max(1.0 - 10.0 * Math.Tan((fov / 2) * (Math.PI / 180.0)) / zoom, 0.1));
                 zfar = (float)(d * zoom * Math.Min(1.0 + 10.0 * Math.Tan((fov / 2)* (Math.PI / 180.0)) / zoom, 10.0));
             }
-
-            //TOSEEMatrix4d clip = Matrix4d.orthoProjection(viewport.Y, viewport.X, viewport.W, viewport.Z, 1.0f, -1.0f);
-            //TOSEEMatrix4d cameraToScreen = Matrix4d.perspectiveProjection(vfov, width / height, znear, zfar);
-            //TOSEEnode.getOwner().setCameraToScreen(clip * cameraToScreen);
+#if TODO
+            Matrix4d clip = Matrix4d.orthoProjection(viewport.Y, viewport.X, viewport.W, viewport.Z, 1.0f, -1.0f);
+            Matrix4d cameraToScreen = Matrix4d.perspectiveProjection(vfov, width / height, znear, zfar);
+            node.getOwner().setCameraToScreen(clip * cameraToScreen);
+#endif
         }
 
 

@@ -309,7 +309,7 @@ namespace proland
 
             Texture1D wavesTexture = new Texture1D(nbWaves, TextureInternalFormat.RGBA32F, TextureFormat.RGBA,
                     PixelType.FLOAT, new Texture.Parameters().wrapS(TextureWrap.CLAMP_TO_BORDER).min(TextureFilter.NEAREST).mag(TextureFilter.NEAREST),
-                    new Sxta.Render.Buffer.Parameters(), new CPUBuffer<byte>(/**TOSEE waves**/));
+                    new Sxta.Render.Buffer.Parameters(), new CPUBuffer<byte>(waves));
 
             //delete[] waves;
 
@@ -318,12 +318,10 @@ namespace proland
 
             if (brdfShader != null)
             {
-                /**TOSEE
                 Debug.Assert(!brdfShader.getUsers().empty());
                 Program prog = (brdfShader.getUsers().begin());
                 prog.getUniform1f("seaRoughness").set(sigmaXsq);
-                prog.getUniform3f("seaColor").set(seaColor)
-                **/
+                prog.getUniform3f("seaColor").set(seaColor);
             }
         }
 
@@ -372,7 +370,7 @@ namespace proland
                 }
 
                 List<TileSampler> uniforms;
-                //TODO SceneNode.FieldIterator ui = n.getFields();
+                //TOSEE SceneNode.FieldIterator ui = n.getFields();
                 foreach (KeyValuePair<string, object> ui in n.getFields())
                 {
                     TileSampler u = (TileSampler)ui.Value;

@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace proland
 {
-    class UpdateTileMapTask : Sxta.Render.Scenegraph.Task
+    public class UpdateTileMapTask : Sxta.Render.Scenegraph.Task
     {
         public TileProducer producer;
 
@@ -37,7 +37,7 @@ namespace proland
             return true;
         }
     };
-    class TileSampler
+    public class TileSampler
     {
 
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -416,7 +416,7 @@ namespace proland
          * An internal quadtree to store the texture tile associated with each
          * %terrain quad.
          */
-        internal class Tree
+        protected class Tree
         {
 
             public bool newTree;

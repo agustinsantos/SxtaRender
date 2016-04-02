@@ -10,7 +10,7 @@ using Sxta.Core;
 
 namespace proland
 {
-    class UpdateTileSamplersTask : AbstractTask
+    public class UpdateTileSamplersTask : AbstractTask
     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 

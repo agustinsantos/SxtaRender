@@ -61,6 +61,9 @@
     <Compile Include="Core\Std.cs" />
     <Compile Include="Core\Threads.cs" />
     <Compile Include="Core\Timer.cs" />
+    <Compile Include="Math\Box2d.cs" />
+    <Compile Include="Math\Box2f.cs" />
+    <Compile Include="Math\Box2i.cs" />
     <Compile Include="Math\Box3f.cs" />
     <Compile Include="Math\MathHelper.cs" />
     <Compile Include="Math\Matrix.cs">
