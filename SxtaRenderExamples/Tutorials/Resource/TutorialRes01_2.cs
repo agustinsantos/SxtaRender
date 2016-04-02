@@ -14,7 +14,7 @@ using System.IO;
 
 namespace Examples.Tutorials
 {
-    /// <summary>
+    /// <summary> 
     /// Demonstrates the GameWindow class.
     /// </summary>
     [Example("Example 1.2: CubeMap Texture Resource", ExampleCategory.Resource, "1. Texture Resource", 1, Source = "TutorialRes01_2", Documentation = "Tutorial-TODO")]
