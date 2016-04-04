@@ -85,9 +85,16 @@ namespace Examples.Tutorials
             float splitFactor = 2;
             int maxLevel = 7;
 
-            TerrainQuad root = new TerrainQuad(null, null, 0, 0, -size, -size, 2.0 * size, zmin, zmax);
-            TerrainNode myTerrain = new TerrainNode(deform, root, splitFactor, maxLevel);
-            
+            //SceneNode
+            SceneNode scene = new SceneNode();
+
+            //Camera children
+            camera = new SceneNode();
+            scene.addChild(camera);
+            //Terrain children
+            root = new TerrainQuad(null, null, 0, 0, -size, -size, 2.0 * size, zmin, zmax);
+            myTerrain = new TerrainNode(deform, root, splitFactor, maxLevel);
+
             //MESH LOAD
             resLoader = new XMLResourceLoader();
             resLoader.addPath(dir + "/Resources/Meshes");
@@ -155,8 +162,10 @@ namespace Examples.Tutorials
         /// <remarks>There is no need to call the base implementation.</remarks>
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
-            mat = Matrix4f.CreateTranslation(-2.0f, -2.0f, -6.0f) * Matrix4f.CreateRotation((float)(-Math.PI / 4), 7.0f, -7.0f, 0.5f);
-            uMVMatrix.set(mat);
+            myTerrain.update(camera);
+            //myTerrain.
+            //mat = Matrix4f.CreateTranslation(-2.0f, -2.0f, -6.0f) * Matrix4f.CreateRotation((float)(-Math.PI / 4), 7.0f, -7.0f, 0.5f);
+            //uMVMatrix.set(mat);
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)
@@ -165,6 +174,10 @@ namespace Examples.Tutorials
             fb.draw(p, mesh, mesh.mode, 0, mesh.nvertices, 1, mesh.nindices);
             this.SwapBuffers();
         }
+
+        TerrainNode myTerrain;
+        TerrainQuad root;
+        SceneNode camera;
 
         string dir = ".";
         XMLResourceLoader resLoader;
