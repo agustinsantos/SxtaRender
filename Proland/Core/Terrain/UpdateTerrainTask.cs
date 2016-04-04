@@ -1,16 +1,14 @@
-﻿using Sxta.Render.Scenegraph;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using log4net;
-using System.Reflection;
+﻿using log4net;
 using Sxta.Core;
+using Sxta.Proland.Core.Terrain.XmlResources;
+using Sxta.Render.Resources;
+using Sxta.Render.Scenegraph;
+using System;
+using System.Reflection;
 
 namespace proland
 {
-    public class UpdateTerrainTask : AbstractTask
+    public class UpdateTerrainTask : AbstractTask, ISwappable<UpdateTerrainTask>
     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -18,10 +16,10 @@ namespace proland
         /// Creates an uninitialized UpdateTerrainTask.
         /// </summary>
         /// <param name="terrain"></param>
-        protected UpdateTerrainTask() : base("UpdateTerrainTask")
+        public UpdateTerrainTask() : base("UpdateTerrainTask")
         {
-
         }
+
         /// <summary>
         /// Creates a new UpdateTerrainTask.
         /// </summary>
@@ -41,17 +39,17 @@ namespace proland
         /// of this "node.name" qualified name specifies the scene node containing
         /// the TerrainNode field. The second part specifies the name of this
         /// TerrainNode field.</param>
-        protected void init(QualifiedName terrain)
+        public void init(QualifiedName terrain)
         {
             this.terrain = terrain;
         }
-        //TOSEE
-        protected void swap(UpdateTerrainTask t)
+
+        public void swap(UpdateTerrainTask t)
         {
             UpdateTerrainTask _this = this;
             Std.Swap(ref _this, ref t);
         }
-        //TOSEE
+
         public override Sxta.Render.Scenegraph.Task getTask(object context)
         {
             Method N = (Method)context;
@@ -64,7 +62,8 @@ namespace proland
             }
             else
             {
-                t = (TerrainNode)target.getField(terrain.name);
+                TerrainNodeResource tr = (TerrainNodeResource)target.getField(terrain.name);
+                t = (TerrainNode)tr.get();
             }
             if (t == null)
             {
@@ -74,9 +73,9 @@ namespace proland
                 }
                 throw new Exception("UpdateTerrain : cannot find terrain '" + terrain.target + "." + terrain.name + "'");
             }
-            if (log.IsErrorEnabled)
+            if (log.IsDebugEnabled)
             {
-                log.Error("UpdateTerrain");
+                log.Debug("UpdateTerrain");
             }
             t.update(n);
             return new TaskGraph();
@@ -88,6 +87,6 @@ namespace proland
         /// field.The second part specifies the name of this TerrainNode field.
         /// </summary>
         private QualifiedName terrain;
-    };
+    }
 }
 

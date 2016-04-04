@@ -255,7 +255,7 @@ namespace Sxta.Render.Resources
          * A cache of the archive files. Maps archive file names to archive content
          * and last modification time on disk.
          */
-        private Dictionary<string, Tuple<XmlDocument, DateTime>> cache;
+        private Dictionary<string, Tuple<XmlDocument, DateTime>> cache = new Dictionary<string, Tuple<XmlDocument, DateTime>>();
 
         /**
          * Returns the XML part of the ResourceDescriptor of the given name. This
@@ -354,25 +354,25 @@ namespace Sxta.Render.Resources
          */
         private static XmlElement findDescriptor(XmlDocument archive, string name)
         {
-#if TODO
-        // we first load the archive ...
-        const TiXmlElement *root = archive.RootElement();
-        if (root != null) {
-            // ... then we look for our descriptor in the archive content
-            for (const TiXmlNode *child = root.FirstChild(); child != null; child = child.NextSibling()) {
-                const TiXmlElement *desc = child.ToElement();
-                if (desc != null) {
-                    const char *n = desc.Attribute("name");
-                    if (n != null && strcmp(n, name.c_str()) == 0) {
-                        return desc.Clone().ToElement();
+            // we first load the archive ...
+            XmlElement root = archive.DocumentElement;
+            if (root != null && root.Name == "archive")
+            {
+                // ... then we look for our descriptor in the archive content
+                foreach (XmlNode child in root.ChildNodes)
+                {
+                    XmlElement desc = child as XmlElement;
+                    if (desc != null)
+                    {
+                        string n = desc.GetAttribute("name");
+                        if (n != null && n == name)
+                        {
+                            return desc;
+                        }
                     }
                 }
             }
-        }
-        return null;
- 
-#endif
-            throw new NotImplementedException();
+            return null;
         }
 
         /**
@@ -451,12 +451,13 @@ namespace Sxta.Render.Resources
                 cache[name] = new Tuple<XmlDocument, DateTime>(doc, t);
                 return doc;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
                 if (log.IsErrorEnabled)
                 {
                     log.Error("File not found or syntax error in '" + name + "'");
+                    log.Error(ex);
                 }
                 return null;
             }
@@ -831,7 +832,8 @@ namespace Sxta.Render.Resources
                     log.Error("Cannot load texture file '" + path + "', exception:" + ex.Message);
                     throw new Exception("Cannot load texture file '" + path + "'");
                 }
-            } throw new NotImplementedException("Unknown image format ");
+            }
+            throw new NotImplementedException("Unknown image format ");
         }
 
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
