@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Sxta.Render.Scenegraph;
-using log4net;
-using System.Reflection;
+﻿using log4net;
 using Sxta.Core;
+using Sxta.Render.Resources;
+using Sxta.Render.Scenegraph;
+using System;
+using System.Collections.Generic;
+using System.Reflection;
 
 namespace proland
 {
-    public class UpdateTileSamplersTask : AbstractTask
+    public class UpdateTileSamplersTask : AbstractTask, ISwappable<UpdateTileSamplersTask>
     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -72,7 +70,7 @@ namespace proland
         /// <summary>
         /// Creates an uninitialized UpdateTileSamplersTask.
         /// </summary>
-        protected UpdateTileSamplersTask() : base("UpdateTileSamplersTask")
+        public UpdateTileSamplersTask() : base("UpdateTileSamplersTask")
         {
 
         }
@@ -84,12 +82,12 @@ namespace proland
         /// of this "node.name" qualified name specifies the scene node containing
         /// the TerrainNode field. The second part specifies the name of this
         /// TerrainNode field.</param>
-        protected void init(QualifiedName terrain)
+        public void init(QualifiedName terrain)
         {
             this.terrain = terrain;
         }
 
-        protected void swap(UpdateTileSamplersTask t)
+        public void swap(UpdateTileSamplersTask t)
         {
             UpdateTileSamplersTask _this = this;
             Std.Swap(ref _this, ref t);

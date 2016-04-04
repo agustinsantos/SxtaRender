@@ -56,8 +56,9 @@ namespace Sxta.Render.Scenegraph
                             prev = next;
                         }
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
+                        ;
                     }
                 }
                 return result;

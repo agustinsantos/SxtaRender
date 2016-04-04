@@ -121,6 +121,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Tutorials\Testing\Tutorial08_1.cs" />
+    <Compile Include="Tutorials\Testing\Tutorial08_3.cs" />
     <Compile Include="Tutorials\Testing\Tutorial08_2.cs" />
     <EmbeddedResource Include="ExampleBrowser.resx">
       <DependentUpon>ExampleBrowser.cs</DependentUpon>
@@ -267,6 +268,9 @@
     <None Include="Resources\Shaders\basicModule.glsl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Resources\Shaders\terrainShader.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Resources\Shaders\TextStrings.glsl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -389,6 +393,10 @@
     <Content Include="Resources\ObjModels\icosahedron.png" />
     <Content Include="Resources\ObjModels\octahedron.png" />
     <Content Include="Resources\ObjModels\README.txt" />
+    <Content Include="Resources\Terrain\HelloWord01.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Resources\Textures\baserock.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -453,6 +461,7 @@
     </Content>
     <Content Include="Resources\Scenes\Example01Scene.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Resources\Scenes\cubesScene.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

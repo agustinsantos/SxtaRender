@@ -8,6 +8,7 @@ using Sxta.Render.Scenegraph;
 using Sxta.Math;
 using Sxta.Core;
 using System.Diagnostics;
+using Sxta.Render.Resources;
 
 namespace proland
 {
@@ -33,7 +34,7 @@ namespace proland
      * @ingroup terrain
      * @authors Eric Bruneton, Antoine Begault, Guillaume Piolat
      */
-    public class TerrainNode : Object
+    public class TerrainNode : ISwappable<TerrainNode>
     {
         int HORIZON_SIZE = 256;
 
@@ -215,7 +216,7 @@ namespace proland
             Vector3d right = deformedFrustumPlanes[1].Xyz;
             right.Normalize();
             //TOSEE Acos
-            float fov = (float)Math.Acos(Vector3d.Dot(-left,right));
+            float fov = (float)Math.Acos(Vector3d.Dot(-left, right));
             splitDist = (float)(splitFactor * fb.getViewport().Z / 1024.0f * Math.Tan(40.0f / 180.0f * Math.PI) / Math.Tan(fov / 2.0f));
             if (splitDist < 1.1f || !(float.IsInfinity(splitDist) == false))
             {
@@ -357,7 +358,7 @@ namespace proland
          * @param maxLevel the maximum level at which the %terrain quadtree must be
          *      subdivided (inclusive).
          */
-        protected void init(Deformation deform, TerrainQuad root, float splitFactor, int maxLevel)
+        public void init(Deformation deform, TerrainQuad root, float splitFactor, int maxLevel)
         {
             this.deform = deform;
             this.root = root;
@@ -370,7 +371,7 @@ namespace proland
             horizon = new float[HORIZON_SIZE];
         }
 
-        internal void swap(TerrainNode t)
+        public void swap(TerrainNode t)
         {
             Std.Swap(ref deform, ref t.deform);
             Std.Swap(ref root, ref t.root);
@@ -422,48 +423,4 @@ namespace proland
          */
         private float[] horizon;
     }
-#if TODO
-    class TerrainNodeResource : ResourceTemplate<0, TerrainNode>
-{
-    public TerrainNodeResource(ptr<ResourceManager> manager, const string &name, ptr<ResourceDescriptor> desc, const TiXmlElement* e = NULL) :
-        ResourceTemplate<0, TerrainNode>(manager, name, desc)
-    {
-        e = e == NULL? desc->descriptor : e;
-        float size;
-        float zmin;
-        float zmax;
-        ptr<Deformation> deform;
-        float splitFactor;
-        int maxLevel;
-        checkParameters(desc, e, "name,size,zmin,zmax,deform,radius,splitFactor,horizonCulling,maxLevel,");
-        getFloatParameter(desc, e, "size", &size);
-        getFloatParameter(desc, e, "zmin", &zmin);
-        getFloatParameter(desc, e, "zmax", &zmax);
-        if (e->Attribute("deform") != NULL && strcmp(e->Attribute("deform"), "sphere") == 0) {
-            deform = new SphericalDeformation(size);
-}
-        if (e->Attribute("deform") != NULL && strcmp(e->Attribute("deform"), "cylinder") == 0) {
-            float radius;
-            getFloatParameter(desc, e, "radius", &radius);
-            deform = new CylindricalDeformation(radius);
-        }
-        if (deform == NULL) {
-            deform = new Deformation();
-        }
-        getFloatParameter(desc, e, "splitFactor", &splitFactor);
-        getIntParameter(desc, e, "maxLevel", &maxLevel);
-
-        ptr<TerrainQuad> root = new TerrainQuad(NULL, NULL, 0, 0, -size, -size, 2.0 * size, zmin, zmax);
-        init(deform, root, splitFactor, maxLevel);
-
-        if (e->Attribute("horizonCulling") != NULL && strcmp(e->Attribute("horizonCulling"), "false") == 0) {
-            horizonCulling = false;
-        }
-    }
-};
-
-extern const char terrainNode[] = "terrainNode";
-
-static ResourceFactory::Type<terrainNode, TerrainNodeResource> TerrainNodeType;
-#endif
 }

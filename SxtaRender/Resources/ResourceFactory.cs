@@ -104,7 +104,7 @@ namespace Sxta.Render.Resources
                 {
                     log.Error("Unknown resource type '" + e.Name + "'");
                 }
-                throw new ArgumentException();
+                throw new ArgumentException("Unknown resource type '" + e.Name + "'");
             }
         }
 

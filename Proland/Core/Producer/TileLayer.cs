@@ -44,7 +44,8 @@ namespace proland
         /// Returns the TileCache that stores the tiles produced by the producer using this TileLayer.
         /// </summary>
         /// <returns></returns>
-        public TileCache getCache() {
+        public TileCache getCache()
+        {
             return cache;
         }
 
@@ -55,7 +56,8 @@ namespace proland
         /// cache.
         /// </summary>
         /// <returns></returns>
-        public int getProducerId() {
+        public int getProducerId()
+        {
             return producerId;
         }
 
@@ -65,7 +67,8 @@ namespace proland
         /// belongs. This size includes borders.
         /// </summary>
         /// <returns></returns>
-        public int getTileSize() {
+        public int getTileSize()
+        {
             return tileSize;
         }
 
@@ -79,21 +82,24 @@ namespace proland
          * data redundancy but is usefull to get the valueC of the neighboring pixels
          * of a tile without needing to load the neighboring tiles.
          */
-        public int getTileBorder() {
+        public int getTileBorder()
+        {
             return tileBorder;
         }
 
         /*
          * Returns the size in meters of the root quad produced by the producer using this Layer.
          */
-        public float getRootQuadSize() {
+        public float getRootQuadSize()
+        {
             return rootQuadSize;
         }
 
         /*
          * Returns the ox,oy,l coordinates of the given tile.
          */
-        public Vector3d getTileCoords(int level, int tx, int ty) {
+        public Vector3d getTileCoords(int level, int tx, int ty)
+        {
             double ox = rootQuadSize * ((double)(tx) / (1 << level) - 0.5f);
             double oy = rootQuadSize * ((double)(ty) / (1 << level) - 0.5f);
             double l = rootQuadSize / (1 << level);
@@ -103,11 +109,13 @@ namespace proland
         /*
          * Returns true if a spherical deformation is applied on the layer or not.
          */
-        public bool isDeformed() {
+        public bool isDeformed()
+        {
             return deform;
         }
 
-        public void getDeformParameters(Vector3d tileCoords, out Vector2d nx, out Vector2d ny, out Vector2d lx, out Vector2d ly) {
+        public void getDeformParameters(Vector3d tileCoords, out Vector2d nx, out Vector2d ny, out Vector2d lx, out Vector2d ly)
+        {
             if (isDeformed())
             {
                 double x = tileCoords.X + tileCoords.Z / 2.0f;
@@ -122,12 +130,17 @@ namespace proland
                 lx = new Vector2d(e * yR, 0.0);
                 ly = new Vector2d(-(e * x * y), e * d);
             }
+            else
+            {
+                nx = ny = lx = ly = new Vector2d();
+            }
         }
 
         /*
          * Returns true if this TileLayer is enabled.
          */
-        public bool isEnabled() {
+        public bool isEnabled()
+        {
             return enabled;
         }
 
@@ -136,7 +149,8 @@ namespace proland
          *
          * @param enabled true to enable this TileLayer, false otherwise.
          */
-        public void setIsEnabled(bool enabled) {
+        public void setIsEnabled(bool enabled)
+        {
             this.enabled = enabled;
             invalidateTiles();
         }
@@ -145,7 +159,8 @@ namespace proland
         /*
          * Sets the TileCache that stores the tiles produced by this Layer.
          */
-        public virtual void setCache(TileCache cache, int producerId) {
+        public virtual void setCache(TileCache cache, int producerId)
+        {
             this.cache = cache;
             this.producerId = producerId;
         }
@@ -160,7 +175,8 @@ namespace proland
         /*
          * Sets the tile size valueC.
          */
-        public virtual void setTileSize(int tileSize, int tileBorder, float rootQuadSize) {
+        public virtual void setTileSize(int tileSize, int tileBorder, float rootQuadSize)
+        {
             this.tileSize = tileSize;
             this.tileBorder = tileBorder;
             this.rootQuadSize = rootQuadSize;
@@ -241,7 +257,8 @@ namespace proland
          * This means that the tasks to produce the actual data of these tiles will
          * be automatically reexecuted before the data can be used.
          */
-        public virtual void invalidateTiles() {
+        public virtual void invalidateTiles()
+        {
             getCache().invalidateTiles(getProducerId());
         }
 
@@ -251,12 +268,14 @@ namespace proland
          *
          * @param deform whether we apply a spherical deformation on the layer or not.
          */
-        protected void init(bool deform = false) {
+        protected void init(bool deform = false)
+        {
             this.deform = deform;
             this.enabled = true;
         }
 
-        protected virtual void swap(TileLayer p) {
+        protected virtual void swap(TileLayer p)
+        {
             cache.invalidateTiles(producerId);
             p.cache.invalidateTiles(p.producerId);
             Std.Swap(ref cache, ref p.cache);

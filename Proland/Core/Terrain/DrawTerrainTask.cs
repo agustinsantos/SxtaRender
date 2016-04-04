@@ -1,20 +1,21 @@
-﻿using Sxta.Render.Scenegraph;
+﻿using log4net;
+using Sxta.Core;
+using Sxta.Proland.Core.Terrain.XmlResources;
+using Sxta.Render;
+using Sxta.Render.Resources;
+using Sxta.Render.Scenegraph;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using log4net;
-using System.Reflection;
-using Sxta.Core;
-using Sxta.Render;
 using System.Diagnostics;
+using System.Reflection;
 
 namespace proland
 {
-    public class DrawTerrainTask : AbstractTask
+    public class DrawTerrainTask : AbstractTask, ISwappable<DrawTerrainTask>
     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
+
         /// <summary>
         /// Creates a new DrawTerrainTask.
         /// </summary>
@@ -46,7 +47,8 @@ namespace proland
             }
             else
             {
-                t = (TerrainNode)target.getField(terrain.name);
+                TerrainNodeResource tr = (TerrainNodeResource)target.getField(terrain.name);
+                t = (TerrainNode)tr.get();
             }
             if (t == null)
             {
@@ -82,9 +84,8 @@ namespace proland
         /// <summary>
         /// Creates an uninitialized DrawTerrainTask.
         /// </summary>
-        protected DrawTerrainTask() : base("DrawTerrainTask")
+        public DrawTerrainTask() : base("DrawTerrainTask")
         {
-
         }
 
         /// <summary>
@@ -98,14 +99,14 @@ namespace proland
         /// field.The second part specifies the name of this mesh field.</param>
         /// <param name="culling">true to draw only visible leaf quads, false to draw all
         /// leaf quads.</param>
-        protected void init(QualifiedName terrain, QualifiedName mesh, bool culling)
+        public void init(QualifiedName terrain, QualifiedName mesh, bool culling)
         {
             this.terrain = terrain;
             this.mesh = mesh;
             this.culling = culling;
         }
 
-        protected void swap(DrawTerrainTask t)
+        public void swap(DrawTerrainTask t)
         {
             DrawTerrainTask _this = this;
             Std.Swap(ref _this, ref t);
@@ -191,9 +192,9 @@ namespace proland
             {
                 if (t != null)
                 {
-                    if (log.IsErrorEnabled)
+                    if (log.IsDebugEnabled)
                     {
-                        log.Error("DrawTerrain");
+                        log.Debug("DrawTerrain");
                     }
                     FrameBuffer fb = SceneManager.getCurrentFrameBuffer();
                     async = false;
@@ -201,7 +202,7 @@ namespace proland
                     //SceneNode.FieldIterator i = n.getFields();
                     foreach (KeyValuePair<string, object> i in n.getFields())
                     {
-                        TileSampler u = (TileSampler)i.Value;
+                        TileSampler u = ((TerrainNodeResource)i.Value).get() as TileSampler; //TODO Dani to review this casting ?
                         if (u != null)
                         {
                             if (u.getTerrain(0) != null)
@@ -271,7 +272,7 @@ namespace proland
 
                 if (q.isLeaf())
                 {
-                    for (int i = 0; i < uniforms.Count(); ++i)
+                    for (int i = 0; i < uniforms.Count; ++i)
                     {
                         if (!uniforms[i].getAsync() || uniforms[i].getMipMap())
                         {
@@ -297,7 +298,7 @@ namespace proland
                     }
                     if (nDrawable < 4)
                     {
-                        for (int i = 0; i < uniforms.Count(); ++i)
+                        for (int i = 0; i < uniforms.Count; ++i)
                         {
                             if (!uniforms[i].getAsync() || uniforms[i].getMipMap())
                             {
@@ -336,7 +337,7 @@ namespace proland
                 Program p = SceneManager.getCurrentProgram();
                 if (q.isLeaf())
                 {
-                    for (int i = 0; i < uniforms.Count(); ++i)
+                    for (int i = 0; i < uniforms.Count; ++i)
                     {
                         uniforms[i].setTile(q.level, q.tx, q.ty);
                     }
@@ -416,7 +417,7 @@ namespace proland
                     if (done < 15)
                     {
                         int[] sizes = new int[16] { 0, 4, 7, 10, 12, 15, 17, 19, 20, 23, 25, 27, 28, 30, 31, 32 };
-                        for (int i = 0; i < uniforms.Count(); ++i)
+                        for (int i = 0; i < uniforms.Count; ++i)
                         {
                             uniforms[i].setTile(q.level, q.tx, q.ty);
                         }
@@ -425,7 +426,7 @@ namespace proland
                     }
                 }
             }
-        };
+        }
     }
 }
 

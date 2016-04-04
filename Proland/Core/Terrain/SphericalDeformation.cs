@@ -2,11 +2,7 @@
 using Sxta.Render;
 using Sxta.Render.Scenegraph;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace proland
 {
@@ -34,12 +30,12 @@ namespace proland
         }
 
 
-        public virtual Vector3d localToDeformed(Vector3d localPt)
+        public override Vector3d localToDeformed(Vector3d localPt)
         {
             return Vector3d.Multiply(new Vector3d(localPt.X, localPt.Y, R), localPt.Z + R);
         }
 
-        public virtual Matrix4d localToDeformedDifferential(Vector3d localPt, bool clamp = false)
+        public override Matrix4d localToDeformedDifferential(Vector3d localPt, bool clamp = false)
         {
             if (Double.IsInfinity(localPt.X) || Double.IsInfinity(localPt.Y) || Double.IsInfinity(localPt.Z))
             {
@@ -62,7 +58,7 @@ namespace proland
                 0.0, 0.0, 0.0, 1.0);
         }
 
-        public virtual Vector3d deformedToLocal(Vector3d deformedPt)
+        public override Vector3d deformedToLocal(Vector3d deformedPt)
         {
             double l = deformedPt.Length;
             if (deformedPt.Z >= Math.Abs(deformedPt.X) && deformedPt.Z >= Math.Abs(deformedPt.Y))
@@ -93,7 +89,7 @@ namespace proland
             return Vector3d.Zero;
         }
 
-        public virtual Box2f deformedToLocalBounds(Vector3d deformedCenter, double deformedRadius)
+        public override Box2f deformedToLocalBounds(Vector3d deformedCenter, double deformedRadius)
         {
             Vector3d p = deformedToLocal(deformedCenter);
             double r = deformedRadius;
@@ -127,7 +123,7 @@ namespace proland
             return new Box2f((float)x1, (float)y1, (float)x2, (float)y2);
         }
 
-        public virtual Matrix4d deformedToTangentFrame(Vector3d deformedPt)
+        public override Matrix4d deformedToTangentFrame(Vector3d deformedPt)
         {
             Vector3d Uz = deformedPt;
             Uz.Normalize();
@@ -175,7 +171,7 @@ namespace proland
             setUniforms(context, q, prog);
         }
 
-        public virtual SceneManager.visibility getVisibility(TerrainNode t, Box3d localBox)
+        public override SceneManager.visibility getVisibility(TerrainNode t, Box3d localBox)
         {
             Vector3d[] deformedBox = new Vector3d[4];
             deformedBox[0] = localToDeformed(new Vector3d(localBox.xmin, localBox.ymin, localBox.zmin));
@@ -239,7 +235,7 @@ namespace proland
         }
 
 
-        protected virtual void setScreenUniforms(SceneNode context, TerrainQuad q, Program prog)
+        protected override void setScreenUniforms(SceneNode context, TerrainQuad q, Program prog)
         {
 
         }

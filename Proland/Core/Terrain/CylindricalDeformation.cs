@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Sxta.Math;
-using System.Diagnostics;
-using Sxta.OpenGL;
+﻿using Sxta.Math;
 using Sxta.Render;
 using Sxta.Render.Scenegraph;
+using System;
+using System.Diagnostics;
 
 
 namespace proland
@@ -33,7 +28,7 @@ namespace proland
          * @param R the radius of the cylinder into which the plane z=0 must be
          *      deformed.
          */
-        CylindricalDeformation(float R) : base()
+        public CylindricalDeformation(float R) : base()
         {
             this.R = R;
             this.localToWorldU = null;
@@ -41,14 +36,14 @@ namespace proland
         }
 
 
-        public virtual Vector3d localToDeformed(Vector3d localPt)
+        public override Vector3d localToDeformed(Vector3d localPt)
         {
             float alpha = (float)localPt.Y / R;
             float r = R - (float)localPt.Z;
             return new Vector3d(localPt.X, r * Math.Sin(alpha), -r * Math.Cos(alpha));
         }
 
-        public virtual Matrix4d localToDeformedDifferential(Vector3d localPt, bool clamp = false)
+        public override Matrix4d localToDeformedDifferential(Vector3d localPt, bool clamp = false)
         {
             float alpha = (float)localPt.Y / R;
             return new Matrix4d(1.0, 0.0, 0.0, localPt.X,
@@ -57,33 +52,33 @@ namespace proland
                 0.0, 0.0, 0.0, 1.0);
         }
 
-        public virtual Vector3d deformedToLocal(Vector3d deformedPt)
+        public override Vector3d deformedToLocal(Vector3d deformedPt)
         {
             float Y = R * (float)Math.Atan2((float)deformedPt.Y, (float)-deformedPt.Z);
             float Z = R - (float)Math.Sqrt((float)(deformedPt.Y * deformedPt.Y + deformedPt.Z * deformedPt.Z));
             return new Vector3d(deformedPt.X, Y, Z);
         }
 
-        public virtual Box2f deformedToLocalBounds(Vector3d deformedCenter, double deformedRadius)
+        public override Box2f deformedToLocalBounds(Vector3d deformedCenter, double deformedRadius)
         {
             Debug.Assert(false); // TODO
             return new Box2f();
         }
 
-        public virtual Matrix4d deformedToTangentFrame(Vector3d deformedPt)
+        public override Matrix4d deformedToTangentFrame(Vector3d deformedPt)
         {
             Vector3d Uz = new Vector3d(0.0, -deformedPt.Y, -deformedPt.Z);
             Uz.Normalize();
             Vector3d Ux = Vector3d.UnitX;
-            Vector3d Uy = Vector3d.Cross(Ux,Uz);
+            Vector3d Uy = Vector3d.Cross(Ux, Uz);
             Vector3d O = new Vector3d(deformedPt.X, -Uz.Y * R, -Uz.Z * R);
-            return new Matrix4d(Ux.X, Ux.Y, Ux.Z, -Vector3d.Dot(Ux,O),
-                Uy.X, Uy.Y, Uy.Z, -Vector3d.Dot(Uy,O),
-                Uz.X, Uz.Y, Uz.Z, -Vector3d.Dot(Uz,O),
+            return new Matrix4d(Ux.X, Ux.Y, Ux.Z, -Vector3d.Dot(Ux, O),
+                Uy.X, Uy.Y, Uy.Z, -Vector3d.Dot(Uy, O),
+                Uz.X, Uz.Y, Uz.Z, -Vector3d.Dot(Uz, O),
                 0.0, 0.0, 0.0, 1.0);
         }
 
-        public virtual void setUniforms(SceneNode context, TerrainNode n, Program prog)
+        public override void setUniforms(SceneNode context, TerrainNode n, Program prog)
         {
             if (lastNodeProg != prog)
             {
@@ -105,7 +100,7 @@ namespace proland
             }
         }
 
-        public virtual SceneManager.visibility getVisibility(TerrainNode t, Box3d localBox)
+        public override SceneManager.visibility getVisibility(TerrainNode t, Box3d localBox)
         {
             Vector3d[] deformedBox = new Vector3d[4];
             deformedBox[0] = localToDeformed(new Vector3d(localBox.xmin, localBox.ymin, localBox.zmax));
@@ -154,7 +149,7 @@ namespace proland
 
         private Uniform1f radiusU;
 
-        private static SceneManager.visibility getVisibility(Vector4d clip,Vector3d[] b, float f)
+        private static SceneManager.visibility getVisibility(Vector4d clip, Vector3d[] b, float f)
         {
             double c1 = b[0].X * clip.X + clip.W;
             double c2 = b[1].X * clip.X + clip.W;
