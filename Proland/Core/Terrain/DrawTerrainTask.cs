@@ -190,7 +190,9 @@ namespace proland
 
             public override bool run()
             {
-                if (t != null)
+                try
+                {
+                    if (t != null)
                 {
                     if (log.IsDebugEnabled)
                     {
@@ -202,7 +204,7 @@ namespace proland
                     //SceneNode.FieldIterator i = n.getFields();
                     foreach (KeyValuePair<string, object> i in n.getFields())
                     {
-                        TileSampler u = ((TerrainNodeResource)i.Value).get() as TileSampler; //TODO Dani to review this casting ?
+                        TileSampler u = i.Value as TileSampler; //TODO Dani to review this casting ?
                         if (u != null)
                         {
                             if (u.getTerrain(0) != null)
@@ -252,6 +254,12 @@ namespace proland
                     drawQuad(t.root, uniforms);
                 }
                 return true;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    return false;
+                }
             }
 
             /// <summary>
@@ -325,106 +333,108 @@ namespace proland
             /// <param name="uniforms">the TileSampler associated with the %terrain.</param>
             public void drawQuad(TerrainQuad q, List<TileSampler> uniforms)
             {
-                if (culling && q.visible == SceneManager.visibility.INVISIBLE)
-                {
-                    return;
-                }
-                if (async && !q.drawable)
-                {
-                    return;
-                }
 
-                Program p = SceneManager.getCurrentProgram();
-                if (q.isLeaf())
-                {
-                    for (int i = 0; i < uniforms.Count; ++i)
+                    if (culling && q.visible == SceneManager.visibility.INVISIBLE)
                     {
-                        uniforms[i].setTile(q.level, q.tx, q.ty);
+                        return;
                     }
-                    t.deform.setUniforms(n, q, p);
-                    if (async)
+                    if (async && !q.drawable)
                     {
-                        SceneManager.getCurrentFrameBuffer().draw(p, m, m.mode, 0, gridSize * 4);
-                    }
-                    else
-                    {
-                        if (m.nindices == 0)
-                        {
-                            SceneManager.getCurrentFrameBuffer().draw(p, m, m.mode, 0, m.nvertices);
-                        }
-                        else
-                        {
-                            SceneManager.getCurrentFrameBuffer().draw(p, m, m.mode, 0, m.nindices);
-                        }
-                    }
-                }
-                else
-                {
-                    int[] order = new int[4];
-                    double ox = t.getLocalCamera().X;
-                    double oy = t.getLocalCamera().Y;
-
-                    double cx = q.ox + q.l / 2.0;
-                    double cy = q.oy + q.l / 2.0;
-                    if (oy < cy)
-                    {
-                        if (ox < cx)
-                        {
-                            order[0] = 0;
-                            order[1] = 1;
-                            order[2] = 2;
-                            order[3] = 3;
-                        }
-                        else
-                        {
-                            order[0] = 1;
-                            order[1] = 0;
-                            order[2] = 3;
-                            order[3] = 2;
-                        }
-                    }
-                    else
-                    {
-                        if (ox < cx)
-                        {
-                            order[0] = 2;
-                            order[1] = 0;
-                            order[2] = 3;
-                            order[3] = 1;
-                        }
-                        else
-                        {
-                            order[0] = 3;
-                            order[1] = 1;
-                            order[2] = 2;
-                            order[3] = 0;
-                        }
+                        return;
                     }
 
-                    int done = 0;
-                    for (int i = 0; i < 4; ++i)
+                    Program p = SceneManager.getCurrentProgram();
+                    if (q.isLeaf())
                     {
-                        if (culling && q.children[order[i]].visible == SceneManager.visibility.INVISIBLE)
-                        {
-                            done |= (1 << order[i]);
-                        }
-                        else if (!async || q.children[order[i]].drawable)
-                        {
-                            drawQuad(q.children[order[i]], uniforms);
-                            done |= (1 << order[i]);
-                        }
-                    }
-                    if (done < 15)
-                    {
-                        int[] sizes = new int[16] { 0, 4, 7, 10, 12, 15, 17, 19, 20, 23, 25, 27, 28, 30, 31, 32 };
                         for (int i = 0; i < uniforms.Count; ++i)
                         {
                             uniforms[i].setTile(q.level, q.tx, q.ty);
                         }
                         t.deform.setUniforms(n, q, p);
-                        SceneManager.getCurrentFrameBuffer().draw(p, m, m.mode, gridSize * sizes[done], gridSize * (sizes[done + 1] - sizes[done]));
+                        if (async)
+                        {
+                            SceneManager.getCurrentFrameBuffer().draw(p, m, m.mode, 0, gridSize * 4);
+                        }
+                        else
+                        {
+                            if (m.nindices == 0)
+                            {
+                                SceneManager.getCurrentFrameBuffer().draw(p, m, m.mode, 0, m.nvertices);
+                            }
+                            else
+                            {
+                                SceneManager.getCurrentFrameBuffer().draw(p, m, m.mode, 0, m.nindices);
+                            }
+                        }
                     }
-                }
+                    else
+                    {
+                        int[] order = new int[4];
+                        double ox = t.getLocalCamera().X;
+                        double oy = t.getLocalCamera().Y;
+
+                        double cx = q.ox + q.l / 2.0;
+                        double cy = q.oy + q.l / 2.0;
+                        if (oy < cy)
+                        {
+                            if (ox < cx)
+                            {
+                                order[0] = 0;
+                                order[1] = 1;
+                                order[2] = 2;
+                                order[3] = 3;
+                            }
+                            else
+                            {
+                                order[0] = 1;
+                                order[1] = 0;
+                                order[2] = 3;
+                                order[3] = 2;
+                            }
+                        }
+                        else
+                        {
+                            if (ox < cx)
+                            {
+                                order[0] = 2;
+                                order[1] = 0;
+                                order[2] = 3;
+                                order[3] = 1;
+                            }
+                            else
+                            {
+                                order[0] = 3;
+                                order[1] = 1;
+                                order[2] = 2;
+                                order[3] = 0;
+                            }
+                        }
+
+                        int done = 0;
+                        for (int i = 0; i < 4; ++i)
+                        {
+                            if (culling && q.children[order[i]].visible == SceneManager.visibility.INVISIBLE)
+                            {
+                                done |= (1 << order[i]);
+                            }
+                            else if (!async || q.children[order[i]].drawable)
+                            {
+                                drawQuad(q.children[order[i]], uniforms);
+                                done |= (1 << order[i]);
+                            }
+                        }
+                        if (done < 15)
+                        {
+                            int[] sizes = new int[16] { 0, 4, 7, 10, 12, 15, 17, 19, 20, 23, 25, 27, 28, 30, 31, 32 };
+                            for (int i = 0; i < uniforms.Count; ++i)
+                            {
+                                uniforms[i].setTile(q.level, q.tx, q.ty);
+                            }
+                            t.deform.setUniforms(n, q, p);
+                            SceneManager.getCurrentFrameBuffer().draw(p, m, m.mode, gridSize * sizes[done], gridSize * (sizes[done + 1] - sizes[done]));
+                        }
+
+                    }
             }
         }
     }
