@@ -59,7 +59,7 @@ namespace proland
                 throw new Exception("DrawTerrain : cannot find terrain '" + terrain.target + "." + terrain.name + "'");
             }
 
-            MeshBuffers m = new MeshBuffers();
+            MeshBuffers m = null;
             target = mesh.getTarget(n);
             if (target == null)
             {
