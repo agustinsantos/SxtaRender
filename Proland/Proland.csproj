@@ -70,6 +70,7 @@
     <Compile Include="Core\Terrain\XmlResources\RegisterResourceReader.cs" />
     <Compile Include="Core\Terrain\XmlResources\TerrainNodeResource.cs" />
     <Compile Include="Core\Terrain\XmlResources\TerrainTasksResource.cs" />
+    <Compile Include="Core\Terrain\XmlResources\TileSamplerResource.cs" />
     <Compile Include="Core\Util\PlanetViewController.cs" />
     <Compile Include="Core\Util\TerrainViewController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

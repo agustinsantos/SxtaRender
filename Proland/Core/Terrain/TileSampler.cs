@@ -2,6 +2,7 @@
 using Sxta.Core;
 using Sxta.Math;
 using Sxta.Render;
+using Sxta.Render.Resources;
 using Sxta.Render.Scenegraph;
 using System;
 using System.Collections.Generic;
@@ -37,7 +38,7 @@ namespace proland
             return true;
         }
     };
-    public class TileSampler
+    public class TileSampler : ISwappable<TileSampler>
     {
 
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -497,7 +498,7 @@ namespace proland
          *      #setTileMap). If not null, must have a
          *      proland.GPUTileStorage.
          */
-        protected virtual void init(string name, TileProducer producer = null)
+        internal virtual void init(string name, TileProducer producer = null)
         {
             this.name = name;
             this.producer = producer;
@@ -729,7 +730,7 @@ namespace proland
 
         }
 
-        protected virtual void swap(TileSampler p)
+        public virtual void swap(TileSampler p)
         {
             Std.Swap(ref name, ref p.name);
             Std.Swap(ref producer, ref p.producer);
