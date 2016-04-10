@@ -52,8 +52,14 @@ namespace Sxta.Proland.Core.Terrain.XmlResources
             this.valueC = new DrawTerrainTask();
             string n = getParameter(desc, e, "name");
             string meshName = getParameter(desc, e, "mesh");
-            string cullingstr = getParameter(desc, e, "culling");
-            this.valueC.init(new AbstractTask.QualifiedName(n), new AbstractTask.QualifiedName(meshName), bool.Parse(cullingstr));
+            //string cullingstr = getParameter(desc, e, "culling"); Agustin
+            bool culling = false;
+            string CullingAttr = e.GetAttribute("culling");
+            if (CullingAttr != null && CullingAttr == "false")
+            {
+                culling = false;//Mirar con agustin
+            }
+            this.valueC.init(new AbstractTask.QualifiedName(n), new AbstractTask.QualifiedName(meshName), /**bool.Parse(cullingstr)*/culling);
         }
     }
 }
