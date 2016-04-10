@@ -81,6 +81,10 @@ namespace proland
     }
     class ObjectTileStorageResource : ResourceTemplate<ObjectTileStorage>
     {
+        public static ObjectTileStorageResource Create(ResourceManager manager, string name, ResourceDescriptor desc, XmlElement e = null, object context = null)
+        {
+            return new ObjectTileStorageResource(manager, name, desc, e);
+        }
         public ObjectTileStorageResource(ResourceManager manager, string name, ResourceDescriptor desc, XmlElement e = null) : base(20, manager, name, desc)
         {
             e = e == null ? desc.descriptor : e;

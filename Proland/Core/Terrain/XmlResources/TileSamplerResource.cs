@@ -9,12 +9,12 @@ namespace Sxta.Proland.Core.Terrain.XmlResources
 {
     public class TileSamplerResource : ResourceTemplate<TileSampler>
     {
-        public static TileSamplerResource Create(ResourceManager manager, string name, ResourceDescriptor desc, XmlElement e = null)
+        public static TileSamplerResource Create(ResourceManager manager, string name, ResourceDescriptor desc, XmlElement e = null, object context = null)
         {
             return new TileSamplerResource(manager, name, desc, e);
         }
-        public TileSamplerResource(ResourceManager manager, string name, ResourceDescriptor desc, XmlElement e = null) :
-            base(40, manager, name, desc)
+        public TileSamplerResource(ResourceManager manager, string name, ResourceDescriptor desc, XmlElement e = null, object context = null) :
+            base(10, manager, name, desc)
         {
             e = e == null ? desc.descriptor : e;
             checkParameters(desc, e, "id,name,sampler,producer,terrains,storeLeaf,storeParent,storeInvisible,async,mipmap,");

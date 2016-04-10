@@ -352,6 +352,10 @@ vec4 uv = vec4(xy + vec2(0.25), xy + vec2(0.75)) / float(bufferLayerLevelWidth.w
 
     public class GPUTileStorageResource : ResourceTemplate<GPUTileStorage>
     {
+        public static GPUTileStorageResource Create(ResourceManager manager, string name, ResourceDescriptor desc, XmlElement e = null, object context = null)
+        {
+            return new GPUTileStorageResource(manager, name, desc, e);
+        }
         public GPUTileStorageResource(ResourceManager manager, string name, ResourceDescriptor desc, XmlElement e = null) :
             base(20, manager, name, desc)
         {

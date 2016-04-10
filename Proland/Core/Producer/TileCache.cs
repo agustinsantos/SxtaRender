@@ -805,6 +805,10 @@ namespace proland
     class TileCacheResource : ResourceTemplate<TileCache>
     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        public static TileCacheResource Create(ResourceManager manager, string name, ResourceDescriptor desc, XmlElement e = null, object context = null)
+        {
+            return new TileCacheResource(manager, name, desc, e);
+        }
         public TileCacheResource(ResourceManager manager, string name, ResourceDescriptor desc, XmlElement e = null) :
         base(50, manager, name, desc)
     {

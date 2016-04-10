@@ -262,10 +262,16 @@
     <None Include="Resources\ObjModels\cessna.mtl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Resources\Shaders\basicModuleTest.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Resources\Shaders\camera.glsl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Resources\Shaders\basicModule.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\Shaders\terrainShaderTest.glsl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Resources\Shaders\terrainShader.glsl">
@@ -393,6 +399,10 @@
     <Content Include="Resources\ObjModels\icosahedron.png" />
     <Content Include="Resources\ObjModels\octahedron.png" />
     <Content Include="Resources\ObjModels\README.txt" />
+    <Content Include="Resources\Terrain\HelloWord02.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\Terrain\HelloWord01.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>

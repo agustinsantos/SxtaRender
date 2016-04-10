@@ -51,7 +51,7 @@ namespace Examples.Tutorials
             resLoader.addPath(dir + "/Meshes");
             resLoader.addPath(dir + "/Methods");
             resLoader.addPath(dir + "/Scenes");
-            resLoader.addArchive(dir + "/Terrain/HelloWord01.xml");
+            resLoader.addArchive(dir + "/Terrain/HelloWord02.xml");
             resManager = new ResourceManager(resLoader);
             manager = new SceneManager();
             manager.setResourceManager(resManager);
