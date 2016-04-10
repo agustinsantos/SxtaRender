@@ -25,6 +25,7 @@ layout(location=0) out vec4 data;
 void main() {
     data = vec4(vec3(0.2 + 0.2 * sin(0.1 * length(p.xy))), 1.0);
     data.r += mod(dot(floor(deformation.offset.xy / deformation.offset.z + 0.5), vec2(1.0)), 2.0);
+	data.g = 1.0;
 }
 
 #endif

@@ -33,6 +33,12 @@
     <foreach var="o" flag="object" culling="true">
       <callMethod name="$o.draw"/>
     </foreach>
+    <foreach var="o" flag="test">
+      <setProgram>
+        <module name="$o.material"/>
+      </setProgram>
+      <drawMesh name="$o.geometry"/>
+    </foreach>
   </sequence>
 
   <terrainNode name="myTerrain" size="500" zmin="-1" zmax="1" splitFactor="2" maxLevel="7"/>
@@ -49,16 +55,25 @@
   </sequence>
 
   <module name="terrainShader" version="330" source="terrainShader.glsl"/>
-
+  
+  <module name="basic" version="330" source="basicModule.glsl">
+    <uniformSampler name="sampler" texture="checker"/>
+  </module>
+  
   <node name="scene">
     <node flags="camera">
       <method id="draw" value="cameraMethod"/>
     </node>
-
+    
+    <node name="quadTestNode" flags="test">
+      <mesh id="geometry" value="quad2.mesh"/>
+      <module id="material" value="basic"/>
+    </node>
+    
     <node name="terrainNode" flags="object,dynamic">
       <bounds xmin="-500" xmax="500" ymin="-500" ymax="500" zmin="-1" zmax="1"/>
       <field id="terrain" value="myTerrain"/>
-      <mesh id="grid" value="quad.mesh"/>
+      <mesh id="grid" value="quad2.mesh"/>
       <method id="update" value="updateTerrainMethod"/>
       <method id="draw" value="drawTerrainMethod"/>
       <module id="material" value="terrainShader"/>
