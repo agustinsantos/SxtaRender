@@ -10,7 +10,7 @@ namespace Sxta.Proland.Core.Terrain.XmlResources
             ResourceFactory.getInstance().addType("terrainNode", TerrainNodeResource.Create);
             ResourceFactory.getInstance().addType("updateTerrain", UpdateTerrainTaskResource.Create);
             ResourceFactory.getInstance().addType("drawTerrain", DrawTerrainTaskResource.Create);
-            //ResourceFactory.getInstance().addType("tileSampler", TileSamplerResource.Create);
+            ResourceFactory.getInstance().addType("tileSampler", TileSamplerResource.Create);
             //PRODUCER RESOURCES
             /**ResourceFactory.getInstance().addType("tileCache", proland.TileCacheResource.Create);
             ResourceFactory.getInstance().addType("cpuByteTileStorage", proland.CPUTileStorageResource<T>.Create);

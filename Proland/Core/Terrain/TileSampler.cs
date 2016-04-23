@@ -417,7 +417,7 @@ namespace proland
          * An internal quadtree to store the texture tile associated with each
          * %terrain quad.
          */
-        protected class Tree
+        internal class Tree
         {
 
             public bool newTree;
@@ -479,7 +479,7 @@ namespace proland
         /**
          * An internal quadtree to store the texture tiles associated with each quad.
          */
-        protected Tree root;
+        internal Tree root;
 
         /**
          * Creates an uninitialized TileSampler.
@@ -551,7 +551,7 @@ namespace proland
          * @param t the internal quadtree node corresponding to q.
          * @param q a quadtree node.
          */
-        protected virtual void putTiles(Tree t, TerrainQuad q)
+        internal virtual void putTiles(Tree t, TerrainQuad q)
         {
             if (t == null)
             {
@@ -600,7 +600,7 @@ namespace proland
          * @param q a quadtree node.
          * @param result the task %graph to collect the tile %producer tasks.
          */
-        protected virtual void getTiles(Tree parent, Tree t, TerrainQuad q, TaskGraph result)
+        internal virtual void getTiles(Tree parent, Tree t, TerrainQuad q, TaskGraph result)
         {
             if (t == null)
             {
@@ -672,7 +672,7 @@ namespace proland
          * @param[in,out] prefetchCount the maximum number of prefetch tasks
          *      that can be created by this method.
          */
-        protected void prefetch(Tree t, TerrainQuad q, int prefetchCount)
+        internal void prefetch(Tree t, TerrainQuad q, int prefetchCount)
         {
             if (t.children[0] == null)
             {

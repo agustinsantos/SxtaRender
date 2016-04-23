@@ -165,7 +165,7 @@ namespace proland
             return 1.0;
         }
 
-        public virtual void interpolatePos(double sx0, double sy0, double dx0, double dy0, double t, double x0, double y0)
+        public virtual void interpolatePos(double sx0, double sy0, double dx0, double dy0, double t, out double x0, out double y0)
         {
             x0 = sx0 * (1.0 - t) + dx0 * t;
             y0 = sy0 * (1.0 - t) + dy0 * t;
@@ -188,6 +188,15 @@ namespace proland
             Vector3d e = new Vector3d(Math.Cos(elon) * Math.Cos(elat), Math.Sin(elon) * Math.Cos(elat), Math.Sin(elat));
             Vector3d v = (s * (1.0 - t) + e * t);
             v.Normalize();
+            //safe_asin implementation
+            if (v.Z <= -1)
+            {
+                v.Z = -1;
+            }
+            else if (v.Z >= 1)
+            {
+                v.Z = 1;
+            }
             lat = Math.Asin(v.Z);
             lon = Math.Atan2(v.Y, v.X);
         }
@@ -238,9 +247,12 @@ namespace proland
          * @param viewport an optional viewport to select a part of the image.
          *      The default value [-1:1]x[-1:1] selects the whole image.
          */
-        public virtual void setProjection(Vector4f viewport, float znear = 0.0f, float zfar = 0.0f)
+
+        public virtual void setProjection(Vector4f viewport/**TODO Agustin*/, float znear = 0.0f, float zfar = 0.0f)
         {
-            viewport = new Vector4f(-1.0f, 1.0f, -1.0f, 1.0f);
+            if (viewport == Vector4f.Zero) { 
+                viewport = new Vector4f(-1.0f, 1.0f, -1.0f, 1.0f);
+            }
             Vector4i vp = SceneManager.getCurrentFrameBuffer().getViewport();
             float width = (float)vp.Z;
             float height = (float)vp.W;
@@ -262,11 +274,13 @@ namespace proland
                 znear = (float)(d * zoom * Math.Max(1.0 - 10.0 * Math.Tan((fov / 2) * (Math.PI / 180.0)) / zoom, 0.1));
                 zfar = (float)(d * zoom * Math.Min(1.0 + 10.0 * Math.Tan((fov / 2)* (Math.PI / 180.0)) / zoom, 10.0));
             }
-#if TODO
-            Matrix4d clip = Matrix4d.orthoProjection(viewport.Y, viewport.X, viewport.W, viewport.Z, 1.0f, -1.0f);
-            Matrix4d cameraToScreen = Matrix4d.perspectiveProjection(vfov, width / height, znear, zfar);
+            // Matrix4d.CreateOrthographic AND Matrix4d.perspectiveProjection C++
+            Matrix4d clip = new Matrix4d();
+            Matrix4d.CreateOrthographic(viewport.Y, viewport.X, viewport.W, viewport.Z, out clip);
+            Matrix4d cameraToScreen = new Matrix4d();
+            Matrix4d.CreatePerspectiveFieldOfView(vfov, width / height, znear, zfar);
             node.getOwner().setCameraToScreen(clip * cameraToScreen);
-#endif
+
         }
 
 

@@ -59,6 +59,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BasicViewHandler.cs" />
     <Compile Include="FirstPersonCamera2.cs" />
     <Compile Include="FirstPersonCamera.cs" />
     <Compile Include="BasicFPCamera.cs" />
@@ -123,6 +124,7 @@
     <Compile Include="Tutorials\Testing\Tutorial08_1.cs" />
     <Compile Include="Tutorials\Testing\Tutorial08_3.cs" />
     <Compile Include="Tutorials\Testing\Tutorial08_2.cs" />
+    <Compile Include="Tutorials\Testing\Tutorial08_4.cs" />
     <EmbeddedResource Include="ExampleBrowser.resx">
       <DependentUpon>ExampleBrowser.cs</DependentUpon>
     </EmbeddedResource>
@@ -399,6 +401,10 @@
     <Content Include="Resources\ObjModels\icosahedron.png" />
     <Content Include="Resources\ObjModels\octahedron.png" />
     <Content Include="Resources\ObjModels\README.txt" />
+    <Content Include="Resources\Terrain\HelloWord03.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\Terrain\HelloWord02.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -445,6 +451,7 @@
     </Content>
     <Content Include="Resources\Methods\Example01Camera.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Resources\Methods\infoMethod.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -490,6 +497,7 @@
     </Content>
     <Content Include="Resources\Shaders\basic.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Resources\Shaders\perspective.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

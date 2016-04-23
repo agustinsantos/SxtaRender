@@ -11,13 +11,10 @@ using MathHelper = Sxta.Math.MathHelper;
 
 namespace Examples.Tutorials
 {
-    /// <summary>
-    /// Drawing a plane using Scenegraphs
-    /// </summary>
-    [Example("Example 8.03: Quadtree Subdivision using TerrainNode", ExampleCategory.Testing, "8. Proland", 1, Source = "Tutorial08_3", Documentation = "Tutorial-TODO")]
-    public class Tutorial08_3 : GameWindow
+    [Example("Example 8.04: Quadtree response to camera", ExampleCategory.Testing, "8. Proland", 1, Source = "Tutorial08_4", Documentation = "Tutorial-TODO")]
+    class Tutorial08_4 : GameWindow
     {
-        public Tutorial08_3(string wd) : base(600, 600)
+        public Tutorial08_4(string wd) : base(600, 600)
         {
             if (!string.IsNullOrWhiteSpace(wd))
                 dir = wd;
@@ -118,12 +115,11 @@ namespace Examples.Tutorials
         [STAThread]
         public static void Main()
         {
-            using (Tutorial08_3 example = new Tutorial08_3("Resources"))
+            using (Tutorial08_4 example = new Tutorial08_4("Resources"))
             {
                 example.Run(30.0, 10.0);
             }
         }
     }
 }
-
 

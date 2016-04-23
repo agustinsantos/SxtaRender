@@ -11,7 +11,8 @@ layout(location=0) in vec4 vertex;
 
 out vec2 uv;
 void main() {
-    gl_Position = vec4(vertex.x - 1.0, vertex.y, vertex.z, vertex.w);
+    vec4 p = vec4(vertex.xy * deformation.offset.z + deformation.offset.xy, -10.0, 1.0);
+    gl_Position = deformation.localToScreen * p;
     uv = vertex.xy;
 }
 

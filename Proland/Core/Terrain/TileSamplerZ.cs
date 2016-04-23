@@ -120,7 +120,7 @@ void main() {
 
         }
 
-        public virtual Sxta.Render.Scenegraph.Task _update(SceneManager scene, TerrainQuad root)
+        public override Sxta.Render.Scenegraph.Task update(SceneManager scene, TerrainQuad root)
         {
             Sxta.Render.Scenegraph.Task result = update(scene, root);
             uint frameNumber = scene.getFrameNumber();
@@ -255,7 +255,7 @@ void main() {
         /// Maybe null if this %producer is used to update a tileMap(see
         /// #setTileMap). If not null, must have a
         /// proland.GPUTileStorage.</param>
-        protected virtual void _init(string name, TileProducer producer = null)
+        internal override void init(string name, TileProducer producer = null)
         {
             init(name, producer);
             factory = stateFactory;
@@ -264,7 +264,7 @@ void main() {
             oldLocalCamera = Vector3d.Zero;
         }
 
-        protected virtual bool _needTile(TerrainQuad q)
+        protected override bool needTile(TerrainQuad q)
         {
             Vector3d c = q.getOwner().getLocalCamera();
             if (c.X >= q.ox && c.X < q.ox + q.l && c.Y >= q.oy && c.Y < q.oy + q.l)
@@ -274,7 +274,7 @@ void main() {
             return needTile(q);
         }
 
-        protected virtual void _getTiles(Tree parent, Tree t, TerrainQuad q, TaskGraph result)
+        internal override void getTiles(Tree parent, Tree t, TerrainQuad q, TaskGraph result)
         {
             if (t == null)
             {
@@ -335,7 +335,7 @@ void main() {
             ///
             ///@param q a %terrain quad.
             /// </summary>
-            public TreeZ(Tree parent, TerrainQuad q) : base(parent)
+            internal TreeZ(Tree parent, TerrainQuad q) : base(parent)
             {
                 this.parent = parent;
                 this.q = q;

@@ -69,4 +69,9 @@
       <module id="material" value="terrainShader"/>
     </node>
   </node>
+
+  <basicViewHandler name="viewHandler" viewManager="window"/>
+
+  <helloworld name="window" ui="tweakBar" view="viewHandler"/>
+  
 </archive>
