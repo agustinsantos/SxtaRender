@@ -142,6 +142,11 @@ namespace Examples.Tutorials
             //controll camera pitch from x movement fromt the mouse
             this.Pitch(mouseMove.X);
 
+            if (parentWindow.Keyboard[OpenTK.Input.Key.ShiftLeft])
+            {
+                move *= 4;
+            }
+
             // camera movement by keyboard
             if (parentWindow.Keyboard[OpenTK.Input.Key.A])
             {
