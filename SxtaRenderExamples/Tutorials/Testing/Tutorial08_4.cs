@@ -8,6 +8,7 @@ using Sxta.Render.Scenegraph;
 using System;
 using Matrix4d = Sxta.Math.Matrix4d;
 using MathHelper = Sxta.Math.MathHelper;
+using Vector3d = Sxta.Math.Vector3d;
 
 namespace Examples.Tutorials
 {
@@ -48,7 +49,7 @@ namespace Examples.Tutorials
             resLoader.addPath(dir + "/Meshes");
             resLoader.addPath(dir + "/Methods");
             resLoader.addPath(dir + "/Scenes");
-            resLoader.addArchive(dir + "/Terrain/HelloWord02.xml");
+            resLoader.addArchive(dir + "/Terrain/HelloWord03.xml");
             resManager = new ResourceManager(resLoader);
             manager = new SceneManager();
             manager.setResourceManager(resManager);
@@ -59,6 +60,9 @@ namespace Examples.Tutorials
             manager.setCameraMethod("draw");
 
             fb = FrameBuffer.getDefault();
+
+            camera = new SGCamera(this);
+            camera.Position = new Vector3d(0, 0, 10);
         }
 
         protected override void OnUnload(EventArgs e)
@@ -79,13 +83,9 @@ namespace Examples.Tutorials
         {
             FrameBuffer fb = FrameBuffer.getDefault();
             fb.setViewport(new Vector4i(0, 0, Width, Height));
-            fb.setDepthTest(true, Function.LESS);
 
-            float fov = 60;
-
-            double vfov = 2 * Math.Atan((float)Height / (float)Width * Math.Tan(MathHelper.ToRadians(fov / 2)));
-            Matrix4d projection = Matrix4d.CreatePerspectiveFieldOfView(vfov, (float)Width / (float)Height, 0.01f, 1000.0f);
-            manager.setCameraToScreen(projection);
+            camera.Resize(Width, Height);
+            manager.setCameraToScreen(camera.ProjectionMatrix);
         }
 
 
@@ -96,12 +96,14 @@ namespace Examples.Tutorials
         /// <remarks>There is no need to call the base implementation.</remarks>
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
-            manager.update(e.Time / 100000); // from Seconds to microseconds;
+            camera.Update((float)e.Time);
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)
         {
-            fb.clear(true, false, true);
+            manager.getCameraNode().setLocalToParent(camera.ViewMatrix);
+
+            manager.update(e.Time / 100000); // from Seconds to microseconds);
             manager.draw();
             this.SwapBuffers();
         }
@@ -111,13 +113,14 @@ namespace Examples.Tutorials
         ResourceManager resManager;
         SceneManager manager;
         FrameBuffer fb;
+        private SGCamera camera;
 
         [STAThread]
         public static void Main()
         {
             using (Tutorial08_4 example = new Tutorial08_4("Resources"))
             {
-                example.Run(30.0, 10.0);
+                example.Run(30.0, 0.0);
             }
         }
     }
