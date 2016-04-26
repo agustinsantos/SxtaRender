@@ -75,7 +75,7 @@ namespace Examples.Tutorials
             root.addChild(camera);
 
             SceneNode plane = new SceneNode();
-            plane.setLocalToParent(Matrix4d.CreateTranslation(0, -10, -20) * Matrix4d.CreateRotationX(MathHelper.ToRadians(90))/*Matrix4d.CreateRotationZ(MathHelper.ToRadians(45)) */ );
+            plane.setLocalToParent(Matrix4d.CreateTranslation(0, -10, -20) * Matrix4d.CreateRotationX(MathHelper.ToRadians(90)));
             plane.addFlag("object");
             plane.addMesh("geometry", (MeshBuffers)resManager.loadResource("plane.mesh").get());
             plane.addModule("material", (Module)resManager.loadResource("perspective").get());

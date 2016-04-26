@@ -144,7 +144,7 @@ namespace Sxta.Render.Scenegraph
             {
                 buildNodeMap(root);
             }
-            return nodeMap.GetValues(flag, false);
+            return nodeMap.GetValues(flag, true);
         }
 
         /// <summary>

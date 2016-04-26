@@ -7,7 +7,7 @@
     <setState clearColor="true" clearStencil="false" clearDepth="true">
       <depth enable="true" value="LESS"/>
     </setState>
-    <setTransforms module="this.material" localToScreen="localToScreen"/>
+    <!--<setTransforms module="this.material" localToScreen="localToScreen"/>-->
     <foreach var="o" flag="object" culling="true">
       <callMethod name="$o.draw"/>
     </foreach>
