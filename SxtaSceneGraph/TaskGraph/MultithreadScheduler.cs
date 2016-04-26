@@ -130,7 +130,7 @@ namespace Sxta.Render.Scenegraph
             lock (mutex)
             {
                 bool noCpuTasks = readyCpuTasks.Count == 0;
-                ISet<Task> addedTasks = new HashSet<Task>(); ;
+                ISet<Task> addedTasks = new HashSet<Task>();
                 addFlattenedTask(task, addedTasks);
                 lock (allTasksCond)
                 {
@@ -794,7 +794,7 @@ namespace Sxta.Render.Scenegraph
         private void addFlattenedDependency(Task src, Task dst)
         {
             // NOTE: the mutex should be locked before calling this method!
-            TaskGraph srcTg = (TaskGraph)src;
+            TaskGraph srcTg = src as TaskGraph;
             if (srcTg != null)
             {
                 foreach (Task srcT in srcTg.flattenedFirstTasks)
@@ -804,7 +804,7 @@ namespace Sxta.Render.Scenegraph
             }
             else
             {
-                TaskGraph dstTg = (TaskGraph)dst;
+                TaskGraph dstTg = dst as TaskGraph;
                 if (dstTg != null)
                 {
                     foreach (Task dstT in dstTg.flattenedLastTasks)
@@ -817,8 +817,22 @@ namespace Sxta.Render.Scenegraph
                     ISet<Task> visited = new HashSet<Task>();
                     removeTask(allReadyTasks, src);
                     removeTask(readyCpuTasks, src);
-                    dependencies[src].Add(dst);
-                    inverseDependencies[dst].Add(src);
+                    if (dependencies.ContainsKey(src))
+                        dependencies[src].Add(dst);
+                    else
+                    {
+                        HashSet<Task> destSet = new HashSet<Task>();
+                        destSet.Add(dst);
+                        dependencies.Add(src, destSet);
+                    }
+                    if (inverseDependencies.ContainsKey(dst))
+                        inverseDependencies[dst].Add(src);
+                    else
+                    {
+                        HashSet<Task> srcSet = new HashSet<Task>();
+                        srcSet.Add(src);
+                        inverseDependencies.Add(dst, srcSet);
+                    }
                     setDeadline(dst, src.getDeadline(), visited);
                     Debug.Assert(src.getDeadline() >= dst.getDeadline());
                 }
@@ -843,7 +857,7 @@ namespace Sxta.Render.Scenegraph
             }
             visited.Add(t);
 
-            TaskGraph tg = (TaskGraph)t;
+            TaskGraph tg = t as TaskGraph;
             if (tg != null)
             {
                 foreach (Task i in tg.getAllTasks())
@@ -909,7 +923,7 @@ namespace Sxta.Render.Scenegraph
                         ISet<Task> k;
                         Debug.Assert(dependencies.TryGetValue(r, out k));
                         // we then remove t from the predecessors of r
-                        k.Remove(r);
+                        k.Remove(t);
                         // if t was the only remaining predecessor of r,
                         // r is now ready to be executed
                         if (k.Count == 0)
@@ -919,7 +933,10 @@ namespace Sxta.Render.Scenegraph
                             // execution threads; we do the same for the set of ready CPU
                             // tasks, if r is a CPU tas
                             insertTask(allReadyTasks, r);
-                            Monitor.PulseAll(allTasksCond); //pthread_cond_broadcast( allTasksCond);
+                            lock (allTasksCond)
+                            {
+                                Monitor.PulseAll(allTasksCond); //pthread_cond_broadcast( allTasksCond);
+                            }
 #if STRICT_PREFETCH
                             if (!r.isGpuTask() && r.getDeadline() > 0)
                             {
@@ -928,7 +945,10 @@ namespace Sxta.Render.Scenegraph
                             {
 #endif
                                 insertTask(readyCpuTasks, r);
-                                Monitor.PulseAll(cpuTasksCond); //pthread_cond_broadcast( cpuTasksCond);
+                                lock (allTasksCond)
+                                {
+                                    Monitor.PulseAll(allTasksCond); //pthread_cond_broadcast( allTasksCond);
+                                }
                             }
                         }
                     }

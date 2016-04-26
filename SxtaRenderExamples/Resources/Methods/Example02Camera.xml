@@ -1,10 +1,16 @@
 <?xml version="1.0" ?>
 <sequence>
-  <setState>
+  <setState clearColor="true" clearStencil="false" clearDepth="true">
     <depth enable="true" value="LESS"/>
   </setState>
-  <setTransforms module="this.material" worldPos="worldCameraPos"/>
+  <setTransforms module="this.material" localToScreen="localToScreen"/>
   <foreach var="o" flag="object" culling="true">
     <callMethod name="$o.draw"/>
   </foreach>
+  <!--<foreach var="o" flag="object">
+    <setProgram>
+      <module name="$o.material"/>
+    </setProgram>
+    <drawMesh name="$o.geometry"/>
+  </foreach>-->
 </sequence>

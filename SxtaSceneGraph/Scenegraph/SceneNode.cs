@@ -616,7 +616,7 @@ namespace Sxta.Render.Scenegraph
         {
             if (parent != null)
             {
-                localToWorld = localToParent * parent.localToWorld ;//AQUI MULT MATRIX
+                localToWorld = parent.localToWorld * localToParent;//AQUI MULT MATRIX CAMBIADO
             }
 
             foreach (SceneNode i in children)
@@ -642,8 +642,8 @@ namespace Sxta.Render.Scenegraph
          */
         internal void updateLocalToCamera(Matrix4d worldToCamera, Matrix4d cameraToScreen)
         {
-            localToCamera = localToWorld * worldToCamera;//AQUI MULT MATRIX
-            localToScreen = localToCamera * cameraToScreen;//AQUI MULT MATRIX
+            localToCamera = worldToCamera * localToWorld;//AQUI MULT MATRIX CAMBIADO
+            localToScreen = cameraToScreen * localToCamera;//AQUI MULT MATRIX CAMBIADO
 
             foreach (SceneNode i in children)
             {

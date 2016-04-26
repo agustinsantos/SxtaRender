@@ -232,7 +232,7 @@ namespace Sxta.Render.Scenegraph
             {
                 HashSet<Task> dep = new HashSet<Task>();
                 dep.Add(src);
-                dependencies.Add(dst, dep);
+                inverseDependencies.Add(dst, dep);
             }
             else
                 inverseDependencies[dst].Add(src);

@@ -6,19 +6,15 @@ using OpenTK.Input;
 using Sxta.Math;
 using Sxta.Render;
 using Sxta.Render.Resources;
-using Sxta.Render.Resources.XmlResources;
 using Sxta.Render.Scenegraph;
 using System;
-using System.Drawing;
-using System.IO;
-using Matrix4d = Sxta.Math.Matrix4d;
-using Vector4d = Sxta.Math.Vector4d;
 using MathHelper = Sxta.Math.MathHelper;
+using Matrix4d = Sxta.Math.Matrix4d;
 
 namespace Examples.Tutorials
 {
     /// <summary>
-    /// Demonstrates the GameWindow class.
+    /// Demonstrates a scenegraph application.
     /// </summary>
     [Example("Example 1.2: Basic SceneGraph", ExampleCategory.SceneGraph, "1. Getting Started", 1, Source = "TutorialSG01_2", Documentation = "Tutorial-TODO")]
     public class TutorialSG01_2 : GameWindow
@@ -104,10 +100,9 @@ namespace Examples.Tutorials
         {
             FrameBuffer fb = FrameBuffer.getDefault();
             fb.setViewport(new Vector4i(0, 0, Width, Height));
-            fb.setDepthTest(true, Function.LESS);
 
             double vfov = 2 * Math.Atan((float)Height / (float)Width * Math.Tan(MathHelper.ToRadians(fov / 2)));
-            Matrix4d projection = Matrix4d.CreatePerspectiveFieldOfView(vfov, (float)Width / (float)Height, 0.01f, 1000.0f);
+            Matrix4d projection = Matrix4d.CreatePerspectiveFieldOfView(vfov, (float)Width / (float)Height, 0.01f, 100.0f);
             manager.setCameraToScreen(projection);
         }
 
@@ -135,7 +130,6 @@ namespace Examples.Tutorials
         /// <remarks>There is no need to call the base implementation.</remarks>
         protected override void OnRenderFrame(FrameEventArgs e)
         {
-            fb.clear(true, false, true);
             manager.update(e.Time / 100000); // from Seconds to microseconds);
             manager.draw();
             this.SwapBuffers();

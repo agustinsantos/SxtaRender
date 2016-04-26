@@ -1,0 +1,72 @@
+<?xml version="1.0" ?>
+
+<archive>
+  <multithreadScheduler name="defaultScheduler" nthreads="3" fps="0"/>
+
+  <sequence name="cameraSGMethod">
+    <setState clearColor="true" clearStencil="false" clearDepth="true">
+      <depth enable="true" value="LESS"/>
+    </setState>
+    <setTransforms module="this.material" localToScreen="localToScreen"/>
+    <foreach var="o" flag="object" culling="true">
+      <callMethod name="$o.draw"/>
+    </foreach>
+  </sequence>
+  
+  <sequence name="meshSGMethod">
+    <setProgram setUniforms="true">
+      <module name="camera.material"/>
+      <module name="this.material"/>
+    </setProgram>
+    <setTransforms localToScreen="localToScreen" localToWorld="localToWorld"/>
+    <drawMesh name="this.geometry"/>
+  </sequence>
+  
+  <module name="cameraShader" version="330" source="camera.glsl"/>
+ 
+  <module name="perspectiveShader" version="330" source="perspective.glsl">
+    <uniformSampler name="sampler" texture="checker"/>
+  </module>
+
+  <node name="sceneTutorial">
+    <node flags="camera">
+      <module id="material" value="cameraShader"/>
+      <method id="draw" value="cameraSGMethod"/>
+    </node>
+    <!-- By default the camara is at point (0,0,0) looking down negative z-axis -->
+    <node flags="object">
+      <translate x="0" y="-10" z="-20"/>
+      <rotatex angle="90"/>
+      <mesh id="geometry" value="plane.mesh"/>
+      <method id="draw" value="meshSGMethod"/>
+      <module id="material" value="perspectiveShader"/>
+    </node>
+
+    <node flags="object">
+      <translate x="0.0" y="0" z="-10.0"/>
+      <rotatex angle="45"/>
+      <rotatey angle="45"/>
+      <mesh id="geometry" value="cube.mesh"/>
+      <method id="draw" value="meshSGMethod"/>
+      <module id="material" value="perspectiveShader"/>
+    </node>
+    <node flags="object">
+      <translate x="-2.0" y="2.0" z="-5.0"/>
+      <rotatex angle="45"/>
+      <rotatey angle="45"/>
+      <scale x="0.5" y="0.5" z="0.5"/>
+      <mesh id="geometry" value="cube.mesh"/>
+      <method id="draw" value="meshSGMethod"/>
+      <module id="material" value="perspectiveShader"/>
+    </node>
+    <node flags="object">
+      <translate x="2.0" y="-3.0" z="-8.0"/>
+      <rotatex angle="45"/>
+      <rotatey angle="45"/>
+      <scale x="0.3" y="0.3" z="0.3"/>
+      <mesh id="geometry" value="cube.mesh"/>
+      <method id="draw" value="meshSGMethod"/>
+      <module id="material" value="perspectiveShader"/>
+    </node>
+  </node>
+</archive>

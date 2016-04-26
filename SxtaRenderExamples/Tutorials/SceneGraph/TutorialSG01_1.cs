@@ -6,18 +6,13 @@ using OpenTK.Input;
 using Sxta.Math;
 using Sxta.Render;
 using Sxta.Render.Resources;
-using Sxta.Render.Resources.XmlResources;
 using Sxta.Render.Scenegraph;
 using System;
-using System.Drawing;
-using System.IO;
-using Matrix4d = Sxta.Math.Matrix4d;
-using MathHelper = Sxta.Math.MathHelper;
 
 namespace Examples.Tutorials
 {
     /// <summary>
-    /// Demonstrates the GameWindow class.
+    /// Demonstrates a scenegraph application.
     /// </summary>
     [Example("Example 1.1: Basic SceneGraph", ExampleCategory.SceneGraph, "1. Getting Started", 1, Source = "TutorialSG01_1", Documentation = "Tutorial-TODO")]
     public class TutorialSG01_1 : GameWindow

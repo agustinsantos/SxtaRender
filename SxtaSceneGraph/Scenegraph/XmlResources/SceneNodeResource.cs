@@ -54,32 +54,37 @@ namespace Sxta.Render.Scenegraph.XmlResources
                     getFloatParameter(desc, f, "x", out x);
                     getFloatParameter(desc, f, "y", out y);
                     getFloatParameter(desc, f, "z", out z);
-                    ltop = Matrix4d.CreateTranslation(x, y, z) * ltop; //AQUI MULT MATRIX
-
+                    ltop = ltop * Matrix4d.CreateTranslation(x, y, z); //AQUI MULT MATRIX CAMBIADO
+                }
+                else if (f.Name == "scale")
+                {
+                    float x, y, z;
+                    checkParameters(desc, f, "x,y,z,");
+                    getFloatParameter(desc, f, "x", out x);
+                    getFloatParameter(desc, f, "y", out y);
+                    getFloatParameter(desc, f, "z", out z);
+                    ltop = ltop * Matrix4d.Scale(x, y, z); //AQUI MULT MATRIX CAMBIADO
                 }
                 else if (f.Name == "rotatex")
                 {
                     float a;
                     checkParameters(desc, f, "angle,");
                     getFloatParameter(desc, f, "angle", out a);
-                    ltop = Matrix4d.CreateRotationX(Math.MathHelper.ToRadians(a)) * ltop; //AQUI MULT MATRIX
-
+                    ltop = ltop * Matrix4d.CreateRotationX(Math.MathHelper.ToRadians(a)); //AQUI MULT MATRIX CAMBIADO
                 }
                 else if (f.Name == "rotatey")
                 {
                     float a;
                     checkParameters(desc, f, "angle,");
-                    getFloatParameter(desc, f, "angle", out a);
-                    ltop = Matrix4d.CreateRotationY(Math.MathHelper.ToRadians(a)) * ltop; //AQUI MULT MATRIX
-
+                    getFloatParameter(desc, f, "angle", out a); 
+                    ltop = ltop * Matrix4d.CreateRotationY(Math.MathHelper.ToRadians(a)); //AQUI MULT MATRIX CAMBIADO
                 }
                 else if (f.Name == "rotatez")
                 {
                     float a;
                     checkParameters(desc, f, "angle,");
                     getFloatParameter(desc, f, "angle", out a);
-                    ltop = Matrix4d.CreateRotationZ(Math.MathHelper.ToRadians(a)) * ltop; //AQUI MULT MATRIX
-
+                    ltop = ltop * Matrix4d.CreateRotationZ(Math.MathHelper.ToRadians(a)); //AQUI MULT MATRIX CAMBIADO
                 }
                 else if (f.Name == "bounds")
                 {
