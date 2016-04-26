@@ -59,6 +59,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SGCamera.cs" />
     <Compile Include="BasicViewHandler.cs" />
     <Compile Include="FirstPersonCamera2.cs" />
     <Compile Include="FirstPersonCamera.cs" />
@@ -93,8 +94,9 @@
     <Compile Include="Tutorials\Learning\Tutorial04_3.cs" />
     <Compile Include="Tutorials\Learning\Tutorial04_2.cs" />
     <Compile Include="Tutorials\Learning\Tutorial04_1.cs" />
-    <Compile Include="Tutorials\SceneGraph\TutorialSG01_4.cs" />
     <Compile Include="Tutorials\SceneGraph\TutorialSG01_5.cs" />
+    <Compile Include="Tutorials\SceneGraph\TutorialSG01_4.cs" />
+    <Compile Include="Tutorials\SceneGraph\TutorialSG01_x.cs" />
     <Compile Include="Tutorials\Testing\Tutorial06_1.cs" />
     <Compile Include="Tutorials\Learning\Tutorial01_2.cs" />
     <Compile Include="Tutorials\Learning\Tutorial01_3.cs" />
