@@ -6,23 +6,17 @@ using OpenTK.Input;
 using Sxta.Math;
 using Sxta.Render;
 using Sxta.Render.Resources;
-using Sxta.Render.Resources.XmlResources;
 using Sxta.Render.Scenegraph;
 using System;
-using System.Drawing;
-using System.IO;
-using Matrix4d = Sxta.Math.Matrix4d;
 using MathHelper = Sxta.Math.MathHelper;
-using OpenTK.Graphics;
-using OpenTK.Graphics.OpenGL;
-using Sxta.Render.OpenGLExt;
+using Matrix4d = Sxta.Math.Matrix4d;
 
 namespace Examples.Tutorials
 {
     /// <summary>
-    /// Demonstrates the GameWindow class.
+    /// Demonstrates a scenegraph application.
     /// </summary>
-    [Example("Example 1.4: Basic SceneGraph", ExampleCategory.SceneGraph, "1. Getting Started", 1, Source = "TutorialSG01_3", Documentation = "Tutorial-TODO")]
+    [Example("Example 1.4: SceneGraph using Code", ExampleCategory.SceneGraph, "1. Getting Started", 1, Source = "TutorialSG01_4", Documentation = "Tutorial-TODO")]
     public class TutorialSG01_4 : GameWindow
     {
         public TutorialSG01_4(string wd)
@@ -50,11 +44,6 @@ namespace Examples.Tutorials
                     this.WindowState = WindowState.Normal;
                 else
                     this.WindowState = WindowState.Fullscreen;
-
-            if (e.Key == Key.F12)
-            {
-               ScreenShot.SaveScreenShot(this.ClientSize, this.ClientRectangle);
-            }
         }
 
         #endregion
@@ -82,51 +71,46 @@ namespace Examples.Tutorials
             SceneNode camera = new SceneNode();
             camera.addFlag("camera");
             camera.addModule("material", (Module)resManager.loadResource("camera").get());
-            camera.addMethod("draw", new Method((TaskFactory)resManager.loadResource("cameraMethod").get()));
+            camera.addMethod("draw", new Method((TaskFactory)resManager.loadResource("Example02Camera").get()));
             root.addChild(camera);
 
-            SceneNode light = new SceneNode();
-            light.setLocalToParent(Matrix4d.CreateRotationX(MathHelper.ToRadians(90)) *
-                                   Matrix4d.CreateRotationY(MathHelper.ToRadians(180)) *
-                                   Matrix4d.CreateRotationZ(MathHelper.ToRadians(90)) *
-                                   Matrix4d.CreateTranslation(0, 0, -7));
-            light.addFlag("light");
-            light.addModule("material", (Module)resManager.loadResource("spotlight").get());
-            light.addMethod("draw", new Method((TaskFactory)resManager.loadResource("lightMethod").get()));
-            root.addChild(light);
+            SceneNode plane = new SceneNode();
+            plane.setLocalToParent(Matrix4d.CreateTranslation(0, -10, -20) * Matrix4d.CreateRotationX(MathHelper.ToRadians(90))/*Matrix4d.CreateRotationZ(MathHelper.ToRadians(45)) */ );
+            plane.addFlag("object");
+            plane.addMesh("geometry", (MeshBuffers)resManager.loadResource("plane.mesh").get());
+            plane.addModule("material", (Module)resManager.loadResource("perspective").get());
+            plane.addMethod("draw", new Method((TaskFactory)resManager.loadResource("mesh02Method").get()));
+            root.addChild(plane);
 
-            SceneNode cube = new SceneNode();
-            cube.setLocalToParent(Matrix4d.CreateRotationX(MathHelper.ToRadians(45)) * Matrix4d.CreateRotationZ(MathHelper.ToRadians(45)) * Matrix4d.CreateTranslation(0, 0, -5));
-            cube.addFlag("object");
-            cube.addMesh("geometry", (MeshBuffers)resManager.loadResource("cube.mesh").get());
-            cube.addModule("material", (Module)resManager.loadResource("texturedPlastic").get());
-            cube.addMethod("draw", new Method((TaskFactory)resManager.loadResource("objectMethod").get()));
-            root.addChild(cube);
+            SceneNode cube1 = new SceneNode();
+            cube1.setLocalToParent(Matrix4d.CreateTranslation(0, 0, -10) * Matrix4d.CreateRotationX(MathHelper.ToRadians(45)) * Matrix4d.CreateRotationY(MathHelper.ToRadians(45)));
+            cube1.addFlag("object");
+            cube1.addMesh("geometry", (MeshBuffers)resManager.loadResource("cube.mesh").get());
+            cube1.addModule("material", (Module)resManager.loadResource("perspective").get());
+            cube1.addMethod("draw", new Method((TaskFactory)resManager.loadResource("mesh02Method").get()));
+            root.addChild(cube1);
 
-            //SceneNode plane = new SceneNode();
-            //plane.setLocalToParent(Matrix4d.CreateRotationX(MathHelper.ToRadians(75)) * Matrix4d.CreateTranslation(0, -10, -20));
-            //plane.addFlag("object");
-            //plane.addMesh("geometry", (MeshBuffers)resManager.loadResource("plane.mesh").get());
-            //plane.addModule("material", (Module)resManager.loadResource("texturedPlastic").get());
-            //plane.addMethod("draw", new Method((TaskFactory)resManager.loadResource("objectMethod").get()));
-            //root.addChild(plane);
+            SceneNode cube2 = new SceneNode();
+            cube2.setLocalToParent(Matrix4d.CreateTranslation(-2, 2, -5) * Matrix4d.CreateRotationX(MathHelper.ToRadians(45)) * Matrix4d.CreateRotationY(MathHelper.ToRadians(45)) * Matrix4d.Scale(0.5, 0.5, 0.5));
+            cube2.addFlag("object");
+            cube2.addMesh("geometry", (MeshBuffers)resManager.loadResource("cube.mesh").get());
+            cube2.addModule("material", (Module)resManager.loadResource("perspective").get());
+            cube2.addMethod("draw", new Method((TaskFactory)resManager.loadResource("mesh02Method").get()));
+            root.addChild(cube2);
 
-            //SceneNode log = new SceneNode();
-            //log.addFlag("overlay");
-            //log.addMethod("draw", new Method(resManager.loadResource("logMethod").get() as TaskFactory));
-            //root.addChild(log);
-
-            //SceneNode info = new SceneNode();
-            //info.addFlag("overlay");
-            //info.addMethod("draw", new Method(resManager.loadResource("infoMethod").get() as TaskFactory));
-            //root.addChild(info);
+            SceneNode cube3 = new SceneNode();
+            cube3.setLocalToParent(Matrix4d.CreateTranslation(2, -3, -8) * Matrix4d.CreateRotationX(MathHelper.ToRadians(45)) * Matrix4d.CreateRotationY(MathHelper.ToRadians(45)) * Matrix4d.Scale(0.3));
+            cube3.addFlag("object");
+            cube3.addMesh("geometry", (MeshBuffers)resManager.loadResource("cube.mesh").get());
+            cube3.addModule("material", (Module)resManager.loadResource("perspective").get());
+            cube3.addMethod("draw", new Method((TaskFactory)resManager.loadResource("mesh02Method").get()));
+            root.addChild(cube3);
 
             manager.setRoot(root);
             manager.setCameraNode("camera");
             manager.setCameraMethod("draw");
 
             fb = FrameBuffer.getDefault();
-            fb.setDepthTest(true, Function.LESS);
         }
 
         #endregion
@@ -172,13 +156,6 @@ namespace Examples.Tutorials
         /// <remarks>There is no need to call the base implementation.</remarks>
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
-            //Matrix4d cameraToWorld = Matrix4d.CreateRotationX(MathHelper.ToRadians(90));
-            //cameraToWorld = cameraToWorld * Matrix4d.CreateRotationY(-alpha);
-            //cameraToWorld = cameraToWorld * Matrix4d.CreateRotationX(-theta);
-            dist += 0.001f;
-            Matrix4d cameraToWorld = Matrix4d.CreateTranslation(0.0f, 0.0f, dist);
-
-            // manager.getCameraNode().setLocalToParent(cameraToWorld);
         }
 
         #endregion
@@ -192,7 +169,6 @@ namespace Examples.Tutorials
         /// <remarks>There is no need to call the base implementation.</remarks>
         protected override void OnRenderFrame(FrameEventArgs e)
         {
-            fb.clear(true, false, true);
             manager.update(e.Time / 100000); // from Seconds to microseconds);
             manager.draw();
             this.SwapBuffers();
@@ -207,11 +183,8 @@ namespace Examples.Tutorials
         ResourceManager resManager;
         SceneManager manager;
         FrameBuffer fb;
-
-        double alpha = MathHelper.ToRadians(45);
-        double theta = MathHelper.ToRadians(45);
         float fov = 60;
-        float dist = 0;
+
         #endregion
 
         #region public static void Main()

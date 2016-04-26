@@ -94,6 +94,7 @@
     <Compile Include="Tutorials\Learning\Tutorial04_2.cs" />
     <Compile Include="Tutorials\Learning\Tutorial04_1.cs" />
     <Compile Include="Tutorials\SceneGraph\TutorialSG01_4.cs" />
+    <Compile Include="Tutorials\SceneGraph\TutorialSG01_5.cs" />
     <Compile Include="Tutorials\Testing\Tutorial06_1.cs" />
     <Compile Include="Tutorials\Learning\Tutorial01_2.cs" />
     <Compile Include="Tutorials\Learning\Tutorial01_3.cs" />

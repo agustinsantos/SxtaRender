@@ -16,7 +16,7 @@ namespace Examples.Tutorials
     /// <summary>
     /// Demonstrates a scenegraph application.
     /// </summary>
-    [Example("Example 1.2: Basic SceneGraph", ExampleCategory.SceneGraph, "1. Getting Started", 1, Source = "TutorialSG01_2", Documentation = "Tutorial-TODO")]
+    [Example("Example 1.2: Complex SceneGraph", ExampleCategory.SceneGraph, "1. Getting Started", 1, Source = "TutorialSG01_2", Documentation = "Tutorial-TODO")]
     public class TutorialSG01_2 : GameWindow
     {
         public TutorialSG01_2(string wd)
