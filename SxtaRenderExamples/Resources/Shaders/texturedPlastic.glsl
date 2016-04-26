@@ -17,7 +17,6 @@ void main() {
 #endif
 
 #ifdef _FRAGMENT_
-
 uniform sampler2D tex;
 
 in vec3 wpos;
@@ -40,7 +39,8 @@ void main() {
 
     vec4 fcolor = texture(tex, fuv);
 
-    data = fcolor * (light + 0.2) + vec4(specular);
+    //data = fcolor * (light + 0.2) + vec4(specular);
+    data = fcolor * (light + 0.2) ;
 }
 
 #endif
