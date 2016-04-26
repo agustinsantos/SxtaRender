@@ -77,7 +77,7 @@ namespace Examples.Tutorials
 
             // position the camera 
             camera = new SGCamera(this);
-            camera.Position = new Vector3d(0, 0, -10);
+            camera.Position = new Vector3d(0, 0, 10);
         }
 
         #endregion

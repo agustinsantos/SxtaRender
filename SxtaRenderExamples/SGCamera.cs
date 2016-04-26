@@ -21,7 +21,7 @@ namespace Examples.Tutorials
         private readonly OpenTK.GameWindow parentWindow;
         private Vector2f mouseMove;
         private float mouseSensitivity = 0.05f;
-        private float moveSpeed = 0.2f;
+        private float moveSpeed = 0.5f;
 
         public Matrix4d ViewMatrix { get; internal set; }
 
@@ -100,7 +100,7 @@ namespace Examples.Tutorials
             matrix = Matrix4d.CreateRotation(yaw, 0.0f, 1.0f, 0.0f) * matrix;
 
             //translate to the position vector's location
-            ViewMatrix = matrix * Matrix4d.CreateTranslation(-Position);
+            ViewMatrix = matrix * Matrix4d.CreateTranslation(Position);
         }
 
         public void Update(float time)
