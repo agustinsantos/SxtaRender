@@ -355,12 +355,13 @@ void main() {
         ///coarsest tiles first (i.e. those whose level is minimal).
         /// </summary>
 
-        private struct TreeZSort : Std.less<TreeZ>
+        internal class TreeZSort : TreeZ
         {
             /// <summary>
             ///Returns true if x's level is less than y's level.
             /// </summary>
-            bool operator <(TreeZ x, TreeZ y);
+            //bool operator()(const TreeZ *x, const TreeZ *y) const;
+
         };
 
         /// <summary>
@@ -459,7 +460,7 @@ void main() {
             /// <summary>
             ///The set of texture tile that need to be read back.
             /// </summary>
-            internal SortedSet<TreeZ, TreeZSort> needReadback;
+            public SortedDictionary<TreeZ, TreeZSort> needReadback;
 
             /// <summary>
             ///The slot of #storage corresponding to the quad below the camera.

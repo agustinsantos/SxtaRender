@@ -129,6 +129,7 @@
     <Compile Include="Tutorials\Testing\Tutorial08_3.cs" />
     <Compile Include="Tutorials\Testing\Tutorial08_2.cs" />
     <Compile Include="Tutorials\Testing\Tutorial08_4.cs" />
+    <Compile Include="Tutorials\Testing\Tutorial08_5.cs" />
     <EmbeddedResource Include="ExampleBrowser.resx">
       <DependentUpon>ExampleBrowser.cs</DependentUpon>
     </EmbeddedResource>
@@ -408,6 +409,10 @@
     <Content Include="Resources\ObjModels\icosahedron.png" />
     <Content Include="Resources\ObjModels\octahedron.png" />
     <Content Include="Resources\ObjModels\README.txt" />
+    <Content Include="Resources\Terrain\HelloWord04.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\Terrain\HelloWord03.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
