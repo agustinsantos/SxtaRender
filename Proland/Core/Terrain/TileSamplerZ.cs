@@ -161,10 +161,10 @@ void main() {
                 state.cameraSlot = null;
             }
 
-           // TODO DEPURAR DANI 
+            // TODO DEPURAR DANI 
             while (state.needReadback.Count > 0 && gpuTiles.Count() < MAX_MIPMAP_PER_FRAME)
             {
-                TreeZ  t = state.needReadback.First();
+                TreeZ t = state.needReadback.First();
                 state.needReadback.Remove(t);
                 TileCache.Tile tile = t.t;
 
@@ -355,13 +355,6 @@ void main() {
         ///coarsest tiles first (i.e. those whose level is minimal).
         /// </summary>
 
-        //private struct TreeZSort : Std.less<TreeZ>
-        //{
-        //    /// <summary>
-        //    ///Returns true if x's level is less than y's level.
-        //    /// </summary>
-        //    bool operator <(TreeZ x, TreeZ y);
-        //};
         private class TreeZSort : IComparer<TreeZ>
         {
             public int Compare(TreeZ x, TreeZ y)

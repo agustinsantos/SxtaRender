@@ -15,12 +15,11 @@ namespace Sxta.Math
         /// </summary>
         public Box2i()
         {
-#if TODO
-            xmin = int.PositiveInfinity;
-            xmax = int.NegativeInfinity;
-            ymin = int.PositiveInfinity;
-            ymax = int.NegativeInfinity;
-#endif
+
+            xmin = int.MaxValue;
+            xmax = int.MinValue;
+            ymin = int.MaxValue;
+            ymax = int.MinValue;
         }
 
         /// <summary>

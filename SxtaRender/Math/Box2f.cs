@@ -16,10 +16,10 @@ namespace Sxta.Math
         /// </summary>
         public Box2f()
         {
-            xmin = float.PositiveInfinity;
-            xmax = float.NegativeInfinity;
-            ymin = float.PositiveInfinity;
-            ymax = float.NegativeInfinity;
+            xmin = float.MaxValue;
+            xmax = float.MinValue;
+            ymin = float.MaxValue;
+            ymax = float.MinValue;
 
         }
 
