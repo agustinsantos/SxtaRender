@@ -65,6 +65,7 @@
     <Compile Include="Core\Terrain\TerrainNode.cs" />
     <Compile Include="Core\Terrain\TerrainQuad.cs" />
     <Compile Include="Core\Terrain\TileSampler.cs" />
+    <Compile Include="Core\Terrain\TileSamplerZ.cs" />
     <Compile Include="Core\Terrain\UpdateTerrainTask.cs" />
     <Compile Include="Core\Terrain\UpdateTileSamplersTask.cs" />
     <Compile Include="Core\Terrain\XmlResources\RegisterResourceReader.cs" />

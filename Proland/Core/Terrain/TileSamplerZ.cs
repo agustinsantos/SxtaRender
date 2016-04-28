@@ -161,12 +161,12 @@ void main() {
                 state.cameraSlot = null;
             }
 
-            Dictionary<TreeZ, TreeZSort>.iterator i = State.needReadback;
-            foreach (KeyValuePair<TreeZ, TreeZSort> i in state.needReadback && gpuTiles.Count() < MAX_MIPMAP_PER_FRAME)
+           // TODO DEPURAR DANI 
+            while (state.needReadback.Count > 0 && gpuTiles.Count() < MAX_MIPMAP_PER_FRAME)
             {
-                TreeZ t = i;
-                TileCache.Tile tile = i.t;
-                state.needReadback.erase(i++);
+                TreeZ  t = state.needReadback.First();
+                state.needReadback.Remove(t);
+                TileCache.Tile tile = t.t;
 
                 if (tile != null)
                 {
@@ -287,7 +287,7 @@ void main() {
             }
             if ((t).t != null && (t).t.task.isDone() && (!((TreeZ)(t)).readback || ((TreeZ)(t)).readbackDate < (t).t.task.getCompletionDate()))
             {
-                state.needReadback.insert((TreeZ)(t));
+                state.needReadback.Add((TreeZ)t);
                 ((TreeZ)(t)).readback = true;
                 ((TreeZ)(t)).readbackDate = (t).t.task.getCompletionDate();
             }
@@ -343,26 +343,35 @@ void main() {
                 readbackDate = 0;
             }
             //TODO
-            public virtual void recursiveDelete(TileSampler owner)
+            public override void recursiveDelete(TileSampler owner)
             {
                 //(TileSamplerZ)(owner).state.needReadback.erase(this);
                 //Tree.recursiveDelete(owner);
             }
-        };
+        }
 
         /// <summary>
         ///A sort operator to sort TreeZ elements. It is used to read back
         ///coarsest tiles first (i.e. those whose level is minimal).
         /// </summary>
 
-        private struct TreeZSort : Std.less<TreeZ>
+        //private struct TreeZSort : Std.less<TreeZ>
+        //{
+        //    /// <summary>
+        //    ///Returns true if x's level is less than y's level.
+        //    /// </summary>
+        //    bool operator <(TreeZ x, TreeZ y);
+        //};
+        private class TreeZSort : IComparer<TreeZ>
         {
-            /// <summary>
-            ///Returns true if x's level is less than y's level.
-            /// </summary>
-            bool operator <(TreeZ x, TreeZ y);
-        };
+            public int Compare(TreeZ x, TreeZ y)
+            {
+                int xLevel = x.q.level;
+                int yLevel = y.q.level;
 
+                return xLevel - yLevel;
+            }
+        }
         /// <summary>
         ///A ork.ReadbackManager.Callback to readback an
         ///elevation tile and to update the zmin and zmax fields
@@ -459,7 +468,7 @@ void main() {
             /// <summary>
             ///The set of texture tile that need to be read back.
             /// </summary>
-            internal SortedSet<TreeZ, TreeZSort> needReadback;
+            public SortedSet<TreeZ> needReadback = new SortedSet<TreeZ>(new TreeZSort());
 
             /// <summary>
             ///The slot of #storage corresponding to the quad below the camera.
@@ -506,7 +515,7 @@ void main() {
         /// <summary>
         ///The %terrain quad directly below the current viewer position.
         /// </summary>
-        public TileSamplerZ.TreeZ cameraQuad;
+        protected TileSamplerZ.TreeZ cameraQuad;
 
         /// <summary>
         ///The relative viewer position in the #cameraQuad quad.
