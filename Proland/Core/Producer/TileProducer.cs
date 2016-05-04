@@ -19,18 +19,15 @@ namespace proland
     /// </summary>
     public class TileProducer
     {
-//#if DANIEL
+        //#if DANIEL
 
-        /////////////////////////////////PARTE 2/////////////////////////////////////
-
-        /*
-          * Creates a new TileProducer.
-          *
-          * @param type the type of this %producer.
-          * @param taskType the type of the Task that produce the actual tile data.
-          * @param cache the tile cache that stores the tiles produced by this %producer.
-          * @param gpuProducer true if this %producer produces textures on GPU.
-          */
+        /// <summary>
+        /// Creates a new TileProducer.
+        /// </summary>
+        /// <param name="type">the type of this %producer.</param>
+        /// <param name="taskType">the type of the Task that produce the actual tile data.</param>
+        /// <param name="cache">the tile cache that stores the tiles produced by this %producer.</param>
+        /// <param name="gpuProducer">true if this %producer produces textures on GPU.</param>
         public TileProducer(string type, string taskType, TileCache cache, bool gpuProducer)
         {
             this.taskType = taskType;
@@ -38,48 +35,47 @@ namespace proland
         }
 
 
-        /*
-          * Deletes this TileProducer.
-          */
-        ~TileProducer()
-        {
-            Debug.Assert(cache != null);
-            Debug.Assert(cache.producers.ContainsKey(id));
-            cache.producers.Remove(id);
-            for (int i = 0; i < tasks.Count; i++)
-            {
-                CreateTile t = (CreateTile)(tasks[i]);
-                if (t != null)
-                {
-                    t.owner = null;
-                }
-                else
-                {
-                    ((CreateTileTaskGraph)tasks[i]).owner = null;
-                }
-            }
-            layers.Clear();
-            if (tileMap != null)
-            {
-                //TODO delete[] tileMap;
-            }
-            //pthread_mutex_destroy((pthread_mutex_t*)mutex);
-            //delete (pthread_mutex_t*) mutex;
-        }
+#if TODO
+        /// Deletes this TileProducer.
 
-        /*
-          * Returns the size in meters of the root quad produced by this %producer.
-          */
+        ~TileProducer()
+       {
+           Debug.Assert(cache != null);
+           Debug.Assert(cache.producers.ContainsKey(id));
+           cache.producers.Remove(id);
+           for (int i = 0; i < tasks.Count; i++)
+           {
+               CreateTile t = (CreateTile)(tasks[i]);
+               if (t != null)
+               {
+                   t.owner = null;
+               }
+               else
+               {
+                   ((CreateTileTaskGraph)tasks[i]).owner = null;
+               }
+           }
+           layers.Clear();
+           if (tileMap != null)
+           {
+               //TODO delete[] tileMap;
+           }
+           //pthread_mutex_destroy((pthread_mutex_t*)mutex);
+           //delete (pthread_mutex_t*) mutex;
+       }
+#endif
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>the size in meters of the root quad produced by this %producer.</returns>
         public float getRootQuadSize()
         {
             return rootQuadSize;
         }
-
-        /*
-          * Sets the size in meters of the root quad produced by this %producer.
-          *
-          * @param size the size of the root quad of this %producer.
-          */
+        /// <summary>
+        /// Sets the size in meters of the root quad produced by this %producer.
+        /// </summary>
+        /// <param name="size">the size of the root quad of this %producer.</param>
         public virtual void setRootQuadSize(float size)
         {
             rootQuadSize = size;
@@ -89,85 +85,85 @@ namespace proland
                 layers[i].setTileSize(cache.getStorage().getTileSize(), getBorder(), getRootQuadSize());
             }
         }
-
-        /*
-          * Returns the id of this %producer. This id is local to the TileCache used by
-          * this %producer, and is used to distinguish all the producers that use this
-          * cache.
-          */
+        /// <summary>
+        /// Returns the id of this %producer. This id is local to the TileCache used by
+        /// this %producer, and is used to distinguish all the producers that use this
+        /// cache.
+        /// </summary>
+        /// <returns></returns>
         public int getId()
         {
             return id;
         }
 
-        /*
-          * Returns the TileCache that stores the tiles produced by this %producer.
-          */
+        ///<summary>
+        /// Returns the TileCache that stores the tiles produced by this %producer.
+        ///</summary>
         public virtual TileCache getCache()
         {
             return cache;
         }
 
-        /*
-          * Returns true if this %producer produces textures on GPU.
-          */
+        ///<summary>
+        /// Returns true if this %producer produces textures on GPU.
+        ///</summary>
         public bool isGpuProducer()
         {
             return gpuProducer;
         }
 
-        /*
-          * Returns the size in pixels of the border of each tile. Tiles made of
-          * raster data may have a border that contains the valueC of the neighboring
-          * pixels of the tile. For instance if the tile size (returned by
-          * TileStorage#getTileSize) is 196, and if the tile border is 2, this means
-          * that the actual tile data is 192x192 pixels, with a 2 pixel border that
-          * contains the valueC of the neighboring pixels. Using a border introduces
-          * data redundancy but is usefull to get the valueC of the neighboring pixels
-          * of a tile without needing to load the neighboring tiles.
-          */
+        ///<summary>
+        /// Returns the size in pixels of the border of each tile. Tiles made of
+        /// raster data may have a border that contains the valueC of the neighboring
+        /// pixels of the tile. For instance if the tile size (returned by
+        /// TileStorage#getTileSize) is 196, and if the tile border is 2, this means
+        /// that the actual tile data is 192x192 pixels, with a 2 pixel border that
+        /// contains the valueC of the neighboring pixels. Using a border introduces
+        /// data redundancy but is usefull to get the valueC of the neighboring pixels
+        /// of a tile without needing to load the neighboring tiles.
+        ///</summary>
         public virtual int getBorder()
         {
             return 0;
         }
 
-        /*
-          * Returns true if this %producer can produce the given tile.
-          *
-          * @param level the tile's quadtree level.
-          * @param tx the tile's quadtree x coordinate.
-          * @param ty the tile's quadtree y coordinate.
-          */
+        ///<summary>
+        /// Returns true if this %producer can produce the given tile.
+        ///
+        /// @param level the tile's quadtree level.
+        /// @param tx the tile's quadtree x coordinate.
+        /// @param ty the tile's quadtree y coordinate.
+        ///</summary>
         public virtual bool hasTile(int level, int tx, int ty)
         {
             return true;
         }
 
-        /*
-          * Returns true if this %producer can produce the children of the given tile.
-          *
-          * @param level the tile's quadtree level.
-          * @param tx the tile's quadtree x coordinate.
-          * @param ty the tile's quadtree y coordinate.
-          */
+        ///<summary>
+        /// Returns true if this %producer can produce the children of the given tile.
+        ///
+        /// @param level the tile's quadtree level.
+        /// @param tx the tile's quadtree x coordinate.
+        /// @param ty the tile's quadtree y coordinate.
+        ///</summary>
         public bool hasChildren(int level, int tx, int ty)
         {
             return hasTile(level + 1, 2 * tx, 2 * ty);
         }
 
-        /*
-          * Looks for a tile in the TileCache of this TileProducer.
-          *
-          * @param level the tile's quadtree level.
-          * @param tx the tile's quadtree x coordinate.
-          * @param ty the tile's quadtree y coordinate.
-          * @param includeCache true to include both used and unused tiles in the
-          *      search, false to include only the used tiles.
-          * @param done true to check that the tile's creation task is done.
-          * @return the requested tile, or null if it is not in the TileCache or
-          *      if 'done' is true, if it is not ready. This method does not change the
-          *      number of users of the returned tile.
-          */
+        ///<summary>
+        /// Looks for a tile in the TileCache of this TileProducer.
+        ///
+        /// @param level the tile's quadtree level.
+        /// @param tx the tile's quadtree x coordinate.
+        /// @param ty the tile's quadtree y coordinate.
+        /// @param includeCache true to include both used and unused tiles in the
+        ///      search, false to include only the used tiles.
+        /// @param done true to check that the tile's creation task is done.
+        /// @return the requested tile, or null if it is not in the TileCache or
+        ///      if 'done' is true, if it is not ready. This method does not change the
+        ///      number of users of the returned tile.
+        ///</summary>
         public virtual TileCache.Tile findTile(int level, int tx, int ty, bool includeCache = false, bool done = false)
         {
             TileCache.Tile t = cache.findTile(id, level, tx, ty, includeCache);
@@ -178,21 +174,21 @@ namespace proland
             return t;
         }
 
-        /*
-          * Returns the requested tile, creating it if necessary. If the tile is
-          * currently in use it is returned directly. If it is in cache but unused,
-          * it marked as used and returned. Otherwise a new tile is created, marked
-          * as used and returned. In all cases the number of users of this tile is
-          * incremented by one.
-          *
-          * @param level the tile's quadtree level.
-          * @param tx the tile's quadtree x coordinate.
-          * @param ty the tile's quadtree y coordinate.
-          * @param deadline the deadline at which the tile data must be ready. 0 means
-          *      the current frame.
-          * @return the requested tile, or null if there is no room left in the
-          *      TileStorage to store the requested tile.
-          */
+        ///<summary>
+        /// Returns the requested tile, creating it if necessary. If the tile is
+        /// currently in use it is returned directly. If it is in cache but unused,
+        /// it marked as used and returned. Otherwise a new tile is created, marked
+        /// as used and returned. In all cases the number of users of this tile is
+        /// incremented by one.
+        ///
+        /// @param level the tile's quadtree level.
+        /// @param tx the tile's quadtree x coordinate.
+        /// @param ty the tile's quadtree y coordinate.
+        /// @param deadline the deadline at which the tile data must be ready. 0 means
+        ///      the current frame.
+        /// @return the requested tile, or null if there is no room left in the
+        ///      TileStorage to store the requested tile.
+        ///</summary>
         public virtual TileCache.Tile getTile(int level, int tx, int ty, uint deadline)
         {
             int users = 0;
@@ -207,25 +203,25 @@ namespace proland
             return t;
         }
 
-        /*
-          * Returns the coordinates in the GPU storage of the given tile. If the
-          * given tile is not in the GPU storage, this method uses the first ancestor
-          * of this tile that is in the storage. It then returns the coordinates of
-          * the area of this ancestor tile that correspond to the requested tile.
-          *
-          * @param level the tile's quadtree level.
-          * @param tx the tile's quadtree x coordinate.
-          * @param ty the tile's quadtree y coordinate.
-          * @param[in,out] tile the tile (level,tx,ty) or its first ancestor that is
-          *     in the storage, if known. If no tile is specified (passing null) this
-          *     method finds it and returns it in this parameter.
-          * @return the coordinates in the GPU storage texture of the requested tile.
-          *     The x,y components correspond to the lower left corner of the tile in
-          *     the GPU storage texture. The z,w components correspond to the width
-          *     and height of the tile. All components are in texture coordinates,
-          *     between 0 and 1. If the tile has borders, the returned coordinates
-          *     correspond to the inside of the tile, excluding its border.
-          */
+        ///<summary>
+        /// Returns the coordinates in the GPU storage of the given tile. If the
+        /// given tile is not in the GPU storage, this method uses the first ancestor
+        /// of this tile that is in the storage. It then returns the coordinates of
+        /// the area of this ancestor tile that correspond to the requested tile.
+        ///
+        /// @param level the tile's quadtree level.
+        /// @param tx the tile's quadtree x coordinate.
+        /// @param ty the tile's quadtree y coordinate.
+        /// @param[in,out] tile the tile (level,tx,ty) or its first ancestor that is
+        ///     in the storage, if known. If no tile is specified (passing null) this
+        ///     method finds it and returns it in this parameter.
+        /// @return the coordinates in the GPU storage texture of the requested tile.
+        ///     The x,y components correspond to the lower left corner of the tile in
+        ///     the GPU storage texture. The z,w components correspond to the width
+        ///     and height of the tile. All components are in texture coordinates,
+        ///     between 0 and 1. If the tile has borders, the returned coordinates
+        ///     correspond to the inside of the tile, excluding its border.
+        ///</summary>
         public Vector4f getGpuTileCoords(int level, int tx, int ty, ref TileCache.Tile tile)
         {
             Debug.Assert(isGpuProducer());
@@ -271,7 +267,7 @@ namespace proland
             {
                 t = tile;
             }
-            ///////////////////////////////////////////////////////////////////////////////////////////////////////
+
             GPUTileStorage.GPUSlot gput = (GPUTileStorage.GPUSlot)(t.getData());
             Debug.Assert(gput != null);
 
@@ -289,19 +285,19 @@ namespace proland
             }
         }
 
-        /*
-          * Schedules a prefetch task to create the given tile. If the requested tile
-          * is currently in use or in cache but unused, this method does nothing.
-          * Otherwise it gets an unused tile storage (evicting an unused tile if
-          * necessary), and then creates and schedules a task to produce the data of
-          * the requested tile.
-          *
-          * @param level the tile's quadtree level.
-          * @param tx the tile's quadtree x coordinate.
-          * @param ty the tile's quadtree y coordinate.
-          * @return true if this method has been able to schedule a prefetch task
-          *      for the given tile.
-          */
+        ///<summary>
+        /// Schedules a prefetch task to create the given tile. If the requested tile
+        /// is currently in use or in cache but unused, this method does nothing.
+        /// Otherwise it gets an unused tile storage (evicting an unused tile if
+        /// necessary), and then creates and schedules a task to produce the data of
+        /// the requested tile.
+        ///
+        /// @param level the tile's quadtree level.
+        /// @param tx the tile's quadtree x coordinate.
+        /// @param ty the tile's quadtree y coordinate.
+        /// @return true if this method has been able to schedule a prefetch task
+        ///      for the given tile.
+        ///</summary>
         public virtual bool prefetchTile(int level, int tx, int ty)
         {
             if (cache.getScheduler() != null && cache.getScheduler().supportsPrefetch(isGpuProducer()))
@@ -320,13 +316,13 @@ namespace proland
             return false;
         }
 
-        /*
-          * Decrements the number of users of this tile by one. If this number
-          * becomes 0 the tile is marked as unused, and so can be evicted from the
-          * cache at any moment.
-          *
-          * @param t a tile currently in use.
-          */
+        ///<summary>
+        /// Decrements the number of users of this tile by one. If this number
+        /// becomes 0 the tile is marked as unused, and so can be evicted from the
+        /// cache at any moment.
+        ///
+        /// @param t a tile currently in use.
+        ///</summary>
         public virtual void putTile(TileCache.Tile t)
         {
             if (cache.putTile(t) == 0)
@@ -338,51 +334,51 @@ namespace proland
             }
         }
 
-        /*
-          * Invalidates the tiles produced by this producer.
-          * This means that the tasks to produce the actual data of these tiles will
-          * be automatically reexecuted before the data can be used.
-          */
+        ///<summary>
+        /// Invalidates the tiles produced by this producer.
+        /// This means that the tasks to produce the actual data of these tiles will
+        /// be automatically reexecuted before the data can be used.
+        ///</summary>
         public virtual void invalidateTiles()
         {
             cache.invalidateTiles(id);
         }
 
-        /*
-          * Invalidates the selected tile produced by this producer.
-          * This means that the tasks to produce the actual data of this tile will
-          * be automatically reexecuted before the data can be used.
-          */
+        ///<summary>
+        /// Invalidates the selected tile produced by this producer.
+        /// This means that the tasks to produce the actual data of this tile will
+        /// be automatically reexecuted before the data can be used.
+        ///</summary>
         public virtual void invalidateTile(int level, int tx, int ty)
         {
             getCache().invalidateTile(getId(), level, tx, ty);
         }
 
-        /*
-          * Updates the tiles produced by this producer, if necessary.
-          * The default implementation of this method does nothing.
-          */
+        ///<summary>
+        /// Updates the tiles produced by this producer, if necessary.
+        /// The default implementation of this method does nothing.
+        ///</summary>
         public virtual void update(SceneManager scene) { }
 
-        /*
-          * Updates the GPU tile map for this %producer. A GPU tile map allows a GPU
-          * shader to retrieve the data of any tile from its level,tx,ty coordinates,
-          * thanks to a mapping between these coordinates and texture tile storage
-          * u,v coordinates, stored in the tile map. This is only possible if the
-          * quadtree of tiles is subdivided only based on the distance to the camera.
-          * The camera position and the subdivision parameters are needed to create
-          * the tile map and to decode it on GPU.
-          *
-          * @param splitDistance the distance at which a quad is subdivided. In fact
-          *      a quad is supposed to be subdivided if the camera distance is less
-          *      than splitDistance times the quad size (in meters).
-          * @param camera the camera position. This position, together with
-          *      splitDistance and rootQuadSize completely define the current
-          *      quadtree (i.e. which quads are subdivided, and which are not).
-          * @param maxLevel the maximum subdivision level of the quadtree (included).
-          * @return true if the tile storage for this %producer has a tile map (see
-          *      GPUTileStorage#getTileMap). Otherwise this method does nothing.
-          */
+        ///<summary>
+        /// Updates the GPU tile map for this %producer. A GPU tile map allows a GPU
+        /// shader to retrieve the data of any tile from its level,tx,ty coordinates,
+        /// thanks to a mapping between these coordinates and texture tile storage
+        /// u,v coordinates, stored in the tile map. This is only possible if the
+        /// quadtree of tiles is subdivided only based on the distance to the camera.
+        /// The camera position and the subdivision parameters are needed to create
+        /// the tile map and to decode it on GPU.
+        ///
+        /// @param splitDistance the distance at which a quad is subdivided. In fact
+        ///      a quad is supposed to be subdivided if the camera distance is less
+        ///      than splitDistance times the quad size (in meters).
+        /// @param camera the camera position. This position, together with
+        ///      splitDistance and rootQuadSize completely define the current
+        ///      quadtree (i.e. which quads are subdivided, and which are not).
+        /// @param maxLevel the maximum subdivision level of the quadtree (included).
+        /// @return true if the tile storage for this %producer has a tile map (see
+        ///      GPUTileStorage#getTileMap). Otherwise this method does nothing.
+        ///</summary>
         public bool updateTileMap(float splitDistance, Vector2f camera, int maxLevel)
         {
             Debug.Assert(isGpuProducer());
@@ -521,69 +517,69 @@ namespace proland
             return true;
         }
 
-        /*
-          * Returns the tile producers used by this TileProducer.
-          *
-          * @param[out] producers the tile producers used by this TileProducer.
-          */
+        ///<summary>
+        /// Returns the tile producers used by this TileProducer.
+        ///
+        /// @param[out] producers the tile producers used by this TileProducer.
+        ///</summary>
         public virtual void getReferencedProducers(List<TileProducer> producers)
         {
         }
 
-        /*
-          * Returns the number of layers of this producer.
-          */
+        ///<summary>
+        /// Returns the number of layers of this producer.
+        ///</summary>
         public int getLayerCount()
         {
             return layers.Count;
         }
 
-        /*
-          * Returns the layer of this producer whose index is given.
-          *
-          * @param index a layer index between 0 and #getLayerCount (exclusive).
-          */
+        ///<summary>
+        /// Returns the layer of this producer whose index is given.
+        ///
+        /// @param index a layer index between 0 and #getLayerCount (exclusive).
+        ///</summary>
         public TileLayer getLayer(int index)
         {
             return layers[index];
         }
 
-        /*
-          * Returns true if the list of layers is not empty. False otherwise.
-          */
+        ///<summary>
+        /// Returns true if the list of layers is not empty. False otherwise.
+        ///</summary>
         public bool hasLayers()
         {
             return layers.Count > 0;
         }
 
-        /*
-          * Adds a Layer to this %producer.
-          *
-          * @param l the layer to be added.
-          */
+        ///<summary>
+        /// Adds a Layer to this %producer.
+        ///
+        /// @param l the layer to be added.
+        ///</summary>
         public void addLayer(TileLayer l)
         {
             layers.Add(l);
         }
 
 
-        /*
-          * Creates an uninitialized TileProducer.
-          *
-          * @param type the type of this %producer.
-          * @param taskType the type of the Task that produce the actual tile data.
-          */
+        ///<summary>
+        /// Creates an uninitialized TileProducer.
+        ///
+        /// @param type the type of this %producer.
+        /// @param taskType the type of the Task that produce the actual tile data.
+        ///</summary>
         protected TileProducer(string type, string taskType)
         {
             this.taskType = taskType;
         }
 
-        /*
-          * Initializes this TileProducer.
-          *
-          * @param cache the tile cache that stores the tiles produced by this %producer.
-          * @param gpuProducer true if this %producer produces textures on GPU.
-          */
+        ///<summary>
+        /// Initializes this TileProducer.
+        ///
+        /// @param cache the tile cache that stores the tiles produced by this %producer.
+        /// @param gpuProducer true if this %producer produces textures on GPU.
+        ///</summary>
         protected void init(TileCache cache, bool gpuProducer)
         {
             Debug.Assert(cache != null);
@@ -603,45 +599,45 @@ namespace proland
             cache.invalidateTiles(id);
             p.cache.invalidateTiles(p.id);
             Std.Swap(ref taskType, ref p.taskType);
-            Std.Swap(ref cache, ref  p.cache);
-            Std.Swap(ref gpuProducer, ref  p.gpuProducer);
+            Std.Swap(ref cache, ref p.cache);
+            Std.Swap(ref gpuProducer, ref p.gpuProducer);
             //std.swap(id, p.id);
             //std.swap(rootQuadSize, p.rootQuadSize);
             Std.Swap(ref tileMap, ref p.tileMap);
         }
 
-        /*
-          * Returns the context for the Task that produce the tile data.
-          * This is only needed for GPU tasks (see Task#getContext).
-          * The default implementation of this method does nothing and returns null.
-          */
+        ///<summary>
+        /// Returns the context for the Task that produce the tile data.
+        /// This is only needed for GPU tasks (see Task#getContext).
+        /// The default implementation of this method does nothing and returns null.
+        ///</summary>
         protected internal virtual ulong getContext()
         {
             return 0;
         }
 
-        /*
-          * Starts the creation of a tile of this %producer. This method is used for
-          * producers that need tiles produced by other producers to create a tile.
-          * In these cases this method must acquire these other tiles with #getTile
-          * so that these tiles are available with #findTile during the actual tile
-          * creation in #doCreateTile.
-          *
-          * @param level the tile's quadtree level.
-          * @param tx the tile's quadtree x coordinate.
-          * @param ty the tile's quadtree y coordinate.
-          * @param deadline the deadline at which the tile data must be ready. 0
-          *      means the current frame.
-          * @param task the task to produce the tile itself.
-          * @param owner the task %graph that contains 'task', or null. This task
-          *      %graph can be used if 'task' depends on other tasks. These other
-          *      tasks must then be added to 'owner'.
-          * @return the task or task %graph to produce the tile itself, and all the
-          *      tiles needed to produce it. The default implementation of this
-          *      method calls Layer#startCreateTile on each layer, and returns
-          *      'owner' if it is not null (otherwise it returns 'task'). NOTE: if
-          *      a task graph is returned, it must be created with #createTaskGraph.
-          */
+        ///<summary>
+        /// Starts the creation of a tile of this %producer. This method is used for
+        /// producers that need tiles produced by other producers to create a tile.
+        /// In these cases this method must acquire these other tiles with #getTile
+        /// so that these tiles are available with #findTile during the actual tile
+        /// creation in #doCreateTile.
+        ///
+        /// @param level the tile's quadtree level.
+        /// @param tx the tile's quadtree x coordinate.
+        /// @param ty the tile's quadtree y coordinate.
+        /// @param deadline the deadline at which the tile data must be ready. 0
+        ///      means the current frame.
+        /// @param task the task to produce the tile itself.
+        /// @param owner the task %graph that contains 'task', or null. This task
+        ///      %graph can be used if 'task' depends on other tasks. These other
+        ///      tasks must then be added to 'owner'.
+        /// @return the task or task %graph to produce the tile itself, and all the
+        ///      tiles needed to produce it. The default implementation of this
+        ///      method calls Layer#startCreateTile on each layer, and returns
+        ///      'owner' if it is not null (otherwise it returns 'task'). NOTE: if
+        ///      a task graph is returned, it must be created with #createTaskGraph.
+        ///</summary>
         protected internal virtual Task startCreateTile(int level, int tx, int ty, uint deadline, Task task, TaskGraph owner)
         {
             for (int i = 0; i < (int)layers.Count; i++)
@@ -651,12 +647,12 @@ namespace proland
             return owner == null ? task : (Task)owner;
         }
 
-        /*
-          * Sets the execution context for the Task that produces the tile data.
-          * This is only needed for GPU tasks (see Task#begin).
-          * The default implementation of this method calls Layer#beginCreateTile on
-          * each Layer of this %producer.
-          */
+        ///<summary>
+        /// Sets the execution context for the Task that produces the tile data.
+        /// This is only needed for GPU tasks (see Task#begin).
+        /// The default implementation of this method calls Layer#beginCreateTile on
+        /// each Layer of this %producer.
+        ///</summary>
         protected internal virtual void beginCreateTile()
         {
             for (int i = 0; i < (int)layers.Count; i++)
@@ -665,21 +661,21 @@ namespace proland
             }
         }
 
-        /*
-          * Creates the given tile. If this task requires tiles produced by other
-          * producers (or other tiles produced by this %producer), these tiles must
-          * be acquired and released in #startCreateTile and #stopCreateTile with
-          * #getTile and #putTile, and retrieved in this method with #findTile.
-          * The default implementation of this method calls Layer#doCreateTile on
-          * each Layer of this %producer.
-          *
-          * @param level the tile's quadtree level.
-          * @param tx the tile's quadtree x coordinate.
-          * @param ty the tile's quadtree y coordinate.
-          * @param data where the created tile data must be stored.
-          * @return true the result of this creation is different from the result
-          *      of the last creation of this tile. See Task#run.
-          */
+        ///<summary>
+        /// Creates the given tile. If this task requires tiles produced by other
+        /// producers (or other tiles produced by this %producer), these tiles must
+        /// be acquired and released in #startCreateTile and #stopCreateTile with
+        /// #getTile and #putTile, and retrieved in this method with #findTile.
+        /// The default implementation of this method calls Layer#doCreateTile on
+        /// each Layer of this %producer.
+        ///
+        /// @param level the tile's quadtree level.
+        /// @param tx the tile's quadtree x coordinate.
+        /// @param ty the tile's quadtree y coordinate.
+        /// @param data where the created tile data must be stored.
+        /// @return true the result of this creation is different from the result
+        ///      of the last creation of this tile. See Task#run.
+        ///</summary>
         protected internal virtual bool doCreateTile(int level, int tx, int ty, TileStorage.Slot data)
         {
             bool changes = false;
@@ -693,12 +689,12 @@ namespace proland
             return changes;
         }
 
-        /*
-          * Restores the execution context for the Task that produces the tile data.
-          * This is only needed for GPU tasks (see Task#end).
-          * The default implementation of this method calls Layer#endCreateTile on
-          * each Layer of this %producer.
-          */
+        ///<summary>
+        /// Restores the execution context for the Task that produces the tile data.
+        /// This is only needed for GPU tasks (see Task#end).
+        /// The default implementation of this method calls Layer#endCreateTile on
+        /// each Layer of this %producer.
+        ///</summary>
         protected internal virtual void endCreateTile()
         {
             for (int i = 0; i < (int)layers.Count; i++)
@@ -707,18 +703,18 @@ namespace proland
             }
         }
 
-        /*
-          * Stops the creation of a tile of this %producer. This method is used for
-          * producers that need tiles produced by other producers to create a tile.
-          * In these cases this method must release these other tiles with #putTile
-          * so that these tiles can be evicted from the cache after use. The default
-          * implementation of this method calls Layer#stopCreateTile on each Layer of
-          * this %producer.
-          *
-          * @param level the tile's quadtree level.
-          * @param tx the tile's quadtree x coordinate.
-          * @param ty the tile's quadtree y coordinate.
-          */
+        ///<summary>
+        /// Stops the creation of a tile of this %producer. This method is used for
+        /// producers that need tiles produced by other producers to create a tile.
+        /// In these cases this method must release these other tiles with #putTile
+        /// so that these tiles can be evicted from the cache after use. The default
+        /// implementation of this method calls Layer#stopCreateTile on each Layer of
+        /// this %producer.
+        ///
+        /// @param level the tile's quadtree level.
+        /// @param tx the tile's quadtree x coordinate.
+        /// @param ty the tile's quadtree y coordinate.
+        ///</summary>
         protected internal virtual void stopCreateTile(int level, int tx, int ty)
         {
             for (int i = 0; i < (int)layers.Count; i++)
@@ -727,11 +723,11 @@ namespace proland
             }
         }
 
-        /*
-          * Removes a task from the vector tasks. This is used to avoid delete-calls
-          * for objects that were already deleted.
-          * This is called when a task created by this producer gets deleted.
-          */
+        ///<summary>
+        /// Removes a task from the vector tasks. This is used to avoid delete-calls
+        /// for objects that were already deleted.
+        /// This is called when a task created by this producer gets deleted.
+        ///</summary>
         internal void removeCreateTile(Task t)
         {
             lock (mutex)
@@ -741,12 +737,12 @@ namespace proland
             }
         }
 
-        /*
-          * Creates a task %graph for use in #startCreateTile.
-          *
-          * @param task a task that will be added to the returned task %graph.
-          * @return a task %graph containing 'task', for use in #startCreateTile.
-          */
+        ///<summary>
+        /// Creates a task %graph for use in #startCreateTile.
+        ///
+        /// @param task a task that will be added to the returned task %graph.
+        /// @return a task %graph containing 'task', for use in #startCreateTile.
+        ///</summary>
         protected TaskGraph createTaskGraph(Task task)
         {
             CreateTile t = (CreateTile)task;
@@ -758,75 +754,69 @@ namespace proland
             return r;
         }
 
-////////////////////////////////////PARTE .H/////////////////////////////////
-
-
-        /*
-          * The list of all the Layers used by this %producer.
-          */
+        ///<summary>
+        /// The list of all the Layers used by this %producer.
+        ///</summary>
         private List<TileLayer> layers;
 
-        /*
-          * The list of all the Tasks created by this %producer.
-          */
+        ///<summary>
+        /// The list of all the Tasks created by this %producer.
+        ///</summary>
         private List<Task> tasks;
 
-        /*
-          * The type of the Task that produce the actual tile data.
-          */
+        ///<summary>
+        /// The type of the Task that produce the actual tile data.
+        ///</summary>
         internal string taskType;
 
-        /*
-          * The tile cache that stores the tiles produced by this %producer.
-          */
+        ///<summary>
+        /// The tile cache that stores the tiles produced by this %producer.
+        ///</summary>
         internal TileCache cache;
 
-        /*
-          * True if this %producer produces textures on GPU.
-          */
+        ///<summary>
+        /// True if this %producer produces textures on GPU.
+        ///</summary>
         internal bool gpuProducer;
 
-        /*
-          * The id of this %producer. This id is local to the TileCache used by this
-          * %producer, and is used to distinguish all the producers that use this
-          * cache.
-          */
+        ///<summary>
+        /// The id of this %producer. This id is local to the TileCache used by this
+        /// %producer, and is used to distinguish all the producers that use this
+        /// cache.
+        ///</summary>
         private int id;
 
-        /*
-          * The size in meters of the root tile produced by this %producer.
-          */
+        ///<summary>
+        /// The size in meters of the root tile produced by this %producer.
+        ///</summary>
         private float rootQuadSize;
-
-        /*
-          * The data of the tileMap texture line on GPU for this %producer. If a
-          * quadtree is subdivided based only on the distance to the camera, it is
-          * possible to compute on GPU which level,tx,ty tile corresponds to an x,y
-          * position in meters. But in order to compute where the data of this tile
-          * is stored in a texture tile storage, the mapping between level,tx,ty
-          * coordinates and texture tile storage u,v coordinates is needed. A tileMap
-          * provides this information (it must be updated each time the camera moves
-          * or the tile storage layout changes). Each line of this tileMap
-          * corresponds to a single %producer. Only GPU producers can have a tileMap.
-          */
+        /// <summary>
+        /// The data of the tileMap texture line on GPU for this %producer. If a
+        /// quadtree is subdivided based only on the distance to the camera, it is
+        /// possible to compute on GPU which level,tx,ty tile corresponds to an x, y
+        /// position in meters.But in order to compute where the data of this tile
+        /// is stored in a texture tile storage, the mapping between level, tx, ty
+        /// coordinates and texture tile storage u, v coordinates is needed.A tileMap
+        /// provides this information (it must be updated each time the camera moves
+        /// or the tile storage layout changes). Each line of this tileMap
+        /// corresponds to a single %producer. Only GPU producers can have a tileMap.
+        /// </summary>
         private byte[] tileMap;
 
-        /*
-          * A mutex to serialize parallel accesses to #tasks.
-          */
+        ///<summary>
+        /// A mutex to serialize parallel accesses to #tasks.
+        ///</summary>
         private object mutex;
-
-        /*
-          * Creates a Task to produce the data of the given tile.
-          *
-          * @param level the tile's quadtree level.
-          * @param tx the tile's quadtree x coordinate.
-          * @param ty the tile's quadtree y coordinate.
-          * @param data where the produced tile data must be stored.
-          * @param deadline the deadline at which the tile data must be ready. 0 means
-          *      the current frame.
-          * @param t the existing task to create this tile if it still exists, or null.
-          */
+        /// <summary>
+        /// Creates a Task to produce the data of the given tile.
+        /// </summary>
+        /// <param name="level">the tile's quadtree level.</param>
+        /// <param name="tx">the tile's quadtree x coordinate.</param>
+        /// <param name="ty">the tile's quadtree y coordinate.</param>
+        /// <param name="data">where the produced tile data must be stored.</param>
+        /// <param name="deadline">the deadline at which the tile data must be ready. 0 means the current frame.</param>
+        /// <param name="old">the existing task to create this tile if it still exists, or null.</param>
+        /// <returns></returns>
         internal Task createTile(int level, int tx, int ty, TileStorage.Slot data, uint deadline, Task old)
         {
             Debug.Assert(data != null);
@@ -859,61 +849,58 @@ namespace proland
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
     }
 
-///////////////////////PARTE 1//////////////////////////////
-
-
-    /**
-     * The Task that produces the tiles for a TileProducer.
-     */
+    ///<summary>
+    /// The Task that produces the tiles for a TileProducer.
+    ///</summary>
     public class CreateTile : Task
     {
 
-        /**
-         * The task graph that contains this task to store its dependencies. May be
-         * null for CreateTile tasks without dependencies.
-         */
+        ///<summary>
+        /// The task graph that contains this task to store its dependencies. May be
+        /// null for CreateTile tasks without dependencies.
+        ///</summary>
         public TaskGraph parent;
 
-        /**
-         * The TileProducer that created this task.
-         */
+        ///<summary>
+        /// The TileProducer that created this task.
+        ///</summary>
         public TileProducer owner;
 
-        /**
-         * The level of the tile to create.
-         */
+        ///<summary>
+        /// The level of the tile to create.
+        ///</summary>
         public int level;
 
-        /**
-         * The quadtree x coordinate of the tile to create.
-         */
+        ///<summary>
+        /// The quadtree x coordinate of the tile to create.
+        ///</summary>
         public int tx;
 
-        /**
-         * The quadtree y coordinate of the tile to create.
-         */
+        ///<summary>
+        /// The quadtree y coordinate of the tile to create.
+        ///</summary>
         public int ty;
 
-        /**
-         * Where the created tile data must be stored.
-         */
+        ///<summary>
+        /// Where the created tile data must be stored.
+        ///</summary>
         public TileStorage.Slot data;
 
-        /**
-         * Cache last result from getContext.
-         */
+        ///<summary>
+        /// Cache last result from getContext.
+        ///</summary>
         public ulong cachedContext;
 
-        /**
-         * True is the tiles needed to create this tile have been acquired with
-         * TileProducer#getTile. False if they are not or have been released with
-         * TileProducer#putTile.
-         */
+        ///<summary>
+        /// True is the tiles needed to create this tile have been acquired with
+        /// TileProducer#getTile. False if they are not or have been released with
+        /// TileProducer#putTile.
+        ///</summary>
         public bool initialized;
 
-        /**
-         * Creates a new CreateTile Task.
-         */
+        ///<summary>
+        /// Creates a new CreateTile Task.
+        ///</summary>
         public CreateTile(TileProducer owner, int level, int tx, int ty, TileStorage.Slot data, uint deadline) :
             base(owner.taskType, owner.isGpuProducer(), deadline)
         {
@@ -953,11 +940,11 @@ namespace proland
             }
         }
 
-        /**
-         * Overrides Task#getContext.
-         */
+        ///<summary>
+        /// Overrides Task#getContext.
+        ///</summary>
         //---------------------TODO Review context definition---------------------------------------------------------------
-        public virtual ulong getContext()
+        public override object getContext()
         {
             // combines the context returned by the producer with the producer type
             // to ensure that two tasks from two producers with the same context
@@ -976,9 +963,9 @@ namespace proland
             }
         }
 
-        /**
-         * Overrides Task#init.
-         */
+        ///<summary>
+        /// Overrides Task#init.
+        ///</summary>
         public virtual void init(HashSet<Task> initialized)
         {
             if (!isDone() && owner != null)
@@ -988,10 +975,10 @@ namespace proland
             }
         }
 
-        /**
-         * Acquires the tiles needed to create this tile with TileProducer#getTile,
-         * if this is not already done.
-         */
+        ///<summary>
+        /// Acquires the tiles needed to create this tile with TileProducer#getTile,
+        /// if this is not already done.
+        ///</summary>
         public void start()
         {
             if (!initialized)
@@ -1026,19 +1013,19 @@ namespace proland
             }
         }
 
-        /**
-         * Overrides Task#begin.
-         */
-        public virtual void begin()
+        ///<summary>
+        /// Overrides Task#begin.
+        ///</summary>
+        public override void begin()
         {
             Debug.Assert(!isDone());
             owner.beginCreateTile();
         }
 
-        /**
-         * Overrides Task#run.
-         */
-        public bool run()
+        ///<summary>
+        /// Overrides Task#run.
+        ///</summary>
+        public override bool run()
         {
             bool changes = true;
             Debug.Assert(!isDone());
@@ -1061,18 +1048,18 @@ namespace proland
             return changes;
         }
 
-        /**
-         * Overrides Task#end.
-         */
-        public virtual void end()
+        ///<summary>
+        /// Overrides Task#end.
+        ///</summary>
+        public override void end()
         {
             owner.endCreateTile();
         }
 
-        /**
-         * Releases the tiles used to create this tile with TileProducer#putTile,
-         * if this is not already done.
-         */
+        ///<summary>
+        /// Releases the tiles used to create this tile with TileProducer#putTile,
+        /// if this is not already done.
+        ///</summary>
         public void stop()
         {
             if (initialized)
@@ -1085,7 +1072,7 @@ namespace proland
             }
         }
 
-        public void setIsDone(bool done, uint t, reason r)
+        public override void setIsDone(bool done, uint t, reason r)
         {
             base.setIsDone(done, t, r);
             if (done)
@@ -1123,7 +1110,7 @@ namespace proland
             }
         }
 
-        public Type getTypeInfo()
+        new public virtual Type getTypeInfo()
         {
             return owner.GetType();
         }
@@ -1137,20 +1124,20 @@ namespace proland
     public class CreateTileTaskGraph : TaskGraph
     {
 
-        /**
-         * The TileProducer that created this task.
-         */
+        ///<summary>
+        /// The TileProducer that created this task.
+        ///</summary>
         public TileProducer owner;
 
-        /**
-         * The CreateTile task that is the 'root' of this task graph.
-         */
+        ///<summary>
+        /// The CreateTile task that is the 'root' of this task graph.
+        ///</summary>
         public CreateTile root;
 
-        /**
-         * Saved dependencies of #root to restore them in #restore,
-         * when #root has been removed from this graph in #doRelease.
-         */
+        ///<summary>
+        /// Saved dependencies of #root to restore them in #restore,
+        /// when #root has been removed from this graph in #doRelease.
+        ///</summary>
         public HashSet<Task> rootDependencies = new HashSet<Task>();
 
         public CreateTileTaskGraph(TileProducer owner)

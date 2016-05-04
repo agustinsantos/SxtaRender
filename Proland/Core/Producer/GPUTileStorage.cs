@@ -133,7 +133,7 @@ vec4 uv = vec4(xy + vec2(0.25), xy + vec2(0.75)) / float(bufferLayerLevelWidth.w
                 return t.getHeight();
             }
             /// <summary>
-            /// CCopies a region of the given frame buffer into this slot. 
+            /// Copies a region of the given frame buffer into this slot. 
             /// </summary>
             /**
             * @param fb a frame buffer.

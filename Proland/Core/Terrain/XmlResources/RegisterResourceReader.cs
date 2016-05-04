@@ -1,4 +1,5 @@
 ﻿using Sxta.Render.Resources;
+using proland;
 
 namespace Sxta.Proland.Core.Terrain.XmlResources
 {
@@ -13,8 +14,7 @@ namespace Sxta.Proland.Core.Terrain.XmlResources
             ResourceFactory.getInstance().addType("tileSampler", TileSamplerResource.Create);
             //PRODUCER RESOURCES
             /**ResourceFactory.getInstance().addType("tileCache", proland.TileCacheResource.Create);
-            ResourceFactory.getInstance().addType("cpuByteTileStorage", proland.CPUTileStorageResource<T>.Create);
-            ResourceFactory.getInstance().addType("cpuFloatTileStorage", proland.CPUTileStorageResource<T>.Create);
+            CPUTileStorageResource.RegisterResource();
             ResourceFactory.getInstance().addType("gpuTileStorage", proland.GPUTileStorageResource.Create);
             ResourceFactory.getInstance().addType("objectTileStorage", proland.ObjectTileStorageResource.Create);*/
         }

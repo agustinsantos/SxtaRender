@@ -151,6 +151,14 @@ namespace proland
         /// <returns></returns>
         public float getCameraDist(Box3d localBox)
         {
+            //Console.WriteLine(Math.Abs(localCameraPos.Y - localBox.ymin) + " + " + Math.Abs(localCameraPos.Y - localBox.ymax));
+            float dist = (float)Math.Max(Math.Abs(localCameraPos.Z - localBox.zmax) / distFactor,
+                   Math.Max(Math.Min(Math.Abs(localCameraPos.X - localBox.xmin), Math.Abs(localCameraPos.X - localBox.xmax)),
+                        Math.Min(Math.Abs(localCameraPos.Y - localBox.ymin), Math.Abs(localCameraPos.Y - localBox.ymax))));
+            if (dist >= 29.9)
+            {
+                Console.WriteLine(Math.Abs(localCameraPos.Y - localBox.ymin) + " + " + Math.Abs(localCameraPos.Y - localBox.ymax));
+            }
             return (float)Math.Max(Math.Abs(localCameraPos.Z - localBox.zmax) / distFactor,
                    Math.Max(Math.Min(Math.Abs(localCameraPos.X - localBox.xmin), Math.Abs(localCameraPos.X - localBox.xmax)),
                         Math.Min(Math.Abs(localCameraPos.Y - localBox.ymin), Math.Abs(localCameraPos.Y - localBox.ymax))));
@@ -215,8 +223,17 @@ namespace proland
             left.Normalize();
             Vector3d right = deformedFrustumPlanes[1].Xyz;
             right.Normalize();
-            //TOSEE Acos
-            float fov = (float)Math.Acos(Vector3d.Dot(-left, right));
+            //Safe_Acos Implementation
+            double x = Vector3d.Dot(-left,right);
+            if (x <= -1)
+            {
+                x = -1;
+            }
+            else if (x >= 1)
+            {
+                x = 1;
+            }
+            float fov = (float)Math.Acos(x);
             splitDist = (float)(splitFactor * fb.getViewport().Z / 1024.0f * Math.Tan(40.0f / 180.0f * Math.PI) / Math.Tan(fov / 2.0f));
             if (splitDist < 1.1f || !(float.IsInfinity(splitDist) == false))
             {

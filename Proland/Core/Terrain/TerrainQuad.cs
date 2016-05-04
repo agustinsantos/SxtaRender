@@ -209,6 +209,7 @@ namespace proland
             }
             double ground = TerrainNode.groundHeightAtCamera;
             float dist = owner.getCameraDist(new Box3d(ox, ox + l, oy, oy + l, Math.Min(0.0, ground), Math.Max(0.0, ground)));
+            //Console.WriteLine(dist);
             if ((owner.splitInvisibleQuads || visible != SceneManager.visibility.INVISIBLE) && dist < l * owner.getSplitDistance() && level < owner.maxLevel)
             {
                 if (isLeaf())

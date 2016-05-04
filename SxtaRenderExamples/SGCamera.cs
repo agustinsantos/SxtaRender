@@ -138,9 +138,9 @@ namespace Examples.Tutorials
 
             // move the camera 
             // controll camera yaw from y movement fromt the mouse
-            this.Yaw(mouseMove.Y);
+            //this.Yaw(mouseMove.Y);
             //controll camera pitch from x movement fromt the mouse
-            this.Pitch(mouseMove.X);
+            //this.Pitch(mouseMove.X);
 
             if (parentWindow.Keyboard[OpenTK.Input.Key.ShiftLeft])
             {
@@ -174,19 +174,19 @@ namespace Examples.Tutorials
             }
             if (parentWindow.Keyboard[OpenTK.Input.Key.Right])
             {
-                this.Yaw(1f);
+                this.Yaw(0.01f);
             }
             if (parentWindow.Keyboard[OpenTK.Input.Key.Left])
             {
-                this.Yaw(-1f);
+                this.Yaw(-0.01f);
             }
             if (parentWindow.Keyboard[OpenTK.Input.Key.Up])
             {
-                this.Pitch(1f);
+                this.Pitch(0.01f);
             }
             if (parentWindow.Keyboard[OpenTK.Input.Key.Down])
             {
-                this.Pitch(-1f);
+                this.Pitch(-0.01f);
             }
 
             this.Update();

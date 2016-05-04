@@ -348,6 +348,25 @@ void main() {
                 //(TileSamplerZ)(owner).state.needReadback.erase(this);
                 //Tree.recursiveDelete(owner);
             }
+            public override bool Equals(object obj)
+            {
+                if (obj == null || GetType() != obj.GetType())
+                {
+                    return false;
+                }
+                TreeZ TreeZ2 = obj as TreeZ;
+                if (this.q.level == TreeZ2.q.level)
+                {
+                    return true;
+                }
+
+                return false;
+            }
+            // override object.GetHashCode
+            public override int GetHashCode()
+            {
+                return this.q.level;
+            }
         }
 
         /// <summary>
@@ -461,6 +480,7 @@ void main() {
             /// <summary>
             ///The set of texture tile that need to be read back.
             /// </summary>
+
             public SortedSet<TreeZ> needReadback = new SortedSet<TreeZ>(new TreeZSort());
 
             /// <summary>

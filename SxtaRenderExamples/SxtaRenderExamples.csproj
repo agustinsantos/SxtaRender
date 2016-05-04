@@ -278,6 +278,9 @@
     <None Include="Resources\Shaders\basicModule.glsl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Resources\Shaders\upsampleShader.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Resources\Shaders\terrainShaderTest.glsl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -409,6 +412,9 @@
     <Content Include="Resources\ObjModels\icosahedron.png" />
     <Content Include="Resources\ObjModels\octahedron.png" />
     <Content Include="Resources\ObjModels\README.txt" />
+    <Content Include="Resources\Shaders\upsampleShader.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\Terrain\HelloWord04.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

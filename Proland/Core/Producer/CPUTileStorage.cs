@@ -130,7 +130,11 @@ namespace proland
         {
             return new CPUTileStorageResource<T>(manager, name, desc, e);
         }
-
+        public static void RegisterResource()
+        {
+            ResourceFactory.getInstance().addType("cpuByteTileStorage", Create);
+            ResourceFactory.getInstance().addType("cpuFloatTileStorage", Create);
+        }
 #if TODO
         public static ResourceFactory::Type<cpuByteTileStorage, CPUTileStorageResource<byte>> CPUByteTileStorageType;
 

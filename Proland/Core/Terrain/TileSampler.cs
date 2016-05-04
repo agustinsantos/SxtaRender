@@ -32,7 +32,7 @@ namespace proland
             this.depth = depth;
         }
 
-        public virtual bool run()
+        public override bool run()
         {
             producer.updateTileMap(splitDistance, camera, depth);
             return true;
