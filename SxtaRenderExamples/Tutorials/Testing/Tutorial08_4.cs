@@ -1,7 +1,7 @@
 ﻿using OpenTK;
 using OpenTK.Input;
 using Sxta.Math;
-using Sxta.Proland.Core.Terrain.XmlResources;
+using Sxta.Proland.Core.XmlResources;
 using Sxta.Render;
 using Sxta.Render.Resources;
 using Sxta.Render.Scenegraph;

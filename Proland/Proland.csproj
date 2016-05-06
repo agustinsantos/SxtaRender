@@ -57,6 +57,8 @@
     <Compile Include="Core\Producer\TileLayer.cs" />
     <Compile Include="Core\Producer\TileProducer.cs" />
     <Compile Include="Core\Producer\TileStorage.cs" />
+    <Compile Include="Core\Producer\XmlResources\GPUTileStorageResource.cs" />
+    <Compile Include="Core\Producer\XmlResources\RegisterResourceReader.cs" />
     <Compile Include="Core\Terrain\CylindricalDeformation.cs" />
     <Compile Include="Core\Terrain\Deformation.cs" />
     <Compile Include="Core\Terrain\DrawTerrainTask.cs" />
@@ -74,6 +76,7 @@
     <Compile Include="Core\Terrain\XmlResources\TileSamplerResource.cs" />
     <Compile Include="Core\Util\PlanetViewController.cs" />
     <Compile Include="Core\Util\TerrainViewController.cs" />
+    <Compile Include="Core\XmlResources\RegisterResourceReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -105,9 +105,14 @@ namespace proland
 
     }
     //Definimos el tipo en T en CPUTileStorageResource??????
-    public class CPUTileStorageResource<T> : ResourceTemplate<CPUTileStorage<T>>
+    public class CPUByteTileStorageResource : ResourceTemplate<CPUTileStorage<byte>>
     {
-        public CPUTileStorageResource(ResourceManager manager, string name, ResourceDescriptor desc, XmlElement e = null) :
+        public static CPUByteTileStorageResource Create(ResourceManager manager, string name, ResourceDescriptor desc, XmlElement e = null, object context = null)
+        {
+            return new CPUByteTileStorageResource(manager, name, desc, e);
+        }
+
+        public CPUByteTileStorageResource(ResourceManager manager, string name, ResourceDescriptor desc, XmlElement e = null) :
                       base(20, manager, name, desc)
         {
             e = e == null ? desc.descriptor : e;
@@ -120,25 +125,26 @@ namespace proland
             getIntParameter(desc, e, "capacity", out capacity);
             valueC.init(tileSize, channels, capacity);
         }
-
-
-        public const string cpuByteTileStorage = "cpuByteTileStorage";
-
-        public const string cpuFloatTileStorage = "cpuFloatTileStorage";
-
-        public static CPUTileStorageResource<T> Create(ResourceManager manager, string name, ResourceDescriptor desc, XmlElement e = null, object context = null)
+    }
+    public class CPUFloatTileStorageResource : ResourceTemplate<CPUTileStorage<float>>
+    {
+        public static CPUFloatTileStorageResource Create(ResourceManager manager, string name, ResourceDescriptor desc, XmlElement e = null, object context = null)
         {
-            return new CPUTileStorageResource<T>(manager, name, desc, e);
+            return new CPUFloatTileStorageResource(manager, name, desc, e);
         }
-        public static void RegisterResource()
-        {
-            ResourceFactory.getInstance().addType("cpuByteTileStorage", Create);
-            ResourceFactory.getInstance().addType("cpuFloatTileStorage", Create);
-        }
-#if TODO
-        public static ResourceFactory::Type<cpuByteTileStorage, CPUTileStorageResource<byte>> CPUByteTileStorageType;
 
-        public static ResourceFactory::Type<cpuFloatTileStorage, CPUTileStorageResource<float>> CPUFloatTileStorageType;
-#endif
+        public CPUFloatTileStorageResource(ResourceManager manager, string name, ResourceDescriptor desc, XmlElement e = null) :
+                      base(20, manager, name, desc)
+        {
+            e = e == null ? desc.descriptor : e;
+            int tileSize;
+            int channels;
+            int capacity;
+            checkParameters(desc, e, "name,tileSize,channels,capacity,");
+            getIntParameter(desc, e, "tileSize", out tileSize);
+            getIntParameter(desc, e, "channels", out channels);
+            getIntParameter(desc, e, "capacity", out capacity);
+            valueC.init(tileSize, channels, capacity);
+        }
     }
 }
