@@ -565,12 +565,15 @@ namespace Sxta.Render
         /// <param name='pixels'>
         /// Pixels pixels the returned data.
         /// </param>
-        public void getImage(int level, TextureFormat f, PixelType t, out byte[] pixels)
+        public void getImage(int level, TextureFormat f, PixelType t,   byte[] pixels)
         {
             bindToTextureUnit();
 #if OPENTK
-            throw new NotImplementedException();
-            pixels = new byte[EnumConversion.getTextureComponents(f)]; // TODO determine the size of the array???
+            if (pixels == null)
+            {
+                throw new ArgumentNullException("Buffer is null. TODO determine the size of the array???");
+                //pixels = new byte[EnumConversion.getTextureComponents(f)]; // How determine the size of the array???
+            }
             GL.GetTexImage<byte>(textureTarget, level, EnumConversion.getTextureFormat(f), EnumConversion.getPixelType(t), pixels);
 #else
             glGetTexImage(textureTarget, level, getTextureFormat(f), getPixelType(t), pixels);

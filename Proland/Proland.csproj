@@ -46,6 +46,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Atmo\AtmoParameters.cs" />
+    <Compile Include="Atmo\PreprocessAtmo.cs" />
     <Compile Include="Core\Math\Color.cs" />
     <Compile Include="Core\Math\Geometry.cs" />
     <Compile Include="Core\Math\Noise.cs" />
@@ -90,9 +92,21 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Atmo\Common.cs" />
+    <Compile Include="Atmo\Constants.cs" />
+    <Compile Include="Atmo\CopyInscatter1.cs" />
+    <Compile Include="Atmo\CopyInscatterN.cs" />
+    <Compile Include="Atmo\CopyIrradiance.cs" />
+    <Compile Include="Atmo\Inscatter1.cs" />
+    <Compile Include="Atmo\InscatterN.cs" />
+    <Compile Include="Atmo\InscatterS.cs" />
+    <Compile Include="Atmo\Irradiance1.cs" />
+    <Compile Include="Atmo\IrradianceN.cs" />
+    <Compile Include="Atmo\Transmittance.cs" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Core\Particles\" />
     <Folder Include="Core\UserInterface\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

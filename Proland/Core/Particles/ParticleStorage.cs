@@ -19,7 +19,7 @@ namespace proland
         /// </summary>
         public abstract class Particle
         {
-        };
+        }
 
         /// <summary>
         /// Creates a new ParticleStorage.
@@ -108,8 +108,7 @@ namespace proland
                     break;
                 default:
                     // unsupported formats
-                    throw exception();
-                    break;
+                    throw new Exception("Unsupported formats");
             }
             GPUBuffer b = new GPUBuffer();
             b.setData(capacity * components * pixelSize, (IntPtr)null, BufferUsage.STREAM_DRAW);
@@ -260,7 +259,7 @@ namespace proland
         ///
         /// See #ParticleStorage
         /// </summary>
-        protected void init(int capacity, bool pack)
+        internal void init(int capacity, bool pack)
         {
             this.capacity = capacity;
             this.available = capacity;
@@ -314,7 +313,7 @@ namespace proland
         /// available index. See #ParticleStorage.
         /// </summary>
         bool pack;
-    };
+    }
 
     class ParticleStorageResource : ResourceTemplate<ParticleStorage>
     {
@@ -326,7 +325,7 @@ namespace proland
 
             bool pack = true;
             int capacity;
-            getIntParameter(desc, e, "capacity", capacity);
+            getIntParameter(desc, e, "capacity", out capacity);
 
             if (e.GetAttribute("pack") != null)
             {
