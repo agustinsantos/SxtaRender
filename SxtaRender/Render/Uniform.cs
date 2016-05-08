@@ -61,10 +61,10 @@ namespace Sxta.Render
 
 			public override void setValue( Value  v)
 			{
-#if TODO
-				set(v);					
-#endif
-				throw new NotImplementedException();
+			    Value1f val = v as Value1f;
+				if (val == null)
+					throw new ArgumentException("Setting wrong value at Uniform1f");
+				set(val.get());
 			}
 
 
@@ -158,10 +158,10 @@ namespace Sxta.Render
 
 			public override void setValue( Value  v)
 			{
-#if TODO
-				set(v);					
-#endif
-				throw new NotImplementedException();
+			    Value1d val = v as Value1d;
+				if (val == null)
+					throw new ArgumentException("Setting wrong value at Uniform1d");
+				set(val.get());
 			}
 
 
@@ -255,10 +255,10 @@ namespace Sxta.Render
 
 			public override void setValue( Value  v)
 			{
-#if TODO
-				set(v);					
-#endif
-				throw new NotImplementedException();
+			    Value1i val = v as Value1i;
+				if (val == null)
+					throw new ArgumentException("Setting wrong value at Uniform1i");
+				set(val.get());
 			}
 
 
@@ -352,10 +352,10 @@ namespace Sxta.Render
 
 			public override void setValue( Value  v)
 			{
-#if TODO
-				set(v);					
-#endif
-				throw new NotImplementedException();
+			    Value1ui val = v as Value1ui;
+				if (val == null)
+					throw new ArgumentException("Setting wrong value at Uniform1ui");
+				set(val.get());
 			}
 
 
@@ -449,10 +449,10 @@ namespace Sxta.Render
 
 			public override void setValue( Value  v)
 			{
-#if TODO
-				set(v);					
-#endif
-				throw new NotImplementedException();
+			    Value1b val = v as Value1b;
+				if (val == null)
+					throw new ArgumentException("Setting wrong value at Uniform1b");
+				set(val.get());
 			}
 
 
@@ -548,10 +548,10 @@ namespace Sxta.Render
 
 			public override void setValue( Value  v)
 			{
-#if TODO
-				set(v);					
-#endif
-				throw new NotImplementedException();
+			    Value2f val = v as Value2f;
+				if (val == null)
+					throw new ArgumentException("Setting wrong value at Uniform2f");
+				set(val.get());
 			}
 
 
@@ -646,10 +646,10 @@ namespace Sxta.Render
 
 			public override void setValue( Value  v)
 			{
-#if TODO
-				set(v);					
-#endif
-				throw new NotImplementedException();
+			    Value2d val = v as Value2d;
+				if (val == null)
+					throw new ArgumentException("Setting wrong value at Uniform2d");
+				set(val.get());
 			}
 
 
@@ -744,10 +744,10 @@ namespace Sxta.Render
 
 			public override void setValue( Value  v)
 			{
-#if TODO
-				set(v);					
-#endif
-				throw new NotImplementedException();
+			    Value2i val = v as Value2i;
+				if (val == null)
+					throw new ArgumentException("Setting wrong value at Uniform2i");
+				set(val.get());
 			}
 
 
@@ -842,10 +842,10 @@ namespace Sxta.Render
 
 			public override void setValue( Value  v)
 			{
-#if TODO
-				set(v);					
-#endif
-				throw new NotImplementedException();
+			    Value2ui val = v as Value2ui;
+				if (val == null)
+					throw new ArgumentException("Setting wrong value at Uniform2ui");
+				set(val.get());
 			}
 
 
@@ -940,10 +940,10 @@ namespace Sxta.Render
 
 			public override void setValue( Value  v)
 			{
-#if TODO
-				set(v);					
-#endif
-				throw new NotImplementedException();
+			    Value2b val = v as Value2b;
+				if (val == null)
+					throw new ArgumentException("Setting wrong value at Uniform2b");
+				set(val.get());
 			}
 
 
@@ -1457,23 +1457,22 @@ namespace Sxta.Render
 #if  ORK_NO_GLPROGRAMUNIFORM
 				GL.Uniform3(location, (value.X? 1 : 0), (value.Y? 1 : 0), (value.Z? 1 : 0));
 #else
-				GL.ProgramUniform3(program.getId(), location, (value.X? 1 : 0), (value.Y? 1 : 0), (value.Z? 1 : 0));
+				GL.Uniform3(location, (value.X? 1 : 0), (value.Y? 1 : 0), (value.Z? 1 : 0));
 #endif
 #else
-#if ORK_NO_GLPROGRAMUNIFORM
+#if  ORK_NO_GLPROGRAMUNIFORM
 				glUniform3f(location, value.X, value.Y, value.Z);
 #else
 				glProgramUniform3fEXT(program->getId(), location, value.X, value.Y, value.Z);
 #endif
 #endif
-            Debug.Assert(FrameBuffer.getError() == ErrorCode.NoError);
-        }
+			}
 
 
-        /*
-         * The current value of this uniform.
-         */
-        private Vector3b value;
+			/*
+			 * The current value of this uniform.
+			 */
+			private Vector3b value;
 		}
 
 		/// <summary>

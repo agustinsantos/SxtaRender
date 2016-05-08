@@ -1,6 +1,7 @@
 ﻿using log4net;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -650,24 +651,20 @@ namespace Sxta.Render.Resources
         }
 
 
-        /**
-         * Loads the ASCII part of a shader %resource, i.e. the shader source code.
-         *
-         * @param desc the XML part of a shader ResourceDescriptor.
-         * @param paths the directories where the shader source files must be looked for.
-         * @param path a file containing (a part of the) shader source code.
-         * @param data the content of the 'path' file.
-         * @param[in,out] size the size of the content of the 'path' file and, after the
-         *      method's execution, the size of the returned data.
-         * @param[in,out] stamps the last modification time of the file(s) that contain
-         *      the shader source code, or an empty vector if these files are not known
-         *      yet. These modification times are updated by this method if they have
-         *      changed. Each element of this vector contains a file name and its last
-         *      modification time.
-         * @throw exception if a problem occurs.
-         */
-        private string loadShaderData(XmlElement desc, List<string> paths,
-                string path, string data, List<Tuple<string, DateTime>> stamps)
+        /// <summary>
+        /// Loads the ASCII part of a shader %resource, i.e. the shader source code.
+        /// </summary>
+        /// <param name="desc">the XML part of a shader ResourceDescriptor.</param>
+        /// <param name="paths">the directories where the shader source files must be looked for.</param>
+        /// <param name="path">a file containing (a part of the) shader source code.</param>
+        /// <param name="data">the content of the 'path' file.</param>
+        /// <param name="stamps">the last modification time of the file(s) that contain
+        ///      the shader source code, or an empty vector if these files are not known
+        ///      yet.These modification times are updated by this method if they have
+        ///      changed.Each element of this vector contains a file name and its last
+        ///      modification time.</param>
+        /// <returns></returns>
+        private string loadShaderData(XmlElement desc, List<string> paths, string path, string data, List<Tuple<string, DateTime>> stamps)
         {
             DateTime t;
             getTimeStamp(path, out t);
@@ -688,76 +685,89 @@ namespace Sxta.Render.Resources
             // we parse the file to find the #include that are not inside comments
             while (i < size)
             {
-#if TODO
-        if (!comment) { // if we are not inside a comment
-            if (i + 1 < size) {
-                if (data[i] == '/' && data[i + 1] == '*') {
-                    // if we find a '/*' then we now are in a comment
-                    result += "/*";
-                    comment = true;
-                    lineComment = false;
-                    i += 2;
-                    continue;
-                } else if (data[i] == '/' && data[i + 1] == '/') {
-                    // likewise if we find a '//'
-                    result+= "//";
-                    comment = true;
-                    lineComment = true;
-                    i += 2;
-                    continue;
-                }
-            }
-            if (i + 8 <= size && strncmp((char*) data + i, "#include", 8) == 0) {
-                // if we find a #include
-                char* s = strchr((char*) data + i, '\"');
-                if (s != null) {
-                    char *e = strchr(s + 1, '\"');
-                    if (e != NULL) {
-                        // we first extract the referenced file name
-                        string inc = string(s + 1, e - s - 1);
-                        string incFile;
-                        try {
-                            // then we find the absolute name of this file
-                            incFile = findFile(desc, paths, inc);
-                        } catch (...) {
-                            delete[] data;
-                            throw exception();
+                if (!comment)
+                { // if we are not inside a comment
+                    if (i + 1 < size)
+                    {
+                        if (data[i] == '/' && data[i + 1] == '*')
+                        {
+                            // if we find a '/*' then we now are in a comment
+                            result.Append("/*");
+                            comment = true;
+                            lineComment = false;
+                            i += 2;
+                            continue;
                         }
-                        unsigned int incSize;
-                        // we can then load the content of the referenced file
-                        unsigned char* incData = loadFile(incFile, incSize);
-                        // and then analyze its content with a recursive call
-                        // to process the #include directives that this file may
-                        // in turn contain
-                        unsigned char* incShader = loadShaderData(desc, paths, incFile, incData, incSize, stamps);
-                        // finally we append this processed content to the
-                        // result data, instead of the #include directive itself
-                        result.append((char*) incShader);
-                        delete[] incShader;
+                        else if (data[i] == '/' && data[i + 1] == '/')
+                        {
+                            // likewise if we find a '//'
+                            result.Append("//");
+                            comment = true;
+                            lineComment = true;
+                            i += 2;
+                            continue;
+                        }
+                    }
+                    if (i + 8 <= size && data.Substring(i, 8) == "#include")
+                    {
+                        // if we find a #include
+                        int s = data.IndexOf('\"', i);
+                        if (s >= 0)
+                        { // not found
+                            int e = data.IndexOf('\"', s + 1);
+                            if (e >= 0)
+                            {
+                                // we first extract the referenced file name
+                                string inc = data.Substring(s + 1, e - s - 1);
+                                string incFile;
+                                try
+                                {
+                                    // then we find the absolute name of this file
+                                    incFile = findFile(desc, paths, inc);
+                                }
+                                catch (Exception ex)
+                                {
+                                    throw ex;
+                                }
+                                int incSize;
+                                // we can then load the content of the referenced file
+                                string incData = Encoding.Default.GetString(loadFile(incFile, out incSize));
+                                // and then analyze its content with a recursive call
+                                // to process the #include directives that this file may
+                                // in turn contain
+                                string incShader = loadShaderData(desc, paths, incFile, incData, stamps);
+                                // finally we append this processed content to the
+                                // result data, instead of the #include directive itself
+                                result.Append(incShader);
 
-                        i = (e - (char*) data) + 1;
+                                // i = (e - (char*) data) + 1;
+                                i = e + 1;
+                                continue;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    if (lineComment)
+                    { // if we are in a line comment
+                        if (data[i] == '\n')
+                        { // and find a newline we exit the comment
+                            result.Append(data[i++]);
+                            comment = false;
+                            continue;
+                        }
+                    }
+                    else if (i + 1 < size && data[i] == '*' && data[i + 1] == '/')
+                    {
+                        // likewise, if we find a '*/' in a block comment, we exit it
+                        result.Append("*/");
+                        comment = false;
+                        i += 2;
                         continue;
                     }
                 }
-            }
-        } else {
-            if (lineComment) { // if we are in a line comment
-                if (data[i] == '\n') { // and find a newline we exit the comment
-                    result.append((char*) data, i++, 1);
-                    comment = false;
-                    continue;
-                }
-            } else if (i + 1 < size && data[i] == '*' && data[i + 1] == '/') {
-                // likewise, if we find a '*/' in a block comment, we exit it
-                result += "*/";
-                comment = false;
-                i += 2;
-                continue;
-            }
-        }
-        result += ((char*) data, i++, 1);  
-#endif
-                throw new NotImplementedException();
+                result.Append(data[i++]);
             }
             //delete[] data;
             //size = result.size();
@@ -784,9 +794,9 @@ namespace Sxta.Render.Resources
         private GPUBuffer loadTextureData(XmlElement desc, string path,
                  byte[] data, ref int size, List<Tuple<string, DateTime>> stamps)
         {
-            if (path.EndsWith("png") ||
-                path.EndsWith("bmp") ||
-                path.EndsWith("jpg"))
+            if (path.EndsWith("png", StringComparison.InvariantCultureIgnoreCase) ||
+                path.EndsWith("bmp", StringComparison.InvariantCultureIgnoreCase) ||
+                path.EndsWith("jpg", StringComparison.InvariantCultureIgnoreCase))
             {
                 try
                 {
@@ -825,6 +835,8 @@ namespace Sxta.Render.Resources
                     GPUBuffer buff = new GPUBuffer();
                     buff.setData(Data.Width * Data.Height * txsize, Data.Scan0, BufferUsage.STATIC_DRAW);
                     img.UnlockBits(Data);
+                    DateTime t = File.GetLastWriteTime(path);
+                    stamps.Add(new Tuple<string, DateTime>(path, t));
                     return buff;
                 }
                 catch (Exception ex)
@@ -833,9 +845,79 @@ namespace Sxta.Render.Resources
                     throw new Exception("Cannot load texture file '" + path + "'");
                 }
             }
-            throw new NotImplementedException("Unknown image format ");
-        }
+            else if (path.EndsWith("raw", StringComparison.InvariantCultureIgnoreCase))
+            {
+                bool raw = BitConverter.ToUInt32(data, size - 5 * sizeof(uint)) == 0xCAFEBABE;
+                if (!raw)
+                {
+                    log.Error("Cannot load texture file '" + path + "', Invalid Raw Format");
+                    throw new Exception("Cannot load texture file '" + path + "', Invalid Raw Format");
+                }
+                int w = BitConverter.ToInt32(data, size - 4 * sizeof(int)); // texture width
+                int h = BitConverter.ToInt32(data, size - 3 * sizeof(int)); // texture height (ignored for 1D textures)
+                int d = BitConverter.ToInt32(data, size - 2 * sizeof(int)); // texture depth (0 for 2D textures)
+                int channels = BitConverter.ToInt32(data, size - 1 * sizeof(int)); // number of channels per pixel (1..4)
+                if (d > 0)
+                    desc.SetAttribute("depth", d.ToString());
+                desc.SetAttribute("width", w.ToString());
+                if (string.IsNullOrWhiteSpace(desc.GetAttribute("height")))
+                {
+                    desc.SetAttribute("height", h.ToString());
+                }
+                if (channels == 1)
+                {
+                    if (string.IsNullOrWhiteSpace(desc.GetAttribute("format")))
+                    {
+                        desc.SetAttribute("format", "RED");
+                    }
+                }
+                else if (channels == 2)
+                {
+                    if (string.IsNullOrWhiteSpace(desc.GetAttribute("format")))
+                    {
+                        desc.SetAttribute("format", "RG");
+                    }
+                }
+                else if (channels == 3)
+                {
+                    if (string.IsNullOrWhiteSpace(desc.GetAttribute("format")))
+                    {
+                        desc.SetAttribute("format", "RGB");
+                    }
+                }
+                else if (channels == 4)
+                {
+                    if (string.IsNullOrWhiteSpace(desc.GetAttribute("format")))
+                    {
+                        desc.SetAttribute("format", "RGBA");
+                    }
+                }
+                else
+                {
+                    log.Error("Cannot load texture file '" + path + "', Invalid Raw Format, Channels =" + channels);
+                    throw new Exception("Cannot load texture file '" + path + "', Invalid Raw Format, Channels =" + channels);
+                }
+                if (string.IsNullOrWhiteSpace(desc.GetAttribute("type")))
+                {
+                    desc.SetAttribute("type", "FLOAT");
+                }
+                DateTime t = File.GetLastWriteTime(path);
+                stamps.Add(new Tuple<string, DateTime>(path, t));
+                GPUBuffer buff = new GPUBuffer();
+                Debug.Assert(size - 5 * sizeof(uint) == w * channels * sizeof(float) * h);
+                buff.setData(w * channels * sizeof(float) * h, data, BufferUsage.STATIC_DRAW);
+                return buff;
+            }
+            else if (path.EndsWith("hdr", StringComparison.InvariantCultureIgnoreCase))
+            {
 
+                log.Error("HDR image format is not implemented'" + path);
+                throw new NotImplementedException("HDR image format is not implemented'" + path);
+            }
+            log.Error("Unknown image format '" + path);
+            throw new NotImplementedException("Unknown image format '" + path);
+
+        }
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
     }
 

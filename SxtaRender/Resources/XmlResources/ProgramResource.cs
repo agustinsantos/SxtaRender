@@ -31,14 +31,14 @@ namespace Sxta.Render.Resources.XmlResources
                     if (f.Name != "module")
                     {
                         logger.Error("Invalid subelement '" + f.Name + "'");
-                        throw new Exception();
+                        throw new Exception("Invalid subelement '" + f.Name + "'");
                     }
                     checkParameters(desc, f, "name,");
                     string moduleName = f.GetAttribute("name");
                     if (moduleName == null)
                     {
                         logger.Error("Missing 'name' attribute");
-                        throw new Exception();
+                        throw new Exception("Missing 'name' attribute");
                     }
                     Module module = null;
                     try
@@ -48,11 +48,12 @@ namespace Sxta.Render.Resources.XmlResources
                     catch (Exception ex)
                     {
                         logger.Error("Error loading '" + moduleName + "' module, exception: " + ex);
+                        throw new Exception("Error loading '" + moduleName + "' module, exception: " + ex);
                     }
                     if (module == null)
                     {
                         logger.Error("Cannot find '" + moduleName + "' module");
-                        throw new Exception();
+                        throw new Exception("Cannot find '" + moduleName + "' module");
                     }
                     modules.Add(module);
                 }

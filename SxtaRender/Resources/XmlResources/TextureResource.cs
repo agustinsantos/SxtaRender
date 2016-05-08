@@ -498,7 +498,7 @@ namespace Sxta.Render.Resources.XmlResources
                 TextureResource.getParameters(desc, e, out tf, out f, out t);
                 TextureResource.getParameters(desc, e, ref params_);
                 s.compressedSize(desc.getSize());
-                valueC.init(w, h / d, d, tf, f, t, params_, s, (Buffer)desc.getData());
+                valueC = new Texture3D(w, h / d, d, tf, f, t, params_, s, (Buffer)desc.getData());
                 this.valueC.Name = name;
                 desc.clearData();
             }
