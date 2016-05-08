@@ -218,5 +218,4 @@ namespace proland
             this.capacity = capacity;
         }
     }
-
 }
