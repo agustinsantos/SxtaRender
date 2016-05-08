@@ -177,7 +177,7 @@ namespace proland
      * @return the classic 2D Perlin noise function evaluated at (x,y). This
      *      function has a main frequency of 1, and its value are between -1 and 1.
      */
-    float cnoise(float x, float y, int period = 0)
+    public static float cnoise(float x, float y, int period = 0)
         {
             int bx0, bx1, by0, by1, b00, b10, b01, b11;
             float rx0, rx1, ry0, ry1, sx, sy, a, b, t, u, v;
@@ -241,7 +241,7 @@ namespace proland
          * @return the classic 3D Perlin noise function evaluated at (x,y,z). This
          *      function has a main frequency of 1, and its value are between -1 and 1.
          */
-        float cnoise(float x, float y, float z, int period = 0)
+        public static float cnoise(float x, float y, float z, int period = 0)
         {
             int bx0, bx1, by0, by1, bz0, bz1, b00, b10, b01, b11;
             float rx0, rx1, ry0, ry1, rz0, rz1, sy, sz, a, b, c, d, t, u, v;
@@ -401,7 +401,7 @@ namespace proland
          * @return the 2D Perlin simplex noise function evaluated at (x,y). This
          *      function has a main frequency of 1, and its value are between -1 and 1.
          */
-        float snoise(float xin, float yin, int period = 0)
+        public static float snoise(float xin, float yin, int period = 0)
         {
             float n0, n1, n2; // Noise contributions from the three corners
                               // Skew the input space to determine which simplex cell we're in
@@ -484,7 +484,7 @@ namespace proland
          * @return the 3D Perlin simplex noise function evaluated at (x,y,z). This
          *      function has a main frequency of 1, and its value are between -1 and 1.
          */
-        float snoise(float xin, float yin, float zin, int P = 0)
+        public static float snoise(float xin, float yin, float zin, int P = 0)
         {
             float n0, n1, n2, n3; // Noise contributions from the four corners
                                   // Skew the input space to determine which simplex cell we're in
@@ -600,7 +600,7 @@ namespace proland
          * @return the 4D Perlin simplex noise function evaluated at (x,y,z,w). This
          *      function has a main frequency of 1, and its value are between -1 and 1.
          */
-        float snoise(float x, float y, float z, float w, int P = 0)
+        public static float snoise(float x, float y, float z, float w, int P = 0)
         {
             // The skewing and unskewing factors are hairy again for the 4D case
             float F4 = ((float)Math.Sqrt(5.0f) - 1.0f) / 4.0f;
@@ -755,7 +755,7 @@ namespace proland
          * @return the computed size*size array of values. These values are normalized
          *      to stay in the range 0-1.
          */
-        float[] buildFbm4NoiseTexture2D(int size, int freq, int octaves, int lacunarity, float gain)
+        public static float[] buildFbm4NoiseTexture2D(int size, int freq, int octaves, int lacunarity, float gain)
         {
             int i, j, k, l;
             float[] _base = new float[4 * size * size];
@@ -825,7 +825,7 @@ namespace proland
          * @return the computed size*size*size array of values. These values are
          *      normalized to stay in the range 0-1.
          */
-        float[] buildFbm1NoiseTexture3D(int size, int freq, int octaves, int lacunarity, float gain)
+        public static float[] buildFbm1NoiseTexture3D(int size, int freq, int octaves, int lacunarity, float gain)
         {
             int i, j, k, l;
             float[] _base = new float[size * size * size];

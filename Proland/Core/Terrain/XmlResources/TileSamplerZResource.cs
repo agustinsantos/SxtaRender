@@ -11,6 +11,10 @@ namespace Sxta.Proland.Core.Terrain.XmlResources
 {
     class TileSamplerZResource : ResourceTemplate<TileSamplerZ>
     {
+        public static TileSamplerZResource Create(ResourceManager manager, string name, ResourceDescriptor desc, XmlElement e = null, object context = null)
+        {
+            return new TileSamplerZResource(manager, name, desc, e);
+        }
         public TileSamplerZResource(ResourceManager manager, string name, ResourceDescriptor desc, XmlElement e = null, object context = null) :
             base(10, manager, name, desc)
         {
