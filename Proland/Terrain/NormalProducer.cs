@@ -173,9 +173,11 @@ namespace Sxta.Proland.Terrain
         {
             if (log.IsDebugEnabled)
             {
+#if TODO
                 ostringstream oss;
                 oss << "Normal tile " << getId() << " " << level << " " << tx << " " << ty;
                 Logger.DEBUG_LOGGER.log("DEM", oss.str());
+#endif
             }
 
             GPUTileStorage.GPUSlot gpuData = (GPUTileStorage.GPUSlot)(data);
@@ -242,10 +244,10 @@ namespace Sxta.Proland.Terrain
                 Vector3d p3 = new Vector3d(x1, y1, R);
                 Vector3d pc = new Vector3d((x0 + x1) * 0.5, (y0 + y1) * 0.5, R);
                 // TODO Normalize returning previous length
-                Vector3d v0 = Vector3d.Multiply(p0,l0);
-                Vector3d v1 = Vector3d.Multiply(p1,l1);
-                Vector3d v2 = Vector3d.Multiply(p2,l2);
-                Vector3d v3 = Vector3d.Multiply(p3,l3);
+                Vector3d v0 = Vector3d.Normalize(p0, out l0);
+                Vector3d v1 = Vector3d.Normalize(p1, out l1);
+                Vector3d v2 = Vector3d.Normalize(p2, out l2);
+                Vector3d v3 = Vector3d.Normalize(p3, out l3);
                 Vector3d vc = (v0 + v1 + v2 + v3) * 0.25;
 
                 Matrix4d deformedCorners = new Matrix4d(
@@ -444,9 +446,8 @@ namespace Sxta.Proland.Terrain
                 format = "RGBA8";
             }
 
-            ostringstream normalTex;
-            normalTex << "renderbuffer-" << tileSize << "-" << format;
-            normalTexture = (Texture2D)manager.loadResource(normalTex.str()).get();
+            string normalTex = "rendebuffer-" + tileSize + "-" + format;
+            normalTexture = (Texture2D)manager.loadResource(normalTex).get();
 
             valueC.init(cache, elevations, normalTexture, normalsProg, gridSize, deform);
         }

@@ -796,6 +796,17 @@ namespace Sxta.Math
                 matrix.R2C2
             };
         }
+		
+		/// <summary>Converts Matrix3i to Matrix3f.</summary>
+        /// <param name="m">The Matrix3i to convert.</param>
+        /// <returns>The resulting Matrix3f.</returns>
+        public static explicit operator Matrix3f(Matrix3i m)
+        {
+            return new Matrix3f((float)m.R0C0, (float)m.R0C1, (float)m.R0C2,
+                                (float)m.R1C0, (float)m.R1C1, (float)m.R1C2,
+                                (float)m.R2C0, (float)m.R2C1, (float)m.R2C2);
+        }
+		
 
         #endregion
 
@@ -2843,6 +2854,17 @@ namespace Sxta.Math
                 matrix.R2C2
             };
         }
+		
+		/// <summary>Converts Matrix3ui to Matrix3f.</summary>
+        /// <param name="m">The Matrix3ui to convert.</param>
+        /// <returns>The resulting Matrix3f.</returns>
+        public static explicit operator Matrix3f(Matrix3ui m)
+        {
+            return new Matrix3f((float)m.R0C0, (float)m.R0C1, (float)m.R0C2,
+                                (float)m.R1C0, (float)m.R1C1, (float)m.R1C2,
+                                (float)m.R2C0, (float)m.R2C1, (float)m.R2C2);
+        }
+		
 
         #endregion
 
@@ -4890,6 +4912,7 @@ namespace Sxta.Math
                 matrix.R2C2
             };
         }
+		
 
         #endregion
 
@@ -5870,6 +5893,7 @@ namespace Sxta.Math
                                 (float)m.Row1.X, (float)m.Row1.Y, (float)m.Row1.Z,
                                 (float)m.Row2.X, (float)m.Row2.Y, (float)m.Row2.Z);
         }
+
 		
         
         #region CreateFromAxisAngle
@@ -7663,6 +7687,17 @@ namespace Sxta.Math
                 matrix.R2C2
             };
         }
+		
+		/// <summary>Converts Matrix3d to Matrix3f.</summary>
+        /// <param name="m">The Matrix3d to convert.</param>
+        /// <returns>The resulting Matrix3f.</returns>
+        public static explicit operator Matrix3f(Matrix3d m)
+        {
+            return new Matrix3f((float)m.R0C0, (float)m.R0C1, (float)m.R0C2,
+                                (float)m.R1C0, (float)m.R1C1, (float)m.R1C2,
+                                (float)m.R2C0, (float)m.R2C1, (float)m.R2C2);
+        }
+		
 
         #endregion
 

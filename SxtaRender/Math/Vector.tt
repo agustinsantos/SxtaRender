@@ -675,6 +675,20 @@ namespace Sxta.Math
             return vec;
         }
 
+		/// <summary>
+        /// Scale a vector to unit length
+        /// </summary>
+        /// <param name="vec">The input vector</param>
+        /// <returns>The normalized vector and the previous length</returns>
+        public static <#= vec2Name #> Normalize(<#= vec2Name #> vec, out double previousLength)
+        {
+			double scale = 1.0 / vec.Length;
+            vec.X = (<#= typeName #>)(vec.X * scale);
+            vec.Y = (<#= typeName #>)(vec.Y * scale);
+			previousLength = scale;
+            return vec;
+        }
+
         /// <summary>
         /// Scale a vector to unit length
         /// </summary>
@@ -1855,6 +1869,21 @@ namespace Sxta.Math
 			vec.X = (<#= typeName #>)(vec.X * scale);
 			vec.Y = (<#= typeName #>)(vec.Y * scale);
 			vec.Z = (<#= typeName #>)(vec.Z * scale);
+            return vec;
+        }
+
+		/// <summary>
+        /// Scale a vector to unit length
+        /// </summary>
+        /// <param name="vec">The input vector</param>
+        /// <returns>The normalized vector and the previous length</returns>
+        public static <#= vec3Name #> Normalize(<#= vec3Name #> vec, out double previousLength)
+        {
+            double scale = 1.0 / vec.Length;
+			vec.X = (<#= typeName #>)(vec.X * scale);
+			vec.Y = (<#= typeName #>)(vec.Y * scale);
+			vec.Z = (<#= typeName #>)(vec.Z * scale);
+			previousLength = scale;
             return vec;
         }
 
@@ -3137,6 +3166,22 @@ namespace Sxta.Math
             vec.Y = (<#= typeName #>)(vec.Y * scale);
             vec.Z = (<#= typeName #>)(vec.Z * scale);
             vec.W = (<#= typeName #>)(vec.W * scale);
+            return vec;
+        }
+
+		/// <summary>
+        /// Scale a vector to unit length
+        /// </summary>
+        /// <param name="vec">The input vector</param>
+        /// <returns>The normalized vector and the previous length</returns>
+        public static <#= vec4Name #> Normalize(<#= vec4Name #> vec, out double previousLength)
+        {
+            double scale = 1.0 / vec.Length;
+            vec.X = (<#= typeName #>)(vec.X * scale);
+            vec.Y = (<#= typeName #>)(vec.Y * scale);
+            vec.Z = (<#= typeName #>)(vec.Z * scale);
+            vec.W = (<#= typeName #>)(vec.W * scale);
+			previousLength = scale;
             return vec;
         }
 

@@ -660,6 +660,20 @@ namespace Sxta.Math
             return vec;
         }
 
+		/// <summary>
+        /// Scale a vector to unit length
+        /// </summary>
+        /// <param name="vec">The input vector</param>
+        /// <returns>The normalized vector and the previous length</returns>
+        public static Vector2i Normalize(Vector2i vec, out double previousLength)
+        {
+			double scale = 1.0 / vec.Length;
+            vec.X = (int)(vec.X * scale);
+            vec.Y = (int)(vec.Y * scale);
+			previousLength = scale;
+            return vec;
+        }
+
         /// <summary>
         /// Scale a vector to unit length
         /// </summary>
@@ -1810,6 +1824,21 @@ namespace Sxta.Math
             return vec;
         }
 
+		/// <summary>
+        /// Scale a vector to unit length
+        /// </summary>
+        /// <param name="vec">The input vector</param>
+        /// <returns>The normalized vector and the previous length</returns>
+        public static Vector3i Normalize(Vector3i vec, out double previousLength)
+        {
+            double scale = 1.0 / vec.Length;
+			vec.X = (int)(vec.X * scale);
+			vec.Y = (int)(vec.Y * scale);
+			vec.Z = (int)(vec.Z * scale);
+			previousLength = scale;
+            return vec;
+        }
+
         /// <summary>
         /// Scale a vector to unit length
         /// </summary>
@@ -2856,6 +2885,22 @@ namespace Sxta.Math
             vec.Y = (int)(vec.Y * scale);
             vec.Z = (int)(vec.Z * scale);
             vec.W = (int)(vec.W * scale);
+            return vec;
+        }
+
+		/// <summary>
+        /// Scale a vector to unit length
+        /// </summary>
+        /// <param name="vec">The input vector</param>
+        /// <returns>The normalized vector and the previous length</returns>
+        public static Vector4i Normalize(Vector4i vec, out double previousLength)
+        {
+            double scale = 1.0 / vec.Length;
+            vec.X = (int)(vec.X * scale);
+            vec.Y = (int)(vec.Y * scale);
+            vec.Z = (int)(vec.Z * scale);
+            vec.W = (int)(vec.W * scale);
+			previousLength = scale;
             return vec;
         }
 
@@ -3907,6 +3952,20 @@ namespace Sxta.Math
             vec.X = (uint)(vec.X * scale);
             vec.Y = (uint)(vec.Y * scale);
 
+            return vec;
+        }
+
+		/// <summary>
+        /// Scale a vector to unit length
+        /// </summary>
+        /// <param name="vec">The input vector</param>
+        /// <returns>The normalized vector and the previous length</returns>
+        public static Vector2ui Normalize(Vector2ui vec, out double previousLength)
+        {
+			double scale = 1.0 / vec.Length;
+            vec.X = (uint)(vec.X * scale);
+            vec.Y = (uint)(vec.Y * scale);
+			previousLength = scale;
             return vec;
         }
 
@@ -5060,6 +5119,21 @@ namespace Sxta.Math
             return vec;
         }
 
+		/// <summary>
+        /// Scale a vector to unit length
+        /// </summary>
+        /// <param name="vec">The input vector</param>
+        /// <returns>The normalized vector and the previous length</returns>
+        public static Vector3ui Normalize(Vector3ui vec, out double previousLength)
+        {
+            double scale = 1.0 / vec.Length;
+			vec.X = (uint)(vec.X * scale);
+			vec.Y = (uint)(vec.Y * scale);
+			vec.Z = (uint)(vec.Z * scale);
+			previousLength = scale;
+            return vec;
+        }
+
         /// <summary>
         /// Scale a vector to unit length
         /// </summary>
@@ -6106,6 +6180,22 @@ namespace Sxta.Math
             vec.Y = (uint)(vec.Y * scale);
             vec.Z = (uint)(vec.Z * scale);
             vec.W = (uint)(vec.W * scale);
+            return vec;
+        }
+
+		/// <summary>
+        /// Scale a vector to unit length
+        /// </summary>
+        /// <param name="vec">The input vector</param>
+        /// <returns>The normalized vector and the previous length</returns>
+        public static Vector4ui Normalize(Vector4ui vec, out double previousLength)
+        {
+            double scale = 1.0 / vec.Length;
+            vec.X = (uint)(vec.X * scale);
+            vec.Y = (uint)(vec.Y * scale);
+            vec.Z = (uint)(vec.Z * scale);
+            vec.W = (uint)(vec.W * scale);
+			previousLength = scale;
             return vec;
         }
 
@@ -7157,6 +7247,20 @@ namespace Sxta.Math
             vec.X = (float)(vec.X * scale);
             vec.Y = (float)(vec.Y * scale);
 
+            return vec;
+        }
+
+		/// <summary>
+        /// Scale a vector to unit length
+        /// </summary>
+        /// <param name="vec">The input vector</param>
+        /// <returns>The normalized vector and the previous length</returns>
+        public static Vector2f Normalize(Vector2f vec, out double previousLength)
+        {
+			double scale = 1.0 / vec.Length;
+            vec.X = (float)(vec.X * scale);
+            vec.Y = (float)(vec.Y * scale);
+			previousLength = scale;
             return vec;
         }
 
@@ -8330,6 +8434,21 @@ namespace Sxta.Math
 			vec.X = (float)(vec.X * scale);
 			vec.Y = (float)(vec.Y * scale);
 			vec.Z = (float)(vec.Z * scale);
+            return vec;
+        }
+
+		/// <summary>
+        /// Scale a vector to unit length
+        /// </summary>
+        /// <param name="vec">The input vector</param>
+        /// <returns>The normalized vector and the previous length</returns>
+        public static Vector3f Normalize(Vector3f vec, out double previousLength)
+        {
+            double scale = 1.0 / vec.Length;
+			vec.X = (float)(vec.X * scale);
+			vec.Y = (float)(vec.Y * scale);
+			vec.Z = (float)(vec.Z * scale);
+			previousLength = scale;
             return vec;
         }
 
@@ -9611,6 +9730,22 @@ namespace Sxta.Math
             return vec;
         }
 
+		/// <summary>
+        /// Scale a vector to unit length
+        /// </summary>
+        /// <param name="vec">The input vector</param>
+        /// <returns>The normalized vector and the previous length</returns>
+        public static Vector4f Normalize(Vector4f vec, out double previousLength)
+        {
+            double scale = 1.0 / vec.Length;
+            vec.X = (float)(vec.X * scale);
+            vec.Y = (float)(vec.Y * scale);
+            vec.Z = (float)(vec.Z * scale);
+            vec.W = (float)(vec.W * scale);
+			previousLength = scale;
+            return vec;
+        }
+
         /// <summary>
         /// Scale a vector to unit length
         /// </summary>
@@ -10717,6 +10852,20 @@ namespace Sxta.Math
             vec.X = (double)(vec.X * scale);
             vec.Y = (double)(vec.Y * scale);
 
+            return vec;
+        }
+
+		/// <summary>
+        /// Scale a vector to unit length
+        /// </summary>
+        /// <param name="vec">The input vector</param>
+        /// <returns>The normalized vector and the previous length</returns>
+        public static Vector2d Normalize(Vector2d vec, out double previousLength)
+        {
+			double scale = 1.0 / vec.Length;
+            vec.X = (double)(vec.X * scale);
+            vec.Y = (double)(vec.Y * scale);
+			previousLength = scale;
             return vec;
         }
 
@@ -11851,6 +12000,21 @@ namespace Sxta.Math
 			vec.X = (double)(vec.X * scale);
 			vec.Y = (double)(vec.Y * scale);
 			vec.Z = (double)(vec.Z * scale);
+            return vec;
+        }
+
+		/// <summary>
+        /// Scale a vector to unit length
+        /// </summary>
+        /// <param name="vec">The input vector</param>
+        /// <returns>The normalized vector and the previous length</returns>
+        public static Vector3d Normalize(Vector3d vec, out double previousLength)
+        {
+            double scale = 1.0 / vec.Length;
+			vec.X = (double)(vec.X * scale);
+			vec.Y = (double)(vec.Y * scale);
+			vec.Z = (double)(vec.Z * scale);
+			previousLength = scale;
             return vec;
         }
 
@@ -13112,6 +13276,22 @@ namespace Sxta.Math
             vec.Y = (double)(vec.Y * scale);
             vec.Z = (double)(vec.Z * scale);
             vec.W = (double)(vec.W * scale);
+            return vec;
+        }
+
+		/// <summary>
+        /// Scale a vector to unit length
+        /// </summary>
+        /// <param name="vec">The input vector</param>
+        /// <returns>The normalized vector and the previous length</returns>
+        public static Vector4d Normalize(Vector4d vec, out double previousLength)
+        {
+            double scale = 1.0 / vec.Length;
+            vec.X = (double)(vec.X * scale);
+            vec.Y = (double)(vec.Y * scale);
+            vec.Z = (double)(vec.Z * scale);
+            vec.W = (double)(vec.W * scale);
+			previousLength = scale;
             return vec;
         }
 
