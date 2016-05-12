@@ -20,7 +20,7 @@ namespace Sxta.Proland.Terrain
     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        FrameBuffer createNormalFramebuffer(Texture2D normalTexture)
+        private static FrameBuffer createNormalFramebuffer(Texture2D normalTexture)
         {
             int tileWidth = normalTexture.getWidth();
             FrameBuffer frameBuffer = new FrameBuffer();
@@ -37,11 +37,9 @@ namespace Sxta.Proland.Terrain
             return frameBuffer;
         }
 
+        //FACTORIES
+        Factory<Texture2D, FrameBuffer> normalFramebufferFactory = new Factory<Texture2D, FrameBuffer>(createNormalFramebuffer);
 
-#if TODO
-    static_ptr< Factory< ptr<Texture2D>, ptr<FrameBuffer> > > normalFramebufferFactory(
-    new Factory< ptr<Texture2D>, ptr<FrameBuffer> >(createNormalFramebuffer));
-#endif
         /// <summary>
         /// Creates a new NormalProducer.
         /// </summary>
@@ -117,7 +115,7 @@ namespace Sxta.Proland.Terrain
             this.elevationTiles = elevationTiles;
             this.normalTexture = normalTexture;
             this.normals = normals;
-            this.frameBuffer = normalFramebufferFactory.get(normalTexture);
+            this.frameBuffer = normalFramebufferFactory.Get(normalTexture);
             this.deform = deform;
             this.gridMeshSize = gridSize;
             this.tileSDFU = normals.getUniform3f("tileSDF");
@@ -140,7 +138,7 @@ namespace Sxta.Proland.Terrain
 
         protected internal override ulong getContext()
         {
-            return normalTexture.get();
+            return 0;//normalTexture.get();
         }
 
         protected internal override Render.Scenegraph.Task startCreateTile(int level, int tx, int ty, uint deadline, Render.Scenegraph.Task task, TaskGraph owner)
@@ -173,11 +171,8 @@ namespace Sxta.Proland.Terrain
         {
             if (log.IsDebugEnabled)
             {
-#if TODO
-                ostringstream oss;
-                oss << "Normal tile " << getId() << " " << level << " " << tx << " " << ty;
-                Logger.DEBUG_LOGGER.log("DEM", oss.str());
-#endif
+                string oss = "Normal tile " + getId() + " " + level + " " + tx + " " + ty;
+                log.DebugFormat("DEM", oss);
             }
 
             GPUTileStorage.GPUSlot gpuData = (GPUTileStorage.GPUSlot)(data);
@@ -264,9 +259,9 @@ namespace Sxta.Proland.Terrain
 
                 Vector3d uz = pc;
                 uz.Normalize();
-                Vector3d ux = Vector3d.Cross(Vector3d.UnitY,uz);
+                Vector3d ux = Vector3d.Cross(Vector3d.UnitY, uz);
                 ux.Normalize();
-                Vector3d uy = Vector3d.Cross(uz,ux);
+                Vector3d uy = Vector3d.Cross(uz, ux);
                 Matrix3d worldToTangentFrame = new Matrix3d(
                     ux.X, ux.Y, ux.Z,
                     uy.X, uy.Y, uy.Z,
@@ -281,7 +276,7 @@ namespace Sxta.Proland.Terrain
                     uz.Normalize();
                     ux = Vector3d.Cross(Vector3d.UnitY, uz);
                     ux.Normalize();
-                    uy = Vector3d.Cross(uz,ux);
+                    uy = Vector3d.Cross(uz, ux);
                     Matrix3d parentToTangentFrame = new Matrix3d();
                     Matrix3d tmp = new Matrix3d(
                         ux.X, uy.X, uz.X,
@@ -411,7 +406,7 @@ namespace Sxta.Proland.Terrain
 
         private Uniform4f deformU;
 
-        private  static FrameBuffer old;
+        private static FrameBuffer old;
     }
     class NormalProducerResource : ResourceTemplate<NormalProducer>
     {
@@ -429,20 +424,24 @@ namespace Sxta.Proland.Terrain
             cache = (TileCache)manager.loadResource(getParameter(desc, e, "cache")).get();
             elevations = (TileProducer)manager.loadResource(getParameter(desc, e, "elevations")).get();
             string normals = "normalShader;";
-            if (e.GetAttribute("normalProg") != null) {
+            if (e.GetAttribute("normalProg") != null)
+            {
                 normals = getParameter(desc, e, "normalProg");
             }
             normalsProg = (Program)(manager.loadResource(normals).get());
-            if (e.GetAttribute("gridSize") != null) {
+            if (e.GetAttribute("gridSize") != null)
+            {
                 getIntParameter(desc, e, "gridSize", out gridSize);
             }
-            if (e.GetAttribute("deform") != null && e.GetAttribute("deform") == "sphere" ){
+            if (e.GetAttribute("deform") != null && e.GetAttribute("deform") == "sphere")
+            {
                 deform = true;
             }
 
             int tileSize = cache.getStorage().getTileSize();
             string format = ((GPUTileStorage)(cache.getStorage())).getTexture(0).getInternalFormatName();
-            if (format.Substring(0,3) == "RG8") {
+            if (format.Substring(0, 3) == "RG8")
+            {
                 format = "RGBA8";
             }
 
@@ -454,7 +453,7 @@ namespace Sxta.Proland.Terrain
 
         virtual bool prepareUpdate()
         {
-            if (((Resource)(valueC.normals.get())).changed())
+            if (((Resource)(valueC.normals)).changed())
             {
                 valueC.invalidateTiles();
             }

@@ -20,11 +20,13 @@ namespace Sxta.Proland.Terrain
     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
+        /**
         private void SetNoise(float[] n, int tileIndex, int tileWidth, int x, int y, float v)
         {
             n[tileIndex + (x) + (y) * tileWidth] = v;
         }
-        Texture2DArray createDemNoise(int tileWidth)
+        */
+        private static Texture2DArray createDemNoise(int tileWidth)
         {
 
             int[] layers = new int[6] { 0, 1, 3, 5, 7, 15 };
@@ -41,7 +43,8 @@ namespace Sxta.Proland.Terrain
                 {
                     for (int i = 0; i < tileWidth; ++i)
                     {
-                        SetNoise(noiseArray, n, tileWidth, i, j, 0.0f);
+                        noiseArray[n + (i) + (j) * tileWidth] = 0.0f;
+                        //SetNoise(noiseArray, n, tileWidth, i, j, 0.0f);
                     }
                 }
                 long brand;
@@ -50,16 +53,20 @@ namespace Sxta.Proland.Terrain
                 for (int h = 5; h <= tileWidth / 2; ++h)
                 {
                     float N = Noise.frandom(brand) * 2.0f - 1.0f;
-                    SetNoise(noiseArray, n, tileWidth, h, 2, N);
-                    SetNoise(noiseArray, n, tileWidth, tileWidth - 1 - h, 2, N);
+                    noiseArray[n + (h) + (2) * tileWidth] = N;
+                    //SetNoise(noiseArray, n, tileWidth, h, 2, N);
+                    noiseArray[n + (tileWidth - 1) + (2) * tileWidth] = N;
+                    //SetNoise(noiseArray, n, tileWidth, tileWidth - 1 - h, 2, N);
                 }
                 for (int v = 3; v < 5; ++v)
                 {
                     for (int h = 5; h < tileWidth - 5; ++h)
                     {
                         float N = Noise.frandom(brand) * 2.0f - 1.0f;
-                        SetNoise(noiseArray, n, tileWidth, h, v, N);
-                        SetNoise(noiseArray, n, tileWidth, tileWidth - 1 - h, 4 - v, N);
+                        noiseArray[n + (h) + (v) * tileWidth] = N;
+                        //SetNoise(noiseArray, n, tileWidth, h, v, N);
+                        noiseArray[n + (tileWidth - 1 - h) + (4 - v) * tileWidth] = N;
+                        //SetNoise(noiseArray, n, tileWidth, tileWidth - 1 - h, 4 - v, N);
                     }
                 }
                 // right border
@@ -67,16 +74,20 @@ namespace Sxta.Proland.Terrain
                 for (int v = 5; v <= tileWidth / 2; ++v)
                 {
                     float N = Noise.frandom(brand) * 2.0f - 1.0f;
-                    SetNoise(noiseArray, n, tileWidth, tileWidth - 3, v, N);
-                    SetNoise(noiseArray, n, tileWidth, tileWidth - 3, tileWidth - 1 - v, N);
+                    noiseArray[n + (tileWidth - 3) + (v) * tileWidth] = N;
+                    //SetNoise(noiseArray, n, tileWidth, tileWidth - 3, v, N);
+                    noiseArray[n + (tileWidth - 3) + (tileWidth - 1 - v) * tileWidth] = N;
+                    //SetNoise(noiseArray, n, tileWidth, tileWidth - 3, tileWidth - 1 - v, N);
                 }
                 for (int h = tileWidth - 4; h >= tileWidth - 5; --h)
                 {
                     for (int v = 5; v < tileWidth - 5; ++v)
                     {
                         float N = Noise.frandom(brand) * 2.0f - 1.0f;
-                        SetNoise(noiseArray, n, tileWidth, h, v, N);
-                        SetNoise(noiseArray, n, tileWidth, 2 * tileWidth - 6 - h, tileWidth - 1 - v, N);
+                        noiseArray[n + (h) + (v) * tileWidth] = N;
+                        //SetNoise(noiseArray, n, tileWidth, h, v, N);
+                        noiseArray[n + (2 * tileWidth - 6 - h) + (tileWidth - 1 - v) * tileWidth] = N;
+                        //SetNoise(noiseArray, n, tileWidth, 2 * tileWidth - 6 - h, tileWidth - 1 - v, N);
                     }
                 }
                 // top border
@@ -84,16 +95,20 @@ namespace Sxta.Proland.Terrain
                 for (int h = 5; h <= tileWidth / 2; ++h)
                 {
                     float N = Noise.frandom(brand) * 2.0f - 1.0f;
-                    SetNoise(noiseArray, n, tileWidth, h, tileWidth - 3, N);
-                    SetNoise(noiseArray, n, tileWidth, tileWidth - 1 - h, tileWidth - 3, N);
+                    noiseArray[n + (h) + (tileWidth - 3) * tileWidth] = N;
+                    //SetNoise(noiseArray, n, tileWidth, h, tileWidth - 3, N);
+                    noiseArray[n + (tileWidth - 1 - h) + (tileWidth - 3) * tileWidth] = N;
+                    //SetNoise(noiseArray, n, tileWidth, tileWidth - 1 - h, tileWidth - 3, N);
                 }
                 for (int v = tileWidth - 2; v < tileWidth; ++v)
                 {
                     for (int h = 5; h < tileWidth - 5; ++h)
                     {
                         float N = Noise.frandom(brand) * 2.0f - 1.0f;
-                        SetNoise(noiseArray, n, tileWidth, h, v, N);
-                        SetNoise(noiseArray, n, tileWidth, tileWidth - 1 - h, 2 * tileWidth - 6 - v, N);
+                        noiseArray[n + (h) + (v) * tileWidth] = N;
+                        //SetNoise(noiseArray, n, tileWidth, h, v, N);
+                        noiseArray[n + (tileWidth - 1 - h) + (2 * tileWidth - 6 - v) * tileWidth] = N;
+                        //SetNoise(noiseArray, n, tileWidth, tileWidth - 1 - h, 2 * tileWidth - 6 - v, N);
                     }
                 }
                 // left border
@@ -101,16 +116,20 @@ namespace Sxta.Proland.Terrain
                 for (int v = 5; v <= tileWidth / 2; ++v)
                 {
                     float N = Noise.frandom(brand) * 2.0f - 1.0f;
-                    SetNoise(noiseArray, n, tileWidth, 2, v, N);
-                    SetNoise(noiseArray, n, tileWidth, 2, tileWidth - 1 - v, N);
+                    noiseArray[n + (2) + (v) * tileWidth] = N;
+                    //SetNoise(noiseArray, n, tileWidth, 2, v, N);
+                    noiseArray[n + (2) + (tileWidth - 1 - v) * tileWidth] = N;
+                    //SetNoise(noiseArray, n, tileWidth, 2, tileWidth - 1 - v, N);
                 }
                 for (int h = 1; h >= 0; --h)
                 {
                     for (int v = 5; v < tileWidth - 5; ++v)
                     {
                         float N = Noise.frandom(brand) * 2.0f - 1.0f;
-                        SetNoise(noiseArray, n, tileWidth, h, v, N);
-                        SetNoise(noiseArray, n, tileWidth, 4 - h, tileWidth - 1 - v, N);
+                        noiseArray[n + (h) + (v) * tileWidth] = N;
+                        //SetNoise(noiseArray, n, tileWidth, h, v, N);
+                        noiseArray[n + (4 - h) + (tileWidth - 1 - v) * tileWidth] = N;
+                        //SetNoise(noiseArray, n, tileWidth, 4 - h, tileWidth - 1 - v, N);
                     }
                 }
                 // center
@@ -118,20 +137,22 @@ namespace Sxta.Proland.Terrain
                 {
                     for (int h = 5; h < tileWidth - 5; ++h)
                     {
-                        SetNoise(noiseArray, n, tileWidth, h, v, Noise.frandom(rand) * 2.0f - 1.0f);
+                        noiseArray[n + (h) + (v) * tileWidth] = Noise.frandom(rand) * 2.0f - 1.0f;
+                        //SetNoise(noiseArray, n, tileWidth, h, v, Noise.frandom(rand) * 2.0f - 1.0f);
                     }
                 }
             }
-            Texture2DArray noiseTexture = new Texture2DArray(tileWidth, tileWidth, 6, TextureInternalFormat.R16F,
-                TextureFormat.RED, PixelType.FLOAT, new Texture.Parameters().wrapS(TextureWrap.REPEAT).wrapT(TextureWrap.REPEAT).min(TextureFilter.NEAREST).mag(TextureFilter.NEAREST), new Sxta.Render.Buffer.Parameters(), new CPUBuffer<float>(noiseArray));
+            Texture2DArray noiseTexture = new Texture2DArray(tileWidth, tileWidth, 6, TextureInternalFormat.R16F, TextureFormat.RED, PixelType.FLOAT,
+                new Texture.Parameters().wrapS(TextureWrap.REPEAT).wrapT(TextureWrap.REPEAT).min(TextureFilter.NEAREST).mag(TextureFilter.NEAREST),
+                new Sxta.Render.Buffer.Parameters(), new CPUBuffer<float>(noiseArray));
             return noiseTexture;
         }
-#if TODO
-        static_ptr<Factory<int, ptr<Texture2DArray>>> demNoiseFactory(new Factory<int, ptr<Texture2DArray>>(createDemNoise));
-        static_ptr<Factory<pair<ptr<Texture2D>, ptr<Texture2D>>, ptr<FrameBuffer>>> demFramebufferFactory(
-        new Factory<pair<ptr<Texture2D>, ptr<Texture2D>>, ptr<FrameBuffer>>(createDemFramebuffer));
-#endif
-        FrameBuffer createDemFramebuffer(Tuple<Texture2D, Texture2D> textures)
+
+        //FACTORIES
+        Factory<int, Texture2DArray> demNoiseFactory = new Factory<int, Texture2DArray>(createDemNoise);
+        Factory<Tuple<Texture2D, Texture2D>, FrameBuffer> demFramebufferFactory = new Factory<Tuple<Texture2D, Texture2D>, FrameBuffer>(createDemFramebuffer);
+
+        private static FrameBuffer createDemFramebuffer(Tuple<Texture2D, Texture2D> textures)
         {
             int tileWidth = textures.Item1.getWidth();
             FrameBuffer frameBuffer = new FrameBuffer();
@@ -284,14 +305,14 @@ namespace Sxta.Proland.Terrain
         {
             int tileWidth = cache.getStorage().getTileSize();
             base.init(cache, true);
-            this.frameBuffer = demFramebufferFactory.get(make_pair(demTexture, layerTexture));
+            this.frameBuffer = demFramebufferFactory.Get(Tuple.Create(demTexture, layerTexture));
             this.residualTiles = residualTiles;
             this.demTexture = demTexture;
             this.layerTexture = layerTexture;
             this.residualTexture = residualTexture;
             this.upsample = upsample;
             this.blend = blend;
-            this.noiseTexture = demNoiseFactory.get(tileWidth);
+            this.noiseTexture = demNoiseFactory.Get(tileWidth);
             this.noiseAmp = noiseAmp;
             this.gridMeshSize = gridMeshSize;
             this.flipDiagonals = flipDiagonals;
@@ -334,11 +355,11 @@ namespace Sxta.Proland.Terrain
         protected void init(ResourceManager manager, Resource r, string name, ResourceDescriptor desc, XmlElement e = null)
         {
             TileCache cache;
-            TileProducer residuals;
+            TileProducer residuals = null;
             Program upsampleProg;
-            Program blendProg;
+            Program blendProg = new Program();
             Texture2D demTexture;
-            Texture2D layerTexture;
+            Texture2D layerTexture = new Texture2D();
             Texture2D residualTexture;
             int gridSize = 24;
             List<float> noiseAmp = null;
@@ -364,7 +385,7 @@ namespace Sxta.Proland.Terrain
                 string[] stringSeparator = new string[] { "," };
                 string[] result = noiseAmps.Split(stringSeparator, StringSplitOptions.None); //Maybe StringSplitOptions.RemoveEmptyEntries?
                 foreach (var node in result)
-                    //while ((index = noiseAmps.find(',', start)) != string::npos)
+                //while ((index = noiseAmps.find(',', start)) != string::npos)
                 {
                     //float value;
                     //sscanf(node.c_str(), "%f", value);
@@ -390,14 +411,11 @@ namespace Sxta.Proland.Terrain
 
             int tileWidth = cache.getStorage().getTileSize();
 
-            ostringstream demTex;
+            string demTex = "renderbuffer-" + tileWidth + "-RGBA32F";
+            demTexture = (Texture2D)(manager.loadResource(demTex)).get();
 
-            demTex << "renderbuffer-" << tileWidth << "-RGBA32F";
-            demTexture = (Texture2D)(manager.loadResource(demTex.str())).get();
-
-            ostringstream residualTex;
-            residualTex << "renderbuffer-" << tileWidth << "-R32F";
-            residualTexture = (Texture2D)(manager.loadResource(residualTex.str())).get();
+            string residualTex = "renderbuffer-" + tileWidth + "-R32F";
+            residualTexture = (Texture2D)(manager.loadResource(residualTex)).get();
 
             XmlNode n = e.FirstChild;
             while (n != null)
@@ -426,8 +444,8 @@ namespace Sxta.Proland.Terrain
 
             if (hasLayers())
             {
-                demTex << "-1";
-                layerTexture = manager.loadResource(demTex.str()).cast<Texture2D>();
+                string _demTex = "-1";
+                layerTexture = (Texture2D)manager.loadResource(_demTex).get();
 
                 string blend = "blendShader;";
                 if (e.GetAttribute("blendProg") != null)
@@ -442,7 +460,7 @@ namespace Sxta.Proland.Terrain
 
         protected internal override ulong getContext()
         {
-            return layerTexture == null ? demTexture.get() : layerTexture.get();
+            return layerTexture == null ? demTexture.Get() : layerTexture.Get();
         }
 
         protected internal override Render.Scenegraph.Task startCreateTile(int level, int tx, int ty, uint deadline, Render.Scenegraph.Task task, TaskGraph owner)
@@ -486,9 +504,8 @@ namespace Sxta.Proland.Terrain
         {
             if (log.IsDebugEnabled)
             {
-                ostringstream oss;
-                oss << "Elevation tile " << getId() << " " << level << " " << tx << " " << ty;
-                Logger.DEBUG_LOGGER.log("DEM", oss.str());
+                string oss = "Elevation tile " + getId() + " " + level + " " + tx + " " + ty;
+                log.DebugFormat("DEM", oss);
             }
 
             GPUTileStorage.GPUSlot gpuData = (GPUTileStorage.GPUSlot)(data);
@@ -587,8 +604,8 @@ namespace Sxta.Proland.Terrain
                 int leftB = Noise.cnoise(tx + offset, ty + 0.5f) > 0.0 ? 8 : 0;
                 noiseL = bottomB + rightB + topB + leftB;
             }
-            int[] noiseRs = new int[16]{ 0, 0, 1, 0, 2, 0, 1, 0, 3, 3, 1, 3, 2, 2, 1, 0 };
-            int[] noiseLs = new int[16]{ 0, 1, 1, 2, 1, 3, 2, 4, 1, 2, 3, 4, 2, 4, 4, 5 };
+            int[] noiseRs = new int[16] { 0, 0, 1, 0, 2, 0, 1, 0, 3, 3, 1, 3, 2, 2, 1, 0 };
+            int[] noiseLs = new int[16] { 0, 1, 1, 2, 1, 3, 2, 4, 1, 2, 3, 4, 2, 4, 4, 5 };
             int noiseR = noiseRs[noiseL];
             noiseL = noiseLs[noiseL];
 
