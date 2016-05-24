@@ -460,7 +460,7 @@ namespace Sxta.Proland.Terrain
 
         protected internal override ulong getContext()
         {
-            return layerTexture == null ? demTexture.Get() : layerTexture.Get();
+            return (ulong)(layerTexture == null ? demTexture.GetHashCode() : layerTexture.GetHashCode());
         }
 
         protected internal override Render.Scenegraph.Task startCreateTile(int level, int tx, int ty, uint deadline, Render.Scenegraph.Task task, TaskGraph owner)
@@ -691,7 +691,10 @@ namespace Sxta.Proland.Terrain
             Std.Swap(ref residualTile, ref p.residualTile);
             Std.Swap(ref gridMeshSize, ref p.gridMeshSize);
             Std.Swap(ref flipDiagonals, ref p.flipDiagonals);
+#if TODO
             Std.Swap(ref old, ref p.old);
+#endif
+            throw new NotImplementedException();
             Std.Swap(ref noiseTexture, ref p.noiseTexture);
             Std.Swap(ref tileWSDFU, ref p.tileWSDFU);
             Std.Swap(ref coarseLevelSamplerU, ref p.coarseLevelSamplerU);

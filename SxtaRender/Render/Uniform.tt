@@ -276,6 +276,7 @@ namespace Sxta.Render
 		var typeName = types[i];
 		var GLtypeName = GLtypes[i];
 		var uniform3Name = unif3Types[i];
+		var value3Name = value3Types[i];
 		var U3Name = uniform3Types[i];
 		var vec3Name = vec3Types[i];
 #>
@@ -333,10 +334,10 @@ namespace Sxta.Render
 
 			public override void setValue( Value  v)
 			{
-#if TODO
-				set(v);					
-#endif
-				throw new NotImplementedException();
+			    <#= value3Name #> val = v as <#= value3Name #>;
+				if (val == null)
+					throw new ArgumentException("Setting wrong value at <#= uniform3Name #>");
+				set(val.get());
 			}
 
 
@@ -398,6 +399,7 @@ namespace Sxta.Render
 		var GLtypeName = GLtypes[i];
 		var U4Name = uniform4Types[i];
 		var uniform4Name = unif4Types[i];
+		var value4Name = value4Types[i];
 		var vec4Name = vec4Types[i];
 #>
 
@@ -455,10 +457,10 @@ namespace Sxta.Render
 
 			public override void setValue( Value  v)
 			{
-#if TODO
-				set(v);					
-#endif
-				throw new NotImplementedException();
+			    <#= value4Name #> val = v as <#= value4Name #>;
+				if (val == null)
+					throw new ArgumentException("Setting wrong value at <#= uniform4Name #>");
+				set(val.get());
 			}
 
 

@@ -77,7 +77,9 @@ namespace Examples.Tutorials
             fb = FrameBuffer.getDefault();
 
             camera = new SGCamera(this);
-            camera.Position = new Vector3d(0, 0, 10);
+            //camera.Position = new Vector3d(0, 0, 5);
+            camera.Yaw((float)MathHelper.ToRadians(90));
+            //camera.Pitch((float)MathHelper.ToRadians(90));
         }
 
         #endregion

@@ -33,7 +33,7 @@ namespace Sxta.Proland.Terrain
             frameBuffer.setBlend(false);
             frameBuffer.setColorMask(true, true, true, true);
             frameBuffer.setDepthMask(true);
-            frameBuffer.setStencilMask(true, true);
+            frameBuffer.setStencilMask(0x01, 0x01);
             return frameBuffer;
         }
 
@@ -336,7 +336,10 @@ namespace Sxta.Proland.Terrain
         {
             base.swap(p);
             Std.Swap(ref frameBuffer, ref p.frameBuffer);
+#if TODO
             Std.Swap(ref old, ref p.old);
+#endif
+            throw new NotImplementedException();
             Std.Swap(ref normals, ref p.normals);
             Std.Swap(ref elevationTiles, ref p.elevationTiles);
             Std.Swap(ref normalTexture, ref p.normalTexture);
@@ -451,13 +454,16 @@ namespace Sxta.Proland.Terrain
             valueC.init(cache, elevations, normalTexture, normalsProg, gridSize, deform);
         }
 
-        virtual bool prepareUpdate()
+        public override bool prepareUpdate()
         {
+#if TODO
             if (((Resource)(valueC.normals)).changed())
             {
                 valueC.invalidateTiles();
             }
             return ResourceTemplate < 50, NormalProducer >.prepareUpdate();
-        }
+#endif
+            throw new NotImplementedException();
+            }
     }
 }

@@ -205,7 +205,7 @@ namespace Sxta.Render
          * Creates a <#= val1Name #>.
          */
         public <#= val1Name #>(string name, <#= typeName #> value)
-            : base("<#= GLtypeName #>", name)
+            : this(name)
         {
             this.value = value;
         }
@@ -250,14 +250,14 @@ namespace Sxta.Render
         public <#= val2Name #>(string name)
             : base("<#= GLtypeName #>", name)
         {
-			this.type = UniformType.<#= uniform1Name #>;
+			this.type = UniformType.<#= uniform2Name #>;
 		}
 
         /*
          * Creates a <#= val2Name #>.
          */
         public <#= val2Name #>(string name, <#= vec2Name #> value)
-            : base("<#= GLtypeName #>", name)
+            : this(name)
         {
             this.value = value;
         }
@@ -303,14 +303,14 @@ namespace Sxta.Render
             : base("<#= GLtypeName #>", name)
         {
 			value = new <#= vec3Name #>();
-			this.type = UniformType.<#= uniform1Name #>;
+			this.type = UniformType.<#= uniform3Name #>;
 		}
 
         /*
          * Creates a <#= val3Name #>.
          */
         public <#= val3Name #>(string name, <#= vec3Name #> value)
-            : base("<#= GLtypeName #>", name)
+            : this(name)
         {
             this.value = value;
         }
@@ -356,14 +356,14 @@ namespace Sxta.Render
             : base("<#= GLtypeName #>", name)
         {
 			value = new <#= vec4Name #>();
-			this.type = UniformType.<#= uniform1Name #>;
+			this.type = UniformType.<#= uniform4Name #>;
 		}
 
         /*
          * Creates a <#= val4Name #>.
          */
         public <#= val4Name #>(string name, <#= vec4Name #> value)
-            : base("<#= GLtypeName #>", name)
+            : this(name)
         {
             this.value = value;
         }
