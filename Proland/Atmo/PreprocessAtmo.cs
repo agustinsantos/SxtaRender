@@ -32,7 +32,10 @@ namespace Sxta.Proland.Atmo
         {
             this.params_ = params_;
             this.output = output;
+        }
 
+        private void Init()
+        {
             transmittanceT = new Texture2D(params_.TRANSMITTANCE_W, params_.TRANSMITTANCE_H, TextureInternalFormat.RGB16F,
                TextureFormat.RGB, PixelType.FLOAT, new Texture.Parameters().min(TextureFilter.LINEAR).mag(TextureFilter.LINEAR), new Render.Buffer.Parameters(), new CPUBuffer<byte>());
             irradianceT = new Texture2D(params_.SKY_W, params_.SKY_H, TextureInternalFormat.RGB16F,
@@ -88,6 +91,29 @@ namespace Sxta.Proland.Atmo
             fbo.setDrawBuffer(BufferId.COLOR0);
 
             order = 2;
+        }
+
+        private void Finish()
+        {
+            copyInscatter1.Dispose();
+            copyInscatterN.Dispose();
+            copyIrradiance.Dispose();
+            inscatter1.Dispose();
+            inscatterN.Dispose();
+            inscatterS.Dispose();
+            irradiance1.Dispose();
+            irradianceN.Dispose();
+            transmittance.Dispose();
+
+            transmittanceT.Dispose();
+            irradianceT.Dispose();
+            inscatterT.Dispose();
+            deltaET.Dispose();
+            deltaSRT.Dispose();
+            deltaSMT.Dispose();
+            deltaJT.Dispose();
+
+            fbo.Dispose();
         }
 
         private void SetParameters(Program p)
@@ -191,6 +217,7 @@ namespace Sxta.Proland.Atmo
             switch (step)
             {
                 case 0:
+                    Init();
                     // computes transmittance texture T (line 1 in algorithm 4.1)
                     fbo.setTextureBuffer(BufferId.COLOR0, transmittanceT, 0);
                     fbo.setViewport(new Vector4i(0, 0, params_.TRANSMITTANCE_W, params_.TRANSMITTANCE_H));
@@ -349,9 +376,12 @@ namespace Sxta.Proland.Atmo
                     }
                     bufIrrad = null;
                     break;
+                case 13:
+                    Finish();
+                    break;
                 default:
                     ///PRECOMPUTATONS DONE. RESTART APPLICATION.
-                    throw new ArgumentException("Only steps 0 to 12 are allowed.");
+                    throw new ArgumentException("Only steps 0 to 13 are allowed.");
             }
         }
 
@@ -365,7 +395,7 @@ namespace Sxta.Proland.Atmo
             if (File.Exists(Path.Combine(outputDir, "inscatter.raw")))
                 return;
             PreprocessAtmo preprocessAtmo = new PreprocessAtmo(params_, outputDir);
-            for (int step = 0; step < 13; step++)
+            for (int step = 0; step < 14; step++)
             {
                 preprocessAtmo.Preprocess(step);
             }
