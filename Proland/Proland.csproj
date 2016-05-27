@@ -81,6 +81,7 @@
     <Compile Include="Core\Terrain\XmlResources\TerrainTasksResource.cs" />
     <Compile Include="Core\Terrain\XmlResources\TileSamplerResource.cs" />
     <Compile Include="Core\Terrain\XmlResources\TileSamplerZResource.cs" />
+    <Compile Include="Core\Util\CylinderViewController.cs" />
     <Compile Include="Core\Util\PlanetViewController.cs" />
     <Compile Include="Core\Util\TerrainViewController.cs" />
     <Compile Include="Core\XmlResources\RegisterResourceReader.cs" />

@@ -56,9 +56,9 @@ namespace Sxta.Render.Scenegraph
          */
         public bool isVisible;
 
-        /*
-         * Creates an empty SceneNode.
-         */
+        /// <summary>
+        /// Creates an empty SceneNode.
+        /// </summary>
         public SceneNode()
         {
             owner = null;
@@ -69,9 +69,9 @@ namespace Sxta.Render.Scenegraph
             localToScreen = Matrix4d.Identity;
         }
 
-        /*
-         * Deletes this SceneNode.
-         */
+        /// <summary>
+        /// Deletes this SceneNode.
+        /// </summary>
         ~SceneNode()
         {
             //MethodIterator i = getMethods();
@@ -81,44 +81,47 @@ namespace Sxta.Render.Scenegraph
             }
         }
 
-        /*
-         * Returns the SceneManager that manages the scene graph to which this node
-         * belongs.
-         */
+        /// <summary>
+        /// Returns the SceneManager that manages the scene graph to which this node
+        /// belongs.
+        /// </summary>
+        /// <returns></returns>
         public SceneManager getOwner()
         {
             return owner;
         }
 
-        /*
-         * Returns the transformation from this node to its parent node.
-         */
+        /// <summary>
+        /// Returns the transformation from this node to its parent node.
+        /// </summary>
+        /// <returns></returns>
         public Matrix4d getLocalToParent()
         {
             return localToParent;
         }
 
-        /*
-         * Sets the transformation from this node to its parent node.
-         *
-         * @param t the new localToParent transformation.
-         */
+        /// <summary>
+        /// the new localToParent transformation.
+        /// </summary>
+        /// <param name="t">the new localToParent transformation.</param>
         public void setLocalToParent(Matrix4d t)
         {
             localToParent = t;
         }
 
-        /*
-         * Returns the transformation from this node to the root node.
-         */
+        /// <summary>
+        /// Returns the transformation from this node to the root node.
+        /// </summary>
+        /// <returns></returns>
         public Matrix4d getLocalToWorld()
         {
             return localToWorld;
         }
 
-        /*
-         * Returns the transformation from the root node to this node.
-         */
+        /// <summary>
+        /// Returns the transformation from the root node to this node.
+        /// </summary>
+        /// <returns></returns>
         public Matrix4d getWorldToLocal()
         {
             if (!worldToLocalUpToDate)
@@ -130,80 +133,86 @@ namespace Sxta.Render.Scenegraph
             return worldToLocal;
         }
 
-        /*
-         * Returns the transformation from this node to the camera node.
-         */
+        /// <summary>
+        /// Returns the transformation from this node to the camera node.
+        /// </summary>
+        /// <returns></returns>
         public Matrix4d getLocalToCamera()
         {
             return localToCamera;
         }
 
-        /*
-         * Returns the tranformation from this node to the screen. This is the
-         * transformation from this node to the camera node, followed by the
-         * transformation from the camera space to the screen space (defined by the
-         * cameraToScreen mat4 uniform of the camera node).
-         */
+        /// <summary>
+        /// Returns the tranformation from this node to the screen. This is the
+        /// transformation from this node to the camera node, followed by the
+        /// transformation from the camera space to the screen space(defined by the
+        /// cameraToScreen mat4 uniform of the camera node).
+        /// </summary>
+        /// <returns></returns>
         public Matrix4d getLocalToScreen()
         {
             return localToScreen;
         }
 
-        /*
-         * Returns the bounding box of this node in local coordinates.
-         */
+        /// <summary>
+        /// Returns the bounding box of this node in local coordinates.
+        /// </summary>
+        /// <returns></returns>
         public Box3d getLocalBounds()
         {
             return localBounds;
         }
 
-        /*
-         * Sets the bounding box of this node in local coordinates.
-         */
+        /// <summary>
+        /// Sets the bounding box of this node in local coordinates.
+        /// </summary>
+        /// <param name="bounds"></param>
         public void setLocalBounds(Box3d bounds)
         {
             localBounds = bounds;
         }
 
-        /*
-         * Returns the bounding box of this node in world coordinates.
-         */
+        /// <summary>
+        /// Returns the bounding box of this node in world coordinates.
+        /// </summary>
+        /// <returns></returns>
         public Box3d getWorldBounds()
         {
             return worldBounds;
         }
 
-        /*
-         * Returns the origin of the local reference frame in world coordinates.
-         */
+        /// <summary>
+        /// Returns the origin of the local reference frame in world coordinates.
+        /// </summary>
+        /// <returns></returns>
         public Vector3d getWorldPos()
         {
             return worldPos;
         }
 
-        /*
-         * Returns the flags of this node.
-         */
+        /// <summary>
+        /// Returns the flags of this node.
+        /// </summary>
+        /// <returns></returns>
         public ISet<string> getFlags()
         {
             return flags;
         }
 
-        /*
-         * Returns true is this node has the given flag.
-         *
-         * @param flag a flag.
-         */
+        /// <summary>
+        /// Returns true is this node has the given flag.
+        /// </summary>
+        /// <param name="flag">a flag.</param>
+        /// <returns></returns>
         public bool hasFlag(string flag)
         {
             return flags.Contains(flag);
         }
 
-        /*
-         * Adds the given flag to the flags of this node.
-         *
-         * @param flag the flag to be added to this node.
-         */
+        /// <summary>
+        /// Adds the given flag to the flags of this node.
+        /// </summary>
+        /// <param name="flag">the flag to be added to this node.</param>
         public void addFlag(string flag)
         {
             flags.Add(flag);
@@ -213,11 +222,10 @@ namespace Sxta.Render.Scenegraph
             }
         }
 
-        /*
-         * Removes the given flag from the flags of this node.
-         *
-         * @param flag the flag to be removed from this node.
-         */
+        /// <summary>
+        /// Removes the given flag from the flags of this node.
+        /// </summary>
+        /// <param name="flag">the flag to be removed from this node.</param>
         public void removeFlag(string flag)
         {
             flags.Remove(flag);
@@ -227,47 +235,47 @@ namespace Sxta.Render.Scenegraph
             }
         }
 
-        /*
-         * Returns the values of this node.
-         */
+        /// <summary>
+        /// Returns the values of this node.
+        /// </summary>
+        /// <returns></returns>
         public IDictionary<string, Value> getValues()
         {
             return values;
         }
 
-        /*
-         * Returns the valueC of this node whose local name is given.
-         *
-         * @param name the local name of a valueC.
-         */
+        /// <summary>
+        /// Returns the valueC of this node whose local name is given.
+        /// </summary>
+        /// <param name="name">the local name of a valueC.</param>
+        /// <returns></returns>
         public Value getValue(string name)
         {
             return values[name];
         }
 
-        /*
-         * Adds a valueC to this node under the given local name.
-         *
-         * @param valueC a valueC.
-         */
+        /// <summary>
+        /// Adds a valueC to this node under the given local name.
+        /// </summary>
+        /// <param name="value"> a valueC.</param>
         public void addValue(Value value)
         {
             values.Add(value.getName(), value);
         }
 
-        /*
-         * Removes the valueC whose local name is given from this node.
-         *
-         * @param name the local name of the valueC.
-         */
+        /// <summary>
+        /// Removes the valueC whose local name is given from this node.
+        /// </summary>
+        /// <param name="name">the local name of the valueC.</param>
         public void removeValue(string name)
         {
             values.Remove(name);
         }
 
-        /*
-         * Returns the modules of this node.
-         */
+        /// <summary>
+        /// Returns the modules of this node.
+        /// </summary>
+        /// <returns></returns>
         public IDictionary<string, Module> getModules()
         {
             return modules;
@@ -482,10 +490,10 @@ namespace Sxta.Render.Scenegraph
          */
         protected void swap(SceneNode n)
         {
-            Std.Swap(ref localToParent, ref  n.localToParent);
+            Std.Swap(ref localToParent, ref n.localToParent);
             Std.Swap(ref flags, ref n.flags);
             Std.Swap(ref values, ref n.values);
-            Std.Swap(ref modules, ref  n.modules);
+            Std.Swap(ref modules, ref n.modules);
             Std.Swap(ref meshes, ref n.meshes);
             Std.Swap(ref methods, ref n.methods);
             Std.Swap(ref children, ref n.children);

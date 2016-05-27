@@ -249,7 +249,7 @@ namespace Sxta.Render.Resources
          * The manager that keeps track of this %resource. May be null for an unused
          * %resource (see ResourceManager#releaseResource).
          */
-        internal ResourceManager manager;
+        public ResourceManager manager;
 
         /*
          * The name of this %resource.

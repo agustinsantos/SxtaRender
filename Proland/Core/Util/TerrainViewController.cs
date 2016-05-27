@@ -1,88 +1,85 @@
 ﻿using Sxta.Math;
 using Sxta.Render.Scenegraph;
+using Sxta.Render.Scenegraph.Controller;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace proland
 {
-    public class TerrainViewController
+    public class TerrainViewController : ViewController
     {
+        /// <summary>
+        /// The field of view angle (degrees).
+        /// </summary>
+        public double Fov { get; set; }
 
-        /**
-         * The field of view angle.
-         */
-        public double fov;
+        /// <summary>
+        /// The x coordinate of the point the camera is looking at on the ground.
+        /// </summary>
+        public double X0 { get; set; }
 
-        /**
-         * The x coordinate of the point the camera is looking at on the ground.
-         */
-        public double x0;
+        /// <summary>
+        /// The y coordinate of the point the camera is looking at on the ground.
+        /// </summary>
+        public double Y0 { get; set; }
 
-        /**
-         * The y coordinate of the point the camera is looking at on the ground.
-         */
-        public double y0;
+        /// <summary>
+        /// The zenith angle of the vector between the "look at" point and the camera.
+        /// </summary>
+        public double Theta { get; set; }
 
-        /**
-         * The zenith angle of the vector between the "look at" point and the camera.
-         */
-        public double theta;
+        /// <summary>
+        /// The azimuth angle of the vector between the "look at" point and the camera.
+        /// </summary>
+        public double Phi { get; set; }
 
-        /**
-         * The azimuth angle of the vector between the "look at" point and the camera.
-         */
-        public double phi;
+        /// <summary>
+        /// The distance between the "look at" point and the camera.
+        /// </summary>
+        public double Distance { get; set; }
 
-        /**
-         * The distance between the "look at" point and the camera.
-         */
-        public double d;
+        /// <summary>
+        /// Zoom factor (realized by increasing d and decreasing fov).
+        /// </summary>
+        public double Zoom { get; set; }
 
-        /**
-         * Zoom factor (realized by increasing d and decreasing fov).
-         */
-        public double zoom;
+        /// <summary>
+        /// The camera position in world space resulting from the x0,y0,theta,phi,
+        /// and d parameters.
+        /// </summary>
+        public Vector3d Position { get { return position; } set { position = value; } }
+        protected Vector3d position;
 
-        /**
-         * The camera position in world space resulting from the x0,y0,theta,phi,
-         * and d parameters.
-         */
-        public Vector3d position;
 
-        /**
-         * Creates a new TerrainViewController to control the given SceneNode.
-         *
-         * @param node a SceneNode representing a camera position and orientation
-         *      in the scene.
-         * @param d0 the initial valued of the #d distance.
-         */
+        /// <summary>
+        /// Creates a new TerrainViewController to control the given SceneNode.
+        /// </summary>
+        /// <param name="node">a SceneNode representing a camera position and orientation in the scene.</param>
+        /// <param name="d0">the initial valued of the distance.</param>
         public TerrainViewController(SceneNode node, double d0)
         {
-            fov= 80.0;
-            x0 = 0.0;
-            y0 = 0.0;
-            theta = 0.0;
-            phi = 0.0;
-            d = d0;
-            zoom = 1.0;
+            Fov = 80.0;
+            X0 = 0.0;
+            Y0 = 0.0;
+            Theta = 0.0;
+            Phi = 0.0;
+            Distance = d0;
+            Zoom = 1.0;
             this.node = node;
             groundHeight = 0;
         }
 
-        /**
-         * Returns the SceneNode associated with this TerrainViewController.
-         * This SceneNode represents a camera position and orientation in the
-         * scene.
-         */
+        /// <summary>
+        /// Returns the SceneNode associated with this TerrainViewController.
+        /// This SceneNode represents a camera position and orientation in the
+        /// scene.
+        /// </summary>
+        /// <returns></returns>
         public SceneNode getNode()
         {
             return node;
         }
 
-        /**
+        /*
          * Sets the SceneNode associated with this TerrainViewController.
          *
          * @param node a SceneNode representing a camera position and orientation
@@ -93,34 +90,29 @@ namespace proland
             this.node = node;
         }
 
-        /**
-         * Returns the %terrain elevation below the camera.
-         */
-        public float getGroundHeight()
+
+        /// <summary>
+        /// Gets/Sets the terrain elevation below the camera. This elevation is used
+        /// to adjust the camera position so that it is not below the ground.
+        /// </summary>
+        public float GroundHeight
         {
-            return groundHeight;
+            get
+            {
+                return groundHeight;
+            }
+            set { this.groundHeight = value; }
         }
 
-        /**
-         * Sets the %terrain elevation below the camera. This elevation is used
-         * to adjust the camera position so that it is not below the ground.
-         *
-         * @param groundHeight the %terrain elevation below the camera.
-         */
-        public void setGroundHeight(float groundHeight)
-        {
-            this.groundHeight = groundHeight;
-        }
-
-        /**
+        /*
          * Returns the height of the camera above the z=0 surface.
          */
         public virtual double getHeight()
         {
-            return position.Z;
+            return Position.Z;
         }
 
-        /**
+        /*
          * Moves the "look at" point so that "oldp" appears at the position of "p"
          * on screen.
          *
@@ -129,25 +121,25 @@ namespace proland
          */
         public virtual void move(Vector3d oldp, Vector3d p)
         {
-            x0 -= p.X - oldp.X;
-            y0 -= p.Y - oldp.Y;
+            X0 -= p.X - oldp.X;
+            Y0 -= p.Y - oldp.Y;
         }
 
         public virtual void moveForward(double distance)
         {
-            x0 -= Math.Sin(phi) * distance;
-            y0 += Math.Cos(phi) * distance;
+            X0 -= Math.Sin(Phi) * distance;
+            Y0 += Math.Cos(Phi) * distance;
         }
 
         public virtual void turn(double angle)
         {
-            double l = d * Math.Sin(theta);
-            x0 -= (Math.Sin(phi) * (Math.Cos(angle) - 1.0) + Math.Cos(phi) * Math.Sin(angle)) * l;
-            y0 += (Math.Cos(phi) * (Math.Cos(angle) - 1.0) - Math.Sin(phi) * Math.Sin(angle)) * l;
-            phi += angle;
+            double l = Distance * Math.Sin(Theta);
+            X0 -= (Math.Sin(Phi) * (Math.Cos(angle) - 1.0) + Math.Cos(Phi) * Math.Sin(angle)) * l;
+            Y0 += (Math.Cos(Phi) * (Math.Cos(angle) - 1.0) - Math.Sin(Phi) * Math.Sin(angle)) * l;
+            Phi += angle;
         }
 
-        /**
+        /*
          * Sets the position as the interpolation of the two given positions with
          * the interpolation parameter t (between 0 and 1). The source position is
          * sx0,sy0,stheta,sphi,sd, the destination is dx0,dy0,dtheta,dphi,dd.
@@ -157,11 +149,11 @@ namespace proland
         public virtual double interpolate(double sx0, double sy0, double stheta, double sphi, double sd,
                 double dx0, double dy0, double dtheta, double dphi, double dd, double t)
         {
-            x0 = dx0;
-            y0 = dy0;
-            theta = dtheta;
-            phi = dphi;
-            d = dd;
+            X0 = dx0;
+            Y0 = dy0;
+            Theta = dtheta;
+            Phi = dphi;
+            Distance = dd;
             return 1.0;
         }
 
@@ -171,7 +163,7 @@ namespace proland
             y0 = sy0 * (1.0 - t) + dy0 * t;
         }
 
-        /**
+        /*
          * Returns a direction interpolated between the two given direction.
          *
          * @param slon start longitude.
@@ -201,26 +193,26 @@ namespace proland
             lon = Math.Atan2(v.Y, v.X);
         }
 
-        /**
-         * Sets the localToParent transform of the SceneNode associated with this
-         * TerrainViewController. The transform is computed from the view parameters
-         * x0,y0,theta,phi and d.
-         */
-        public virtual void update()
+        /// <summary>
+        /// Sets the localToParent transform of the SceneNode associated with this
+        /// TerrainViewController. The transform is computed from the view parameters
+        /// x0,y0,theta,phi and d.
+        /// </summary>
+        public virtual void Update()
         {
-            Vector3d po = new Vector3d(x0, y0, groundHeight);
+            Vector3d po = new Vector3d(X0, Y0, groundHeight);
             Vector3d px = new Vector3d(1.0, 0.0, 0.0);
             Vector3d py = new Vector3d(0.0, 1.0, 0.0);
             Vector3d pz = new Vector3d(0.0, 0.0, 1.0);
 
-            double ct = Math.Cos(theta);
-            double st = Math.Sin(theta);
-            double cp = Math.Cos(phi);
-            double sp = Math.Sin(phi);
+            double ct = Math.Cos(Theta);
+            double st = Math.Sin(Theta);
+            double cp = Math.Cos(Phi);
+            double sp = Math.Sin(Phi);
             Vector3d cx = px * cp + py * sp;
             Vector3d cy = -px * sp * ct + py * cp * ct + pz * st;
             Vector3d cz = px * sp * st - py * cp * st + pz * ct;
-            position = po + cz * d * zoom;
+            position = po + cz * Distance * Zoom;
 
             if (position.Z < groundHeight + 1.0)
             {
@@ -231,13 +223,12 @@ namespace proland
                     cy.X, cy.Y, cy.Z, 0.0,
                     cz.X, cz.Y, cz.Z, 0.0,
                     0.0, 0.0, 0.0, 1.0);
-            //TOSEE view = view * Matrix4d.Translate(-position);
-            Matrix4d.Translate(view, -position.X, -position.Y, -position.Z);
-            view.Invert();
+            view = Matrix4d.Translate(view, -Position.X, -Position.Y, -Position.Z);
+            //view.Invert();
             node.setLocalToParent(view);
         }
 
-        /**
+        /*
          * Sets the camera to screen perspective projection.
          *
          * @param znear an optional znear plane (0.0 means that a default value
@@ -248,15 +239,16 @@ namespace proland
          *      The default value [-1:1]x[-1:1] selects the whole image.
          */
 
-        public virtual void setProjection(Vector4f viewport/**TODO Agustin*/, float znear = 0.0f, float zfar = 0.0f)
+        public virtual void setProjection(Vector4f viewport, float znear = 0.0f, float zfar = 0.0f)
         {
-            if (viewport == Vector4f.Zero) { 
+            if (viewport == Vector4f.Zero)
+            {
                 viewport = new Vector4f(-1.0f, 1.0f, -1.0f, 1.0f);
             }
             Vector4i vp = SceneManager.getCurrentFrameBuffer().getViewport();
-            float width = (float)vp.Z;
-            float height = (float)vp.W;
-            float vfov = (float)((2 * Math.Atan(height / width * Math.Tan((fov / 2) * (Math.PI / 180.0)))) * (180.0 / Math.PI));
+            float width = vp.Z;
+            float height = vp.W;
+            float vfov = (float)((2 * Math.Atan(height / width * Math.Tan((Fov / 2) * (Math.PI / 180.0)))));
 
             float h = (float)(getHeight() - TerrainNode.groundHeightAtCamera);
             if (znear == 0.0f)
@@ -268,28 +260,26 @@ namespace proland
                 zfar = 1e6f * h;
             }
 
-            if (zoom > 1.0)
+            if (Zoom > 1.0)
             {
-                vfov = (float)((2 * Math.Atan(height / width * Math.Tan((fov / 2) * (Math.PI / 180.0)) / zoom)) * (180.0 / Math.PI));
-                znear = (float)(d * zoom * Math.Max(1.0 - 10.0 * Math.Tan((fov / 2) * (Math.PI / 180.0)) / zoom, 0.1));
-                zfar = (float)(d * zoom * Math.Min(1.0 + 10.0 * Math.Tan((fov / 2)* (Math.PI / 180.0)) / zoom, 10.0));
+                vfov = (float)((2 * Math.Atan(height / width * Math.Tan((Fov / 2) * (Math.PI / 180.0)) / Zoom)));
+                znear = (float)(Distance * Zoom * Math.Max(1.0 - 10.0 * Math.Tan((Fov / 2) * (Math.PI / 180.0)) / Zoom, 0.1));
+                zfar = (float)(Distance * Zoom * Math.Min(1.0 + 10.0 * Math.Tan((Fov / 2) * (Math.PI / 180.0)) / Zoom, 10.0));
             }
             // Matrix4d.CreateOrthographic AND Matrix4d.perspectiveProjection C++
             Matrix4d clip = new Matrix4d();
             Matrix4d.CreateOrthographic(viewport.Y, viewport.X, viewport.W, viewport.Z, out clip);
-            Matrix4d cameraToScreen = new Matrix4d();
-            Matrix4d.CreatePerspectiveFieldOfView(vfov, width / height, znear, zfar);
+            Matrix4d cameraToScreen = Matrix4d.CreatePerspectiveFieldOfView(vfov, width / height, znear, zfar);
             node.getOwner().setCameraToScreen(clip * cameraToScreen);
 
         }
 
-
-        /**
+        /*
          * The SceneNode associated with this TerrainViewController.
          */
         protected SceneNode node;
 
-        /**
+        /*
          * The %terrain elevation below the camera.
          */
         protected float groundHeight;

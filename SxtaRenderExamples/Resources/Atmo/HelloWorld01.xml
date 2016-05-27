@@ -68,11 +68,11 @@
         <uniform3f name="origin" x="0.0" y="0.0" z="6360000.0"/>
     </module>
 
-    <texture2D name="transmittance" source="transmittance.raw" internalformat="RGBA16F" min="LINEAR" mag="LINEAR" wraps="CLAMP_TO_EDGE" wrapt="CLAMP_TO_EDGE"/>
+    <texture2D name="transmittance" source="transmittance.raw" internalformat="RGB16F" format="RGB" min="LINEAR" mag="LINEAR" wraps="CLAMP_TO_EDGE" wrapt="CLAMP_TO_EDGE"/>
 
-    <texture2D name="irradiance" source="irradiance.raw" internalformat="RGBA16F" min="LINEAR" mag="LINEAR" wraps="CLAMP_TO_EDGE" wrapt="CLAMP_TO_EDGE"/>
+    <texture2D name="irradiance" source="irradiance.raw" internalformat="RGB16F" format="RGB" min="LINEAR" mag="LINEAR" wraps="CLAMP_TO_EDGE" wrapt="CLAMP_TO_EDGE"/>
 
-    <texture3D name="inscatter" source="inscatter.raw" internalformat="RGBA16F" min="LINEAR" mag="LINEAR" wraps="CLAMP_TO_EDGE" wrapt="CLAMP_TO_EDGE" wrapr="CLAMP_TO_EDGE"/>
+    <texture3D name="inscatter" source="inscatter.raw" internalformat="RGBA16F" format="RGBA" min="LINEAR" mag="LINEAR" wraps="CLAMP_TO_EDGE" wrapt="CLAMP_TO_EDGE" wrapr="CLAMP_TO_EDGE"/>
 
     <texture2D name="sunglare" source="sunglare.png" internalformat="RGB8" min="LINEAR_MIPMAP_LINEAR" mag="LINEAR"/>
 
@@ -116,9 +116,9 @@
         </node>-->
     </node>
 
-    <!--<basicViewHandler name="viewHandler" viewManager="window"/>
+    <basicViewHandler name="viewHandler" viewManager="window"/>
 
-    <tweakScene name="editScene" scene="scene" active="false"/>
+    <!--<tweakScene name="editScene" scene="scene" active="false"/>
 
     <tweakBar name="settings" label="Options">
         <float label="Exposure" keyincr="+" keydecr="-"
