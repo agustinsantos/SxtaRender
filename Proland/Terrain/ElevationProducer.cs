@@ -16,7 +16,7 @@ using System.Xml;
 
 namespace Sxta.Proland.Terrain
 {
-    class ElevationProducer : TileProducer
+    class ElevationProducer : TileProducer, ISwappable<ElevationProducer>
     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -254,13 +254,13 @@ namespace Sxta.Proland.Terrain
         /// The Program to perform the upsampling and add procedure on GPU.
         /// See \ref sec-elevation.
         /// </summary>
-        protected Program upsample;
+        internal Program upsample;
 
         /// <summary>
         /// The Program to blend the layers of this %producer with the raw %terrain
         /// elevations.
         /// </summary>
-        protected Program blend;
+        internal Program blend;
 
         /// <summary>
         /// The %producer producing the residual tiles. This %producer should produce its
@@ -298,7 +298,7 @@ namespace Sxta.Proland.Terrain
         /// Initializes this ElevationProducer. See #ElevationProducer.
         /// </summary>
 
-        protected void init(TileCache cache, TileProducer residualTiles,
+        internal void init(TileCache cache, TileProducer residualTiles,
             Texture2D demTexture, Texture2D layerTexture, Texture2D residualTexture,
             Program upsample, Program blend, int gridMeshSize,
             List<float> noiseAmp, bool flipDiagonals = false)
@@ -352,7 +352,7 @@ namespace Sxta.Proland.Terrain
         /// <param name="e">an optional XML element providing contextual information (such
         /// as the XML element in which the %resource descriptor was found).</param>
 
-        protected void init(ResourceManager manager, Resource r, string name, ResourceDescriptor desc, XmlElement e = null)
+        internal void init(ResourceManager manager, Resource r, string name, ResourceDescriptor desc, XmlElement e = null)
         {
             TileCache cache;
             TileProducer residuals = null;
@@ -460,7 +460,8 @@ namespace Sxta.Proland.Terrain
 
         protected internal override ulong getContext()
         {
-            return layerTexture == null ? demTexture.Get() : layerTexture.Get();
+            // TODO return layerTexture == NULL ? demTexture.get() : layerTexture.get();
+            return (ulong)(layerTexture == null ? demTexture.GetHashCode() : layerTexture.GetHashCode());
         }
 
         protected internal override Render.Scenegraph.Task startCreateTile(int level, int tx, int ty, uint deadline, Render.Scenegraph.Task task, TaskGraph owner)
@@ -677,7 +678,7 @@ namespace Sxta.Proland.Terrain
             base.stopCreateTile(level, tx, ty);
         }
 
-        protected virtual void swap(ElevationProducer p)
+        public virtual void swap(ElevationProducer p)
         {
             base.swap(p);
             Std.Swap(ref frameBuffer, ref p.frameBuffer);
@@ -751,6 +752,42 @@ namespace Sxta.Proland.Terrain
 
         private Uniform1f blendScaleU;
 
-        private static FrameBuffer old;
+        private FrameBuffer old;
+    }
+    class ElevationProducerResource : ResourceTemplate<ElevationProducer>
+    {
+        public ElevationProducerResource(ResourceManager manager, string name, ResourceDescriptor desc, XmlElement e = null) :
+                base(40, manager, name, desc)
+            {
+                e = e == null ? desc.descriptor : e;
+                checkParameters(desc, e, "name,cache,residuals,face,upsampleProg,blendProg,gridSize,noise,flip,");
+                valueC.init(manager, this, name, desc, e);
+            }
+
+        public override bool prepareUpdate()
+        {
+#if TODO
+
+                if (dynamic_cast<Resource*>(upsample.get())->changed()) {
+                    invalidateTiles();
+                } else if (blend != NULL && dynamic_cast<Resource*>(blend.get())->changed()) {
+                    invalidateTiles();
+                }
+                return ResourceTemplate<40, ElevationProducer>::prepareUpdate();
+
+
+            if ((Resource)(valueC.upsample).changed())
+            {
+                valueC.invalidateTiles();
+            }
+            else if (valueC.blend != null && ((Resource)(valueC.blend)).get.changed())
+            {
+                valueC.invalidateTiles();
+            }
+            return new ResourceTemplate <ElevationProducer>(40,null,null,null).prepareUpdate();
+#endif
+            throw new NotImplementedException();
+
+        }
     }
 }

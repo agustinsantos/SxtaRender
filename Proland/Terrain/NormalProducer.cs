@@ -4,6 +4,7 @@ using Sxta.Core;
 using Sxta.Math;
 using Sxta.Render;
 using Sxta.Render.Resources;
+using Sxta.Render.Resources.XmlResources;
 using Sxta.Render.Scenegraph;
 using System;
 using System.Collections.Generic;
@@ -33,7 +34,7 @@ namespace Sxta.Proland.Terrain
             frameBuffer.setBlend(false);
             frameBuffer.setColorMask(true, true, true, true);
             frameBuffer.setDepthMask(true);
-            frameBuffer.setStencilMask(true, true);
+            frameBuffer.setStencilMask(1, 1);
             return frameBuffer;
         }
 
@@ -238,7 +239,6 @@ namespace Sxta.Proland.Terrain
                 Vector3d p2 = new Vector3d(x0, y1, R);
                 Vector3d p3 = new Vector3d(x1, y1, R);
                 Vector3d pc = new Vector3d((x0 + x1) * 0.5, (y0 + y1) * 0.5, R);
-                // TODO Normalize returning previous length
                 Vector3d v0 = Vector3d.Normalize(p0, out l0);
                 Vector3d v1 = Vector3d.Normalize(p1, out l1);
                 Vector3d v2 = Vector3d.Normalize(p2, out l2);
@@ -406,7 +406,7 @@ namespace Sxta.Proland.Terrain
 
         private Uniform4f deformU;
 
-        private static FrameBuffer old;
+        private FrameBuffer old;
     }
     class NormalProducerResource : ResourceTemplate<NormalProducer>
     {
@@ -451,13 +451,15 @@ namespace Sxta.Proland.Terrain
             valueC.init(cache, elevations, normalTexture, normalsProg, gridSize, deform);
         }
 
-        virtual bool prepareUpdate()
+        public override bool prepareUpdate()
         {
-            if (((Resource)(valueC.normals)).changed())
-            {
-                valueC.invalidateTiles();
-            }
-            return ResourceTemplate < 50, NormalProducer >.prepareUpdate();
+#if TODO
+        if (dynamic_cast<Resource*>(normals.get())->changed()) {
+            invalidateTiles();
+        }
+        return ResourceTemplate<50, NormalProducer>::prepareUpdate();
+#endif
+            throw new NotImplementedException();
         }
     }
 }
