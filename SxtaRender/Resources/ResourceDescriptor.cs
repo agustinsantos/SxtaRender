@@ -77,6 +77,8 @@ namespace Sxta.Render.Resources
         {
             if (data != null)
             {
+                if (data is IDisposable)
+                    ((IDisposable)data).Dispose();
                 data = null;
             }
         }

@@ -13,6 +13,7 @@ using Matrix4d = Sxta.Math.Matrix4d;
 using MathHelper = Sxta.Math.MathHelper;
 using Vector3d = Sxta.Math.Vector3d;
 using Sxta.Proland.Atmo;
+using Sxta.Render.Scenegraph.Controller;
 
 namespace Examples.Tutorials
 {
@@ -74,10 +75,15 @@ namespace Examples.Tutorials
             manager.setCameraNode("camera");
             manager.setCameraMethod("draw");
 
+            view = resManager.loadResource("viewHandler").get() as BasicViewHandler;
+            view.GameWindow = this;
+
             fb = FrameBuffer.getDefault();
 
             camera = new SGCamera(this);
-            camera.Position = new Vector3d(0, 0, 10);
+            //camera.Position = new Vector3d(0, 0, 5);
+            camera.Yaw((float)MathHelper.ToRadians(90));
+            //camera.Pitch((float)MathHelper.ToRadians(90));
         }
 
         #endregion
@@ -123,6 +129,7 @@ namespace Examples.Tutorials
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
             camera.Update((float)e.Time);
+            //view.OnUpdateFrame(e.Time);
         }
 
         #endregion
@@ -146,12 +153,13 @@ namespace Examples.Tutorials
         #endregion
 
         #region Fields
-        string dir = ".";
-        XMLResourceLoader resLoader;
-        ResourceManager resManager;
-        SceneManager manager;
-        FrameBuffer fb;
+        private string dir = ".";
+        private XMLResourceLoader resLoader;
+        private ResourceManager resManager;
+        private SceneManager manager;
+        private FrameBuffer fb;
         private SGCamera camera;
+        private BasicViewHandler view;
         #endregion
 
         #region public static void Main()

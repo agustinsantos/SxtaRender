@@ -1,120 +1,79 @@
-﻿using Sxta.Core;
+﻿using OpenTK;
+using Sxta.Core;
 using Sxta.Math;
-using Sxta.Render;
-using Sxta.Render.Scenegraph;
+using Sxta.Render.Resources;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using proland;
+using Vector3d = Sxta.Math.Vector3d;
+using Matrix4d = Sxta.Math.Matrix4d;
+using OpenTK.Input;
 
-namespace Examples.Tutorials
+namespace Sxta.Render.Scenegraph.Controller
 {
-    public interface ViewManager
-    {
-
-        /// <summary>
-        /// Returns the SceneManager. Used to find the light SceneNode
-        /// controlled by a BasicViewHandler.
-        /// </summary>
-        /// <returns></returns>
-        SceneManager getScene();
-
-        /// <summary>
-        /// Returns the TerrainViewController. Used by a BasicViewHandler to
-        /// control the view.
-        /// </summary>
-        TerrainViewController getViewController();
-
-        /// <summary>
-        /// Converts screen coordinates to world space coordinates. Used
-        /// by a BasicViewHandler to find the location of mouse clics.
-        ///
-        /// @param x a screen x coordinate.
-        /// @param y a screen y coordinate.
-        /// @return the world space point corresponding to (x,y) on screen.
-        /// </summary>
-        Vector3d getWorldCoordinates(int x, int y);
-    }
 
     /// <summary>
-    /// An EventHandler to control a TerrainViewController and a light source with
+    /// An EventHandler to control a ViewController and a light source with
     /// the mouse and/or the keyboard. This EventHandler relies on a ViewManager
-    /// to find the TerrainViewController, to find the light SceneNode (using a
+    /// to find the ViewController, to find the light SceneNode (using a
     /// SceneManager), and to convert between screen and world coordinates.
     /// This implementation allows the user to move the view and the light with
     /// the mouse and the PAGE_UP and PAGE_DOWN keys.
     /// It also provides methods to instantly change the view and light positions,
     /// and to start an animation to go smoothly from one position to another.
-    /// @ingroup proland_ui
     /// </summary>
-    public class BasicViewHandler
+    public class BasicViewHandler : ISwappable<BasicViewHandler>
     {
+        /// <summary>
+        /// The %terrain elevation below the current viewer position. This field must be
+        /// updated manually by users(the TileSamplerZ class can do this for you).
+        /// </summary>
+        public float groundHeightAtCamera = 0.0f;
 
-        //3d vector to store the camera's position in
-        public Vector3f _Position;
-        //the rotation around the Y axis of the camera
-        private float yaw = 0.0f;
-        //the rotation around the X axis of the camera
-        private float pitch = 0.0f;
+        public GameWindow GameWindow { get; set; }
 
-        private OpenTK.Input.MouseState currentMouseState;
-        private OpenTK.Input.MouseState previousMouseState;
-        private readonly OpenTK.GameWindow parentWindow;
-        private Vector2f mouseMove;
-        private float mouseSensitivity = 0.05f;
-        private float moveSpeed = 0.2f;
-
-
-        double mix2(double x, double y, double t)
+        private float moveSpeed = 0.5f;
+        private float turnSpeed = 0.5f;
+        private float lerpFactor = 2.301f; // original lerp factor was 2.301e-6
+        private float mouseSensitivity = 700f;
+ 
+        private double Mix2(double x, double y, double t)
         {
-            return Math.Abs(x - y) < Math.Max(x, y) * 1e-5 ? y : ((double)1 - t) * x + t * y;
+            return System.Math.Abs(x - y) < System.Math.Max(x, y) * 1e-5 ? y : (1 - t) * x + t * y;
         }
+
         /// <summary>
         /// A TerrainViewController position and a light source position.
         /// </summary>
-        public class Position
+        public struct Position
         {
             public double x0, y0, theta, phi, d, sx, sy, sz;
-
-            public Position()
-            {
-                x0 = 0.0;
-                y0 = 0.0;
-                theta = 0.0;
-                phi = 0.0;
-                d = 0.0;
-                sx = 0.0;
-                sy = 0.0;
-                sz = 0.0;
-            }
-        };
+        }
 
         /// <summary>
         /// Creates a new BasicViewHandler.
-        ///
-        /// @param smooth true to use exponential damping to go to target
-        ///      positions, false to go to target positions directly.
-        /// @param view the object used to access the view controller.
-        /// @param next the EventHandler to which the events not handled by this
-        ///      EventHandler must be forwarded.
         /// </summary>
-        public BasicViewHandler(bool smooth, ViewManager view)
+        /// <param name="smooth">true to use exponential damping to go to target
+        ///      positions, false to go to target positions directly.</param>
+        /// <param name="view">the object used to access the view controller.</param>
+        /// <param name="next">the EventHandler to which the events not handled by this
+        ///      EventHandler must be forwarded.</param>
+        public BasicViewHandler(bool smooth, ViewManager view, EventHandler next)
         {
-            init(smooth, view);
+            init(smooth, view, next);
         }
 
 
-        public virtual void redisplay(double t, double dt)
+        public virtual void OnRenderFrame(double t, double dt)
         {
             if (!initialized)
             {
-                getPosition(target);
+                target = GetPosition();
                 initialized = true;
             }
 
-            TerrainViewController controller = getViewManager().getViewController();
+            ViewController controller = viewManager.ViewController;
 
             if (animation >= 0.0)
             {
@@ -125,7 +84,7 @@ namespace Examples.Tutorials
                 Vector3d endl = new Vector3d(end.sx, end.sy, end.sz);
                 Vector3d l = (startl * (1.0 - animation) + endl * animation);
                 l.Normalize();
-                HashSet<SceneNode> i = getViewManager().getScene().getNodes("light");
+                HashSet<SceneNode> i = viewManager.SceneManager.getNodes("light");
                 if (i != null && i.Count > 0)
                 {
                     SceneNode n = i.First();
@@ -134,7 +93,7 @@ namespace Examples.Tutorials
 
                 if (animation == 1.0)
                 {
-                    getPosition(target);
+                    target = GetPosition();
                     animation = -1.0;
                 }
             }
@@ -142,90 +101,86 @@ namespace Examples.Tutorials
             {
                 updateView(t, dt);
             }
-            controller.update();
+            controller.Update();
             controller.setProjection(Vector4f.Zero);
 
             FrameBuffer fb = FrameBuffer.getDefault();
             fb.clear(true, false, true);
 
-            getViewManager().getScene().update(dt);
-            getViewManager().getScene().draw();
+            viewManager.SceneManager.update(dt);
+            viewManager.SceneManager.draw();
 
-            double lerp = 1.0 - Math.Exp(-dt * 2.301e-6);
-            double gh = mix2(controller.getGroundHeight(), TerrainNode.groundHeightAtCamera, lerp);
-            controller.setGroundHeight((float)gh);
-
+            double lerp = 1.0 - System.Math.Exp(-dt * 2.301e-6);
+            double gh = Mix2(controller.GroundHeight, groundHeightAtCamera, lerp);
+            controller.GroundHeight = (float)gh;
         }
 
-        public virtual void reshape(int x, int y)
+        public void OnUpdateFrame(double time)
         {
-
+            // get current mouse position
+            OpenTK.Input.MouseState currentMouseState = OpenTK.Input.Mouse.GetState();
+             MouseMotion( currentMouseState.X,  currentMouseState.Y);
         }
 
-        public virtual void idle(bool damaged)
+        public virtual bool OnMouseDown(MouseButtonEventArgs e)
         {
-
-        }
-#if TODO
-        public virtual bool mouseClick(int x, int y)
-        {
-            oldx = x;
-            oldy = y;
-            if (OpenTK.Input.Key.ControlLeft != 0)
-            {
-                mode = userMode.rotate;
-                return true;
-            }
-            else if (m == 0)
-            { // no modifier
-                if (parentWindow.Keyboard[OpenTK.Input.Key.Left])
-                {
-                    mode = userMode.move;
-                }
-                else
-                {
-                    mode = userMode.light;
-                }
-                return true;
-            }
+            oldx = e.X;
+            oldy = e.Y;
+            //if (OpenTK.Input.Key.ControlLeft != 0)
+            //{
+            //    mode = userMode.rotate;
+            //    return true;
+            //}
+            //else if (m == 0)
+            //{ // no modifier
+            //    if (parentWindow.Keyboard[OpenTK.Input.Key.Left])
+            //    {
+            //        mode = userMode.move;
+            //    }
+            //    else
+            //    {
+            //        mode = userMode.light;
+            //    }
+            //    return true;
+            //}
             return false;
         }
-#endif
-        public virtual bool mouseMotion(int x, int y)
+
+        public virtual bool MouseMotion(int x, int y)
         {
             if (!initialized)
             {
-                getPosition(target);
+                target = GetPosition();
                 initialized = true;
             }
-            if (mode == userMode.rotate)
+            if (mode == userMode.Rotate)
             {
-                target.phi += (oldx - x) / 500.0;
-                target.theta += (oldy - y) / 500.0;
-                target.theta = Math.Max((float)-Math.PI, Math.Min((float)Math.PI, (float)target.theta));
+                target.phi += (oldx - x) / mouseSensitivity;
+                target.theta += (oldy - y) / mouseSensitivity;
+                target.theta = System.Math.Max((float)-System.Math.PI, System.Math.Min((float)System.Math.PI, (float)target.theta));
                 oldx = x;
                 oldy = y;
                 return true;
             }
-            else if (mode == userMode.move)
+            else if (mode == userMode.Move)
             {
-                Vector3d oldp = getViewManager().getWorldCoordinates(oldx, oldy);
-                Vector3d p = getViewManager().getWorldCoordinates(x, y);
+                Vector3d oldp = viewManager.GetWorldCoordinates(oldx, oldy);
+                Vector3d p = viewManager.GetWorldCoordinates(x, y);
                 if (!(double.IsNaN(oldp.X) || double.IsNaN(oldp.Y) || double.IsNaN(oldp.Z) || double.IsNaN(p.X) || double.IsNaN(p.Y) || double.IsNaN(p.Z)))
                 {
                     Position current = new Position();
-                    getPosition(current, false);
-                    setPosition(target, false);
-                    TerrainViewController controller = getViewManager().getViewController();
+                    current = GetPosition(false);
+                    SetPosition(target, false);
+                    ViewController controller = viewManager.ViewController;
                     controller.move(oldp, p);
-                    getPosition(target, false);
-                    setPosition(current, false);
+                    target = GetPosition(false);
+                    SetPosition(current, false);
                 }
                 oldx = x;
                 oldy = y;
                 return true;
             }
-            else if (mode == userMode.light)
+            else if (mode == userMode.Light)
             {
                 //safe_asin implementation
                 if (target.sz <= -1)
@@ -236,13 +191,13 @@ namespace Examples.Tutorials
                 {
                     target.sz = 1;
                 }
-                float vangle = (float)Math.Asin(target.sz);
-                float hangle = (float)Math.Atan2(target.sy, target.sx);
-                vangle += ((float)Math.PI / 180) * ((float)(oldy - y)) * 0.25f;
-                hangle += ((float)Math.PI / 180) * ((float)(oldx - x)) * 0.25f;
-                target.sx = Math.Cos(vangle) * Math.Cos(hangle);
-                target.sy = Math.Cos(vangle) * Math.Sin(hangle);
-                target.sz = Math.Sin(vangle);
+                float vangle = (float)System.Math.Asin(target.sz);
+                float hangle = (float)System.Math.Atan2(target.sy, target.sx);
+                vangle += ((float)System.Math.PI / 180) * ((float)(oldy - y)) * 0.25f;
+                hangle += ((float)System.Math.PI / 180) * ((float)(oldx - x)) * 0.25f;
+                target.sx = System.Math.Cos(vangle) * System.Math.Cos(hangle);
+                target.sy = System.Math.Cos(vangle) * System.Math.Sin(hangle);
+                target.sz = System.Math.Sin(vangle);
 
                 oldx = x;
                 oldy = y;
@@ -251,51 +206,36 @@ namespace Examples.Tutorials
             return false;
         }
 
-        public virtual bool mousePassiveMotion()
-        {
-            return false;
-        }
-#if TODO
-        public virtual bool mouseWheel(int x, int y)
+        public virtual bool OnMouseWheel(MouseWheelEventArgs e)
         {
             if (!initialized)
             {
-                getPosition(target);
+                target = GetPosition();
                 initialized = true;
             }
-            TerrainViewController controller = getViewManager().getViewController();
+            ViewController controller = viewManager.ViewController;
             const float dzFactor = 1.2f;
-            if (/**b == WHEEL_DOWN currentMouseState.Wheel*/)
+            if (e.Delta < 0) // WHEEL_DOWN
             {
-                target.d = target.d * dzFactor;
+                target.d = target.d * e.DeltaPrecise * dzFactor;
                 return true;
             }
-            if (/**b == WHEEL_UP*/)
+            if (e.Delta > 0) // WHEEL_UP
             {
-                target.d = target.d / dzFactor;
+                target.d = target.d / (e.DeltaPrecise * dzFactor);
                 return true;
             }
-            return false;
-        }
-#endif
-        public virtual bool keyTyped()
-        {
             return false;
         }
 
-        public virtual bool keyReleased()
+        public virtual bool OnKeyDown(KeyboardKeyEventArgs e)
         {
-            return false;
-        }
-
-        public virtual bool specialKey()
-        {
-            if (parentWindow.Keyboard[OpenTK.Input.Key.F10])
+            if (e.Key == OpenTK.Input.Key.F10)
             {
                 smooth = !smooth;
                 return true;
             }
-            if (parentWindow.Keyboard[OpenTK.Input.Key.PageUp])
+            if (e.Key == OpenTK.Input.Key.PageUp)
             {
                 far = true;
                 return true;
@@ -304,7 +244,7 @@ namespace Examples.Tutorials
             {
                 far = false;
             }
-            if (parentWindow.Keyboard[OpenTK.Input.Key.PageDown])
+            if (e.Key == OpenTK.Input.Key.PageDown)
             {
                 near = true;
                 return true;
@@ -313,7 +253,7 @@ namespace Examples.Tutorials
             {
                 near = false;
             }
-            if (parentWindow.Keyboard[OpenTK.Input.Key.Up])
+            if (e.Key == OpenTK.Input.Key.Up || e.Key == OpenTK.Input.Key.W)
             {
                 forward = true;
                 return true;
@@ -322,7 +262,7 @@ namespace Examples.Tutorials
             {
                 forward = false;
             }
-            if (parentWindow.Keyboard[OpenTK.Input.Key.Down])
+            if (e.Key == OpenTK.Input.Key.Down || e.Key == OpenTK.Input.Key.S)
             {
                 backward = true;
                 return true;
@@ -331,7 +271,7 @@ namespace Examples.Tutorials
             {
                 backward = false;
             }
-            if (parentWindow.Keyboard[OpenTK.Input.Key.Left])
+            if (e.Key == OpenTK.Input.Key.Left || e.Key == OpenTK.Input.Key.A)
             {
                 left = true;
                 return true;
@@ -340,7 +280,7 @@ namespace Examples.Tutorials
             {
                 left = false;
             }
-            if (parentWindow.Keyboard[OpenTK.Input.Key.Right])
+            if (e.Key == OpenTK.Input.Key.Right || e.Key == OpenTK.Input.Key.D)
             {
                 right = true;
                 return true;
@@ -352,39 +292,39 @@ namespace Examples.Tutorials
             return false;
         }
 
-        public virtual bool specialKeyReleased()
+        public virtual bool OnKeyRelease(KeyboardKeyEventArgs e)
         {
-            if (parentWindow.Keyboard[OpenTK.Input.Key.F10])
+            if (e.Key == OpenTK.Input.Key.F10)
             {
                 smooth = !smooth;
                 return true;
             }
-            if (parentWindow.Keyboard[OpenTK.Input.Key.PageUp])
+            if (e.Key == OpenTK.Input.Key.PageUp)
             {
                 far = false;
                 return true;
             }
-            if (parentWindow.Keyboard[OpenTK.Input.Key.PageDown])
+            if (e.Key == OpenTK.Input.Key.PageDown)
             {
                 near = false;
                 return true;
             }
-            if (parentWindow.Keyboard[OpenTK.Input.Key.Up])
+            if (e.Key == OpenTK.Input.Key.Up || e.Key == OpenTK.Input.Key.W)
             {
                 forward = false;
                 return true;
             }
-            if (parentWindow.Keyboard[OpenTK.Input.Key.Down])
+            if (e.Key == OpenTK.Input.Key.Down || e.Key == OpenTK.Input.Key.S)
             {
                 backward = false;
                 return true;
             }
-            if (parentWindow.Keyboard[OpenTK.Input.Key.Left])
+            if (e.Key == OpenTK.Input.Key.Left || e.Key == OpenTK.Input.Key.A)
             {
                 left = false;
                 return true;
             }
-            if (parentWindow.Keyboard[OpenTK.Input.Key.Right])
+            if (e.Key == OpenTK.Input.Key.Right || e.Key == OpenTK.Input.Key.D)
             {
                 right = false;
                 return true;
@@ -392,22 +332,25 @@ namespace Examples.Tutorials
             return false;
         }
 
+
         /// <summary>
         /// Returns the current view and light positions.
-        ///
-        /// @param[out] p the current view and light position.
         /// </summary>
-        public void getPosition(Position p, bool light = true)
+        /// <param name="light">the current view and light position.</param>
+        /// <returns></returns>
+        /// </summary>
+        public Position GetPosition(bool light = true)
         {
-            TerrainViewController view = getViewManager().getViewController();
-            p.x0 = view.x0;
-            p.y0 = view.y0;
-            p.theta = view.theta;
-            p.phi = view.phi;
-            p.d = view.d;
+            ViewController view = viewManager.ViewController;
+            Position p = new Position();
+            p.x0 = view.X0;
+            p.y0 = view.Y0;
+            p.theta = view.Theta;
+            p.phi = view.Phi;
+            p.d = view.Distance;
             if (light)
             {
-                HashSet<SceneNode> i = getViewManager().getScene().getNodes("light");
+                HashSet<SceneNode> i = viewManager.SceneManager.getNodes("light");
                 if (i != null && i.Count > 0)
                 {
                     SceneNode n = i.First();
@@ -417,24 +360,26 @@ namespace Examples.Tutorials
                     p.sz = l.Z;
                 }
             }
+            return p;
         }
+
 
         /// <summary>
         /// Sets the current view and light position.
-        ///
-        /// @param p the new view and light position.
+        /// <param name="p">the new view and light position.</param>
+        /// <param name="light"></param>
         /// </summary>
-        public void setPosition(Position p, bool light = true)
+        public void SetPosition(Position p, bool light = true)
         {
-            TerrainViewController view = getViewManager().getViewController();
-            view.x0 = p.x0;
-            view.y0 = p.y0;
-            view.theta = p.theta;
-            view.phi = p.phi;
-            view.d = p.d;
+            ViewController view = viewManager.ViewController;
+            view.X0 = p.x0;
+            view.Y0 = p.y0;
+            view.Theta = p.theta;
+            view.Phi = p.phi;
+            view.Distance = p.d;
             if (light)
             {
-                HashSet<SceneNode> i = getViewManager().getScene().getNodes("light");
+                HashSet<SceneNode> i = viewManager.SceneManager.getNodes("light");
                 if (i != null && i.Count > 0)
                 {
                     SceneNode n = i.First();
@@ -447,12 +392,11 @@ namespace Examples.Tutorials
         /// <summary>
         /// Starts an animation to go smoothly from the current position
         /// to the given position.
-        ///
-        /// @param p the target position.
         /// </summary>
-        public virtual void goToPosition(Position p)
+        /// <param name="p">the target position.</param>
+        public virtual void GoToPosition(Position p)
         {
-            getPosition(start);
+            start = GetPosition();
             end = p;
             animation = 0.0;
         }
@@ -462,18 +406,18 @@ namespace Examples.Tutorials
         ///
         /// @param p the new view and light position.
         /// </summary>
-        public void jumpToPosition(Position p)
+        public void JumpToPosition(Position p)
         {
-            setPosition(p, true);
+            SetPosition(p, true);
             target = p;
         }
 
 
         /// <summary>
-        /// The ViewManager to find the TerrainViewController, to find the light
+        /// The ViewManager to find the ViewController, to find the light
         /// SceneNode, and to convert between screen and world coordinates.
         /// </summary>
-        protected ViewManager viewManager;
+        internal ViewManager viewManager;
 
         /// <summary>
         /// Creates an uninitialized BasicViewHandler.
@@ -485,11 +429,11 @@ namespace Examples.Tutorials
 
         /// <summary>
         /// Initializes this BasicViewHandler.
-        /// See #BasicViewHandler.
         /// </summary>
-        protected void init(bool smooth, ViewManager view)
+        internal void init(bool smooth, ViewManager view, EventHandler next)
         {
             this.viewManager = view;
+            this.next = next;
             this.smooth = smooth;
             this.near = false;
             this.far = false;
@@ -506,9 +450,10 @@ namespace Examples.Tutorials
         /// TerrainViewController, to find the light SceneNode, and to convert
         /// between screen and world coordinates.
         /// </summary>
-        protected virtual ViewManager getViewManager()
+        public virtual ViewManager ViewManager
         {
-            return viewManager;
+            get { return viewManager; }
+            set { viewManager = value; }
         }
 
         /// <summary>
@@ -516,8 +461,8 @@ namespace Examples.Tutorials
         /// </summary>
         protected virtual void updateView(double t, double dt)
         {
-            TerrainViewController controller = getViewManager().getViewController();
-            float dzFactor = (float)(Math.Pow(1.02f, Math.Min((float)(50.0e-6 * dt), 1.0f)));
+            ViewController controller = viewManager.ViewController;
+            float dzFactor = (float)(System.Math.Pow(1.02f, System.Math.Min((float)(50.0e-6 * dt), 1.0f)));
             if (near)
             {
                 target.d = target.d / dzFactor;
@@ -526,57 +471,56 @@ namespace Examples.Tutorials
             {
                 target.d = target.d * dzFactor;
             }
-            Position p = new Position();
-            getPosition(p, true);
-            setPosition(target, false);
+            Position p = GetPosition(true);
+            SetPosition(target, false);
             //specialkey();
             if (forward)
             {
-                float speed = (float)Math.Max(controller.getHeight() - controller.getGroundHeight(), 0.0);
-                controller.moveForward(speed * dt * 1e-6);
+                float speed = (float)System.Math.Max(controller.getHeight() - controller.GroundHeight, 0.0);
+                controller.moveForward(speed * dt * moveSpeed);
             }
             else if (backward)
             {
-                float speed = (float)Math.Max(controller.getHeight() - controller.getGroundHeight(), 0.0);
-                controller.moveForward(-speed * dt * 1e-6);
+                float speed = (float)System.Math.Max(controller.getHeight() - controller.GroundHeight, 0.0);
+                controller.moveForward(-speed * dt * moveSpeed);
             }
             if (left)
             {
-                controller.turn(dt * 5e-7);
+                controller.turn(dt * turnSpeed);
             }
             else if (right)
             {
-                controller.turn(-dt * 5e-7);
+                controller.turn(-dt * turnSpeed);
             }
-            getPosition(target, false);
+            target = GetPosition(false);
 
             if (smooth)
             {
-                double lerp = 1.0 - Math.Exp(-dt * 2.301e-6);
+                double lerp = 1.0 - System.Math.Exp(-dt * lerpFactor);// original lerp factor was 2.301e-6
                 double x0;
                 double y0;
                 controller.interpolatePos(p.x0, p.y0, target.x0, target.y0, lerp, out x0, out y0);
                 p.x0 = x0;
                 p.y0 = y0;
-                p.theta = mix2(p.theta, target.theta, lerp);
-                p.phi = mix2(p.phi, target.phi, lerp);
-                p.d = mix2(p.d, target.d, lerp);
-                p.sx = mix2(p.sx, target.sx, lerp);
-                p.sy = mix2(p.sy, target.sy, lerp);
-                p.sz = mix2(p.sz, target.sz, lerp);
-                double l = 1.0 / Math.Sqrt(p.sx * p.sx + p.sy * p.sy + p.sz * p.sz);
+                p.theta = Mix2(p.theta, target.theta, lerp);
+                p.phi = Mix2(p.phi, target.phi, lerp);
+                p.d = Mix2(p.d, target.d, lerp);
+                p.sx = Mix2(p.sx, target.sx, lerp);
+                p.sy = Mix2(p.sy, target.sy, lerp);
+                p.sz = Mix2(p.sz, target.sz, lerp);
+                double l = 1.0 / System.Math.Sqrt(p.sx * p.sx + p.sy * p.sy + p.sz * p.sz);
                 p.sx *= l;
                 p.sy *= l;
                 p.sz *= l;
-                setPosition(p);
+                SetPosition(p);
             }
             else
             {
-                setPosition(target);
+                SetPosition(target);
             }
         }
 
-        protected void swap(BasicViewHandler o)
+        public void swap(BasicViewHandler o)
         {
             Std.Swap(ref viewManager, ref o.viewManager);
             Std.Swap(ref mode, ref o.mode);
@@ -591,7 +535,7 @@ namespace Examples.Tutorials
         /// The EventHandler to which the events not handled by this EventHandler
         /// must be forwarded.
         /// </summary>
-        //private EventHandler next;
+        private EventHandler next;
 
         /// <summary>
         /// True to use exponential damping to go to target positions, false to go
@@ -634,9 +578,9 @@ namespace Examples.Tutorials
         /// </summary>
         private enum userMode
         {
-            move, ///< moves the "look-at" point.
-            rotate, ///< rotates around the "look-at" point
-            light ///< moves the light.
+            Rotate, ///< rotates around the "look-at" point
+            Move, ///< moves the "look-at" point.
+            Light ///< moves the light.
         };
 
         /// <summary>

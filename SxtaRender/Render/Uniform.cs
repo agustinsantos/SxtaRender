@@ -1038,10 +1038,10 @@ namespace Sxta.Render
 
 			public override void setValue( Value  v)
 			{
-#if TODO
-				set(v);					
-#endif
-				throw new NotImplementedException();
+			    Value3f val = v as Value3f;
+				if (val == null)
+					throw new ArgumentException("Setting wrong value at Uniform3f");
+				set(val.get());
 			}
 
 
@@ -1136,10 +1136,10 @@ namespace Sxta.Render
 
 			public override void setValue( Value  v)
 			{
-#if TODO
-				set(v);					
-#endif
-				throw new NotImplementedException();
+			    Value3d val = v as Value3d;
+				if (val == null)
+					throw new ArgumentException("Setting wrong value at Uniform3d");
+				set(val.get());
 			}
 
 
@@ -1234,10 +1234,10 @@ namespace Sxta.Render
 
 			public override void setValue( Value  v)
 			{
-#if TODO
-				set(v);					
-#endif
-				throw new NotImplementedException();
+			    Value3i val = v as Value3i;
+				if (val == null)
+					throw new ArgumentException("Setting wrong value at Uniform3i");
+				set(val.get());
 			}
 
 
@@ -1332,10 +1332,10 @@ namespace Sxta.Render
 
 			public override void setValue( Value  v)
 			{
-#if TODO
-				set(v);					
-#endif
-				throw new NotImplementedException();
+			    Value3ui val = v as Value3ui;
+				if (val == null)
+					throw new ArgumentException("Setting wrong value at Uniform3ui");
+				set(val.get());
 			}
 
 
@@ -1430,10 +1430,10 @@ namespace Sxta.Render
 
 			public override void setValue( Value  v)
 			{
-#if TODO
-				set(v);					
-#endif
-				throw new NotImplementedException();
+			    Value3b val = v as Value3b;
+				if (val == null)
+					throw new ArgumentException("Setting wrong value at Uniform3b");
+				set(val.get());
 			}
 
 
@@ -1529,10 +1529,10 @@ namespace Sxta.Render
 
 			public override void setValue( Value  v)
 			{
-#if TODO
-				set(v);					
-#endif
-				throw new NotImplementedException();
+			    Value4f val = v as Value4f;
+				if (val == null)
+					throw new ArgumentException("Setting wrong value at Uniform4f");
+				set(val.get());
 			}
 
 
@@ -1628,10 +1628,10 @@ namespace Sxta.Render
 
 			public override void setValue( Value  v)
 			{
-#if TODO
-				set(v);					
-#endif
-				throw new NotImplementedException();
+			    Value4d val = v as Value4d;
+				if (val == null)
+					throw new ArgumentException("Setting wrong value at Uniform4d");
+				set(val.get());
 			}
 
 
@@ -1727,10 +1727,10 @@ namespace Sxta.Render
 
 			public override void setValue( Value  v)
 			{
-#if TODO
-				set(v);					
-#endif
-				throw new NotImplementedException();
+			    Value4i val = v as Value4i;
+				if (val == null)
+					throw new ArgumentException("Setting wrong value at Uniform4i");
+				set(val.get());
 			}
 
 
@@ -1826,10 +1826,10 @@ namespace Sxta.Render
 
 			public override void setValue( Value  v)
 			{
-#if TODO
-				set(v);					
-#endif
-				throw new NotImplementedException();
+			    Value4ui val = v as Value4ui;
+				if (val == null)
+					throw new ArgumentException("Setting wrong value at Uniform4ui");
+				set(val.get());
 			}
 
 
@@ -1925,10 +1925,10 @@ namespace Sxta.Render
 
 			public override void setValue( Value  v)
 			{
-#if TODO
-				set(v);					
-#endif
-				throw new NotImplementedException();
+			    Value4b val = v as Value4b;
+				if (val == null)
+					throw new ArgumentException("Setting wrong value at Uniform4b");
+				set(val.get());
 			}
 
 

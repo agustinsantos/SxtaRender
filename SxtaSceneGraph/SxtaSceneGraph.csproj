@@ -56,6 +56,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Scenegraph\Controller\BasicViewHandler.cs" />
+    <Compile Include="Scenegraph\Controller\CameraViewController.cs" />
+    <Compile Include="Scenegraph\Controller\ViewController.cs" />
+    <Compile Include="Scenegraph\Controller\ViewManager.cs" />
     <Compile Include="Producer\GPUTileStorage.cs" />
     <Compile Include="Producer\TileCache.cs" />
     <Compile Include="Producer\TileLayer.cs" />
@@ -76,6 +80,8 @@
     <Compile Include="Scenegraph\SetTransformsTask.cs" />
     <Compile Include="Scenegraph\ShowInfoTask.cs" />
     <Compile Include="Scenegraph\ShowLogTask.cs" />
+    <Compile Include="Scenegraph\XmlResources\BasicViewHandlerResource.cs" />
+    <Compile Include="Scenegraph\XmlResources\RegisterResourceReader.cs" />
     <Compile Include="Scenegraph\XmlResources\SceneNodeResource.cs" />
     <Compile Include="Scenegraph\XmlResources\TaskResource.cs" />
     <Compile Include="TaskGraph\MultithreadScheduler.cs" />

@@ -166,7 +166,7 @@ namespace Sxta.Render
             pixels.unbind(BufferTarget.PixelUnpackBuffer);
             Debug.Assert(FrameBuffer.getError() == ErrorCode.NoError);  
 #endif
-            //throw new NotImplementedException();
+            throw new NotImplementedException();
         }
 
 
@@ -217,7 +217,7 @@ namespace Sxta.Render
             pixels.unbind(BufferTarget.PixelUnpackBuffer);
             Debug.Assert(FrameBuffer.getError() == ErrorCode.NoError);  
 #endif
-            // throw new NotImplementedException();
+             throw new NotImplementedException();
         }
 
 

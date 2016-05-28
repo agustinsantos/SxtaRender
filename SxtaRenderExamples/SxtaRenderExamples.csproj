@@ -60,7 +60,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="SGCamera.cs" />
-    <Compile Include="BasicViewHandler.cs" />
     <Compile Include="FirstPersonCamera2.cs" />
     <Compile Include="FirstPersonCamera.cs" />
     <Compile Include="BasicFPCamera.cs" />
@@ -131,6 +130,7 @@
     <Compile Include="Tutorials\Testing\Tutorial08_2.cs" />
     <Compile Include="Tutorials\Testing\Tutorial08_4.cs" />
     <Compile Include="Tutorials\Testing\Tutorial08_5.cs" />
+    <Compile Include="Tutorials\Testing\TutorialSG10_01.cs" />
     <EmbeddedResource Include="ExampleBrowser.resx">
       <DependentUpon>ExampleBrowser.cs</DependentUpon>
     </EmbeddedResource>
@@ -419,6 +419,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\App.ico" />
+    <Content Include="Resources\Archives\TutorialSG10_1.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Resources\Archives\TutorialSG01_3.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

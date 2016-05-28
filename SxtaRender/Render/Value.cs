@@ -128,7 +128,7 @@ namespace Sxta.Render
          * Creates a Value1f.
          */
         public Value1f(string name, float value)
-            : base("GLfloat", name)
+            : this(name)
         {
             this.value = value;
         }
@@ -173,14 +173,14 @@ namespace Sxta.Render
         public Value2f(string name)
             : base("GLfloat", name)
         {
-			this.type = UniformType.VEC1F;
+			this.type = UniformType.VEC2F;
 		}
 
         /*
          * Creates a Value2f.
          */
         public Value2f(string name, Vector2f value)
-            : base("GLfloat", name)
+            : this(name)
         {
             this.value = value;
         }
@@ -226,14 +226,14 @@ namespace Sxta.Render
             : base("GLfloat", name)
         {
 			value = new Vector3f();
-			this.type = UniformType.VEC1F;
+			this.type = UniformType.VEC3F;
 		}
 
         /*
          * Creates a Value3f.
          */
         public Value3f(string name, Vector3f value)
-            : base("GLfloat", name)
+            : this(name)
         {
             this.value = value;
         }
@@ -279,14 +279,14 @@ namespace Sxta.Render
             : base("GLfloat", name)
         {
 			value = new Vector4f();
-			this.type = UniformType.VEC1F;
+			this.type = UniformType.VEC4F;
 		}
 
         /*
          * Creates a Value4f.
          */
         public Value4f(string name, Vector4f value)
-            : base("GLfloat", name)
+            : this(name)
         {
             this.value = value;
         }
@@ -440,7 +440,7 @@ namespace Sxta.Render
          * Creates a Value1d.
          */
         public Value1d(string name, double value)
-            : base("GLdouble", name)
+            : this(name)
         {
             this.value = value;
         }
@@ -485,14 +485,14 @@ namespace Sxta.Render
         public Value2d(string name)
             : base("GLdouble", name)
         {
-			this.type = UniformType.VEC1D;
+			this.type = UniformType.VEC2D;
 		}
 
         /*
          * Creates a Value2d.
          */
         public Value2d(string name, Vector2d value)
-            : base("GLdouble", name)
+            : this(name)
         {
             this.value = value;
         }
@@ -538,14 +538,14 @@ namespace Sxta.Render
             : base("GLdouble", name)
         {
 			value = new Vector3d();
-			this.type = UniformType.VEC1D;
+			this.type = UniformType.VEC3D;
 		}
 
         /*
          * Creates a Value3d.
          */
         public Value3d(string name, Vector3d value)
-            : base("GLdouble", name)
+            : this(name)
         {
             this.value = value;
         }
@@ -591,14 +591,14 @@ namespace Sxta.Render
             : base("GLdouble", name)
         {
 			value = new Vector4d();
-			this.type = UniformType.VEC1D;
+			this.type = UniformType.VEC4D;
 		}
 
         /*
          * Creates a Value4d.
          */
         public Value4d(string name, Vector4d value)
-            : base("GLdouble", name)
+            : this(name)
         {
             this.value = value;
         }
@@ -752,7 +752,7 @@ namespace Sxta.Render
          * Creates a Value1i.
          */
         public Value1i(string name, int value)
-            : base("GLint", name)
+            : this(name)
         {
             this.value = value;
         }
@@ -797,14 +797,14 @@ namespace Sxta.Render
         public Value2i(string name)
             : base("GLint", name)
         {
-			this.type = UniformType.VEC1I;
+			this.type = UniformType.VEC2I;
 		}
 
         /*
          * Creates a Value2i.
          */
         public Value2i(string name, Vector2i value)
-            : base("GLint", name)
+            : this(name)
         {
             this.value = value;
         }
@@ -850,14 +850,14 @@ namespace Sxta.Render
             : base("GLint", name)
         {
 			value = new Vector3i();
-			this.type = UniformType.VEC1I;
+			this.type = UniformType.VEC3I;
 		}
 
         /*
          * Creates a Value3i.
          */
         public Value3i(string name, Vector3i value)
-            : base("GLint", name)
+            : this(name)
         {
             this.value = value;
         }
@@ -903,14 +903,14 @@ namespace Sxta.Render
             : base("GLint", name)
         {
 			value = new Vector4i();
-			this.type = UniformType.VEC1I;
+			this.type = UniformType.VEC4I;
 		}
 
         /*
          * Creates a Value4i.
          */
         public Value4i(string name, Vector4i value)
-            : base("GLint", name)
+            : this(name)
         {
             this.value = value;
         }
@@ -1064,7 +1064,7 @@ namespace Sxta.Render
          * Creates a Value1ui.
          */
         public Value1ui(string name, uint value)
-            : base("GLuint", name)
+            : this(name)
         {
             this.value = value;
         }
@@ -1109,14 +1109,14 @@ namespace Sxta.Render
         public Value2ui(string name)
             : base("GLuint", name)
         {
-			this.type = UniformType.VEC1UI;
+			this.type = UniformType.VEC2UI;
 		}
 
         /*
          * Creates a Value2ui.
          */
         public Value2ui(string name, Vector2ui value)
-            : base("GLuint", name)
+            : this(name)
         {
             this.value = value;
         }
@@ -1162,14 +1162,14 @@ namespace Sxta.Render
             : base("GLuint", name)
         {
 			value = new Vector3ui();
-			this.type = UniformType.VEC1UI;
+			this.type = UniformType.VEC3UI;
 		}
 
         /*
          * Creates a Value3ui.
          */
         public Value3ui(string name, Vector3ui value)
-            : base("GLuint", name)
+            : this(name)
         {
             this.value = value;
         }
@@ -1215,14 +1215,14 @@ namespace Sxta.Render
             : base("GLuint", name)
         {
 			value = new Vector4ui();
-			this.type = UniformType.VEC1UI;
+			this.type = UniformType.VEC4UI;
 		}
 
         /*
          * Creates a Value4ui.
          */
         public Value4ui(string name, Vector4ui value)
-            : base("GLuint", name)
+            : this(name)
         {
             this.value = value;
         }
@@ -1376,7 +1376,7 @@ namespace Sxta.Render
          * Creates a Value1b.
          */
         public Value1b(string name, bool value)
-            : base("GLbool", name)
+            : this(name)
         {
             this.value = value;
         }
@@ -1421,14 +1421,14 @@ namespace Sxta.Render
         public Value2b(string name)
             : base("GLbool", name)
         {
-			this.type = UniformType.VEC1B;
+			this.type = UniformType.VEC2B;
 		}
 
         /*
          * Creates a Value2b.
          */
         public Value2b(string name, Vector2b value)
-            : base("GLbool", name)
+            : this(name)
         {
             this.value = value;
         }
@@ -1474,14 +1474,14 @@ namespace Sxta.Render
             : base("GLbool", name)
         {
 			value = new Vector3b();
-			this.type = UniformType.VEC1B;
+			this.type = UniformType.VEC3B;
 		}
 
         /*
          * Creates a Value3b.
          */
         public Value3b(string name, Vector3b value)
-            : base("GLbool", name)
+            : this(name)
         {
             this.value = value;
         }
@@ -1527,14 +1527,14 @@ namespace Sxta.Render
             : base("GLbool", name)
         {
 			value = new Vector4b();
-			this.type = UniformType.VEC1B;
+			this.type = UniformType.VEC4B;
 		}
 
         /*
          * Creates a Value4b.
          */
         public Value4b(string name, Vector4b value)
-            : base("GLbool", name)
+            : this(name)
         {
             this.value = value;
         }
