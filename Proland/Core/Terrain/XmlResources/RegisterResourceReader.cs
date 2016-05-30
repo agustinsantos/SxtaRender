@@ -1,5 +1,6 @@
 ﻿using Sxta.Render.Resources;
 using proland;
+using Sxta.Proland.Ocean.XmlResources;
 
 namespace Sxta.Proland.Core.Terrain.XmlResources
 {

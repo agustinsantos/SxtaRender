@@ -141,7 +141,7 @@ namespace proland
 
         public bool clipPoint(Box2d box, Vector2i a)
         {
-            return box.contains(a);
+            return box.Contains(a);
         }
 
         /**
@@ -203,7 +203,7 @@ namespace proland
 
         public bool clipSegment(Box2d box, Vector2d a, Vector2d b)
         {
-            if (box.contains(a) || box.contains(b))
+            if (box.Contains(a) || box.Contains(b))
             {
                 return true;
             }
@@ -247,7 +247,7 @@ namespace proland
 
         public bool clipQuad(Box2d box, Vector2d a, Vector2d b, Vector2d c)
         {
-            if (box.contains(a) || box.contains(b) || box.contains(c))
+            if (box.Contains(a) || box.Contains(b) || box.Contains(c))
             {
                 return true;
             }
@@ -292,12 +292,12 @@ namespace proland
         }
         public bool clipCubic(Box2d box, Vector2d a, Vector2d b, Vector2d c, Vector2d d)
         {
-            if (box.contains(a) || box.contains(b) || box.contains(c) || box.contains(d))
+            if (box.Contains(a) || box.Contains(b) || box.Contains(c) || box.Contains(d))
             {
                 return true;
             }
 
-            Box2d abcd = new Box2d(a.X, a.Y, b.X, b.Y).enlarge(new Box2d(c.X, c.Y, d.X, d.Y));
+            Box2d abcd = new Box2d(a.X, a.Y, b.X, b.Y).Enlarge(new Box2d(c.X, c.Y, d.X, d.Y));
 
             if (abcd.xmax < box.xmin || abcd.xmin > box.xmax || abcd.ymax < box.ymin || abcd.ymin > box.ymax)
             {

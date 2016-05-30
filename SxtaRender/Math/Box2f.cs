@@ -58,13 +58,14 @@ namespace Sxta.Math
         /// <param name='q'>
         /// Q.
         /// </param>
-        Box2f(Vector2 p, Vector2 q)
+        public Box2f(Vector2f p, Vector2f q)
         {
             this.xmin = System.Math.Min(p.X, q.X);
             this.xmax = System.Math.Max(p.X, q.X);
             this.ymin = System.Math.Min(p.Y, q.Y);
             this.ymax = System.Math.Max(p.Y, q.Y);
         }
+
         /// <summary>
         /// Minimum x coordinate.
         /// </summary>
@@ -101,7 +102,7 @@ namespace Sxta.Math
         /// Returns the center of this bounding box.
         /// Center this instance.
         /// </summary>
-        Vector2 center()
+        Vector2 Center()
         {
             return new Vector2((xmin + xmax) / 2, (ymin + ymax) / 2);
         }
@@ -113,7 +114,7 @@ namespace Sxta.Math
         /// <param name='p'>
         /// P. p an arbitrary point.
         /// </param>
-        Box2f enlarge(Vector2 p)
+        Box2f Enlarge(Vector2 p)
         {
             return new Box2f(System.Math.Min(xmin, p.X),
                                 System.Math.Max(xmax, p.X),
@@ -129,7 +130,7 @@ namespace Sxta.Math
         /// <param name='r'>
         /// R.  an arbitrary bounding box.
         /// </param>
-        public Box2f enlarge(Box2f r)
+        public Box2f Enlarge(Box2f r)
         {
             return new Box2f(System.Math.Min(xmin, r.xmin),
                             System.Math.Max(xmax, r.xmax),
@@ -145,7 +146,7 @@ namespace Sxta.Math
         /// <param name='p'>
         /// P. p an arbitrary point.
         /// </param>
-        public bool contains(Vector2 p)
+        public bool Contains(Vector2f p)
         {
             return p.X >= xmin && p.X <= xmax && p.Y >= ymin && p.Y <= ymax;
         }

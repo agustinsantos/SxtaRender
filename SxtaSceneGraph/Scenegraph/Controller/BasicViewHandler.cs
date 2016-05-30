@@ -26,7 +26,7 @@ namespace Sxta.Render.Scenegraph.Controller
     public class BasicViewHandler : ISwappable<BasicViewHandler>
     {
         /// <summary>
-        /// The %terrain elevation below the current viewer position. This field must be
+        /// The terrain elevation below the current viewer position. This field must be
         /// updated manually by users(the TileSamplerZ class can do this for you).
         /// </summary>
         public float groundHeightAtCamera = 0.0f;

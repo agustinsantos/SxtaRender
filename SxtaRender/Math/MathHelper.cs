@@ -23,6 +23,12 @@ namespace Sxta.Math
         public const float PiOver4 = (float)(System.Math.PI / 4);
         public const float PiOver2 = (float)(System.Math.PI / 2);
         public const float TwoPi = (float)(2 * System.Math.PI);
-        public const float Pi = (float)(2 * System.Math.PI);
+        public const float Pi = (float)(System.Math.PI);
+
+        public static float Safe_acos(double x)
+        {
+            if (System.Math.Abs(x) <= 1.0) return (float)System.Math.Acos(x);
+            return ((x > 0) ? 0 : Pi);
+        }
     }
 }

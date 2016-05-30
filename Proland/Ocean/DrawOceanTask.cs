@@ -1,7 +1,50 @@
-﻿using log4net;
+﻿/*
+ * Proland: a procedural landscape rendering library.
+ * Website : http://proland.inrialpes.fr/
+ * Copyright (c) 2008-2015 INRIA - LJK (CNRS - Grenoble University)
+ * All rights reserved.
+ * Redistribution and use in source and binary forms, with or without 
+ * modification, are permitted provided that the following conditions are met:
+ * 
+ * 1. Redistributions of source code must retain the above copyright notice, 
+ * this list of conditions and the following disclaimer.
+ * 
+ * 2. Redistributions in binary form must reproduce the above copyright notice, 
+ * this list of conditions and the following disclaimer in the documentation 
+ * and/or other materials provided with the distribution.
+ * 
+ * 3. Neither the name of the copyright holder nor the names of its contributors 
+ * may be used to endorse or promote products derived from this software without 
+ * specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+ * IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
+ * OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+/*
+ * Proland is distributed under the Berkeley Software Distribution 3 Licence. 
+ * For any assistance, feedback and enquiries about training programs, you can check out the 
+ * contact page on our website : 
+ * http://proland.inrialpes.fr/
+ */
+/*
+ * Main authors: Eric Bruneton, Antoine Begault, Guillaume Piolat.
+* Modified and ported to C# and Sxta Engine by Agustin Santos and Daniel Olmedo 2015-2016
+*/
+using log4net;
+using proland;
 using Sxta.Core;
 using Sxta.Math;
 using Sxta.Render;
+using Sxta.Render.Resources;
 using Sxta.Render.Scenegraph;
 using System;
 using System.Collections.Generic;
@@ -10,12 +53,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace proland
+namespace Sxta.Proland.Ocean
 {
-    class DrawOceanTask : AbstractTask
+    /// <summary>
+    /// An AbstractTask to draw a flat or spherical ocean.
+    /// </summary>
+    public class DrawOceanTask : AbstractTask, ISwappable<DrawOceanTask>
     {
         private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        /**
+
+        /*
          * Creates a new DrawOceanTask.
          *
          * @param radius the radius of the planet for a spherical ocean, or
@@ -24,12 +71,13 @@ namespace proland
          *      displayed.
          * @param brdfShader the Shader used to render the ocean surface.
          */
-        public DrawOceanTask(float radius, float zmin, Sxta.Render.Module brdfShader) : base("DrawOceanTask")
+        public DrawOceanTask(float radius, float zmin, Sxta.Render.Module brdfShader) :
+            base("DrawOceanTask")
         {
             init(radius, zmin, brdfShader);
         }
 
-        /**
+        /*
          * Creates an uninitialized DrawOceanTask.
          */
         protected DrawOceanTask() : base("DrawOceanTask")
@@ -42,7 +90,7 @@ namespace proland
             return new Impl(n, this);
         }
 
-        /**
+        /*
          * Initializes this DrawOceanTask.
          *
          * @param radius the radius of the planet for a spherical ocean, or
@@ -67,29 +115,29 @@ namespace proland
             this.nbWavesU = null;
         }
 
-        protected void swap(DrawOceanTask t)
+        public void swap(DrawOceanTask t)
         {
             DrawOceanTask tmp = this;
             Std.Swap(ref tmp, ref t);
         }
 
 
-        /**
+        /*
          * The radius of the planet for a spherical ocean, or 0 for a flat ocean.
          */
         private float radius;
 
-        /**
+        /*
          * The maximum altitude at which the ocean must be displayed.
          */
         private float zmin;
 
-        /**
+        /*
          * Number of wave trains used to synthesize the ocean surface.
          */
         private int nbWaves;
 
-        /**
+        /*
          * Minimum wavelength of the waves.
          */
         private float lambdaMin;
@@ -99,62 +147,62 @@ namespace proland
          */
         private float lambdaMax;
 
-        /**
+        /*
          * Parameter to color the height of waves.
          */
         private float heightMax;
 
-        /**
+        /*
          * Color of the seabed.
          */
         private Vector3f seaColor;
 
         // -------
 
-        /**
+        /*
          * Variance of the x slope over the sea surface.
          */
         private float sigmaXsq;
 
-        /**
+        /*
          * Variance of the y slope over the sea surface.
          */
         private float sigmaYsq;
 
-        /**
+        /*
          * Average height of the sea surface.
          */
         private float meanHeight;
 
-        /**
+        /*
          * Variance of the sea surface height.
          */
         private float heightVariance;
 
-        /**
+        /*
          * Maximum amplitude between crests and throughs.
          */
         private float amplitudeMax;
 
         // -------
 
-        /**
+        /*
          * Number of pixels per cell to use for the screen space grid
          * used to display the ocean surface.
          */
         private int resolution;
 
-        /**
+        /*
          * Current width of the viewport, in pixels.
          */
         private int screenWidth;
 
-        /**
+        /*
          * Current height of the viewport, in pixels.
          */
         private int screenHeight;
 
-        /**
+        /*
          * The mesh used to display the ocean surface.
          */
         private Mesh<Vector2f, uint> screenGrid;
@@ -167,7 +215,7 @@ namespace proland
 
         // -------
 
-        /**
+        /*
          * The Shader used to render the ocean surface.
          */
         private Module brdfShader;
@@ -219,8 +267,8 @@ namespace proland
         private void generateWaves()
         {
             long seed = 1234567;
-            float min = (float)(Math.Log(lambdaMin) / Math.Log(2.0f));
-            float max = (float)(Math.Log(lambdaMax) / Math.Log(2.0f));
+            float min = (float)(System.Math.Log(lambdaMin) / System.Math.Log(2.0f));
+            float max = (float)(System.Math.Log(lambdaMax) / System.Math.Log(2.0f));
 
             Vector4f[] waves = new Vector4f[nbWaves];
 
@@ -237,7 +285,7 @@ namespace proland
             {
                 index[i] = i;
                 float a = angle(i); // (i/(float)(nbAngle/2)-1)*1.5;
-                s += Wa[i] = (float)Math.Exp(-.5 * a * a);
+                s += Wa[i] = (float)System.Math.Exp(-.5 * a * a);
             }
             for (int i = 0; i < nbAngles; i++)
             {
@@ -252,15 +300,15 @@ namespace proland
             {
                 float x = i / (nbWaves - 1.0f);
 
-                float lambda = (float)(Math.Pow(2.0f, (1.0f - x) * min + x * max));
+                float lambda = (float)(System.Math.Pow(2.0f, (1.0f - x) * min + x * max));
                 float ktheta = Noise.grandom(0.0f, 1.0f, seed) * waveDispersion;
-                float knorm = 2.0f * (float)Math.PI / lambda;
-                float omega = (float)Math.Sqrt(9.81f * knorm);
+                float knorm = 2.0f * (float)System.Math.PI / lambda;
+                float omega = (float)System.Math.Sqrt(9.81f * knorm);
                 float amplitude;
 
                 if (spectrumType == 1)
                 {
-                    amplitude = (float)(heightMax * Noise.grandom(0.5f, 0.15f, seed) / (knorm * lambdaMax / (2.0f * Math.PI)));
+                    amplitude = (float)(heightMax * Noise.grandom(0.5f, 0.15f, seed) / (knorm * lambdaMax / (2.0f * System.Math.PI)));
                 }
                 else if (spectrumType == 2)
                 {
@@ -275,10 +323,10 @@ namespace proland
                         }
                     }
                     ktheta = (float)(waveDispersion * (angle(index[(i) % nbAngles]) + .4 * srnd(seed) * dangle()));
-                    ktheta *= (float)(1 / (1 + 40 * Math.Pow(omega0 / omega, 4)));
-                    amplitude = (float)((8.1e-3 * 9.81 * 9.81) / Math.Pow(omega, 5) * Math.Exp(-0.74 * Math.Pow(omega0 / omega, 4)));
-                    amplitude = (float)(.5 * Math.Sqrt(2 * 3.14 * 9.81 / lambda) * nbAngles * step); // (2/step-step/2);
-                    amplitude = (float)(3 * heightMax * Math.Sqrt(amplitude));
+                    ktheta *= (float)(1 / (1 + 40 * System.Math.Pow(omega0 / omega, 4)));
+                    amplitude = (float)((8.1e-3 * 9.81 * 9.81) / System.Math.Pow(omega, 5) * System.Math.Exp(-0.74 * System.Math.Pow(omega0 / omega, 4)));
+                    amplitude = (float)(.5 * System.Math.Sqrt(2 * 3.14 * 9.81 / lambda) * nbAngles * step); // (2/step-step/2);
+                    amplitude = (float)(3 * heightMax * System.Math.Sqrt(amplitude));
                 }
 
                 // cull breaking trochoids ( d(x+Acos(kx))=1-Akcos(); must be >0 )
@@ -293,23 +341,32 @@ namespace proland
 
                 waves[i].X = amplitude;
                 waves[i].Y = omega;
-                waves[i].Z = (float)(knorm * Math.Cos(ktheta));
-                waves[i].W = (float)(knorm * Math.Sin(ktheta));
-                sigmaXsq += (float)(Math.Pow(Math.Cos(ktheta), 2.0f) * (1.0f - Math.Sqrt(1.0f - knorm * knorm * amplitude * amplitude)));
-                sigmaYsq += (float)(Math.Pow(Math.Sin(ktheta), 2.0f) * (1.0f - Math.Sqrt(1.0f - knorm * knorm * amplitude * amplitude)));
+                waves[i].Z = (float)(knorm * System.Math.Cos(ktheta));
+                waves[i].W = (float)(knorm * System.Math.Sin(ktheta));
+                sigmaXsq += (float)(System.Math.Pow(System.Math.Cos(ktheta), 2.0f) * (1.0f - System.Math.Sqrt(1.0f - knorm * knorm * amplitude * amplitude)));
+                sigmaYsq += (float)(System.Math.Pow(System.Math.Sin(ktheta), 2.0f) * (1.0f - System.Math.Sqrt(1.0f - knorm * knorm * amplitude * amplitude)));
                 meanHeight -= knorm * amplitude * amplitude * 0.5f;
                 heightVariance += amplitude * amplitude * (2.0f - knorm * knorm * amplitude * amplitude) * 0.25f;
-                amplitudeMax += Math.Abs(amplitude);
+                amplitudeMax += System.Math.Abs(amplitude);
             }
 
             float var = 4.0f;
-            float h0 = (float)(meanHeight - var * Math.Sqrt(heightVariance));
-            float h1 = (float)(meanHeight + var * Math.Sqrt(heightVariance));
+            float h0 = (float)(meanHeight - var * System.Math.Sqrt(heightVariance));
+            float h1 = (float)(meanHeight + var * System.Math.Sqrt(heightVariance));
             amplitudeMax = h1 - h0;
 
+            byte[] data = new byte[4 * sizeof(float) * waves.Length];
+            int pos = 0;
+            foreach (var v in waves)
+            {
+                Array.Copy(BitConverter.GetBytes(v.X), 0, data, pos, sizeof(float)); pos += sizeof(float);
+                Array.Copy(BitConverter.GetBytes(v.Y), 0, data, pos, sizeof(float)); pos += sizeof(float);
+                Array.Copy(BitConverter.GetBytes(v.Z), 0, data, pos, sizeof(float)); pos += sizeof(float);
+                Array.Copy(BitConverter.GetBytes(v.W), 0, data, pos, sizeof(float)); pos += sizeof(float);
+            }
             Texture1D wavesTexture = new Texture1D(nbWaves, TextureInternalFormat.RGBA32F, TextureFormat.RGBA,
                     PixelType.FLOAT, new Texture.Parameters().wrapS(TextureWrap.CLAMP_TO_BORDER).min(TextureFilter.NEAREST).mag(TextureFilter.NEAREST),
-                    new Sxta.Render.Buffer.Parameters(), new CPUBuffer<byte>(waves));
+                    new Sxta.Render.Buffer.Parameters(), new CPUBuffer<byte>(data));
 
             //delete[] waves;
 
@@ -318,8 +375,8 @@ namespace proland
 
             if (brdfShader != null)
             {
-                Debug.Assert(!brdfShader.getUsers().empty());
-                Program prog = (brdfShader.getUsers().begin());
+                Debug.Assert(brdfShader.getUsers().Count != 0);
+                Program prog = (brdfShader.getUsers().First());
                 prog.getUniform1f("seaRoughness").set(sigmaXsq);
                 prog.getUniform3f("seaColor").set(seaColor);
             }
@@ -338,11 +395,11 @@ namespace proland
                 o = owner;
             }
 
-            public virtual bool run()
+            public override bool run()
             {
-                if (log.IsErrorEnabled)
+                if (log.IsDebugEnabled)
                 {
-                    log.Error("DrawOcean");
+                    log.Debug("Run DrawOcean Task");
                 }
                 FrameBuffer fb = SceneManager.getCurrentFrameBuffer();
                 Program prog = SceneManager.getCurrentProgram();
@@ -369,7 +426,7 @@ namespace proland
                     o.generateWaves();
                 }
 
-                List<TileSampler> uniforms;
+                //List<TileSampler> uniforms;
                 //TOSEE SceneNode.FieldIterator ui = n.getFields();
                 foreach (KeyValuePair<string, object> ui in n.getFields())
                 {
@@ -484,14 +541,14 @@ namespace proland
 
                 Vector4i screen = fb.getViewport();
 
-                Vector4d[] frustum= new Vector4d[6];
+                Vector4d[] frustum = new Vector4d[6];
                 SceneManager.getFrustumPlanes(ctos, frustum);
                 Vector3d left = frustum[0].Xyz;
                 left.Normalize();
                 Vector3d right = frustum[1].Xyz;
                 right.Normalize();
-                float fov = (float)Math.Acos(-Vector3d.Dot(left, right));
-                float pixelSize = (float)(Math.Atan(Math.Tan(fov / 2.0f) / (screen.W / 2.0f))); // angle under which a screen pixel is viewed from the camera
+                float fov = (float)System.Math.Acos(-Vector3d.Dot(left, right));
+                float pixelSize = (float)(System.Math.Atan(System.Math.Tan(fov / 2.0f) / (screen.W / 2.0f))); // angle under which a screen pixel is viewed from the camera
 
                 o.cameraToOceanU.setMatrix((Matrix4f)ctoo);
                 o.screenToCameraU.setMatrix((Matrix4f)stoc);
@@ -542,8 +599,8 @@ namespace proland
                 o.heightOffsetU.set(-o.meanHeight);
                 o.lodsU.set(new Vector4f(o.resolution,
                         pixelSize * o.resolution,
-                        (float)(Math.Log(o.lambdaMin) / Math.Log(2.0f)),
-                        (float)((o.nbWavesU.get() - 1.0f) / (Math.Log(o.lambdaMax) / Math.Log(2.0f) - Math.Log(o.lambdaMin) / Math.Log(2.0f)))));
+                        (float)(System.Math.Log(o.lambdaMin) / System.Math.Log(2.0f)),
+                        (float)((o.nbWavesU.get() - 1.0f) / (System.Math.Log(o.lambdaMax) / System.Math.Log(2.0f) - System.Math.Log(o.lambdaMin) / System.Math.Log(2.0f)))));
 
                 if (o.screenGrid == null || o.screenWidth != screen.Z || o.screenHeight != screen.W)
                 {
