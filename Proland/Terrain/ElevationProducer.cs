@@ -1,46 +1,4 @@
-﻿/*
- * Proland: a procedural landscape rendering library.
- * Website : http://proland.inrialpes.fr/
- * Copyright (c) 2008-2015 INRIA - LJK (CNRS - Grenoble University)
- * All rights reserved.
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions are met:
- * 
- * 1. Redistributions of source code must retain the above copyright notice, 
- * this list of conditions and the following disclaimer.
- * 
- * 2. Redistributions in binary form must reproduce the above copyright notice, 
- * this list of conditions and the following disclaimer in the documentation 
- * and/or other materials provided with the distribution.
- * 
- * 3. Neither the name of the copyright holder nor the names of its contributors 
- * may be used to endorse or promote products derived from this software without 
- * specific prior written permission.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
- * IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
- * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
- * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
- * OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- */
-/*
- * Proland is distributed under the Berkeley Software Distribution 3 Licence. 
- * For any assistance, feedback and enquiries about training programs, you can check out the 
- * contact page on our website : 
- * http://proland.inrialpes.fr/
- */
-/*
- * Main authors: Eric Bruneton, Antoine Begault, Guillaume Piolat.
-* Modified and ported to C# and Sxta Engine by Agustin Santos and Daniel Olmedo 2015-2016
-*/
-
-using log4net;
+﻿using log4net;
 using proland;
 using Sxta.Core;
 using Sxta.Math;
@@ -52,6 +10,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
 using System.Xml;
 
 namespace Sxta.Proland.Terrain
@@ -92,7 +52,7 @@ namespace Sxta.Proland.Terrain
                 brand = (l & 1) == 0 ? 7654321 : 5647381;
                 for (int h = 5; h <= tileWidth / 2; ++h)
                 {
-                    float N = Noise.frandom(ref rand) * 2.0f - 1.0f;
+                    float N = Noise.frandom(brand) * 2.0f - 1.0f;
                     noiseArray[n + (h) + (2) * tileWidth] = N;
                     //SetNoise(noiseArray, n, tileWidth, h, 2, N);
                     noiseArray[n + (tileWidth - 1) + (2) * tileWidth] = N;
@@ -102,7 +62,7 @@ namespace Sxta.Proland.Terrain
                 {
                     for (int h = 5; h < tileWidth - 5; ++h)
                     {
-                        float N = Noise.frandom(ref rand) * 2.0f - 1.0f;
+                        float N = Noise.frandom(brand) * 2.0f - 1.0f;
                         noiseArray[n + (h) + (v) * tileWidth] = N;
                         //SetNoise(noiseArray, n, tileWidth, h, v, N);
                         noiseArray[n + (tileWidth - 1 - h) + (4 - v) * tileWidth] = N;
@@ -113,7 +73,7 @@ namespace Sxta.Proland.Terrain
                 brand = (l & 2) == 0 ? 7654321 : 5647381;
                 for (int v = 5; v <= tileWidth / 2; ++v)
                 {
-                    float N = Noise.frandom(ref rand) * 2.0f - 1.0f;
+                    float N = Noise.frandom(brand) * 2.0f - 1.0f;
                     noiseArray[n + (tileWidth - 3) + (v) * tileWidth] = N;
                     //SetNoise(noiseArray, n, tileWidth, tileWidth - 3, v, N);
                     noiseArray[n + (tileWidth - 3) + (tileWidth - 1 - v) * tileWidth] = N;
@@ -123,7 +83,7 @@ namespace Sxta.Proland.Terrain
                 {
                     for (int v = 5; v < tileWidth - 5; ++v)
                     {
-                        float N = Noise.frandom(ref rand) * 2.0f - 1.0f;
+                        float N = Noise.frandom(brand) * 2.0f - 1.0f;
                         noiseArray[n + (h) + (v) * tileWidth] = N;
                         //SetNoise(noiseArray, n, tileWidth, h, v, N);
                         noiseArray[n + (2 * tileWidth - 6 - h) + (tileWidth - 1 - v) * tileWidth] = N;
@@ -134,7 +94,7 @@ namespace Sxta.Proland.Terrain
                 brand = (l & 4) == 0 ? 7654321 : 5647381;
                 for (int h = 5; h <= tileWidth / 2; ++h)
                 {
-                    float N = Noise.frandom(ref rand) * 2.0f - 1.0f;
+                    float N = Noise.frandom(brand) * 2.0f - 1.0f;
                     noiseArray[n + (h) + (tileWidth - 3) * tileWidth] = N;
                     //SetNoise(noiseArray, n, tileWidth, h, tileWidth - 3, N);
                     noiseArray[n + (tileWidth - 1 - h) + (tileWidth - 3) * tileWidth] = N;
@@ -144,7 +104,7 @@ namespace Sxta.Proland.Terrain
                 {
                     for (int h = 5; h < tileWidth - 5; ++h)
                     {
-                        float N = Noise.frandom(ref rand) * 2.0f - 1.0f;
+                        float N = Noise.frandom(brand) * 2.0f - 1.0f;
                         noiseArray[n + (h) + (v) * tileWidth] = N;
                         //SetNoise(noiseArray, n, tileWidth, h, v, N);
                         noiseArray[n + (tileWidth - 1 - h) + (2 * tileWidth - 6 - v) * tileWidth] = N;
@@ -155,7 +115,7 @@ namespace Sxta.Proland.Terrain
                 brand = (l & 8) == 0 ? 7654321 : 5647381;
                 for (int v = 5; v <= tileWidth / 2; ++v)
                 {
-                    float N = Noise.frandom(ref rand) * 2.0f - 1.0f;
+                    float N = Noise.frandom(brand) * 2.0f - 1.0f;
                     noiseArray[n + (2) + (v) * tileWidth] = N;
                     //SetNoise(noiseArray, n, tileWidth, 2, v, N);
                     noiseArray[n + (2) + (tileWidth - 1 - v) * tileWidth] = N;
@@ -165,7 +125,7 @@ namespace Sxta.Proland.Terrain
                 {
                     for (int v = 5; v < tileWidth - 5; ++v)
                     {
-                        float N = Noise.frandom(ref rand) * 2.0f - 1.0f;
+                        float N = Noise.frandom(brand) * 2.0f - 1.0f;
                         noiseArray[n + (h) + (v) * tileWidth] = N;
                         //SetNoise(noiseArray, n, tileWidth, h, v, N);
                         noiseArray[n + (4 - h) + (tileWidth - 1 - v) * tileWidth] = N;
@@ -177,7 +137,7 @@ namespace Sxta.Proland.Terrain
                 {
                     for (int h = 5; h < tileWidth - 5; ++h)
                     {
-                        noiseArray[n + (h) + (v) * tileWidth] = Noise.frandom(ref rand) * 2.0f - 1.0f;
+                        noiseArray[n + (h) + (v) * tileWidth] = Noise.frandom(rand) * 2.0f - 1.0f;
                         //SetNoise(noiseArray, n, tileWidth, h, v, Noise.frandom(rand) * 2.0f - 1.0f);
                     }
                 }
@@ -467,7 +427,7 @@ namespace Sxta.Proland.Terrain
                     continue;
                 }
 
-                TileLayer l = manager.loadResource(desc, f).get() as TileLayer;
+                TileLayer l = (TileLayer)manager.loadResource(desc, f);
                 if (l != null)
                 {
                     addLayer(l);
@@ -798,11 +758,11 @@ namespace Sxta.Proland.Terrain
     {
         public ElevationProducerResource(ResourceManager manager, string name, ResourceDescriptor desc, XmlElement e = null) :
                 base(40, manager, name, desc)
-        {
-            e = e == null ? desc.descriptor : e;
-            checkParameters(desc, e, "name,cache,residuals,face,upsampleProg,blendProg,gridSize,noise,flip,");
-            valueC.init(manager, this, name, desc, e);
-        }
+            {
+                e = e == null ? desc.descriptor : e;
+                checkParameters(desc, e, "name,cache,residuals,face,upsampleProg,blendProg,gridSize,noise,flip,");
+                valueC.init(manager, this, name, desc, e);
+            }
 
         public override bool prepareUpdate()
         {
