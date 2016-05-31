@@ -80,7 +80,7 @@ namespace Sxta.Proland.Terrain.Ortho
          */
         //public virtual ~EmptyOrthoLayer();
 
-        public virtual bool doCreateTile(int level, int tx, int ty, TileStorage.Slot data)
+        public override bool doCreateTile(int level, int tx, int ty, TileStorage.Slot data)
         {
             if (log.IsDebugEnabled)
             {

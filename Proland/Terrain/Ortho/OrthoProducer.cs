@@ -253,17 +253,17 @@ namespace Sxta.Proland.Terrain
             float scale = 2.0f;
             int maxLevel = -1;
             cache = manager.loadResource(Resource.getParameter(desc, e, "cache")).get() as TileCache;
-            if (e.GetAttribute("residuals") != null)
+            if (!string.IsNullOrWhiteSpace(e.GetAttribute("residuals")))
             {
                 residuals = manager.loadResource(Resource.getParameter(desc, e, "residuals")).get() as TileProducer;
             }
             string upsample = "upsampleOrthoShader;";
-            if (e.GetAttribute("upsampleProg") != null)
+            if (!string.IsNullOrWhiteSpace(e.GetAttribute("upsampleProg")))
             {
                 upsample = Resource.getParameter(desc, e, "upsampleProg");
             }
             upsampleProg = manager.loadResource(upsample).get() as Program;
-            if (e.GetAttribute("rnoise") != null)
+            if (!string.IsNullOrWhiteSpace(e.GetAttribute("rnoise")))
             {
                 string c = e.GetAttribute("rnoise") + ",";
                 int start = 0;
@@ -277,7 +277,7 @@ namespace Sxta.Proland.Terrain
                 }
                 rootNoiseColor = new Vector4f(val[0], val[1], val[2], val[2]);
             }
-            if (e.GetAttribute("cnoise") != null)
+            if (!string.IsNullOrWhiteSpace(e.GetAttribute("cnoise")))
             {
                 string c = e.GetAttribute("cnoise") + ",";
                 int start = 0;
@@ -291,7 +291,7 @@ namespace Sxta.Proland.Terrain
                 }
                 noiseColor = new Vector4f(val[0], val[1], val[2], val[2]);
             }
-            if (e.GetAttribute("noise") != null)
+            if (!string.IsNullOrWhiteSpace(e.GetAttribute("noise")))
             {
                 string noiseAmps = e.GetAttribute("noise") + ",";
                 int start = 0;
@@ -309,15 +309,15 @@ namespace Sxta.Proland.Terrain
             {
                 noiseHsv = true;
             }
-            if (e.GetAttribute("scale") != null)
+            if (!string.IsNullOrWhiteSpace(e.GetAttribute("scale")))
             {
                 Resource.getFloatParameter(desc, e, "scale", out scale);
             }
-            if (e.GetAttribute("maxLevel") != null)
+            if (!string.IsNullOrWhiteSpace(e.GetAttribute("maxLevel")))
             {
                 Resource.getIntParameter(desc, e, "maxLevel", out maxLevel);
             }
-            if (e.GetAttribute("face") != null)
+            if (!string.IsNullOrWhiteSpace(e.GetAttribute("face")))
             {
                 Resource.getIntParameter(desc, e, "face", out face);
             }

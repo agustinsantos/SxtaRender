@@ -462,12 +462,12 @@ namespace Sxta.Proland.Terrain
             cache = (TileCache)manager.loadResource(getParameter(desc, e, "cache")).get();
             elevations = (TileProducer)manager.loadResource(getParameter(desc, e, "elevations")).get();
             string normals = "normalShader;";
-            if (e.GetAttribute("normalProg") != null)
+            if (!string.IsNullOrWhiteSpace(e.GetAttribute("normalProg")))
             {
                 normals = getParameter(desc, e, "normalProg");
             }
             normalsProg = (Program)(manager.loadResource(normals).get());
-            if (e.GetAttribute("gridSize") != null)
+            if (!string.IsNullOrWhiteSpace(e.GetAttribute("gridSize")))
             {
                 getIntParameter(desc, e, "gridSize", out gridSize);
             }

@@ -64,7 +64,7 @@ namespace Sxta.Proland.Ocean.XmlResources
             Program fftInit = manager.loadResource("fftInitShader;").get() as Program ;
             Program fftx = manager.loadResource("fftxShader;").get() as Program;
             Program ffty = manager.loadResource("fftyShader;").get() as Program;
-            if (e.GetAttribute("brdfShader") != null)
+            if (!string.IsNullOrWhiteSpace(e.GetAttribute("brdfShader") ))
             {
                 variances = manager.loadResource("variancesShader;").get() as Program;
                 brdfShader = manager.loadResource(getParameter(desc, e, "brdfShader")).get() as Module;

@@ -60,7 +60,7 @@ namespace Sxta.Proland.Ocean.XmlResources
             float radius;
             float zmin;
             Module brdfShader = null;
-            if (e.GetAttribute("brdfShader") != null)
+            if (!string.IsNullOrWhiteSpace(e.GetAttribute("brdfShader")))
             {
                 brdfShader = manager.loadResource(getParameter(desc, e, "brdfShader")).get() as Module;
             }

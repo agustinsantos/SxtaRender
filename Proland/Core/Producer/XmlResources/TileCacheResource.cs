@@ -23,7 +23,7 @@ namespace Sxta.Proland.Core.Producer.XmlResources
             TileStorage storage = new TileStorage();
             Scheduler scheduler;
             checkParameters(desc, e, "name,storage,scheduler,");
-            if (e.GetAttribute("storage") != null)
+            if (!string.IsNullOrWhiteSpace(e.GetAttribute("storage")))
             {
                 string _id = getParameter(desc, e, "storage");
                 storage = (TileStorage)manager.loadResource(_id).get();

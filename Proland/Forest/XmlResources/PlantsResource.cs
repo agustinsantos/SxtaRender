@@ -81,7 +81,7 @@ namespace Sxta.Proland.Forest.XmlResources
             getIntParameter(desc, e, "patternCount", out patternCount);
 
             this.valueC.selectProg = manager.loadResource(getParameter(desc, e, "selectProg")).get() as Program;
-            if (e.GetAttribute("shadowProg") != null)
+            if (!string.IsNullOrWhiteSpace(e.GetAttribute("shadowProg") ))
             {
                 this.valueC.shadowProg = manager.loadResource(getParameter(desc, e, "shadowProg")).get() as Program;
             }

@@ -109,13 +109,13 @@ namespace Sxta.Proland.Terrain.Ortho.XmlResources
                     blendParams.buffer = BufferId.STENCIL;
                 }
             }
-            if (e.GetAttribute("equation") != null)
+            if (!string.IsNullOrWhiteSpace(e.GetAttribute("equation")))
             {
                 blendParams.rgb = getBlendEquation(desc, e, "equation");
                 blendParams.srgb = getBlendArgument(desc, e, "sourceFunction");
                 blendParams.drgb = getBlendArgument(desc, e, "destinationFunction");
             }
-            if (e.GetAttribute("equationAlpha") != null)
+            if (!string.IsNullOrWhiteSpace(e.GetAttribute("equationAlpha")))
             {
                 blendParams.alpha = getBlendEquation(desc, e, "equationAlpha");
                 blendParams.salpha = getBlendArgument(desc, e, "sourceFunctionAlpha");
@@ -173,60 +173,60 @@ namespace Sxta.Proland.Terrain.Ortho.XmlResources
         {
             try
             {
-                if (e.GetAttribute(name) == "ZERO") 
-                    {
+                if (e.GetAttribute(name) == "ZERO")
+                {
                     return BlendArgument.ZERO;
                 }
-                if (e.GetAttribute(name) == "ONE") 
-                    {
+                if (e.GetAttribute(name) == "ONE")
+                {
                     return BlendArgument.ONE;
                 }
-                if (e.GetAttribute(name) == "SRC_COLOR") 
-                    {
+                if (e.GetAttribute(name) == "SRC_COLOR")
+                {
                     return BlendArgument.SRC_COLOR;
                 }
-                if (e.GetAttribute(name) == "ONE_MINUS_SRC_COLOR") 
-                    {
+                if (e.GetAttribute(name) == "ONE_MINUS_SRC_COLOR")
+                {
                     return BlendArgument.ONE_MINUS_SRC_COLOR;
                 }
-                if (e.GetAttribute(name) == "DST_COLOR") 
-                    {
+                if (e.GetAttribute(name) == "DST_COLOR")
+                {
                     return BlendArgument.DST_COLOR;
                 }
-                if (e.GetAttribute(name) == "ONE_MINUS_DST_COLOR") 
-                    {
+                if (e.GetAttribute(name) == "ONE_MINUS_DST_COLOR")
+                {
                     return BlendArgument.ONE_MINUS_DST_COLOR;
                 }
-                if (e.GetAttribute(name) == "SRC_ALPHA") 
-                    {
+                if (e.GetAttribute(name) == "SRC_ALPHA")
+                {
                     return BlendArgument.SRC_ALPHA;
                 }
-                if (e.GetAttribute(name) == "ONE_MINUS_SRC_ALPHA") 
-                    {
+                if (e.GetAttribute(name) == "ONE_MINUS_SRC_ALPHA")
+                {
                     return BlendArgument.ONE_MINUS_SRC_ALPHA;
                 }
                 if (e.GetAttribute(name) == "DST_ALPHA")
-                    {
+                {
                     return BlendArgument.DST_ALPHA;
                 }
                 if (e.GetAttribute(name) == "ONE_MINUS_DST_ALPHA")
-                    {
+                {
                     return BlendArgument.ONE_MINUS_DST_ALPHA;
                 }
-                if (e.GetAttribute(name) == "CONSTANT_COLOR") 
-                    {
+                if (e.GetAttribute(name) == "CONSTANT_COLOR")
+                {
                     return BlendArgument.CONSTANT_COLOR;
                 }
-                if (e.GetAttribute(name) == "ONE_MINUS_CONSTANT_COLOR") 
-                    {
+                if (e.GetAttribute(name) == "ONE_MINUS_CONSTANT_COLOR")
+                {
                     return BlendArgument.ONE_MINUS_CONSTANT_COLOR;
                 }
                 if (e.GetAttribute(name) == "CONSTANT_ALPHA")
-                    {
+                {
                     return BlendArgument.CONSTANT_ALPHA;
                 }
                 if (e.GetAttribute(name) == "ONE_MINUS_CONSTANT_ALPHA")
-                    {
+                {
                     return BlendArgument.ONE_MINUS_CONSTANT_ALPHA;
                 }
             }

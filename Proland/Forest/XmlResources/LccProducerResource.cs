@@ -50,7 +50,7 @@ namespace Sxta.Proland.Forest.XmlResources
             Program dots = manager.loadResource("globalsShaderGS;dots;").get() as Program;
 
             int maxLevel = -1;
-            if (e.GetAttribute("maxLevel") != null)
+            if (!string.IsNullOrWhiteSpace(e.GetAttribute("maxLevel")))
             {
                 getIntParameter(desc, e, "maxLevel", out maxLevel);
             }

@@ -60,7 +60,7 @@ namespace Sxta.Proland.Terrain.Ortho.XmlResources
             string file = null;
             checkParameters(desc, e, "name,cache,file,");
             cache = manager.loadResource(getParameter(desc, e, "cache")).get() as TileCache;
-            if (e.GetAttribute("file") != null)
+            if (!string.IsNullOrWhiteSpace(e.GetAttribute("file")))
             {
                 file = getParameter(desc, e, "file");
                 file = manager.getLoader().findResource(file);

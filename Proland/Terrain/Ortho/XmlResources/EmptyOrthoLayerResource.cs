@@ -61,7 +61,7 @@ namespace Sxta.Proland.Terrain.Ortho.XmlResources
 
             checkParameters(desc, e, "name,color,");
 
-            if (e.GetAttribute("color") != null)
+            if (!string.IsNullOrWhiteSpace(e.GetAttribute("color") ))
             {
                 string c = getParameter(desc, e, "color") + ",";
                 int start = 0;

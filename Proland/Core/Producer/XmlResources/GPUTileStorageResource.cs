@@ -28,7 +28,7 @@ namespace Sxta.Proland.Core.Producer.XmlResources
             TextureResource.getParameters(desc, e, ref _params);
             getIntParameter(desc, e, "tileSize", out tileSize);
             getIntParameter(desc, e, "nTiles", out nTiles);
-            if (e.GetAttribute("tileMap") != null)
+            if (!string.IsNullOrWhiteSpace(e.GetAttribute("tileMap")))
             {
                 useTileMap = e.GetAttribute("tileMap") == "true"; // == 0???
             }

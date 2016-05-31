@@ -405,21 +405,21 @@ namespace Sxta.Proland.Terrain
             List<float> noiseAmp = null;
             bool flip = false;
             cache = (TileCache)(manager.loadResource(Resource.getParameter(desc, e, "cache"))).get();
-            if (e.GetAttribute("residuals") != null)
+            if (!string.IsNullOrWhiteSpace(e.GetAttribute("residuals")))
             {
                 residuals = (TileProducer)(manager.loadResource(Resource.getParameter(desc, e, "residuals")).get());
             }
             string upsample = "upsampleShader;";
-            if (e.GetAttribute("upsampleProg") != null)
+            if (!string.IsNullOrWhiteSpace(e.GetAttribute("upsampleProg")))
             {
                 upsample = Resource.getParameter(desc, e, "upsampleProg");
             }
             upsampleProg = (Program)(manager.loadResource(upsample)).get();
-            if (e.GetAttribute("gridSize") != null)
+            if (!string.IsNullOrWhiteSpace(e.GetAttribute("gridSize")))
             {
                 Resource.getIntParameter(desc, e, "gridSize", out gridSize);
             }
-            if (e.GetAttribute("noise") != null)
+            if (!string.IsNullOrWhiteSpace(e.GetAttribute("noise")))
             {
                 string noiseAmps = e.GetAttribute("noise") + ",";
                 string[] stringSeparator = new string[] { "," };
@@ -436,7 +436,7 @@ namespace Sxta.Proland.Terrain
             {
                 flip = true;
             }
-            if (e.GetAttribute("face") != null)
+            if (!string.IsNullOrWhiteSpace(e.GetAttribute("face")))
             {
                 Resource.getIntParameter(desc, e, "face", out face);
             }
@@ -488,7 +488,7 @@ namespace Sxta.Proland.Terrain
                 layerTexture = (Texture2D)manager.loadResource(_demTex).get();
 
                 string blend = "blendShader;";
-                if (e.GetAttribute("blendProg") != null)
+                if (!string.IsNullOrWhiteSpace(e.GetAttribute("blendProg")))
                 {
                     blend = Resource.getParameter(desc, e, "blendProg");
                 }

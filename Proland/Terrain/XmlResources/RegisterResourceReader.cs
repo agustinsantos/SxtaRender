@@ -52,6 +52,7 @@ namespace Sxta.Proland.Terrain.XmlResources
             ResourceFactory.getInstance().addType("emptyOrthoLayer", EmptyOrthoLayerResource.Create);
             ResourceFactory.getInstance().addType("orthoProducer", OrthoProducerResource.Create);
             ResourceFactory.getInstance().addType("orthoCpuProducer", OrthoCPUProducerResource.Create);
+            ResourceFactory.getInstance().addType("orthoGpuProducer", OrthoGPUProducerResource.Create);
             ResourceFactory.getInstance().addType("textureLayer", TextureLayerResource.Create);
         }
     }
