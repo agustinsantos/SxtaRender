@@ -16,7 +16,7 @@ using System.Xml;
 
 namespace Sxta.Proland.Terrain
 {
-    class ElevationProducer : TileProducer, ISwappable<ElevationProducer>
+    public class ElevationProducer : TileProducer, ISwappable<ElevationProducer>
     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -219,7 +219,7 @@ namespace Sxta.Proland.Terrain
         /// <summary>
         ///  Creates an uninitialized ElevationProducer.
         /// </summary>
-        protected ElevationProducer() : base("ElevationProducer", "CreateElevationTile")
+        public ElevationProducer() : base("ElevationProducer", "CreateElevationTile")
         {
 
         }
@@ -753,41 +753,5 @@ namespace Sxta.Proland.Terrain
         private Uniform1f blendScaleU;
 
         private FrameBuffer old;
-    }
-    class ElevationProducerResource : ResourceTemplate<ElevationProducer>
-    {
-        public ElevationProducerResource(ResourceManager manager, string name, ResourceDescriptor desc, XmlElement e = null) :
-                base(40, manager, name, desc)
-            {
-                e = e == null ? desc.descriptor : e;
-                checkParameters(desc, e, "name,cache,residuals,face,upsampleProg,blendProg,gridSize,noise,flip,");
-                valueC.init(manager, this, name, desc, e);
-            }
-
-        public override bool prepareUpdate()
-        {
-#if TODO
-
-                if (dynamic_cast<Resource*>(upsample.get())->changed()) {
-                    invalidateTiles();
-                } else if (blend != NULL && dynamic_cast<Resource*>(blend.get())->changed()) {
-                    invalidateTiles();
-                }
-                return ResourceTemplate<40, ElevationProducer>::prepareUpdate();
-
-
-            if ((Resource)(valueC.upsample).changed())
-            {
-                valueC.invalidateTiles();
-            }
-            else if (valueC.blend != null && ((Resource)(valueC.blend)).get.changed())
-            {
-                valueC.invalidateTiles();
-            }
-            return new ResourceTemplate <ElevationProducer>(40,null,null,null).prepareUpdate();
-#endif
-            throw new NotImplementedException();
-
-        }
     }
 }

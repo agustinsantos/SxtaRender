@@ -18,6 +18,9 @@ namespace Sxta.Proland.Core.Producer.XmlResources
             ResourceFactory.getInstance().addType("objectTileStorage", ObjectTileStorageResource.Create);
             ResourceFactory.getInstance().addType("cpuByteTileStorage", CPUByteTileStorageResource.Create);
             ResourceFactory.getInstance().addType("cpuFloatTileStorage", CPUFloatTileStorageResource.Create);
+
+            ResourceFactory.getInstance().addType("elevationProducer", ElevationProducerResource.Create);
+            ResourceFactory.getInstance().addType("normalProducer", NormalProducerResource.Create);
         }
     }
 }
