@@ -1,11 +1,4 @@
-﻿
-
-
-
-
-
-
-#region --- License ---
+﻿#region --- License ---
 /*
 Copyright (c) 2008 - 2016 The Sxta Render library.
 
@@ -38,7 +31,6 @@ using OpenTK;
 
 namespace Sxta.Math
 {
-
       /// <summary>Represents a 2D vector using two int-precision floating-point numbers.</summary>
     [Serializable]
     [StructLayout(LayoutKind.Sequential)]
@@ -259,7 +251,17 @@ namespace Sxta.Math
             X = (int)(this.X * scale);
             Y = (int)(this.Y * scale);
         }
-
+		
+		/// <summary>
+        /// Scales the Vector2i to the given length.
+        /// </summary>
+        public Vector2i Normalize(int l)
+        {    
+            double scale = l / this.Length;
+            X = (int)(X * scale);
+            Y = (int)(Y * scale);
+			return this;
+        }
         #endregion
 
         #region public void Scale()
@@ -673,6 +675,18 @@ namespace Sxta.Math
 			previousLength = scale;
             return vec;
         }
+		
+		/// <summary>
+        /// Scales the Vector2i to the given length.
+        /// </summary>
+        public static Vector2i Normalize(Vector2i vec, int l)
+        {    
+			double scale = l / vec.Length;
+            vec.X = (int)(vec.X * scale);
+            vec.Y = (int)(vec.Y * scale);
+
+            return vec;
+        }
 
         /// <summary>
         /// Scale a vector to unit length
@@ -739,6 +753,21 @@ namespace Sxta.Math
         public static void Dot(ref Vector2i left, ref Vector2i right, out int result)
         {
             result = left.X * right.X + left.Y * right.Y;
+        }
+
+        #endregion
+
+		#region Cross
+
+        /// <summary>
+        /// Caclulate the cross (vector) product of two vectors
+        /// </summary>
+        /// <param name="left">First operand</param>
+        /// <param name="right">Second operand</param>
+        /// <returns>The cross product of the two inputs</returns>
+        public static int Cross(Vector2i left, Vector2i right)
+        {
+            return left.X * right.Y - left.Y * right.X;
         }
 
         #endregion
@@ -813,7 +842,6 @@ namespace Sxta.Math
         }
 
         #endregion
-
 
 
         #endregion
@@ -936,30 +964,22 @@ namespace Sxta.Math
             return new Vector2((float)v2d.X, (float)v2d.Y);
         }
 
-		
-		/// <summary>Converts Vector2i to Vector2f.</summary>
+				/// <summary>Converts Vector2i to Vector2f.</summary>
         /// <param name="v2d">The Vector2i to convert.</param>
         /// <returns>The resulting Vector2f.</returns>
         public static explicit operator Vector2f(Vector2i v2)
         {
             return new Vector2f((float)v2.X, (float)v2.Y);
         }
-
-
 		
-
-		
-		/// <summary>Converts Vector2i to Vector2d.</summary>
+				/// <summary>Converts Vector2i to Vector2d.</summary>
         /// <param name="v2d">The Vector2i to convert.</param>
         /// <returns>The resulting Vector2d.</returns>
         public static explicit operator Vector2d(Vector2i v2)
         {
             return new Vector2d(v2.X, v2.Y);
         }
-
-
 		
-
 		public static bool operator <(Vector2i l, Vector2i r)
         {
 			if (l.X != r.X) return l.X < r.X;
@@ -1128,7 +1148,6 @@ namespace Sxta.Math
             Z = v.Z;
         }
 
-
         /// <summary>
         /// Constructs a new instance from the given Vector4i.
         /// </summary>
@@ -1139,7 +1158,6 @@ namespace Sxta.Math
             Y = (int)v.Y;
             Z = (int)v.Z;
         }
-
 
         #endregion
 
@@ -1296,6 +1314,17 @@ namespace Sxta.Math
         public void Normalize()
         {
             double scale = 1.0 / this.Length;
+            X = (int)(X * scale);
+            Y = (int)(Y * scale);
+            Z = (int)(Z * scale);
+        }
+
+		/// <summary>
+        /// Scales the Vector3i to the given length.
+        /// </summary>
+        public void Normalize(int l)
+        {    
+            double scale = l / this.Length;
             X = (int)(X * scale);
             Y = (int)(Y * scale);
             Z = (int)(Z * scale);
@@ -1568,7 +1597,6 @@ namespace Sxta.Math
             return vector;
         }
 
-
         /// <summary>
         /// Multiplies a vector by a scalar.
         /// </summary>
@@ -1581,7 +1609,6 @@ namespace Sxta.Math
             return vector;
         }
 
-
         /// <summary>
         /// Multiplies a vector by a scalar.
         /// </summary>
@@ -1592,7 +1619,6 @@ namespace Sxta.Math
         {
             result = new Vector3i(vector.X * scale, vector.Y * scale, vector.Z * scale);
         }
-
 
         /// <summary>
         /// Multiplies a vector by a scalar.
@@ -1606,7 +1632,6 @@ namespace Sxta.Math
 			                            (int)(vector.Y * scale),
 			                            (int)(vector.Z * scale));
         }
-
 
         /// <summary>
         /// Multiplies a vector by the components a vector (scale).
@@ -2015,7 +2040,6 @@ namespace Sxta.Math
 
         #endregion
 
-
         #region CalculateAngle
 
         /// <summary>
@@ -2173,8 +2197,7 @@ namespace Sxta.Math
         }
 
 		 
-		
-		 
+				 
         /// <summary>Converts Vector3i to OpenTK.Vector3.</summary>
         /// <param name="v3d">The Vector3i to convert.</param>
         /// <returns>The resulting Vector3.</returns>
@@ -2190,16 +2213,14 @@ namespace Sxta.Math
         {
             return new Vector3i((int)v3.X, (int)v3.Y, (int)v3.Z);
         }
-		
-        /// <summary>Converts Vector3i to OpenTK.Vector3d.</summary>
+		        /// <summary>Converts Vector3i to OpenTK.Vector3d.</summary>
         /// <param name="v3d">The Vector3i to convert.</param>
         /// <returns>The resulting Vector3d.</returns>
         public static explicit operator Vector3d(Vector3i v3d)
         {
             return new Vector3d((float)v3d.X, (float)v3d.Y, (float)v3d.Z);
         }
-		
-		
+				
 		public static bool operator <(Vector3i l, Vector3i r)
         {
 			if (l.X != r.X) return l.X < r.X;
@@ -3058,7 +3079,6 @@ namespace Sxta.Math
 
         #endregion
 
-
         #endregion
 
         #region Swizzle
@@ -3230,7 +3250,17 @@ namespace Sxta.Math
         {
             return new Vector4((float)v4d.X, (float)v4d.Y, (float)v4d.Z, (float)v4d.W);
         }
-				
+
+
+		/// <summary>Converts Vector4i to  Vector4f.</summary>
+        /// <param name="v4d">The Vector4i to convert.</param>
+        /// <returns>The resulting Vector4f.</returns>
+        public static explicit operator Vector4f(Vector4i v4d)
+        {
+            return new Vector4f((float)v4d.X, (float)v4d.Y, (float)v4d.Z, (float)v4d.W);
+        }
+ 	
+
 		public static bool operator <(Vector4i l, Vector4i r)
         {
 			if (l.X != r.X) return l.X < r.X;
@@ -3333,8 +3363,7 @@ namespace Sxta.Math
         #endregion
     }
 
-	
-      /// <summary>Represents a 2D vector using two uint-precision floating-point numbers.</summary>
+	      /// <summary>Represents a 2D vector using two uint-precision floating-point numbers.</summary>
     [Serializable]
     [StructLayout(LayoutKind.Sequential)]
     public struct Vector2ui : IEquatable<Vector2ui>
@@ -3554,7 +3583,17 @@ namespace Sxta.Math
             X = (uint)(this.X * scale);
             Y = (uint)(this.Y * scale);
         }
-
+		
+		/// <summary>
+        /// Scales the Vector2ui to the given length.
+        /// </summary>
+        public Vector2ui Normalize(uint l)
+        {    
+            double scale = l / this.Length;
+            X = (uint)(X * scale);
+            Y = (uint)(Y * scale);
+			return this;
+        }
         #endregion
 
         #region public void Scale()
@@ -3968,6 +4007,18 @@ namespace Sxta.Math
 			previousLength = scale;
             return vec;
         }
+		
+		/// <summary>
+        /// Scales the Vector2ui to the given length.
+        /// </summary>
+        public static Vector2ui Normalize(Vector2ui vec, uint l)
+        {    
+			double scale = l / vec.Length;
+            vec.X = (uint)(vec.X * scale);
+            vec.Y = (uint)(vec.Y * scale);
+
+            return vec;
+        }
 
         /// <summary>
         /// Scale a vector to unit length
@@ -4034,6 +4085,21 @@ namespace Sxta.Math
         public static void Dot(ref Vector2ui left, ref Vector2ui right, out uint result)
         {
             result = left.X * right.X + left.Y * right.Y;
+        }
+
+        #endregion
+
+		#region Cross
+
+        /// <summary>
+        /// Caclulate the cross (vector) product of two vectors
+        /// </summary>
+        /// <param name="left">First operand</param>
+        /// <param name="right">Second operand</param>
+        /// <returns>The cross product of the two inputs</returns>
+        public static uint Cross(Vector2ui left, Vector2ui right)
+        {
+            return left.X * right.Y - left.Y * right.X;
         }
 
         #endregion
@@ -4108,7 +4174,6 @@ namespace Sxta.Math
         }
 
         #endregion
-
 
 
         #endregion
@@ -4231,30 +4296,22 @@ namespace Sxta.Math
             return new Vector2((float)v2d.X, (float)v2d.Y);
         }
 
-		
-		/// <summary>Converts Vector2ui to Vector2f.</summary>
+				/// <summary>Converts Vector2ui to Vector2f.</summary>
         /// <param name="v2d">The Vector2ui to convert.</param>
         /// <returns>The resulting Vector2f.</returns>
         public static explicit operator Vector2f(Vector2ui v2)
         {
             return new Vector2f((float)v2.X, (float)v2.Y);
         }
-
-
 		
-
-		
-		/// <summary>Converts Vector2ui to Vector2d.</summary>
+				/// <summary>Converts Vector2ui to Vector2d.</summary>
         /// <param name="v2d">The Vector2ui to convert.</param>
         /// <returns>The resulting Vector2d.</returns>
         public static explicit operator Vector2d(Vector2ui v2)
         {
             return new Vector2d(v2.X, v2.Y);
         }
-
-
 		
-
 		public static bool operator <(Vector2ui l, Vector2ui r)
         {
 			if (l.X != r.X) return l.X < r.X;
@@ -4423,7 +4480,6 @@ namespace Sxta.Math
             Z = v.Z;
         }
 
-
         /// <summary>
         /// Constructs a new instance from the given Vector4ui.
         /// </summary>
@@ -4434,7 +4490,6 @@ namespace Sxta.Math
             Y = (uint)v.Y;
             Z = (uint)v.Z;
         }
-
 
         #endregion
 
@@ -4591,6 +4646,17 @@ namespace Sxta.Math
         public void Normalize()
         {
             double scale = 1.0 / this.Length;
+            X = (uint)(X * scale);
+            Y = (uint)(Y * scale);
+            Z = (uint)(Z * scale);
+        }
+
+		/// <summary>
+        /// Scales the Vector3ui to the given length.
+        /// </summary>
+        public void Normalize(uint l)
+        {    
+            double scale = l / this.Length;
             X = (uint)(X * scale);
             Y = (uint)(Y * scale);
             Z = (uint)(Z * scale);
@@ -4863,7 +4929,6 @@ namespace Sxta.Math
             return vector;
         }
 
-
         /// <summary>
         /// Multiplies a vector by a scalar.
         /// </summary>
@@ -4876,7 +4941,6 @@ namespace Sxta.Math
             return vector;
         }
 
-
         /// <summary>
         /// Multiplies a vector by a scalar.
         /// </summary>
@@ -4887,7 +4951,6 @@ namespace Sxta.Math
         {
             result = new Vector3ui(vector.X * scale, vector.Y * scale, vector.Z * scale);
         }
-
 
         /// <summary>
         /// Multiplies a vector by a scalar.
@@ -4901,7 +4964,6 @@ namespace Sxta.Math
 			                            (uint)(vector.Y * scale),
 			                            (uint)(vector.Z * scale));
         }
-
 
         /// <summary>
         /// Multiplies a vector by the components a vector (scale).
@@ -5310,7 +5372,6 @@ namespace Sxta.Math
 
         #endregion
 
-
         #region CalculateAngle
 
         /// <summary>
@@ -5468,8 +5529,7 @@ namespace Sxta.Math
         }
 
 		 
-		
-		 
+				 
         /// <summary>Converts Vector3ui to OpenTK.Vector3.</summary>
         /// <param name="v3d">The Vector3ui to convert.</param>
         /// <returns>The resulting Vector3.</returns>
@@ -5485,16 +5545,14 @@ namespace Sxta.Math
         {
             return new Vector3ui((uint)v3.X, (uint)v3.Y, (uint)v3.Z);
         }
-		
-        /// <summary>Converts Vector3ui to OpenTK.Vector3d.</summary>
+		        /// <summary>Converts Vector3ui to OpenTK.Vector3d.</summary>
         /// <param name="v3d">The Vector3ui to convert.</param>
         /// <returns>The resulting Vector3d.</returns>
         public static explicit operator Vector3d(Vector3ui v3d)
         {
             return new Vector3d((float)v3d.X, (float)v3d.Y, (float)v3d.Z);
         }
-		
-		
+				
 		public static bool operator <(Vector3ui l, Vector3ui r)
         {
 			if (l.X != r.X) return l.X < r.X;
@@ -6353,7 +6411,6 @@ namespace Sxta.Math
 
         #endregion
 
-
         #endregion
 
         #region Swizzle
@@ -6525,7 +6582,17 @@ namespace Sxta.Math
         {
             return new Vector4((float)v4d.X, (float)v4d.Y, (float)v4d.Z, (float)v4d.W);
         }
-				
+
+
+		/// <summary>Converts Vector4ui to  Vector4f.</summary>
+        /// <param name="v4d">The Vector4ui to convert.</param>
+        /// <returns>The resulting Vector4f.</returns>
+        public static explicit operator Vector4f(Vector4ui v4d)
+        {
+            return new Vector4f((float)v4d.X, (float)v4d.Y, (float)v4d.Z, (float)v4d.W);
+        }
+ 	
+
 		public static bool operator <(Vector4ui l, Vector4ui r)
         {
 			if (l.X != r.X) return l.X < r.X;
@@ -6628,8 +6695,7 @@ namespace Sxta.Math
         #endregion
     }
 
-	
-      /// <summary>Represents a 2D vector using two float-precision floating-point numbers.</summary>
+	      /// <summary>Represents a 2D vector using two float-precision floating-point numbers.</summary>
     [Serializable]
     [StructLayout(LayoutKind.Sequential)]
     public struct Vector2f : IEquatable<Vector2f>
@@ -6849,7 +6915,17 @@ namespace Sxta.Math
             X = (float)(this.X * scale);
             Y = (float)(this.Y * scale);
         }
-
+		
+		/// <summary>
+        /// Scales the Vector2f to the given length.
+        /// </summary>
+        public Vector2f Normalize(float l)
+        {    
+            double scale = l / this.Length;
+            X = (float)(X * scale);
+            Y = (float)(Y * scale);
+			return this;
+        }
         #endregion
 
         #region public void Scale()
@@ -7263,6 +7339,18 @@ namespace Sxta.Math
 			previousLength = scale;
             return vec;
         }
+		
+		/// <summary>
+        /// Scales the Vector2f to the given length.
+        /// </summary>
+        public static Vector2f Normalize(Vector2f vec, float l)
+        {    
+			double scale = l / vec.Length;
+            vec.X = (float)(vec.X * scale);
+            vec.Y = (float)(vec.Y * scale);
+
+            return vec;
+        }
 
         /// <summary>
         /// Scale a vector to unit length
@@ -7329,6 +7417,21 @@ namespace Sxta.Math
         public static void Dot(ref Vector2f left, ref Vector2f right, out float result)
         {
             result = left.X * right.X + left.Y * right.Y;
+        }
+
+        #endregion
+
+		#region Cross
+
+        /// <summary>
+        /// Caclulate the cross (vector) product of two vectors
+        /// </summary>
+        /// <param name="left">First operand</param>
+        /// <param name="right">Second operand</param>
+        /// <returns>The cross product of the two inputs</returns>
+        public static float Cross(Vector2f left, Vector2f right)
+        {
+            return left.X * right.Y - left.Y * right.X;
         }
 
         #endregion
@@ -7404,7 +7507,6 @@ namespace Sxta.Math
 
         #endregion
 
-
         #region Transform
 
         /// <summary>
@@ -7437,7 +7539,6 @@ namespace Sxta.Math
         }
 
         #endregion
-
 
         #endregion
 
@@ -7560,19 +7661,14 @@ namespace Sxta.Math
         }
 
 		
-
-		
-		/// <summary>Converts Vector2f to Vector2d.</summary>
+				/// <summary>Converts Vector2f to Vector2d.</summary>
         /// <param name="v2d">The Vector2f to convert.</param>
         /// <returns>The resulting Vector2d.</returns>
         public static explicit operator Vector2d(Vector2f v2)
         {
             return new Vector2d(v2.X, v2.Y);
         }
-
-
 		
-
 		public static bool operator <(Vector2f l, Vector2f r)
         {
 			if (l.X != r.X) return l.X < r.X;
@@ -7741,7 +7837,6 @@ namespace Sxta.Math
             Z = v.Z;
         }
 
-
         /// <summary>
         /// Constructs a new instance from the given Vector4f.
         /// </summary>
@@ -7752,7 +7847,6 @@ namespace Sxta.Math
             Y = (float)v.Y;
             Z = (float)v.Z;
         }
-
 
         #endregion
 
@@ -7909,6 +8003,17 @@ namespace Sxta.Math
         public void Normalize()
         {
             double scale = 1.0 / this.Length;
+            X = (float)(X * scale);
+            Y = (float)(Y * scale);
+            Z = (float)(Z * scale);
+        }
+
+		/// <summary>
+        /// Scales the Vector3f to the given length.
+        /// </summary>
+        public void Normalize(float l)
+        {    
+            double scale = l / this.Length;
             X = (float)(X * scale);
             Y = (float)(Y * scale);
             Z = (float)(Z * scale);
@@ -8181,7 +8286,6 @@ namespace Sxta.Math
             return vector;
         }
 
-
         /// <summary>
         /// Multiplies a vector by a scalar.
         /// </summary>
@@ -8194,7 +8298,6 @@ namespace Sxta.Math
             return vector;
         }
 
-
         /// <summary>
         /// Multiplies a vector by a scalar.
         /// </summary>
@@ -8205,7 +8308,6 @@ namespace Sxta.Math
         {
             result = new Vector3f(vector.X * scale, vector.Y * scale, vector.Z * scale);
         }
-
 
         /// <summary>
         /// Multiplies a vector by a scalar.
@@ -8219,7 +8321,6 @@ namespace Sxta.Math
 			                            (float)(vector.Y * scale),
 			                            (float)(vector.Z * scale));
         }
-
 
         /// <summary>
         /// Multiplies a vector by the components a vector (scale).
@@ -8627,7 +8728,6 @@ namespace Sxta.Math
         }
 
         #endregion
-
         #region Transform
 
         /// <summary>Transform a direction vector by the given Matrix
@@ -8848,7 +8948,6 @@ namespace Sxta.Math
 
         #endregion
 
-
         #region CalculateAngle
 
         /// <summary>
@@ -9006,8 +9105,7 @@ namespace Sxta.Math
         }
 
 		 
-		
-		/// <summary>Converts Vector3d to Vector3f.</summary>
+				/// <summary>Converts Vector3d to Vector3f.</summary>
         /// <param name="v3">The Vector3d to convert.</param>
         /// <returns>The resulting Vector3f.</returns>
         public static explicit operator Vector3f(Vector3d v3)
@@ -9015,8 +9113,7 @@ namespace Sxta.Math
             return new Vector3f((float)v3.X, (float)v3.Y, (float)v3.Z);
         }
 
-		
-		 
+				 
         /// <summary>Converts Vector3f to OpenTK.Vector3.</summary>
         /// <param name="v3d">The Vector3f to convert.</param>
         /// <returns>The resulting Vector3.</returns>
@@ -9032,16 +9129,14 @@ namespace Sxta.Math
         {
             return new Vector3f((float)v3.X, (float)v3.Y, (float)v3.Z);
         }
-		
-        /// <summary>Converts Vector3f to OpenTK.Vector3d.</summary>
+		        /// <summary>Converts Vector3f to OpenTK.Vector3d.</summary>
         /// <param name="v3d">The Vector3f to convert.</param>
         /// <returns>The resulting Vector3d.</returns>
         public static explicit operator Vector3d(Vector3f v3d)
         {
             return new Vector3d((float)v3d.X, (float)v3d.Y, (float)v3d.Z);
         }
-		
-		
+				
 		public static bool operator <(Vector3f l, Vector3f r)
         {
 			if (l.X != r.X) return l.X < r.X;
@@ -9900,7 +9995,6 @@ namespace Sxta.Math
 
         #endregion
 
-
         #region Transform
 
         /// <summary>Transform a Vector by the given Matrix</summary>
@@ -9957,7 +10051,6 @@ namespace Sxta.Math
         }
 
         #endregion
-
 
         #endregion
 
@@ -10130,7 +10223,9 @@ namespace Sxta.Math
         {
             return new Vector4((float)v4d.X, (float)v4d.Y, (float)v4d.Z, (float)v4d.W);
         }
-				
+
+ 	
+
 		public static bool operator <(Vector4f l, Vector4f r)
         {
 			if (l.X != r.X) return l.X < r.X;
@@ -10233,8 +10328,7 @@ namespace Sxta.Math
         #endregion
     }
 
-	
-      /// <summary>Represents a 2D vector using two double-precision floating-point numbers.</summary>
+	      /// <summary>Represents a 2D vector using two double-precision floating-point numbers.</summary>
     [Serializable]
     [StructLayout(LayoutKind.Sequential)]
     public struct Vector2d : IEquatable<Vector2d>
@@ -10454,7 +10548,17 @@ namespace Sxta.Math
             X = (double)(this.X * scale);
             Y = (double)(this.Y * scale);
         }
-
+		
+		/// <summary>
+        /// Scales the Vector2d to the given length.
+        /// </summary>
+        public Vector2d Normalize(double l)
+        {    
+            double scale = l / this.Length;
+            X = (double)(X * scale);
+            Y = (double)(Y * scale);
+			return this;
+        }
         #endregion
 
         #region public void Scale()
@@ -10868,6 +10972,18 @@ namespace Sxta.Math
 			previousLength = scale;
             return vec;
         }
+		
+		/// <summary>
+        /// Scales the Vector2d to the given length.
+        /// </summary>
+        public static Vector2d Normalize(Vector2d vec, double l)
+        {    
+			double scale = l / vec.Length;
+            vec.X = (double)(vec.X * scale);
+            vec.Y = (double)(vec.Y * scale);
+
+            return vec;
+        }
 
         /// <summary>
         /// Scale a vector to unit length
@@ -10934,6 +11050,21 @@ namespace Sxta.Math
         public static void Dot(ref Vector2d left, ref Vector2d right, out double result)
         {
             result = left.X * right.X + left.Y * right.Y;
+        }
+
+        #endregion
+
+		#region Cross
+
+        /// <summary>
+        /// Caclulate the cross (vector) product of two vectors
+        /// </summary>
+        /// <param name="left">First operand</param>
+        /// <param name="right">Second operand</param>
+        /// <returns>The cross product of the two inputs</returns>
+        public static double Cross(Vector2d left, Vector2d right)
+        {
+            return left.X * right.Y - left.Y * right.X;
         }
 
         #endregion
@@ -11009,7 +11140,6 @@ namespace Sxta.Math
 
         #endregion
 
-
         #region Transform
 
         /// <summary>
@@ -11042,7 +11172,6 @@ namespace Sxta.Math
         }
 
         #endregion
-
 
         #endregion
 
@@ -11164,20 +11293,15 @@ namespace Sxta.Math
             return new Vector2((float)v2d.X, (float)v2d.Y);
         }
 
-		
-		/// <summary>Converts Vector2d to Vector2f.</summary>
+				/// <summary>Converts Vector2d to Vector2f.</summary>
         /// <param name="v2d">The Vector2d to convert.</param>
         /// <returns>The resulting Vector2f.</returns>
         public static explicit operator Vector2f(Vector2d v2)
         {
             return new Vector2f((float)v2.X, (float)v2.Y);
         }
-
-
 		
-
 		
-
 		public static bool operator <(Vector2d l, Vector2d r)
         {
 			if (l.X != r.X) return l.X < r.X;
@@ -11346,7 +11470,6 @@ namespace Sxta.Math
             Z = v.Z;
         }
 
-
         #endregion
 
         #region Public Members
@@ -11502,6 +11625,17 @@ namespace Sxta.Math
         public void Normalize()
         {
             double scale = 1.0 / this.Length;
+            X = (double)(X * scale);
+            Y = (double)(Y * scale);
+            Z = (double)(Z * scale);
+        }
+
+		/// <summary>
+        /// Scales the Vector3d to the given length.
+        /// </summary>
+        public void Normalize(double l)
+        {    
+            double scale = l / this.Length;
             X = (double)(X * scale);
             Y = (double)(Y * scale);
             Z = (double)(Z * scale);
@@ -11774,7 +11908,6 @@ namespace Sxta.Math
             return vector;
         }
 
-
         /// <summary>
         /// Multiplies a vector by a scalar.
         /// </summary>
@@ -11785,7 +11918,6 @@ namespace Sxta.Math
         {
             result = new Vector3d(vector.X * scale, vector.Y * scale, vector.Z * scale);
         }
-
 
         /// <summary>
         /// Multiplies a vector by the components a vector (scale).
@@ -12193,7 +12325,6 @@ namespace Sxta.Math
         }
 
         #endregion
-
         #region Transform
 
         /// <summary>Transform a direction vector by the given Matrix
@@ -12414,7 +12545,6 @@ namespace Sxta.Math
 
         #endregion
 
-
         #region CalculateAngle
 
         /// <summary>
@@ -12572,8 +12702,7 @@ namespace Sxta.Math
         }
 
 		 
-		
-		 
+				 
         /// <summary>Converts Vector3d to OpenTK.Vector3.</summary>
         /// <param name="v3d">The Vector3d to convert.</param>
         /// <returns>The resulting Vector3.</returns>
@@ -12589,8 +12718,7 @@ namespace Sxta.Math
         {
             return new Vector3d((double)v3.X, (double)v3.Y, (double)v3.Z);
         }
-		
-		
+				
 		public static bool operator <(Vector3d l, Vector3d r)
         {
 			if (l.X != r.X) return l.X < r.X;
@@ -13449,7 +13577,6 @@ namespace Sxta.Math
 
         #endregion
 
-
         #region Transform
 
         /// <summary>Transform a Vector by the given Matrix</summary>
@@ -13506,7 +13633,6 @@ namespace Sxta.Math
         }
 
         #endregion
-
 
         #endregion
 
@@ -13679,7 +13805,17 @@ namespace Sxta.Math
         {
             return new Vector4((float)v4d.X, (float)v4d.Y, (float)v4d.Z, (float)v4d.W);
         }
-				
+
+
+		/// <summary>Converts Vector4d to  Vector4f.</summary>
+        /// <param name="v4d">The Vector4d to convert.</param>
+        /// <returns>The resulting Vector4f.</returns>
+        public static explicit operator Vector4f(Vector4d v4d)
+        {
+            return new Vector4f((float)v4d.X, (float)v4d.Y, (float)v4d.Z, (float)v4d.W);
+        }
+ 	
+
 		public static bool operator <(Vector4d l, Vector4d r)
         {
 			if (l.X != r.X) return l.X < r.X;
@@ -13782,5 +13918,4 @@ namespace Sxta.Math
         #endregion
     }
 
-	
-}
+	}

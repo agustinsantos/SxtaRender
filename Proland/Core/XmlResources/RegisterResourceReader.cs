@@ -9,6 +9,7 @@
 
             //TERRAIN RESOURCES
             Sxta.Proland.Core.Terrain.XmlResources.RegisterResourceReader.RegisterResources();
+
         }
     }
 }

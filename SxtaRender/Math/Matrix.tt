@@ -1143,6 +1143,17 @@ namespace Sxta.Math
 			return r;
 		}
 
+		/// <summary>
+        /// Matrix multiplication
+        /// </summary>
+        /// <param name="left">left-hand operand</param>
+        /// <param name="right">right-hand operand</param>
+        /// <returns>A new <#= vec3Name #> which holds the result of the multiplication</returns>
+        public static <#= mat3Name #> operator *(<#= mat3Name #> left, <#= mat3Name #> right)
+		{
+			return Multiply(left, right);
+		}
+
         /// <summary>Multiply left martix times this matrix.</summary>
         /// <param name="matrix">The matrix to multiply.</param>
         public void Multiply(ref <#= mat3Name #> matrix)
@@ -1202,6 +1213,18 @@ namespace Sxta.Math
             result.R2C2 = right.R2C0 * left.R0C2 + right.R2C1 * left.R1C2 + right.R2C2 * left.R2C2;
         }
 
+		/// <summary>
+        /// Multiplies two instances.
+        /// </summary>
+        /// <param name="left">The left operand of the multiplication.</param>
+        /// <param name="right">The right operand of the multiplication.</param>
+        /// <returns>A new instance that is the result of the multiplication</returns>
+        public static <#= mat3Name #> Multiply(<#= mat3Name #> left, <#= mat3Name #> right)
+        {
+            <#= mat3Name #> result;
+            Multiply(ref left, ref right, out result);
+            return result;
+        }
 
         /// <summary>Multiply matrix times this matrix.</summary>
         /// <param name="matrix">The matrix to multiply.</param>
@@ -1815,6 +1838,16 @@ namespace Sxta.Math
 		<# 
 		}
 		#>
+
+		public <#= mat3Name #> Mat3x3
+        {
+			get {
+				return new <#= mat3Name #>(this.R0C0, this.R0C1, this.R0C2,
+									this.R1C0, this.R1C1, this.R1C2,
+									this.R2C0, this.R2C1, this.R2C2);
+			}
+		}
+
         <# if (hasDec) 
 		{
 		#>

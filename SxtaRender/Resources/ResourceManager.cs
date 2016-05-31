@@ -121,7 +121,7 @@ namespace Sxta.Render.Resources
          * @return the %resource corresponding to the given name, or null if the %resource is not
          *      found.
          */
-        public Object loadResource(ResourceDescriptor desc, XmlElement f)
+        public Resource loadResource(ResourceDescriptor desc, XmlElement f)
         {
             string name;
             string nm = f.Attributes["name"].Value;
@@ -133,7 +133,7 @@ namespace Sxta.Render.Resources
             {
                 name = nm;
             }
-            Object r = null;
+            Resource r = null;
 
             if (desc != null)
             {

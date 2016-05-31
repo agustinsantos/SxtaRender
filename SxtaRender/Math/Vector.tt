@@ -274,7 +274,17 @@ namespace Sxta.Math
             X = (<#= typeName #>)(this.X * scale);
             Y = (<#= typeName #>)(this.Y * scale);
         }
-
+		
+		/// <summary>
+        /// Scales the <#= vec2Name #> to the given length.
+        /// </summary>
+        public <#= vec2Name #> Normalize(<#= typeName #> l)
+        {    
+            double scale = l / this.Length;
+            X = (<#= typeName #>)(X * scale);
+            Y = (<#= typeName #>)(Y * scale);
+			return this;
+        }
         #endregion
 
         #region public void Scale()
@@ -688,6 +698,18 @@ namespace Sxta.Math
 			previousLength = scale;
             return vec;
         }
+		
+		/// <summary>
+        /// Scales the <#= vec2Name #> to the given length.
+        /// </summary>
+        public static <#= vec2Name #> Normalize(<#= vec2Name #> vec, <#= typeName #> l)
+        {    
+			double scale = l / vec.Length;
+            vec.X = (<#= typeName #>)(vec.X * scale);
+            vec.Y = (<#= typeName #>)(vec.Y * scale);
+
+            return vec;
+        }
 
         /// <summary>
         /// Scale a vector to unit length
@@ -754,6 +776,21 @@ namespace Sxta.Math
         public static void Dot(ref <#= vec2Name #> left, ref <#= vec2Name #> right, out <#= typeName #> result)
         {
             result = left.X * right.X + left.Y * right.Y;
+        }
+
+        #endregion
+
+		#region Cross
+
+        /// <summary>
+        /// Caclulate the cross (vector) product of two vectors
+        /// </summary>
+        /// <param name="left">First operand</param>
+        /// <param name="right">Second operand</param>
+        /// <returns>The cross product of the two inputs</returns>
+        public static <#= typeName #> Cross(<#= vec2Name #> left, <#= vec2Name #> right)
+        {
+            return left.X * right.Y - left.Y * right.X;
         }
 
         #endregion
@@ -992,8 +1029,6 @@ namespace Sxta.Math
         {
             return new Vector2f((float)v2.X, (float)v2.Y);
         }
-
-
 		<#}#>
 
 		<# if (typeName != "double"){#>
@@ -1004,8 +1039,6 @@ namespace Sxta.Math
         {
             return new Vector2d(v2.X, v2.Y);
         }
-
-
 		<#}#>
 
 		public static bool operator <(<#= vec2Name #> l, <#= vec2Name #> r)
@@ -1344,6 +1377,17 @@ namespace Sxta.Math
         public void Normalize()
         {
             double scale = 1.0 / this.Length;
+            X = (<#= typeName #>)(X * scale);
+            Y = (<#= typeName #>)(Y * scale);
+            Z = (<#= typeName #>)(Z * scale);
+        }
+
+		/// <summary>
+        /// Scales the <#= vec3Name #> to the given length.
+        /// </summary>
+        public void Normalize(<#= typeName #> l)
+        {    
+            double scale = l / this.Length;
             X = (<#= typeName #>)(X * scale);
             Y = (<#= typeName #>)(Y * scale);
             Z = (<#= typeName #>)(Z * scale);
@@ -3569,7 +3613,18 @@ namespace Sxta.Math
         {
             return new Vector4((float)v4d.X, (float)v4d.Y, (float)v4d.Z, (float)v4d.W);
         }
-				
+
+<# if (vec4Name != "Vector4f") { #>
+
+		/// <summary>Converts <#= vec4Name #> to  Vector4f.</summary>
+        /// <param name="v4d">The <#= vec4Name #> to convert.</param>
+        /// <returns>The resulting Vector4f.</returns>
+        public static explicit operator Vector4f(<#= vec4Name #> v4d)
+        {
+            return new Vector4f((float)v4d.X, (float)v4d.Y, (float)v4d.Z, (float)v4d.W);
+        }
+<# }  #> 	
+
 		public static bool operator <(<#= vec4Name #> l, <#= vec4Name #> r)
         {
 			if (l.X != r.X) return l.X < r.X;

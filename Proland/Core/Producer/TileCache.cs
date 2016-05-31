@@ -51,7 +51,7 @@ namespace proland
         {
             init(storage, name, scheduler);
         }
-
+        
         /*
         * Returns the storage used to store the actual tiles data.
         */

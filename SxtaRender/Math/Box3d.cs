@@ -11,11 +11,11 @@ namespace Sxta.Math
     /// </summary>
     public class Box3d
     {
-        
-		/// <summary>
-		/// Initializes a new instance of the <see cref="Sxta.Math.Box3d"/> class.
-		/// Creates a new, empty bounding box.
-		/// </summary>
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Sxta.Math.Box3d"/> class.
+        /// Creates a new, empty bounding box.
+        /// </summary>
         public Box3d()
         {
             xmin = double.PositiveInfinity;
@@ -27,29 +27,29 @@ namespace Sxta.Math
 
         }
 
-        
-		/// <summary>
-		/// Creates a new bounding box with the given coordinates.
-		/// Initializes a new instance of the <see cref="Sxta.Math.Box3d"/> class.
-		/// </summary>
-		/// <param name='xmin'>
-		/// Xmin.
-		/// </param>
-		/// <param name='xmax'>
-		/// Xmax.
-		/// </param>
-		/// <param name='ymin'>
-		/// Ymin.
-		/// </param>
-		/// <param name='ymax'>
-		/// Ymax.
-		/// </param>
-		/// <param name='zmin'>
-		/// Zmin.
-		/// </param>
-		/// <param name='zmax'>
-		/// Zmax.
-		/// </param>
+
+        /// <summary>
+        /// Creates a new bounding box with the given coordinates.
+        /// Initializes a new instance of the <see cref="Sxta.Math.Box3d"/> class.
+        /// </summary>
+        /// <param name='xmin'>
+        /// Xmin.
+        /// </param>
+        /// <param name='xmax'>
+        /// Xmax.
+        /// </param>
+        /// <param name='ymin'>
+        /// Ymin.
+        /// </param>
+        /// <param name='ymax'>
+        /// Ymax.
+        /// </param>
+        /// <param name='zmin'>
+        /// Zmin.
+        /// </param>
+        /// <param name='zmax'>
+        /// Zmax.
+        /// </param>
         public Box3d(double xmin, double xmax, double ymin, double ymax, double zmin, double zmax)
         {
             this.xmin = xmin;
@@ -60,16 +60,16 @@ namespace Sxta.Math
             this.zmax = zmax;
         }
 
-		/// <summary>
-		/// Creates a new bounding box enclosing the two given points.
-		/// Initializes a new instance of the <see cref="Sxta.Math.Box3d"/> class.
-		/// </summary>
-		/// <param name='p'>
-		/// P.
-		/// </param>
-		/// <param name='q'>
-		/// Q.
-		/// </param>
+        /// <summary>
+        /// Creates a new bounding box enclosing the two given points.
+        /// Initializes a new instance of the <see cref="Sxta.Math.Box3d"/> class.
+        /// </summary>
+        /// <param name='p'>
+        /// P.
+        /// </param>
+        /// <param name='q'>
+        /// Q.
+        /// </param>
         public Box3d(Vector3d p, Vector3d q)
         {
             this.xmin = System.Math.Min(p.X, q.X);
@@ -82,71 +82,71 @@ namespace Sxta.Math
         /// <summary>
         /// Minimum x coordinate.
         /// </summary>
-        public double xmin { get; private set; }
+        public double xmin { get; set; }
 
-		/// <summary>
-		/// Maximum x coordinate.
-		/// Gets the xmax.
-		/// </summary>
-		/// <value>
-		/// The xmax.
-		/// </value>
-        public double xmax { get; private set; }
+        /// <summary>
+        /// Maximum x coordinate.
+        /// Gets the xmax.
+        /// </summary>
+        /// <value>
+        /// The xmax.
+        /// </value>
+        public double xmax { get; set; }
 
-		/// <summary>
-		/// Minimum y coordinate.
-		/// Gets the ymin.
-		/// </summary>
-		/// <value>
-		/// The ymin.
-		/// </value>
-        public double ymin { get; private set; }
+        /// <summary>
+        /// Minimum y coordinate.
+        /// Gets the ymin.
+        /// </summary>
+        /// <value>
+        /// The ymin.
+        /// </value>
+        public double ymin { get; set; }
 
-		/// <summary>
-		/// Maximum y coordinate.
-		/// Gets the ymax.
-		/// </summary>
-		/// <value>
-		/// The ymax.
-		/// </value>
-        public double ymax { get; private set; }
+        /// <summary>
+        /// Maximum y coordinate.
+        /// Gets the ymax.
+        /// </summary>
+        /// <value>
+        /// The ymax.
+        /// </value>
+        public double ymax { get; set; }
 
-        
-		/// <summary>
-		/// Minimum z coordinate.
-		/// Gets the zmin.
-		/// </summary>
-		/// <value>
-		/// The zmin.
-		/// </value>
-        public double zmin { get; private set; }
 
-		/// <summary>
-		/// Maximum z coordinate.
-		/// Gets the zmax.
-		/// </summary>
-		/// <value>
-		/// The zmax.
-		/// </value>
-        public double zmax { get; private set; }
+        /// <summary>
+        /// Minimum z coordinate.
+        /// Gets the zmin.
+        /// </summary>
+        /// <value>
+        /// The zmin.
+        /// </value>
+        public double zmin { get; set; }
 
-      
-		/// <summary>
-		/// Returns the center of this bounding box.
-		/// Center this instance.
-		/// </summary>
+        /// <summary>
+        /// Maximum z coordinate.
+        /// Gets the zmax.
+        /// </summary>
+        /// <value>
+        /// The zmax.
+        /// </value>
+        public double zmax { get; set; }
+
+
+        /// <summary>
+        /// Returns the center of this bounding box.
+        /// Center this instance.
+        /// </summary>
         public Vector3d center()
         {
             return new Vector3d((xmin + xmax) / 2, (ymin + ymax) / 2, (zmin + zmax) / 2);
         }
 
-		/// <summary>
-		/// Returns the bounding box containing this box and the given point.
-		/// Enlarge the specified p.
-		/// </summary>
-		/// <param name='p'>
-		/// P. an arbitrary point.
-		/// </param>
+        /// <summary>
+        /// Returns the bounding box containing this box and the given point.
+        /// Enlarge the specified p.
+        /// </summary>
+        /// <param name='p'>
+        /// P. an arbitrary point.
+        /// </param>
         public Box3d enlarge(Vector3d p)
         {
             return new Box3d(System.Math.Min(xmin, p.X),
@@ -167,14 +167,14 @@ namespace Sxta.Math
                                 System.Math.Max(zmax, p.Z));
         }
 
-       
-		/// <summary>
-		/// Returns the bounding box containing this box and the given box.
-		/// Enlarge the specified r.
-		/// </summary>
-		/// <param name='r'>
-		/// R. r an arbitrary bounding box.
-		/// </param>
+
+        /// <summary>
+        /// Returns the bounding box containing this box and the given box.
+        /// Enlarge the specified r.
+        /// </summary>
+        /// <param name='r'>
+        /// R. r an arbitrary bounding box.
+        /// </param>
         public Box3d enlarge(Box3d r)
         {
             return new Box3d(System.Math.Min(xmin, r.xmin),
@@ -194,14 +194,14 @@ namespace Sxta.Math
                             System.Math.Max(zmax, r.zmax));
         }
 
-       
-		/// <summary>
-		/// Returns true if this bounding box contains the given point.
-		/// Contains the specified p.
-		/// </summary>
-		/// <param name='p'>
-		/// P. @param p an arbitrary point.
-		/// </param>
+
+        /// <summary>
+        /// Returns true if this bounding box contains the given point.
+        /// Contains the specified p.
+        /// </summary>
+        /// <param name='p'>
+        /// P. @param p an arbitrary point.
+        /// </param>
         public bool contains(Vector3d p)
         {
             return p.X >= xmin && p.X <= xmax && p.Y >= ymin && p.Y <= ymax && p.Z >= zmin && p.Z <= zmax;

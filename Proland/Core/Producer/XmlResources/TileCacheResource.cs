@@ -45,7 +45,7 @@ namespace Sxta.Proland.Core.Producer.XmlResources
             }
             string id = getParameter(desc, e, "scheduler");
             scheduler = (Scheduler)manager.loadResource(id).get();
-            valueC.init(storage, name, scheduler);
+            this.valueC = new TileCache(storage, name, scheduler);
         }
     }
 }

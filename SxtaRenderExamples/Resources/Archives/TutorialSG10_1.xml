@@ -35,8 +35,8 @@
     </node>
     <!-- By default the camara is at point (0,0,0) looking down negative z-axis -->
     <node flags="object">
-      <translate x="0" y="3" z="-15.0"/>
-      <rotatex angle="90"/>
+      <!--<translate x="0" y="3" z="-15.0"/>
+      <rotatex angle="90"/>-->
       <scale x="2" y="2" z="0"/>
       <mesh id="geometry" value="plane.mesh"/>
       <method id="draw" value="meshSGMethod"/>

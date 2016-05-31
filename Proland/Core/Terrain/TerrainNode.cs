@@ -12,35 +12,28 @@ using Sxta.Render.Resources;
 
 namespace proland
 {
-    /**
-     * @defgroup terrain terrain
-     * Provides a framework to draw and update view-dependent, quadtree based terrains.
-     * This framework provides classes to represent the %terrain quadtree, classes to
-     * associate data produced by proland::TileProducer to the quads of this
-     * quadtree, as well as classes to update and draw such terrains (which can be
-     * deformed to get spherical or cylindrical terrains).
-     * @ingroup proland
-     */
-
-    /**
-     * A view dependent, quadtree based %terrain. This class provides access to the
-     * %terrain quadtree, defines the %terrain deformation (can be used to get planet
-     * sized terrains), and defines how the %terrain quadtree must be subdivided based
-     * on the viewer position. This class does not give any direct or indirect access
-     * to the %terrain data (elevations, normals, texture, etc). The %terrain data must
-     * be managed by proland::TileProducer, and stored in
-     * proland::TileStorage. The link between with the %terrain quadtree is
-     * provided by the TileSampler class.
-     * @ingroup terrain
-     * @authors Eric Bruneton, Antoine Begault, Guillaume Piolat
-     */
+    /// <summary>
+    /// Provides a framework to draw and update view-dependent, quadtree based terrains.
+    /// This framework provides classes to represent the terrain quadtree, classes to
+    /// associate data produced by a TileProducer to the quads of this
+    /// quadtree, as well as classes to update and draw such terrains (which can be
+    /// deformed to get spherical).
+    ///
+    /// A view dependent, quadtree based terrain. This class provides access to the
+    /// terrain quadtree, defines the terrain deformation(can be used to get planet
+    /// sized terrains), and defines how the terrain quadtree must be subdivided based
+    /// on the viewer position.This class does not give any direct or indirect access
+    /// to the terrain data(elevations, normals, texture, etc). The terrain data must
+    /// be managed by TileProducer, and stored in TileStorage.
+    /// The link between with the terrain quadtree is provided by the TileSampler class.
+    /// </summary>
     public class TerrainNode : ISwappable<TerrainNode>
     {
         int HORIZON_SIZE = 256;
 
         /// <summary>
         /// The deformation of this %terrain. In the %terrain <i>local</i> space the
-        ///%terrain sea level surface is flat.In the %terrain<i> deformed</i> space
+        /// terrain sea level surface is flat.In the %terrain<i> deformed</i> space
         /// the sea level surface can be spherical or cylindrical (or flat if the
         /// identity deformation is used).
         /// </summary>
