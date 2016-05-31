@@ -113,6 +113,12 @@
     <Compile Include="Terrain\Dem\NormalProducer.cs" />
     <Compile Include="Terrain\Dem\OriginalElevationProducer.cs" />
     <Compile Include="Terrain\Dem\ResidualProducer.cs" />
+    <Compile Include="Terrain\Ortho\OrthoCPUProducer.cs" />
+    <Compile Include="Terrain\Ortho\OrthoProducer.cs" />
+    <Compile Include="Terrain\Ortho\TextureLayer.cs" />
+    <Compile Include="Terrain\Ortho\XmlResources\OrthoCPUProducerResource.cs" />
+    <Compile Include="Terrain\Ortho\XmlResources\OrthoProducerResource.cs" />
+    <Compile Include="Terrain\Ortho\XmlResources\TextureOrthoLayerResource.cs" />
     <Compile Include="Terrain\Preprocess\AbstractTileCache.cs" />
     <Compile Include="Terrain\Preprocess\ApertureMipmap.cs" />
     <Compile Include="Terrain\Preprocess\ColorFunction.cs" />
@@ -124,6 +130,8 @@
     <Compile Include="Terrain\Preprocess\Preprocess.cs" />
     <Compile Include="Terrain\Preprocess\RawInputMap.cs" />
     <Compile Include="Terrain\Preprocess\TextureInputMap.cs" />
+    <Compile Include="Terrain\XmlResources\RegisterResourceReader.cs" />
+    <Compile Include="XmlResources\RegisterResourceReader.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SxtaRender\SxtaRender.csproj">
@@ -151,7 +159,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Core\Particles\" />
-    <Folder Include="Terrain\Ortho\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Core\Math\Seg2.tt">

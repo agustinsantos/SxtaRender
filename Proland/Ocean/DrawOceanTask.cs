@@ -262,7 +262,7 @@ namespace Sxta.Proland.Ocean
         }
         public static float srnd(long seed)
         {
-            return (2 * Noise.frandom(seed) - 1);
+            return (2 * Noise.frandom(ref seed) - 1);
         }
         private void generateWaves()
         {
@@ -301,14 +301,14 @@ namespace Sxta.Proland.Ocean
                 float x = i / (nbWaves - 1.0f);
 
                 float lambda = (float)(System.Math.Pow(2.0f, (1.0f - x) * min + x * max));
-                float ktheta = Noise.grandom(0.0f, 1.0f, seed) * waveDispersion;
+                float ktheta = Noise.grandom(0.0f, 1.0f, ref seed) * waveDispersion;
                 float knorm = 2.0f * (float)System.Math.PI / lambda;
                 float omega = (float)System.Math.Sqrt(9.81f * knorm);
                 float amplitude;
 
                 if (spectrumType == 1)
                 {
-                    amplitude = (float)(heightMax * Noise.grandom(0.5f, 0.15f, seed) / (knorm * lambdaMax / (2.0f * System.Math.PI)));
+                    amplitude = (float)(heightMax * Noise.grandom(0.5f, 0.15f, ref seed) / (knorm * lambdaMax / (2.0f * System.Math.PI)));
                 }
                 else if (spectrumType == 2)
                 {
@@ -318,7 +318,7 @@ namespace Sxta.Proland.Ocean
                     { // scramble angle ordre
                         for (int k = 0; k < nbAngles; k++)
                         {   // do N swap in indices
-                            int n1 = (int)(Noise.lrandom(seed) % nbAngles), n2 = (int)Noise.lrandom(seed) % nbAngles, n;
+                            int n1 = (int)(Noise.lrandom(ref seed) % nbAngles), n2 = (int)Noise.lrandom(ref seed) % nbAngles, n;
                             n = index[n1]; index[n1] = index[n2]; index[n2] = n;
                         }
                     }

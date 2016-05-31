@@ -36,38 +36,36 @@
  * http://proland.inrialpes.fr/
  */
 /*
-* Main authors: Eric Bruneton, Antoine Begault, Guillaume Piolat.
- * Modified and ported to C# and Sxta Engine by Agustin Santos and Daniel Olmedo 2015-2016
+ * Main authors: Eric Bruneton, Antoine Begault, Guillaume Piolat.
+* Modified and ported to C# and Sxta Engine by Agustin Santos and Daniel Olmedo 2015-2016
 */
 
-using Sxta.Render;
+using proland;
 using Sxta.Render.Resources;
 using System.Xml;
 
-namespace Sxta.Proland.Ocean.XmlResources
+namespace Sxta.Proland.Terrain.Ortho.XmlResources
 {
-    public class DrawOceanTaskResource : ResourceTemplate<DrawOceanTask>
+    public class OrthoCPUProducerResource : ResourceTemplate<OrthoCPUProducer>
     {
-        public static DrawOceanTaskResource Create(ResourceManager manager, string name, ResourceDescriptor desc, XmlElement e = null, object context = null)
+        public static OrthoCPUProducerResource Create(ResourceManager manager, string name, ResourceDescriptor desc, XmlElement e = null, object context = null)
         {
-            return new DrawOceanTaskResource(manager, name, desc, e);
+            return new OrthoCPUProducerResource(manager, name, desc, e);
         }
-        public DrawOceanTaskResource(ResourceManager manager, string name, ResourceDescriptor desc, XmlElement e = null) :
+        public OrthoCPUProducerResource(ResourceManager manager, string name, ResourceDescriptor desc, XmlElement e = null) :
         base(40, manager, name, desc)
         {
             e = e == null ? desc.descriptor : e;
-            checkParameters(desc, e, "name,radius,zmin,brdfShader,");
-            float radius;
-            float zmin;
-            Module brdfShader = null;
-            if (e.GetAttribute("brdfShader") != null)
+            TileCache cache;
+            string file = null;
+            checkParameters(desc, e, "name,cache,file,");
+            cache = manager.loadResource(getParameter(desc, e, "cache")).get() as TileCache;
+            if (e.GetAttribute("file") != null)
             {
-                brdfShader = manager.loadResource(getParameter(desc, e, "brdfShader")).get() as Module;
+                file = getParameter(desc, e, "file");
+                file = manager.getLoader().findResource(file);
             }
-            getFloatParameter(desc, e, "radius", out radius);
-            getFloatParameter(desc, e, "zmin", out zmin);
-            this.valueC = new DrawOceanTask(radius, zmin, brdfShader);
+            this.valueC = new OrthoCPUProducer(cache, file);
         }
     }
-
 }

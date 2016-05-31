@@ -10,11 +10,6 @@
             //TERRAIN RESOURCES
             Sxta.Proland.Core.Terrain.XmlResources.RegisterResourceReader.RegisterResources();
 
-            //OCEAN RESOURCES
-            Sxta.Proland.Ocean.XmlResources.RegisterResourceReader.RegisterResources();
-
-            //FOREST RESOURCES
-            Sxta.Proland.Forest.XmlResources.RegisterResourceReader.RegisterResources();
         }
     }
 }

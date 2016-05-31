@@ -1,16 +1,50 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Sxta.Render;
-using Sxta.Core;
-using System.Xml;
-using Sxta.Math;
+﻿/*
+ * Proland: a procedural landscape rendering library.
+ * Website : http://proland.inrialpes.fr/
+ * Copyright (c) 2008-2015 INRIA - LJK (CNRS - Grenoble University)
+ * All rights reserved.
+ * Redistribution and use in source and binary forms, with or without 
+ * modification, are permitted provided that the following conditions are met:
+ * 
+ * 1. Redistributions of source code must retain the above copyright notice, 
+ * this list of conditions and the following disclaimer.
+ * 
+ * 2. Redistributions in binary form must reproduce the above copyright notice, 
+ * this list of conditions and the following disclaimer in the documentation 
+ * and/or other materials provided with the distribution.
+ * 
+ * 3. Neither the name of the copyright holder nor the names of its contributors 
+ * may be used to endorse or promote products derived from this software without 
+ * specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+ * IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
+ * OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+/*
+ * Proland is distributed under the Berkeley Software Distribution 3 Licence. 
+ * For any assistance, feedback and enquiries about training programs, you can check out the 
+ * contact page on our website : 
+ * http://proland.inrialpes.fr/
+ */
+/*
+ * Main authors: Eric Bruneton, Antoine Begault, Guillaume Piolat.
+* Modified and ported to C# and Sxta Engine by Agustin Santos and Daniel Olmedo 2015-2016
+*/
+
+using System;
 
 namespace proland
 {
-    class Noise
+    public class Noise
     {
 
         // ----------------------------------------------------------------------------
@@ -21,8 +55,8 @@ namespace proland
 
         static int[] p = new int[2 * 256 + 2];
         static float[] g1 = new float[2 * 256 + 2];
-        static float[][] g2 = new float[][] {new float[2 * 256 + 2], new float[2]};
-        static float[][] g3 = new float[][] {new float[2 * 256 + 2], new float[3]};
+        static float[][] g2 = new float[][] { new float[2 * 256 + 2], new float[2] };
+        static float[][] g3 = new float[][] { new float[2 * 256 + 2], new float[3] };
 
         /**
          * @defgroup proland_math math
@@ -38,7 +72,7 @@ namespace proland
          *      time this function is called.
          * @return a peudo random integer in the range 0-2147483647.
          */
-        public static long lrandom(long seed)
+        public static long lrandom(ref long seed)
         {
             seed = (seed * 1103515245 + 12345) & 0x7FFFFFFF;
             return seed;
@@ -52,9 +86,9 @@ namespace proland
          *      time this function is called.
          * @return a pseudo random float number in the range 0-1.
          */
-        public static float frandom(long seed)
+        public static float frandom(ref long seed)
         {
-            long r = lrandom(seed) >> (31 - 24);
+            long r = lrandom(ref seed) >> (31 - 24);
             return r / (float)(1 << 24);
         }
 
@@ -70,10 +104,10 @@ namespace proland
          * @return a pseudo random float number with the given Gaussian distribution.
          */
         static float y2;
-        public static float grandom(float mean, float stdDeviation, long seed)
+        public static float grandom(float mean, float stdDeviation, ref long seed)
         {
             float x1, x2, w, y1;
-            
+
             int use_last = 0;
 
             if (use_last != 0)
@@ -85,8 +119,8 @@ namespace proland
             {
                 do
                 {
-                    x1 = 2.0f * frandom(seed) - 1.0f;
-                    x2 = 2.0f * frandom(seed) - 1.0f;
+                    x1 = 2.0f * frandom(ref seed) - 1.0f;
+                    x2 = 2.0f * frandom(ref seed) - 1.0f;
                     w = x1 * x1 + x2 * x2;
                 } while (w >= 1.0f);
                 w = (float)Math.Sqrt((-2.0f * Math.Log10(w)) / w);
@@ -105,17 +139,17 @@ namespace proland
             for (i = 0; i < 256; ++i)
             {
                 p[i] = i;
-                g1[i] = (float)((lrandom(seed) % (2 * 256)) - 256) / 256;
+                g1[i] = (float)((lrandom(ref seed) % (2 * 256)) - 256) / 256;
                 for (j = 0; j < 2; ++j)
                 {
-                    g2[i][j] = (float)((lrandom(seed) % (2 * 256)) - 256) / 256;
+                    g2[i][j] = (float)((lrandom(ref seed) % (2 * 256)) - 256) / 256;
                 }
                 float l = Convert.ToSingle(Math.Sqrt(g2[i][0] * g2[i][0] + g2[i][1] * g2[i][1]));
                 g2[i][0] /= l;
                 g2[i][1] /= l;
                 for (j = 0; j < 3; ++j)
                 {
-                    g3[i][j] = (float)((lrandom(seed) % (2 * 256)) - 256) / 256;
+                    g3[i][j] = (float)((lrandom(ref seed) % (2 * 256)) - 256) / 256;
                 }
                 l = Convert.ToSingle(Math.Sqrt(g3[i][0] * g3[i][0] + g3[i][1] * g3[i][1] + g3[i][2] * g3[i][2]));
                 g3[i][0] /= l;
@@ -125,7 +159,7 @@ namespace proland
             while (i >= 1)
             {
                 k = p[i];
-                p[i] = p[j = Convert.ToInt16(lrandom(seed) % 256)];
+                p[i] = p[j = Convert.ToInt16(lrandom(ref seed) % 256)];
                 p[j] = k;
             }
             for (i = 0; i < 256 + 2; ++i)
@@ -143,41 +177,44 @@ namespace proland
             }
         }
 
-        private static float S_CURVE(float t) {
+        private static float S_CURVE(float t)
+        {
             return (t * t * (3.0f - 2.0f * t));
         }
 
-        private static float LERP(float t, float a, float b) {
+        private static float LERP(float t, float a, float b)
+        {
             return (a + t * (b - a));
-            }
-        private static void SETUP(float x, out int b0, out int b1, out float r0, out float r1) {
+        }
+        private static void SETUP(float x, out int b0, out int b1, out float r0, out float r1)
+        {
             int t = (int)x + 0x1000;
             b0 = (t) & 0xFF;
             b1 = (b0 + 1) & 0xFF;
             r0 = t - (int)Math.Floor((double)t);
             r1 = r0 - 1.0f;
         }
-        private static float AT2(float rx ,float ry, float[] q)
+        private static float AT2(float rx, float ry, float[] q)
         {
-            return rx * q[0] + ry* q[1];
+            return rx * q[0] + ry * q[1];
         }
 
         private static float AT3(float rx, float ry, float rz, float[] q)
         {
             return rx * q[0] + ry * q[1] + rz * q[2];
         }
-    /**
-     * Computes the classic 2D Perlin noise function.
-     * @ingroup proland_math
-     *
-     * @param x the x coordinate of the point where the function must be evaluated.
-     * @param y the y coordinate of the point where the function must be evaluated.
-     * @param P an optional period to get a periodic noise function. The default
-     *      value 0 means a non periodic function.
-     * @return the classic 2D Perlin noise function evaluated at (x,y). This
-     *      function has a main frequency of 1, and its value are between -1 and 1.
-     */
-    public static float cnoise(float x, float y, int period = 0)
+        /**
+         * Computes the classic 2D Perlin noise function.
+         * @ingroup proland_math
+         *
+         * @param x the x coordinate of the point where the function must be evaluated.
+         * @param y the y coordinate of the point where the function must be evaluated.
+         * @param P an optional period to get a periodic noise function. The default
+         *      value 0 means a non periodic function.
+         * @return the classic 2D Perlin noise function evaluated at (x,y). This
+         *      function has a main frequency of 1, and its value are between -1 and 1.
+         */
+        public static float cnoise(float x, float y, int period = 0)
         {
             int bx0, bx1, by0, by1, b00, b10, b01, b11;
             float rx0, rx1, ry0, ry1, sx, sy, a, b, t, u, v;
@@ -282,7 +319,7 @@ namespace proland
             t = S_CURVE(rx0);
             sy = S_CURVE(ry0);
             sz = S_CURVE(rz0);
-            
+
 
             q = g3[b00 + bz0];
             u = AT3(rx0, ry0, rz0, q);
@@ -315,11 +352,11 @@ namespace proland
             return LERP(sz, c, d);
         }
 
-    // ----------------------------------------------------------------------------
-    // SIMPLEX NOISE
-    // ----------------------------------------------------------------------------
+        // ----------------------------------------------------------------------------
+        // SIMPLEX NOISE
+        // ----------------------------------------------------------------------------
 
-    static int[] perm = {151,160,137,91,90,15,
+        static int[] perm = {151,160,137,91,90,15,
     131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,142,8,99,37,240,21,10,23,
     190, 6,148,247,120,234,75,0,26,197,62,94,252,219,203,117,35,11,32,57,177,33,
     88,237,149,56,87,174,20,125,136,171,168, 68,175,74,165,71,134,139,48,27,166,
@@ -345,11 +382,11 @@ namespace proland
     49,192,214, 31,181,199,106,157,184, 84,204,176,115,121,50,45,127, 4,150,254,
     138,236,205,93,222,114,67,29,24,72,243,141,128,195,78,66,215,61,156,180};
 
-    static int[][] grad3 = new int[][]{new int[]{1,1,0},new int[]{-1,1,0},new int[]{1,-1,0},new int[]{-1,-1,0},
+        static int[][] grad3 = new int[][]{new int[]{1,1,0},new int[]{-1,1,0},new int[]{1,-1,0},new int[]{-1,-1,0},
     new int[]{1,0,1},new int[]{-1,0,1},new int[]{1,0,-1},new int[]{-1,0,-1},
     new int[]{0,1,1},new int[]{0,-1,1},new int[]{0,1,-1},new int[]{0,-1,-1}};
 
-    static int[][] grad4 = new int[][]{new int[]{0,1,1,1},new int[]{0,1,1,-1}, new int[]{0,1,-1,1}, new int[]{0,1,-1,-1},
+        static int[][] grad4 = new int[][]{new int[]{0,1,1,1},new int[]{0,1,1,-1}, new int[]{0,1,-1,1}, new int[]{0,1,-1,-1},
     new int[]{0,-1,1,1},new int[] {0,-1,1,-1},new int[] {0,-1,-1,1},new int[] {0,-1,-1,-1},
     new int[]{1,0,1,1}, new int[]{1,0,1,-1}, new int[]{1,0,-1,1}, new int[]{1,0,-1,-1},
     new int[]{-1,0,1,1}, new int[]{-1,0,1,-1}, new int[]{-1,0,-1,1}, new int[]{-1,0,-1,-1},
@@ -358,7 +395,7 @@ namespace proland
     new int[]{1,1,1,0}, new int[]{1,1,-1,0}, new int[]{1,-1,1,0}, new int[]{1,-1,-1,0},
     new int[]{-1,1,1,0}, new int[]{-1,1,-1,0}, new int[]{-1,-1,1,0}, new int[]{-1,-1,-1,0}};
 
-    static int[][] simplex = new int[][]{
+        static int[][] simplex = new int[][]{
     new int[]{0,1,2,3},new int[]{0,1,3,2},new int[]{0,0,0,0},new int[]{0,2,3,1},new int[]{0,0,0,0},new int[]{0,0,0,0},new int[]{0,0,0,0},new int[]{1,2,3,0},
     new int[]{0,2,1,3},new int[]{0,0,0,0},new int[]{0,3,1,2},new int[]{0,3,2,1},new int[]{0,0,0,0},new int[]{0,0,0,0},new int[]{0,0,0,0},new int[]{1,3,2,0},
     new int[]{0,0,0,0},new int[]{0,0,0,0},new int[]{0,0,0,0},new int[]{0,0,0,0},new int[]{0,0,0,0},new int[]{0,0,0,0},new int[]{0,0,0,0},new int[]{0,0,0,0},
@@ -368,7 +405,7 @@ namespace proland
     new int[]{2,0,1,3},new int[]{0,0,0,0},new int[]{0,0,0,0},new int[]{0,0,0,0},new int[]{3,0,1,2},new int[]{3,0,2,1},new int[]{0,0,0,0},new int[]{3,1,2,0},
     new int[]{2,1,0,3},new int[]{0,0,0,0},new int[]{0,0,0,0},new int[]{0,0,0,0},new int[]{3,1,0,2},new int[]{0,0,0,0},new int[]{3,2,0,1},new int[]{3,2,1,0}};
 
-    static int fastfloor(float x)
+        static int fastfloor(float x)
         {
             return x > 0 ? (int)x : (int)x - 1;
         }
@@ -807,7 +844,7 @@ namespace proland
                     }
                 }
             }
-            
+
             return data;
         }
 
@@ -879,7 +916,7 @@ namespace proland
                     }
                 }
             }
-            
+
             return data;
         }
     }

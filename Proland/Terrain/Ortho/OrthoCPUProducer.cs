@@ -41,152 +41,333 @@
 */
 
 
+using log4net;
 using proland;
-using System.Collections.Generic;
+using Sxta.Core;
+using Sxta.Render.Resources;
+using System;
 using System.IO;
 
 namespace Sxta.Proland.Terrain
 {
-	public class OrthoCPUProducer : TileProducer 
-	{
-		/**
-		* The name of the file containing the tiles to load.
-		*/
-		string m_fileName = "/Proland/Textures/Terrain/Final/Color.proland";
+    /// <summary>
+    /// A TileProducer to load any kind of texture tile from disk to CPU memory.
+    /// </summary>
+	public class OrthoCPUProducer : TileProducer, ISwappable<OrthoCPUProducer>
+    {
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-		/**
-		* The number of components per pixel in the tiles to load.
-		*/
-		int m_channels;
+        /**
+         * Creates a new OrthoCPUProducer.
+         *
+         * @param cache the cache to store the produced tiles. The underlying
+         *      storage must be a CPUTileStorage of unsigned char type. The size
+         *      of tiles in this storage size must be equal to the size of the
+         *      tiles stored on disk, borders included.
+         * @param name the name of the file containing the tiles to load.
+         */
+        public OrthoCPUProducer(TileCache cache, string name) : base("OrthoCPUProducer", "CreateOrthoCPUTile")
+        {
+            init(cache, name);
+        }
 
-		/**
-		* The size of the tiles to load, without borders. A tile contains
-		* (tileSize+4)*(tileSize+4)*channels samples.
-		*/
-		int m_tileSize;
+        /**
+         * Deletes this OrthoCPUProducer.
+         */
+        //public virtual ~OrthoCPUProducer();
 
-		/**
-		* The size in pixels of the border around each tile. A tile contains
-		* (tileSize+4)*(tileSize+4)*channels samples.
-		*/
-		int m_border;
+        public override int getBorder()
+        {
+            return border;
+        }
 
-		/**
-		* The maximum level of the stored tiles on disk (inclusive).
-		*/
-		int m_maxLevel;
 
-		/**
-		* The offsets of each tile on disk, relatively to offset, for each tile id
-		*/
-		long[] m_offsets;
+        public override bool hasTile(int level, int tx, int ty)
+        {
+            return level <= maxLevel;
+        }
 
-		protected  void Start () 
-		{
-			base.Start ();
-			
-			CPUTileStorage storage = GetCache().GetStorage(0) as CPUTileStorage;
-			
-			if (storage == null) {
-				throw new InvalidStorageException ("Storage must be a CPUTileStorage");
-			}
-			
-			if(storage.GetDataType() != CPUTileStorage.DATA_TYPE.BYTE) {
-				throw new InvalidStorageException ("Storage data type must be byte");
-			}
 
-			byte[] data = new byte[7 * 4];
-			
-			using(Stream stream = new FileStream(Application.dataPath + m_fileName, FileMode.Open))
-			{
-				stream.Seek(0, SeekOrigin.Begin);
-				stream.Read(data, 0, data.Length);
-			}
-			
-			m_maxLevel = System.BitConverter.ToInt32(data, 0);
-			m_tileSize = System.BitConverter.ToInt32(data,4);
-			m_channels = System.BitConverter.ToInt32(data, 8);
-			m_border = System.BitConverter.ToInt32(data, 12);
-			//int root = System.BitConverter.ToInt32(data, 16);
-			//int tx = System.BitConverter.ToInt32(data, 20);
-			//int ty = System.BitConverter.ToInt32(data, 24);
+        /**
+         * Returns true if the produced tiles are compressed in DXT format.
+         */
+        public bool isCompressed()
+        {
+            return dxt;
+        }
 
-			if(storage.GetChannels() != m_channels) {
-				throw new InvalidStorageException ("Storage channels must be " + m_channels);
-			}
 
-//			Debug.Log("Proland::OrthoCPUProducer::Start - max level = " + m_maxLevel);
-//			Debug.Log("Proland::OrthoCPUProducer::Start - tile size = " + m_tileSize);
-//			Debug.Log("Proland::OrthoCPUProducer::Start - channels = " + m_channels);
-//			Debug.Log("Proland::OrthoCPUProducer::Start - border = " + m_border);
-//			Debug.Log("Proland::OrthoCPUProducer::Start - root level = " + root);
-//			Debug.Log("Proland::OrthoCPUProducer::Start - root tx = " + tx);
-//			Debug.Log("Proland::OrthoCPUProducer::Start - root ty = " + ty);
 
-			int ntiles = ((1 << (m_maxLevel * 2 + 2)) - 1) / 3;
-			m_offsets = new long[ntiles * 2];
-			
-			data = new byte[ntiles * 2 * 8];
-			
-			using(Stream stream = new FileStream(Application.dataPath + m_fileName, FileMode.Open))
-			{
-				stream.Seek(7 * 4, SeekOrigin.Begin);
-				stream.Read(data, 0, data.Length);
-			}
-			
-			for(int i = 0; i < ntiles*2; i++)
-			{
-				m_offsets[i] = System.BitConverter.ToInt64(data, 8 * i);
-				//Debug.Log("Proland::OrthoCPUProducer::Start - offset = " + m_offsets[i]);
-			}
-			
-			//Debug.Log("Proland::OrthoCPUProducer::Start - Num offsets = " + m_offsets.Length);
+        /**
+         * Creates an uninitialized OrthoCPUProducer.
+         */
+        protected OrthoCPUProducer() : base("OrthoCPUProducer", "CreateOrthoCPUTile")
+        {
+        }
 
-		}
+        /**
+         * Initializes this OrthoCPUProducer.
+         *
+         * @param cache the cache to store the produced tiles. The underlying
+         *      storage must be a CPUTileStorage of unsigned char type. The size
+         *      of tiles in this storage size must be equal to the size of the
+         *      tiles stored on disk, borders included.
+         * @param name the name of the file containing the tiles to load.
+         */
+        protected virtual void init(TileCache cache, string name)
+        {
+#if TODO
+            base.init(cache, false);
+            this.name = name;
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                maxLevel = 1;
+                tileSize = 0;
+                dxt = false;
+                border = 2;
+            }
+            else
+            {
+                fopen(&tileFile, name, "rb");
+                if (tileFile == null)
+                {
+                    if (Logger.ERROR_LOGGER != null)
+                    {
+                        Logger.ERROR_LOGGER.log("ORTHO", "Cannot open file '" + string(name) + "'");
+                    }
+                    maxLevel = -1;
+                }
+                else
+                {
+                    int root;
+                    int tx;
+                    int ty;
+                    int flags;
+                    fread(&maxLevel, sizeof(int), 1, tileFile);
+                    fread(&tileSize, sizeof(int), 1, tileFile);
+                    fread(&channels, sizeof(int), 1, tileFile);
+                    fread(&root, sizeof(int), 1, tileFile);
+                    fread(&tx, sizeof(int), 1, tileFile);
+                    fread(&ty, sizeof(int), 1, tileFile);
+                    fread(&flags, sizeof(int), 1, tileFile);
+                    dxt = (flags & 1) != 0;
+                    border = (flags & 2) != 0 ? 0 : 2;
+                }
 
-		public int GetChannels() 
-		{
-			return m_channels;
-		}
+                int ntiles = ((1 << (maxLevel * 2 + 2)) - 1) / 3;
+                header = 7 * sizeof(int) + 2 * ntiles * sizeof(long);
+                offsets = new long long[2 * ntiles];
+                if (tileFile != null)
+                {
+                    fread(offsets, sizeof(long) * ntiles * 2, 1, tileFile);
+#if !SINGLE_FILE
+                    fclose(tileFile);
+                    tileFile = null;
+#endif
+                }
 
-		public override int GetBorder()
-		{
-			return m_border;
-		}
-		
-		public override bool HasTile(int level, int tx, int ty)
-		{
-			return level <= m_maxLevel;
-		}
+                if (key == null)
+                {
+                    key = new pthread_key_t;
+                    pthread_key_create((pthread_key_t*)key, orthoCPUDelete);
+                }
 
-		int GetTileId(int level, int tx, int ty)
-		{
-			return tx + ty * (1 << level) + ((1 << (2 * level)) - 1) / 3;
-		}
+                Debug.Assert(tileSize + 2 * border < MAX_TILE_SIZE);
 
-		public override void DoCreateTile (int level, int tx, int ty, List<TileStorage.Slot> slot)
-		{
+#if !SINGLE_FILE
+                mutex = new pthread_mutex_t;
+                pthread_mutex_init((pthread_mutex_t*)mutex, null);
+#endif
+            }
+#endif
+            throw new NotImplementedException();
+        }
 
-			CPUTileStorage.CPUSlot<byte> cpuSlot = slot[0] as CPUTileStorage.CPUSlot<byte>;
-			cpuSlot.ClearData();
 
-			int tileid = GetTileId(level, tx, ty);
+        protected internal override bool doCreateTile(int level, int tx, int ty, TileStorage.Slot data)
+        {
+            if (log.IsDebugEnabled)
+            {
+                log.Debug("CPU tile " + getId() + " " + level + " " + tx + " " + ty);
+            }
+#if TODO
+            CPUTileStorage<byte>.CPUSlot cpuData = (CPUTileStorage<byte>.CPUSlot)(data);
+            Debug.Assert(cpuData != null);
 
-			long fsize = m_offsets [2 * tileid + 1] - m_offsets [2 * tileid];
-			
-			if(fsize > (m_tileSize + 2*m_border) * (m_tileSize + 2*m_border) * m_channels)
-				throw new InvalidParameterException("file size of tile is larger than actual tile size");
+            int tileid = getTileId(level, tx, ty);
 
-			using(Stream stream = new FileStream(Application.dataPath + m_fileName, FileMode.Open))
-			{
-				stream.Seek(m_offsets[2 * tileid], SeekOrigin.Begin);
-				stream.Read(cpuSlot.GetData(), 0, cpuSlot.GetData().Length);
-			}
+            if (string.IsNullOrEmpty( name))
+            {
+                for (int i = 0; i < cpuData.size; i++)
+                {
+                    cpuData.data[i] = 0;
+                }
+            }
+            else
+            {
+                Debug.Assert(((CPUTileStorage < byte >)cpuData.getOwner()).getChannels() == channels);
+                Debug.Assert(cpuData.getOwner().getTileSize() == tileSize + 2 * border);
+                Debug.Assert(level <= maxLevel);
 
-			base.DoCreateTile (level, tx, ty, slot);
-		}
-		
-	}
+                byte[]compressedData = (byte[]) pthread_getspecific(*((pthread_key_t*)key));
+                if (compressedData == null)
+                {
+                    compressedData = new byte[MAX_TILE_SIZE * MAX_TILE_SIZE * 4 * 2];
+                    pthread_setspecific(*((pthread_key_t*)key), compressedData);
+                }
+
+                int fsize = (int)(offsets[2 * tileid + 1] - offsets[2 * tileid]);
+                Debug.Assert(fsize < (tileSize + 2 * border) * (tileSize + 2 * border) * channels * 2);
+
+                if (dxt)
+                {
+#if SINGLE_FILE
+                    pthread_mutex_lock((pthread_mutex_t*)mutex);
+                    fseek64(tileFile, header + offsets[2 * tileid], SEEK_SET);
+                    fread(cpuData.data, fsize, 1, tileFile);
+                    pthread_mutex_unlock((pthread_mutex_t*)mutex);
+#else
+                    FILE* file;
+                    fopen(&file, name.c_str(), "rb");
+                    fseek64(file, header + offsets[2 * tileid], SEEK_SET);
+                    fread(cpuData.data, fsize, 1, file);
+                    fclose(file);
+                    /*ifstream fs(name.c_str(), ios.binary);
+                    fs.seekg(header + offsets[2 * tileid], ios.beg);
+                    fs.read((char*) cpuData.data, fsize);
+                    fs.close();*/
+#endif
+                    cpuData.size = fsize;
+                }
+                else
+                {
+                    byte[] srcData = compressedData;
+#if SINGLE_FILE
+                    pthread_mutex_lock((pthread_mutex_t*)mutex);
+                    fseek64(tileFile, header + offsets[2 * tileid], SEEK_SET);
+                    fread(compressedData, fsize, 1, tileFile);
+                    pthread_mutex_unlock((pthread_mutex_t*)mutex);
+#else
+                    FILE* file;
+                    fopen(&file, name.c_str(), "rb");
+                    fseek64(file, header + offsets[2 * tileid], SEEK_SET);
+                    fread(compressedData, fsize, 1, file);
+                    fclose(file);
+                    /*ifstream fs(name.c_str(), ios.binary);
+                    fs.seekg(header + offsets[2 * tileid], ios.beg);
+                    fs.read((char*) src, fsize);
+                    fs.close();*/
+#endif
+
+                    mfs_file fd;
+                    mfs_open(srcData, fsize, (char*)"r", &fd);
+                    TIFF* tf = TIFFClientOpen("name", "r", &fd,
+                        (TIFFReadWriteProc)mfs_read, (TIFFReadWriteProc)mfs_write, (TIFFSeekProc)mfs_lseek,
+                        (TIFFCloseProc)mfs_close, (TIFFSizeProc)mfs_size, (TIFFMapFileProc)mfs_map,
+                        (TIFFUnmapFileProc)mfs_unmap);
+                    TIFFReadEncodedStrip(tf, 0, cpuData.data, (tsize_t) - 1);
+                    TIFFClose(tf);
+                }
+            }
+
+            return true;
+#endif 
+            throw new NotImplementedException();
+        }
+
+        public void swap(OrthoCPUProducer p)
+        {
+            base.swap(p);
+            Std.Swap(ref name, ref p.name);
+            Std.Swap(ref channels, ref p.channels);
+            Std.Swap(ref tileSize, ref p.tileSize);
+            Std.Swap(ref maxLevel, ref p.maxLevel);
+            Std.Swap(ref dxt, ref p.dxt);
+            Std.Swap(ref offsets, ref p.offsets);
+            Std.Swap(ref mutex, ref p.mutex);
+            Std.Swap(ref tileFile, ref p.tileFile);
+        }
+
+
+
+
+        /**
+         * The name of the file containing the residual tiles to load.
+         */
+        private string name;
+
+        /**
+         * The number of components per pixel in the tiles to load.
+         */
+        private int channels;
+
+        /**
+         * The size of the tiles to load, without borders. A tile contains
+         * (tileSize+4)*(tileSize+4)*channels samples.
+         */
+        private int tileSize;
+
+        /**
+         * The size in pixels of the border around each tile. A tile contains
+         * (tileSize+4)*(tileSize+4)*channels samples.
+         */
+        private int border;
+
+        /**
+         * The maximum level of the stored tiles on disk (inclusive).
+         */
+        private int maxLevel;
+
+        /**
+         * true if the produced tiles are compressed in DXT format.
+         */
+        private bool dxt;
+
+        /**
+         * Offset of the first stored tile on disk. The offsets indicated in
+         * the tile offsets array #offsets are relative to this offset.
+         */
+        private int header;
+
+        /**
+         * The offsets of each tile on disk, relatively to #offset, for each
+         * tile id (see #getTileId).
+         */
+        private long offsets;
+
+        /**
+         * A mutex used to serializes accesses to the file storing the tiles.
+         */
+        private object mutex;
+
+        /**
+         * The file storing the tiles on disk.
+         */
+        private FileStream tileFile;
+
+        /**
+         * A key to store thread specific buffers used to produce the tiles.
+         */
+        private static object key;
+
+        /**
+         * Returns the id of the given tile. This id is used to find the offset
+         * the tile data on disk, using #offsets.
+         *
+         * @param level the level of the tile.
+         * @param tx the logical x coordinate of the tile.
+         * @param ty the logical y coordinate of the tile.
+         * @return the id of the given tile.
+         */
+        private int getTileId(int level, int tx, int ty)
+        {
+            return tx + ty * (1 << level) + ((1 << (2 * level)) - 1) / 3;
+        }
+
+
+        private const int MAX_TILE_SIZE = 512;
+
+    }
 }
 
 

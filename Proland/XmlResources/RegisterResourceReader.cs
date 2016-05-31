@@ -36,38 +36,27 @@
  * http://proland.inrialpes.fr/
  */
 /*
-* Main authors: Eric Bruneton, Antoine Begault, Guillaume Piolat.
- * Modified and ported to C# and Sxta Engine by Agustin Santos and Daniel Olmedo 2015-2016
+ * Main authors: Eric Bruneton, Antoine Begault, Guillaume Piolat.
+* Modified and ported to C# and Sxta Engine by Agustin Santos and Daniel Olmedo 2015-2016
 */
 
-using Sxta.Render;
-using Sxta.Render.Resources;
-using System.Xml;
-
-namespace Sxta.Proland.Ocean.XmlResources
+namespace Sxta.Proland.XmlResources
 {
-    public class DrawOceanTaskResource : ResourceTemplate<DrawOceanTask>
+    public class RegisterResourceReader
     {
-        public static DrawOceanTaskResource Create(ResourceManager manager, string name, ResourceDescriptor desc, XmlElement e = null, object context = null)
+        public static void RegisterResources()
         {
-            return new DrawOceanTaskResource(manager, name, desc, e);
-        }
-        public DrawOceanTaskResource(ResourceManager manager, string name, ResourceDescriptor desc, XmlElement e = null) :
-        base(40, manager, name, desc)
-        {
-            e = e == null ? desc.descriptor : e;
-            checkParameters(desc, e, "name,radius,zmin,brdfShader,");
-            float radius;
-            float zmin;
-            Module brdfShader = null;
-            if (e.GetAttribute("brdfShader") != null)
-            {
-                brdfShader = manager.loadResource(getParameter(desc, e, "brdfShader")).get() as Module;
-            }
-            getFloatParameter(desc, e, "radius", out radius);
-            getFloatParameter(desc, e, "zmin", out zmin);
-            this.valueC = new DrawOceanTask(radius, zmin, brdfShader);
+            //CORE RESOURCES
+            Sxta.Proland.Core.XmlResources.RegisterResourceReader.RegisterResources();
+
+            //OCEAN RESOURCES
+            Sxta.Proland.Ocean.XmlResources.RegisterResourceReader.RegisterResources();
+
+            //FOREST RESOURCES
+            Sxta.Proland.Forest.XmlResources.RegisterResourceReader.RegisterResources();
+
+            //TERRAIN RESOURCES
+            Sxta.Proland.Terrain.XmlResources.RegisterResourceReader.RegisterResources();
         }
     }
-
 }

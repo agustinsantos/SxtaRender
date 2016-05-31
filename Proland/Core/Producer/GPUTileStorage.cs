@@ -93,23 +93,21 @@ vec4 uv = vec4(xy + vec2(0.25), xy + vec2(0.75)) / float(bufferLayerLevelWidth.w
             /// <summary>
             /// The 2D array texture containing the tile stored in this slot.
             /// </summary>
-
             public Texture2DArray t;
+
             /// <summary>
             /// The layer of the tile in the 2D texture array 't'.
             /// </summary>
-
             public const int l = 1;
-            /// <summary>
+
+             /// <summary>
             /// Creates a new GPUSlot.
             /// </summary>
-            /*
-	         * @param owner the TileStorage that manages this slot.
-	         * @param index the index of t in the list of textures managed by the
-	         *      tile storage.
-	         * @param t the 2D array texture in which the tile is stored.
-	         * @param l the layer of the tile in the 2D texture array t.
-             */
+            /// <param name="owner">the TileStorage that manages this slot.</param>
+            /// <param name="index">the index of t in the list of textures managed by the
+	        ///       tile storage.</param>
+            /// <param name="t">the 2D array texture in which the tile is stored.</param>
+            /// <param name="l">the layer of the tile in the 2D texture array t.</param>
             public GPUSlot(TileStorage owner, int index, Texture2DArray t, int l) : base(owner)
             {
                 l = 1;
@@ -128,10 +126,12 @@ vec4 uv = vec4(xy + vec2(0.25), xy + vec2(0.75)) / float(bufferLayerLevelWidth.w
             {
                 return t.getHeight();
             }
+
+
             /// <summary>
             /// Copies a region of the given frame buffer into this slot. 
             /// </summary>
-            /**
+            /* 
             * @param fb a frame buffer.
             * @param x lower left corner of the area where the pixels must be read.
             * @param y lower left corner of the area where the pixels must be read.
@@ -147,7 +147,7 @@ vec4 uv = vec4(xy + vec2(0.25), xy + vec2(0.75)) / float(bufferLayerLevelWidth.w
             /// Copies a region of the given pixel buffer into this slot. The region
             /// Coordinates are relative to the lower left corner of the slot. 
             /// </summary>
-            /**
+            /*
             *@param x lower left corner of the part to be replaced in this slot.
             * @param y lower left corner of the part to be replaced in this slot.
             * @param w the width of the part to be replaced in this slot.

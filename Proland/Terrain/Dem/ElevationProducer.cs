@@ -92,7 +92,7 @@ namespace Sxta.Proland.Terrain
                 brand = (l & 1) == 0 ? 7654321 : 5647381;
                 for (int h = 5; h <= tileWidth / 2; ++h)
                 {
-                    float N = Noise.frandom(brand) * 2.0f - 1.0f;
+                    float N = Noise.frandom(ref rand) * 2.0f - 1.0f;
                     noiseArray[n + (h) + (2) * tileWidth] = N;
                     //SetNoise(noiseArray, n, tileWidth, h, 2, N);
                     noiseArray[n + (tileWidth - 1) + (2) * tileWidth] = N;
@@ -102,7 +102,7 @@ namespace Sxta.Proland.Terrain
                 {
                     for (int h = 5; h < tileWidth - 5; ++h)
                     {
-                        float N = Noise.frandom(brand) * 2.0f - 1.0f;
+                        float N = Noise.frandom(ref rand) * 2.0f - 1.0f;
                         noiseArray[n + (h) + (v) * tileWidth] = N;
                         //SetNoise(noiseArray, n, tileWidth, h, v, N);
                         noiseArray[n + (tileWidth - 1 - h) + (4 - v) * tileWidth] = N;
@@ -113,7 +113,7 @@ namespace Sxta.Proland.Terrain
                 brand = (l & 2) == 0 ? 7654321 : 5647381;
                 for (int v = 5; v <= tileWidth / 2; ++v)
                 {
-                    float N = Noise.frandom(brand) * 2.0f - 1.0f;
+                    float N = Noise.frandom(ref rand) * 2.0f - 1.0f;
                     noiseArray[n + (tileWidth - 3) + (v) * tileWidth] = N;
                     //SetNoise(noiseArray, n, tileWidth, tileWidth - 3, v, N);
                     noiseArray[n + (tileWidth - 3) + (tileWidth - 1 - v) * tileWidth] = N;
@@ -123,7 +123,7 @@ namespace Sxta.Proland.Terrain
                 {
                     for (int v = 5; v < tileWidth - 5; ++v)
                     {
-                        float N = Noise.frandom(brand) * 2.0f - 1.0f;
+                        float N = Noise.frandom(ref rand) * 2.0f - 1.0f;
                         noiseArray[n + (h) + (v) * tileWidth] = N;
                         //SetNoise(noiseArray, n, tileWidth, h, v, N);
                         noiseArray[n + (2 * tileWidth - 6 - h) + (tileWidth - 1 - v) * tileWidth] = N;
@@ -134,7 +134,7 @@ namespace Sxta.Proland.Terrain
                 brand = (l & 4) == 0 ? 7654321 : 5647381;
                 for (int h = 5; h <= tileWidth / 2; ++h)
                 {
-                    float N = Noise.frandom(brand) * 2.0f - 1.0f;
+                    float N = Noise.frandom(ref rand) * 2.0f - 1.0f;
                     noiseArray[n + (h) + (tileWidth - 3) * tileWidth] = N;
                     //SetNoise(noiseArray, n, tileWidth, h, tileWidth - 3, N);
                     noiseArray[n + (tileWidth - 1 - h) + (tileWidth - 3) * tileWidth] = N;
@@ -144,7 +144,7 @@ namespace Sxta.Proland.Terrain
                 {
                     for (int h = 5; h < tileWidth - 5; ++h)
                     {
-                        float N = Noise.frandom(brand) * 2.0f - 1.0f;
+                        float N = Noise.frandom(ref rand) * 2.0f - 1.0f;
                         noiseArray[n + (h) + (v) * tileWidth] = N;
                         //SetNoise(noiseArray, n, tileWidth, h, v, N);
                         noiseArray[n + (tileWidth - 1 - h) + (2 * tileWidth - 6 - v) * tileWidth] = N;
@@ -155,7 +155,7 @@ namespace Sxta.Proland.Terrain
                 brand = (l & 8) == 0 ? 7654321 : 5647381;
                 for (int v = 5; v <= tileWidth / 2; ++v)
                 {
-                    float N = Noise.frandom(brand) * 2.0f - 1.0f;
+                    float N = Noise.frandom(ref rand) * 2.0f - 1.0f;
                     noiseArray[n + (2) + (v) * tileWidth] = N;
                     //SetNoise(noiseArray, n, tileWidth, 2, v, N);
                     noiseArray[n + (2) + (tileWidth - 1 - v) * tileWidth] = N;
@@ -165,7 +165,7 @@ namespace Sxta.Proland.Terrain
                 {
                     for (int v = 5; v < tileWidth - 5; ++v)
                     {
-                        float N = Noise.frandom(brand) * 2.0f - 1.0f;
+                        float N = Noise.frandom(ref rand) * 2.0f - 1.0f;
                         noiseArray[n + (h) + (v) * tileWidth] = N;
                         //SetNoise(noiseArray, n, tileWidth, h, v, N);
                         noiseArray[n + (4 - h) + (tileWidth - 1 - v) * tileWidth] = N;
@@ -177,7 +177,7 @@ namespace Sxta.Proland.Terrain
                 {
                     for (int h = 5; h < tileWidth - 5; ++h)
                     {
-                        noiseArray[n + (h) + (v) * tileWidth] = Noise.frandom(rand) * 2.0f - 1.0f;
+                        noiseArray[n + (h) + (v) * tileWidth] = Noise.frandom(ref rand) * 2.0f - 1.0f;
                         //SetNoise(noiseArray, n, tileWidth, h, v, Noise.frandom(rand) * 2.0f - 1.0f);
                     }
                 }
@@ -467,7 +467,7 @@ namespace Sxta.Proland.Terrain
                     continue;
                 }
 
-                TileLayer l = (TileLayer)manager.loadResource(desc, f);
+                TileLayer l = manager.loadResource(desc, f).get() as TileLayer;
                 if (l != null)
                 {
                     addLayer(l);
@@ -798,11 +798,11 @@ namespace Sxta.Proland.Terrain
     {
         public ElevationProducerResource(ResourceManager manager, string name, ResourceDescriptor desc, XmlElement e = null) :
                 base(40, manager, name, desc)
-            {
-                e = e == null ? desc.descriptor : e;
-                checkParameters(desc, e, "name,cache,residuals,face,upsampleProg,blendProg,gridSize,noise,flip,");
-                valueC.init(manager, this, name, desc, e);
-            }
+        {
+            e = e == null ? desc.descriptor : e;
+            checkParameters(desc, e, "name,cache,residuals,face,upsampleProg,blendProg,gridSize,noise,flip,");
+            valueC.init(manager, this, name, desc, e);
+        }
 
         public override bool prepareUpdate()
         {

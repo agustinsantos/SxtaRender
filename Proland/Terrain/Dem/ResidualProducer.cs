@@ -42,9 +42,8 @@
 //#define SINGLE_FILE
 
 using proland;
-using System.Collections.Generic;
-using System.IO;
 using System;
+using System.Collections.Generic;
 
 namespace Sxta.Proland.Terrain
 {

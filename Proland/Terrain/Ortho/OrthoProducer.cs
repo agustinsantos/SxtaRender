@@ -37,353 +37,754 @@
  */
 /*
  * Main authors: Eric Bruneton, Antoine Begault, Guillaume Piolat.
-* Modified and ported to C# and Sxta Engine by Agustin Santos and Daniel Olmedo 2015-2016
+ * Modified and ported to C# and Sxta Engine by Agustin Santos and Daniel Olmedo 2015-2016
 */
 
+using log4net;
 using proland;
+using Sxta.Core;
+using Sxta.Math;
+using Sxta.Render;
+using Sxta.Render.Resources;
+using Sxta.Render.Scenegraph;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Xml;
+using System;
+using System.Globalization;
 
 namespace Sxta.Proland.Terrain
 {
-	
-	public class OrthoProducer : TileProducer
-	{
+    /// <summary>
+    /// A TileProducer to create texture tiles on GPU from CPU residual tiles.
+    /// </summary>
+    public class OrthoProducer : TileProducer, ISwappable<OrthoProducer>
+    {
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-		public class Uniforms
-		{
-			public int tileWidth, coarseLevelSampler, coarseLevelOSL;
-			public int noiseSampler, noiseUVLH, noiseColor;
-			public int noiseRootColor;
-			public int residualOSH, residualSampler;
+        /*
+             * Creates a new OrthoProducer.
+             *
+             * @param cache the cache to store the produced tiles. The underlying
+             *      storage must be a GPUTileStorage.
+             * @param residualTiles the %producer producing the residual tiles. This
+             *      %producer should produce its tiles in a CPUTileStorage of
+             *      unsigned ybte type. The size of the residual tiles (without
+             *      borders) must be equal to the size of the produced tiles (without
+             *      borders). The border sizes must be the same.
+             * @param orthoTexture a texture used to produce the tiles. Its size must
+             *      be equal to the produced tile size (including borders).
+             * @param residualTexture a texture used to produce the tiles. Its size
+             *      must be equal to the produced tile size (including borders).
+             * @param upsample the Program to perform the upsampling and add
+             *      procedure on GPU. See \ref sec-ortho.
+             * @param scale scaling factor used for residual values.
+             * @param maxLevel maximum quadtree level, or -1 to allow any level.
+             */
+        public OrthoProducer(TileCache cache, TileProducer residualTiles,
+            Texture2D orthoTexture, Texture2D residualTexture,
+            Program upsample, Vector4f rootNoiseColor, Vector4f noiseColor,
+             List<float> noiseAmp, bool noiseHsv,
+            float scale, int maxLevel) : base("OrthoProducer", "CreateOrthoTile")
+        {
+            init(cache, residualTiles, orthoTexture, residualTexture, upsample, rootNoiseColor, noiseColor, noiseAmp, noiseHsv, scale, maxLevel);
+        }
 
-			public Uniforms()
-			{
-				tileWidth = Shader.PropertyToID("_TileWidth");
-				coarseLevelSampler = Shader.PropertyToID("_CoarseLevelSampler");
-				coarseLevelOSL = Shader.PropertyToID("_CoarseLevelOSL");
-				noiseSampler = Shader.PropertyToID("_NoiseSampler");
-				noiseUVLH = Shader.PropertyToID("_NoiseUVLH");
-				noiseColor = Shader.PropertyToID("_NoiseColor");
-				noiseRootColor = Shader.PropertyToID("_NoiseRootColor");
-				residualOSH = Shader.PropertyToID("_ResidualOSH");
-				residualSampler = Shader.PropertyToID("_ResidualSampler");
-			}
-		}
+        /**
+         * Deletes this OrthoProducer.
+         */
+        //public virtual ~OrthoProducer();
 
-		GameObject m_orthoCPUProducerGO;
-		OrthoCPUProducer m_orthoCPUProducer;
-
-		//The Program to perform the upsampling and add procedure on GPU.
-		Material m_upsampleMat;
-
-		Color m_rootNoiseColor = new Color(0.5f,0.5f,0.5f,0.5f);
-
-		Color m_noiseColor = new Color(1.0f,1.0f,1.0f,1.0f);
-
-     	//Maximum quadtree level, or -1 to allow any level
-		int m_maxLevel = -1;
-
-		bool m_hsv = true;
-
-		int m_seed = 0;
-
-		float[] m_noiseAmp = new float[]{0,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255};
-
-		Uniforms m_uniforms;
-
-		PerlinNoise m_noise;
-
-		Texture2D[] m_noiseTextures;
-
-		Texture2D m_residueTex;
-
-		protected override void Start () 
-		{
-			base.Start();
-
-			if(m_orthoCPUProducerGO != null)
-				m_orthoCPUProducer = m_orthoCPUProducerGO.GetComponent<OrthoCPUProducer>();
-
-			int tileSize = GetCache().GetStorage(0).GetTileSize();
-
-			if(m_orthoCPUProducer != null && m_orthoCPUProducer.GetTileSize(0) != tileSize) {
-				throw new InvalidParameterException("ortho CPU tile size must match ortho tile size");
-			}
-
-			GPUTileStorage storage = GetCache().GetStorage(0) as GPUTileStorage;
-			
-			if(storage == null) {
-				throw new InvalidStorageException("Storage must be a GPUTileStorage");
-			}
-
-			m_uniforms = new Uniforms();
-
-			m_noise = new PerlinNoise(m_seed);
-
-			m_residueTex = new Texture2D(tileSize, tileSize, TextureFormat.ARGB32, false);
-			m_residueTex.wrapMode = TextureWrapMode.Clamp;
-			m_residueTex.filterMode = FilterMode.Point;
-
-			CreateOrthoNoise();
-		}
-		
-		public override int GetBorder() {
-			return 2;
-		}
-		
-		public override bool HasTile(int level, int tx, int ty) {
-			return (m_maxLevel == -1 || level <= m_maxLevel);
-		}
-
-		public override void DoCreateTile(int level, int tx, int ty, List<TileStorage.Slot> slot)
-		{
-
-			GPUTileStorage.GPUSlot gpuSlot = slot[0] as GPUTileStorage.GPUSlot;
-			
-			int tileWidth = gpuSlot.GetOwner().GetTileSize();
-			int tileSize = tileWidth - 4;
-
-			GPUTileStorage.GPUSlot parentGpuSlot = null;
-			Tile parentTile = null;
-			
-			if (level > 0) 
-			{	
-				parentTile = FindTile(level - 1, tx / 2, ty / 2, false, true);
-				
-				if(parentTile != null)
-					parentGpuSlot = parentTile.GetSlot(0) as GPUTileStorage.GPUSlot;
-				else  {
-					throw new MissingTileException("Find parent tile failed");
-				}
-			}
-
-			m_upsampleMat.SetFloat(m_uniforms.tileWidth, tileWidth);
-
-			if (level > 0) 
-			{
-				RenderTexture tex = parentGpuSlot.GetTexture();
-
-				m_upsampleMat.SetTexture(m_uniforms.coarseLevelSampler, tex);
-
-				float dx = (float)(tx % 2) * (float)(tileSize / 2);
-				float dy = (float)(ty % 2) * (float)(tileSize / 2);
-				
-				Vector4f coarseLevelOSL = new Vector4((dx+0.5f) / (float)tex.width, (dy+0.5f) / (float)tex.height, 1.0f / (float)tex.width, 0.0f);
-				
-				m_upsampleMat.SetVector(m_uniforms.coarseLevelOSL, coarseLevelOSL);
-			} 
-			else {
-				m_upsampleMat.SetVector(m_uniforms.coarseLevelOSL,  new Vector4(-1.0f, -1.0f, -1.0f, -1.0f));
-			}
-
-			if (m_orthoCPUProducer != null && m_orthoCPUProducer.HasTile(level, tx, ty)) 
-			{
-				Tile orthoCPUTile = m_orthoCPUProducer.FindTile(level, tx, ty, false, true);
-				CPUTileStorage.CPUSlot<byte> orthoCPUSlot = null;
-				
-				if(orthoCPUTile != null) {
-					orthoCPUSlot = orthoCPUTile.GetSlot(0) as CPUTileStorage.CPUSlot<byte>;
-				}
-				else  {
-					throw new MissingTileException("Find orthoCPU tile failed");
-				}
-
-				int c = m_orthoCPUProducer.GetChannels();
-				Color32 col = new Color32();
-				byte[] data = orthoCPUSlot.GetData();
-
-				for(int x = 0; x < tileWidth; x++)
-				{
-					for(int y = 0; y < tileWidth; y++)
-					{
-						col.r = data[(x+y*tileWidth)*c];
-
-						if(c > 1) col.g = data[(x+y*tileWidth)*c+1];
-						if(c > 2) col.b = data[(x+y*tileWidth)*c+2];
-						if(c > 3) col.a = data[(x+y*tileWidth)*c+3];
-
-						m_residueTex.SetPixel(x, y, col);
-					}
-				}
-
-				m_residueTex.Apply();
-
-				m_upsampleMat.SetTexture(m_uniforms.residualSampler, m_residueTex);
-				m_upsampleMat.SetVector(m_uniforms.residualOSH, new Vector4( 0.5f/(float)tileWidth, 0.5f/(float)tileWidth, 1.0f/(float)tileWidth, 0.0f));
-			} 
-			else {
-				m_upsampleMat.SetTexture(m_uniforms.residualSampler, null);
-				m_upsampleMat.SetVector(m_uniforms.residualOSH, new Vector4( -1,-1,-1,-1));
-			}
-
-			float rs = level < m_noiseAmp.Length ? m_noiseAmp[level] : 0.0f;
-			
-			int noiseL = 0;
-			int face = GetTerrainNode().GetFace();
-
-			if(rs != 0.0f)
-			{
-				if (face == 1) 
-				{
-					int offset = 1 << level;
-					int bottomB = m_noise.Noise2D(tx + 0.5f, ty + offset) > 0.0f ? 1 : 0;
-					int rightB = (tx == offset - 1 ? m_noise.Noise2D(ty + offset + 0.5f, offset) : m_noise.Noise2D(tx + 1.0f, ty + offset + 0.5f)) > 0.0f ? 2 : 0;
-					int topB = (ty == offset - 1 ? m_noise.Noise2D((3.0f * offset - 1.0f - tx) + 0.5f, offset) : m_noise.Noise2D(tx + 0.5f, ty + offset + 1.0f)) > 0.0f ? 4 : 0;
-					int leftB = (tx == 0 ? m_noise.Noise2D((4.0f * offset - 1.0f - ty) + 0.5f, offset) : m_noise.Noise2D(tx, ty + offset + 0.5f)) > 0.0f ? 8 : 0;
-					noiseL = bottomB + rightB + topB + leftB;
-				} 
-				else if (face == 6) 
-				{
-					int offset = 1 << level;
-					int bottomB = (ty == 0 ? m_noise.Noise2D((3.0f * offset - 1.0f - tx) + 0.5f, 0) : m_noise.Noise2D(tx + 0.5f, ty - offset)) > 0.0f ? 1 : 0;
-					int rightB = (tx == offset - 1.0f ? m_noise.Noise2D((2.0f * offset - 1.0f - ty) + 0.5f, 0) : m_noise.Noise2D(tx + 1.0f, ty - offset + 0.5f)) > 0.0f ? 2 : 0;
-					int topB = m_noise.Noise2D(tx + 0.5f, ty - offset + 1.0f) > 0.0f ? 4 : 0;
-					int leftB = (tx == 0 ? m_noise.Noise2D(3.0f * offset + ty + 0.5f, 0) : m_noise.Noise2D(tx, ty - offset + 0.5f)) > 0.0f ? 8 : 0;
-					noiseL = bottomB + rightB + topB + leftB;
-				} 
-				else 
-				{
-					int offset = (1 << level) * (face - 2);
-					int bottomB = m_noise.Noise2D(tx + offset + 0.5f, ty) > 0.0f ? 1 : 0;
-					int rightB = m_noise.Noise2D((tx + offset + 1) % (4 << level), ty + 0.5f) > 0.0f ? 2 : 0;
-					int topB = m_noise.Noise2D(tx + offset + 0.5f, ty + 1.0f) > 0.0f ? 4 : 0;
-					int leftB = m_noise.Noise2D(tx + offset, ty + 0.5f) > 0.0f ? 8 : 0;
-					noiseL = bottomB + rightB + topB + leftB;
-				}
-			}
-			
-			int[] noiseRs = new int[]{ 0, 0, 1, 0, 2, 0, 1, 0, 3, 3, 1, 3, 2, 2, 1, 0 };
-			int noiseR = noiseRs[noiseL];
-
-			int[] noiseLs = new int[]{ 0, 1, 1, 2, 1, 3, 2, 4, 1, 2, 3, 4, 2, 4, 4, 5 };
-			noiseL = noiseLs[noiseL];
-			
-			m_upsampleMat.SetTexture(m_uniforms.noiseSampler, m_noiseTextures[noiseL]);
-			m_upsampleMat.SetVector(m_uniforms.noiseUVLH, new Vector4(noiseR, (noiseR + 1) % 4, 0.0f, m_hsv ? 1.0f : 0.0f));
+        public override void getReferencedProducers(List<TileProducer> producers)
+        {
+            if (residualTiles != null)
+            {
+                producers.Add(residualTiles);
+            }
+        }
 
 
-			if(m_hsv)
-			{
-				Vector4f col = m_noiseColor * rs / 255.0f;
-				col.w *= 2.0f;
-				m_upsampleMat.SetVector(m_uniforms.noiseColor, col);
-			} 
-			else 
-			{
-				Vector4f col = m_noiseColor * rs * 2.0f / 255.0f;
-				col.w *= 2.0f;
-				m_upsampleMat.SetVector(m_uniforms.noiseColor, col);
-			}
+        public override void setRootQuadSize(float size)
+        {
+            base.setRootQuadSize(size);
+            if (residualTiles != null)
+            {
+                residualTiles.setRootQuadSize(size);
+            }
+        }
 
-			m_upsampleMat.SetVector(m_uniforms.noiseRootColor, m_rootNoiseColor);
 
-			Graphics.Blit(null, gpuSlot.GetTexture(), m_upsampleMat);
+        public override int getBorder()
+        {
+            Debug.Assert(residualTiles == null || residualTiles.getBorder() == 2);
+            return 2;
+        }
 
-			base.DoCreateTile(level, tx, ty, slot);
 
-		}
+        public override bool hasTile(int level, int tx, int ty)
+        {
+            return maxLevel == -1 || level <= maxLevel;
+        }
 
-		void CreateOrthoNoise()
-		{
-			int tileWidth = GetCache().GetStorage(0).GetTileSize();
-			m_noiseTextures = new Texture2D[6];
-			Color col = new Color();
-			
-			int[] layers = new int[]{0, 1, 3, 5, 7, 15};
-			int rand = 1234567;
-			
-			for (int nl = 0; nl < 6; ++nl) 
-			{
-				int l = layers[nl];
 
-				m_noiseTextures[nl] = new Texture2D(tileWidth, tileWidth, TextureFormat.ARGB32, false, true);
+        public override bool prefetchTile(int level, int tx, int ty)
+        {
+            bool b = base.prefetchTile(level, tx, ty);
+            if (!b)
+            {
+                if (residualTiles != null && residualTiles.hasTile(level, tx, ty))
+                {
+                    residualTiles.prefetchTile(level, tx, ty);
+                }
+            }
+            return b;
+        }
 
-				// corners
-				for (int j = 0; j < tileWidth; ++j) {
-					for (int i = 0; i < tileWidth; ++i) {
-						m_noiseTextures[nl].SetPixel(i,j, new Color(0.5f,0.5f,0.5f,0.5f));
-					}
-				}
-				
-				// bottom border
-				Random.seed = (l & 1) == 0 ? 7654321 : 5647381;
-				//Random.seed = 5647381;
-				for (int v = 2; v < 4; ++v) {
-					for (int h = 4; h < tileWidth - 4; ++h) {
-						for (int c = 0; c < 4; ++c) {
-							col[c] = Random.value;
-						}
 
-						m_noiseTextures[nl].SetPixel(h,v,col);
-						m_noiseTextures[nl].SetPixel(tileWidth-1-h,3-v,col);
-					}
-				}
-	
-				// right border
-				Random.seed = (l & 2) == 0 ? 7654321 : 5647381;
-				//Random.seed = 5647381;
-				for (int h = tileWidth - 3; h >= tileWidth - 4; --h) {
-					for (int v = 4; v < tileWidth - 4; ++v) {
-						for (int c = 0; c < 4; ++c) {
-							col[c] = Random.value;
-						}
 
-						m_noiseTextures[nl].SetPixel(h,v,col);
-						m_noiseTextures[nl].SetPixel(2*tileWidth-5-h,tileWidth-1-v,col);
-					}
-				}
-				
-				// top border
-				Random.seed = (l & 4) == 0 ? 7654321 : 5647381;
-				//Random.seed = 5647381;
-				for (int v = tileWidth - 2; v < tileWidth; ++v) {
-					for (int h = 4; h < tileWidth - 4; ++h) {
-						for (int c = 0; c < 4; ++c) {
-							col[c] = Random.value;
-						}
-						
-						m_noiseTextures[nl].SetPixel(h,v,col);
-						m_noiseTextures[nl].SetPixel(tileWidth-1-h,2*tileWidth-5-v,col);
-					}
-				}
-				
-				// left border
-				Random.seed = (l & 8) == 0 ? 7654321 : 5647381;
-				//Random.seed = 5647381;
-				for (int h = 1; h >= 0; --h) {
-					for (int v = 4; v < tileWidth - 4; ++v) {
-						for (int c = 0; c < 4; ++c) {
-							col[c] = Random.value;
-						}
-						
-						m_noiseTextures[nl].SetPixel(h,v,col);
-						m_noiseTextures[nl].SetPixel(3-h,tileWidth-1-v,col);
-					}
-				}
-				
-				// center
-				Random.seed = rand;
-				for (int v = 4; v < tileWidth - 4; ++v) {
-					for (int h = 4; h < tileWidth - 4; ++h) {
-						for (int c = 0; c < 4; ++c) {
-							col[c] = Random.value;
-						}
+        protected FrameBuffer frameBuffer;
 
-						m_noiseTextures[nl].SetPixel(h,v,col);
-					}
-				}
-				
-				//randomize for next texture
-				rand = (rand * 1103515245 + 12345) & 0x7FFFFFFF;
+        /*
+         * The %producer producing the residual tiles. This %producer should produce its
+         * tiles in a CPUTileStorage of unsigned byte type. The size of the residual
+         * tiles (without borders) must be equal to the size of the produced tiles
+         * (without borders).
+         */
+        protected TileProducer residualTiles;
 
-				m_noiseTextures[nl].Apply();
+        /*
+         * A texture used to produce the tiles. Its size must be equal to the produced
+         * tile size (including borders).
+         */
+        protected Texture2D orthoTexture;
 
-			}
-			
-		}
+        /*
+         * A texture used to produce the tiles. Its size must be equal to the produced
+         * tile size (including borders).
+         */
+        protected Texture2D residualTexture;
 
-	}
+        /*
+         * Cube face ID for producers targeting spherical terrains.
+         */
+        protected int face;
 
+        /*
+         * The Program to perform the upsampling and add procedure on GPU.
+         * See \ref sec-ortho.
+         */
+        public Program upsample;
+
+        /*
+         * Creates an uninitialized OrthoProducer.
+         */
+        public OrthoProducer() : base("OrthoProducer", "CreateOrthoTile")
+        {
+        }
+
+        /*
+         * Initializes this OrthoProducer. See #OrthoProducer.
+         */
+        protected void init(TileCache cache, TileProducer residualTiles,
+            Texture2D orthoTexture, Texture2D residualTexture,
+            Program upsample, Vector4f rootNoiseColor, Vector4f noiseColor,
+            List<float> noiseAmp, bool noiseHsv,
+            float scale, int maxLevel)
+        {
+            int tileWidth = cache.getStorage().getTileSize();
+            base.init(cache, true);
+            this.frameBuffer = orthoFramebufferFactory.Get(orthoTexture);
+            this.residualTiles = residualTiles;
+            this.orthoTexture = orthoTexture;
+            this.residualTexture = residualTexture;
+            this.upsample = upsample;
+            this.noiseTexture = orthoNoiseFactory.Get(tileWidth);
+            this.rootNoiseColor = rootNoiseColor;
+            this.noiseColor = noiseColor;
+            this.noiseAmp = noiseAmp;
+            this.noiseHsv = noiseHsv;
+            this.scale = scale;
+            this.maxLevel = maxLevel;
+
+            tileWidthU = upsample.getUniform1f("tileWidth");
+            coarseLevelSamplerU = upsample.getUniformSampler("coarseLevelSampler");
+            coarseLevelOSLU = upsample.getUniform4f("coarseLevelOSL");
+            residualSamplerU = upsample.getUniformSampler("residualSampler");
+            residualOSHU = upsample.getUniform4f("residualOSH");
+            noiseSamplerU = upsample.getUniformSampler("noiseSampler");
+            noiseUVLHU = upsample.getUniform4i("noiseUVLH");
+            noiseColorU = upsample.getUniform4f("noiseColor");
+            rootNoiseColorU = upsample.getUniform4f("rootNoiseColor");
+
+            if (residualTiles != null)
+            {
+                TileStorage s = residualTiles.getCache().getStorage();
+                channels = ((CPUTileStorage<byte>)s).getChannels();
+                Debug.Assert(tileWidth == s.getTileSize());
+                Debug.Assert(((GPUTileStorage)cache.getStorage()).getTexture(0).getComponents() >= channels);
+            }
+            else
+            {
+                channels = ((GPUTileStorage)cache.getStorage()).getTexture(0).getComponents();
+            }
+        }
+
+        /**
+         * Initializes this OrthoProducer from a Resource.
+         *
+         * @param manager the manager that will manage the created %resource.
+         * @param r the %resource.
+         * @param name the %resource name.
+         * @param desc the %resource descriptor.
+         * @param e an optional XML element providing contextual information (such
+         *      as the XML element in which the %resource descriptor was found).
+         */
+        public void init(ResourceManager manager, Resource r, string name, ResourceDescriptor desc, XmlElement e = null)
+        {
+            TileCache cache;
+            TileProducer residuals = null;
+            Program upsampleProg;
+            Texture2D orthoTexture;
+            Texture2D residualTexture;
+            Vector4f rootNoiseColor = new Vector4f(0.5f, 0.5f, 0.5f, 0.5f);
+            Vector4f noiseColor = new Vector4f(1.0f, 1.0f, 1.0f, 1.0f);
+            List<float> noiseAmp = new List<float>();
+            bool noiseHsv = false;
+            float scale = 2.0f;
+            int maxLevel = -1;
+            cache = manager.loadResource(Resource.getParameter(desc, e, "cache")).get() as TileCache;
+            if (e.GetAttribute("residuals") != null)
+            {
+                residuals = manager.loadResource(Resource.getParameter(desc, e, "residuals")).get() as TileProducer;
+            }
+            string upsample = "upsampleOrthoShader;";
+            if (e.GetAttribute("upsampleProg") != null)
+            {
+                upsample = Resource.getParameter(desc, e, "upsampleProg");
+            }
+            upsampleProg = manager.loadResource(upsample).get() as Program;
+            if (e.GetAttribute("rnoise") != null)
+            {
+                string c = e.GetAttribute("rnoise") + ",";
+                int start = 0;
+                int index;
+                float[] val = new float[4];
+                for (int i = 0; i < 4; i++)
+                {
+                    index = c.LastIndexOf(',', start);
+                    val[i] = float.Parse(c.Substring(start, index - start), CultureInfo.InvariantCulture) / 255;
+                    start = index + 1;
+                }
+                rootNoiseColor = new Vector4f(val[0], val[1], val[2], val[2]);
+            }
+            if (e.GetAttribute("cnoise") != null)
+            {
+                string c = e.GetAttribute("cnoise") + ",";
+                int start = 0;
+                int index;
+                float[] val = new float[4];
+                for (int i = 0; i < 4; i++)
+                {
+                    index = c.LastIndexOf(',', start);
+                    val[i] = float.Parse(c.Substring(start, index - start), CultureInfo.InvariantCulture) / 255;
+                    start = index + 1;
+                }
+                noiseColor = new Vector4f(val[0], val[1], val[2], val[2]);
+            }
+            if (e.GetAttribute("noise") != null)
+            {
+                string noiseAmps = e.GetAttribute("noise") + ",";
+                int start = 0;
+                int index;
+                while ((index = noiseAmps.LastIndexOf(',', start)) != -1)
+                {
+                    float value;
+                    string amp = noiseAmps.Substring(start, index - start);
+                    value = float.Parse(amp, CultureInfo.InvariantCulture);
+                    noiseAmp.Add(value);
+                    start = index + 1;
+                }
+            }
+            if (e.GetAttribute("hsv") != null && e.GetAttribute("hsv") == "true")
+            {
+                noiseHsv = true;
+            }
+            if (e.GetAttribute("scale") != null)
+            {
+                Resource.getFloatParameter(desc, e, "scale", out scale);
+            }
+            if (e.GetAttribute("maxLevel") != null)
+            {
+                Resource.getIntParameter(desc, e, "maxLevel", out maxLevel);
+            }
+            if (e.GetAttribute("face") != null)
+            {
+                Resource.getIntParameter(desc, e, "face", out face);
+            }
+            else if (name[name.Length - 1] >= '1' && name[name.Length - 1] <= '6')
+            {
+                face = name[name.Length - 1] - '0';
+            }
+            else
+            {
+                face = 1;
+            }
+
+            XmlNode n = e.FirstChild;
+            while (n != null)
+            {
+                XmlElement f = n as XmlElement;
+                if (f == null)
+                {
+                    n = n.NextSibling;
+                    continue;
+                }
+
+                TileLayer l = manager.loadResource(desc, f).get() as TileLayer;
+                if (l != null)
+                {
+                    addLayer(l);
+                }
+                else
+                {
+                    if (log.IsWarnEnabled)
+                    {
+                        Resource.log(log, desc, f, "Unknown scene node element '" + f + "'");
+                    }
+                }
+                n = n.NextSibling;
+            }
+
+            int tileWidth = cache.getStorage().getTileSize();
+            int channels = hasLayers() ? 4 : ((GPUTileStorage)cache.getStorage()).getTexture(0).getComponents();
+
+            string orthoTex = "renderbuffer-" + tileWidth;
+            switch (channels)
+            {
+                case 1:
+                    orthoTex += "-R8";
+                    break;
+                case 2:
+                    orthoTex += "-RG8";
+                    break;
+                case 3:
+                    orthoTex += "-RGB8";
+                    break;
+                default:
+                    orthoTex += "-RGBA8";
+                    break;
+            }
+            orthoTexture = manager.loadResource(orthoTex).get() as Texture2D;
+
+            string residualTex = "renderbuffer-" + tileWidth;
+            switch (((GPUTileStorage)cache.getStorage()).getTexture(0).getComponents())
+            {
+                case 1:
+                    residualTex += "-R8";
+                    break;
+                case 2:
+                    residualTex += "-RG8";
+                    break;
+                case 3:
+                    residualTex += "-RGB8";
+                    break;
+                default:
+                    residualTex += "-RGBA8";
+                    break;
+            }
+            residualTex += "-1";
+            residualTexture = manager.loadResource(residualTex).get() as Texture2D;
+
+            init(cache, residuals, orthoTexture, residualTexture, upsampleProg, rootNoiseColor, noiseColor, noiseAmp, noiseHsv, scale, maxLevel);
+        }
+
+        protected internal override ulong getContext()
+        {
+            return (uint)orthoTexture.GetHashCode();
+        }
+
+
+        protected internal override Task startCreateTile(int level, int tx, int ty, uint deadline, Task task, TaskGraph owner)
+        {
+            TaskGraph result = owner == null ? createTaskGraph(task) : owner;
+
+            if (level > 0)
+            {
+                TileCache.Tile t = getTile(level - 1, tx / 2, ty / 2, deadline);
+                Debug.Assert(t != null);
+                result.addTask(t.task);
+                result.addDependency(task, t.task);
+            }
+
+            if (residualTiles != null && residualTiles.hasTile(level, tx, ty))
+            {
+                TileCache.Tile t = residualTiles.getTile(level, tx, ty, deadline);
+                Debug.Assert(t != null);
+                result.addTask(t.task);
+                result.addDependency(task, t.task);
+            }
+            base.startCreateTile(level, tx, ty, deadline, task, result);
+
+            return result;
+        }
+
+
+        protected internal override void beginCreateTile()
+        {
+            old = SceneManager.getCurrentFrameBuffer();
+            SceneManager.setCurrentFrameBuffer(frameBuffer);
+            base.beginCreateTile();
+        }
+
+
+        protected internal override bool doCreateTile(int level, int tx, int ty, TileStorage.Slot data)
+        {
+            if (log.IsDebugEnabled)
+            {
+                log.Debug("Ortho tile " + getId() + " " + level + " " + tx + " " + ty);
+            }
+
+            GPUTileStorage.GPUSlot gpuData = (GPUTileStorage.GPUSlot)data;
+            Debug.Assert(gpuData != null);
+            ((GPUTileStorage)getCache().getStorage()).notifyChange(gpuData);
+
+            int tileWidth = data.getOwner().getTileSize();
+            int tileSize = tileWidth - 4;
+
+            GPUTileStorage.GPUSlot parentGpuData = null;
+            if (level > 0)
+            {
+                TileCache.Tile t = findTile(level - 1, tx / 2, ty / 2);
+                Debug.Assert(t != null);
+                parentGpuData = (GPUTileStorage.GPUSlot)(t.getData());
+                Debug.Assert(parentGpuData != null);
+            }
+
+            tileWidthU.set((float)tileWidth);
+
+            if (level > 0)
+            {
+                Texture t = parentGpuData.t;
+                float dx = (float)((tx % 2) * (tileSize / 2));
+                float dy = (float)((ty % 2) * (tileSize / 2));
+                coarseLevelSamplerU.set(t);
+                coarseLevelOSLU.set(new Vector4f((dx + 0.5f) / parentGpuData.getWidth(), (dy + 0.5f) / parentGpuData.getHeight(), 1.0f / parentGpuData.getWidth(), GPUTileStorage.GPUSlot.l));
+            }
+            else
+            {
+                coarseLevelOSLU.set(new Vector4f(-1.0f, -1.0f, -1.0f, -1.0f));
+            }
+
+            if (residualTiles != null && residualTiles.hasTile(level, tx, ty))
+            {
+                residualSamplerU.set(residualTexture);
+                residualOSHU.set(new Vector4f(0.5f / tileWidth, 0.5f / tileWidth, 1.0f / tileWidth, scale));
+
+                TileCache.Tile t = residualTiles.findTile(level, tx, ty);
+                Debug.Assert(t != null);
+                CPUTileStorage<byte>.CPUSlot cpuTile = (CPUTileStorage<byte>.CPUSlot)(t.getData());
+                Debug.Assert(cpuTile != null);
+
+                TextureFormat f;
+                switch (channels)
+                {
+                    case 1:
+                        f = TextureFormat.RED;
+                        break;
+                    case 2:
+                        f = TextureFormat.RG;
+                        break;
+                    case 3:
+                        f = TextureFormat.RGB;
+                        break;
+                    default:
+                        f = TextureFormat.RGBA;
+                        break;
+                }
+                residualTexture.setSubImage(0, 0, 0, tileWidth, tileWidth, f, PixelType.UNSIGNED_BYTE, new Render.Buffer.Parameters(), new CPUBuffer<byte>(cpuTile.data));
+            }
+            else
+            {
+                residualOSHU.set(new Vector4f(-1.0f, -1.0f, -1.0f, -1.0f));
+            }
+
+            float rs = level < (int)(noiseAmp.Count) ? noiseAmp[level] : 0.0f;
+
+            int noiseL = 0;
+            if (face == 1)
+            {
+                int offset = 1 << level;
+                int bottomB = Noise.cnoise(tx + 0.5f, ty + offset) > 0.0 ? 1 : 0;
+                int rightB = (tx == offset - 1 ? Noise.cnoise(ty + offset + 0.5f, offset) : Noise.cnoise(tx + 1, ty + offset + 0.5f)) > 0.0 ? 2 : 0;
+                int topB = (ty == offset - 1 ? Noise.cnoise((3 * offset - 1 - tx) + 0.5f, offset) : Noise.cnoise(tx + 0.5f, ty + offset + 1)) > 0.0 ? 4 : 0;
+                int leftB = (tx == 0 ? Noise.cnoise((4 * offset - 1 - ty) + 0.5f, offset) : Noise.cnoise(tx, ty + offset + 0.5f)) > 0.0 ? 8 : 0;
+                noiseL = bottomB + rightB + topB + leftB;
+            }
+            else if (face == 6)
+            {
+                int offset = 1 << level;
+                int bottomB = (ty == 0 ? Noise.cnoise((3 * offset - 1 - tx) + 0.5f, 0) : Noise.cnoise(tx + 0.5f, ty - offset)) > 0.0 ? 1 : 0;
+                int rightB = (tx == offset - 1 ? Noise.cnoise((2 * offset - 1 - ty) + 0.5f, 0) : Noise.cnoise(tx + 1, ty - offset + 0.5f)) > 0.0 ? 2 : 0;
+                int topB = Noise.cnoise(tx + 0.5f, ty - offset + 1) > 0.0 ? 4 : 0;
+                int leftB = (tx == 0 ? Noise.cnoise(3 * offset + ty + 0.5f, 0) : Noise.cnoise(tx, ty - offset + 0.5f)) > 0.0 ? 8 : 0;
+                noiseL = bottomB + rightB + topB + leftB;
+            }
+            else
+            {
+                int offset = (1 << level) * (face - 2);
+                int bottomB = Noise.cnoise(tx + offset + 0.5f, ty) > 0.0 ? 1 : 0;
+                int rightB = Noise.cnoise((tx + offset + 1) % (4 << level), ty + 0.5f) > 0.0 ? 2 : 0;
+                int topB = Noise.cnoise(tx + offset + 0.5f, ty + 1) > 0.0 ? 4 : 0;
+                int leftB = Noise.cnoise(tx + offset, ty + 0.5f) > 0.0 ? 8 : 0;
+                noiseL = bottomB + rightB + topB + leftB;
+            }
+            int[] noiseRs = new int[16] { 0, 0, 1, 0, 2, 0, 1, 0, 3, 3, 1, 3, 2, 2, 1, 0 };
+            int[] noiseLs = new int[16] { 0, 1, 1, 2, 1, 3, 2, 4, 1, 2, 3, 4, 2, 4, 4, 5 };
+            int noiseR = noiseRs[noiseL];
+            noiseL = noiseLs[noiseL];
+
+            noiseSamplerU.set(noiseTexture);
+            noiseUVLHU.set(new Vector4i(noiseR, (noiseR + 1) % 4, noiseL, noiseHsv ? 1 : 0));
+            if (noiseHsv)
+            {
+                noiseColorU.set(Vector4f.Multiply(new Vector4f(noiseColor), new Vector4f(rs, rs, rs, scale * rs)) / 255.0f);
+            }
+            else
+            {
+                noiseColorU.set(noiseColor * scale * rs / 255.0f);
+            }
+            if (rootNoiseColorU != null)
+            {
+                rootNoiseColorU.set(rootNoiseColor);
+            }
+
+            frameBuffer.drawQuad(upsample);
+            if (hasLayers())
+            {
+                base.doCreateTile(level, tx, ty, data);
+            }
+            gpuData.copyPixels(frameBuffer, 0, 0, tileWidth, tileWidth);
+
+            return true;
+        }
+
+        protected internal override void endCreateTile()
+        {
+            base.endCreateTile();
+            SceneManager.setCurrentFrameBuffer(old);
+            old = null;
+        }
+
+
+        protected internal override void stopCreateTile(int level, int tx, int ty)
+        {
+            if (level > 0)
+            {
+                TileCache.Tile t = findTile(level - 1, tx / 2, ty / 2);
+                Debug.Assert(t != null);
+                putTile(t);
+            }
+
+            if (residualTiles != null && residualTiles.hasTile(level, tx, ty))
+            {
+                TileCache.Tile t = residualTiles.findTile(level, tx, ty);
+                Debug.Assert(t != null);
+                residualTiles.putTile(t);
+            }
+
+            base.stopCreateTile(level, tx, ty);
+        }
+
+        public virtual void swap(OrthoProducer p)
+        {
+            base.swap(p);
+            Std.Swap(ref frameBuffer, ref p.frameBuffer);
+            Std.Swap(ref residualTiles, ref p.residualTiles);
+            Std.Swap(ref orthoTexture, ref p.orthoTexture);
+            Std.Swap(ref residualTexture, ref p.residualTexture);
+            //Std.Swap(ref old, ref p.old);
+            Std.Swap(ref upsample, ref p.upsample);
+            Std.Swap(ref channels, ref p.channels);
+            Std.Swap(ref maxLevel, ref p.maxLevel);
+            Std.Swap(ref noiseTexture, ref p.noiseTexture);
+            Std.Swap(ref rootNoiseColor, ref p.rootNoiseColor);
+            Std.Swap(ref noiseColor, ref p.noiseColor);
+            Std.Swap(ref noiseAmp, ref p.noiseAmp);
+            Std.Swap(ref noiseHsv, ref p.noiseHsv);
+            Std.Swap(ref scale, ref p.scale);
+            Std.Swap(ref tileWidthU, ref p.tileWidthU);
+            Std.Swap(ref coarseLevelSamplerU, ref p.coarseLevelSamplerU);
+            Std.Swap(ref coarseLevelOSLU, ref p.coarseLevelOSLU);
+            Std.Swap(ref residualSamplerU, ref p.residualSamplerU);
+            Std.Swap(ref residualOSHU, ref p.residualOSHU);
+            Std.Swap(ref noiseSamplerU, ref p.noiseSamplerU);
+            Std.Swap(ref noiseUVLHU, ref p.noiseUVLHU);
+            Std.Swap(ref noiseColorU, ref p.noiseColorU);
+            Std.Swap(ref rootNoiseColorU, ref p.rootNoiseColorU);
+        }
+
+
+        /**
+         * The number of components per pixel in the CPU residual tiles.
+         */
+        private int channels;
+
+        /**
+         * Maximum quadtree level, or -1 to allow any level.
+         */
+        private int maxLevel;
+
+        private Texture2DArray noiseTexture;
+
+        private Vector4f rootNoiseColor;
+
+        private Vector4f noiseColor;
+
+        private List<float> noiseAmp = new List<float>();
+
+        private bool noiseHsv;
+
+        /**
+         * Scaling factor used for residual values.
+         */
+        private float scale;
+
+        private Uniform1f tileWidthU;
+
+        private UniformSampler coarseLevelSamplerU;
+
+        private Uniform4f coarseLevelOSLU;
+
+        private UniformSampler residualSamplerU;
+
+        private Uniform4f residualOSHU;
+
+        private UniformSampler noiseSamplerU;
+
+        private Uniform4i noiseUVLHU;
+
+        private Uniform4f noiseColorU;
+
+        private Uniform4f rootNoiseColorU;
+
+        private static FrameBuffer old;
+
+        private static Texture2DArray createOrthoNoise(int tileWidth)
+        {
+#if TODO
+            int[] layers = new int[6] { 0, 1, 3, 5, 7, 15 };
+            byte[] noiseArray = new byte[6 * tileWidth * tileWidth * 4];
+            long rand = 1234567;
+            for (int nl = 0; nl < 6; ++nl)
+            {
+                byte* n = noiseArray + nl * tileWidth * tileWidth * 4;
+                int l = layers[nl];
+                // corners
+                for (int v = 0; v < tileWidth; ++v)
+                {
+                    for (int h = 0; h < tileWidth; ++h)
+                    {
+                        for (int c = 0; c < 4; ++c)
+                        {
+                            n[4 * (h + v * tileWidth) + c] = 128;
+                        }
+                    }
+                }
+                long brand;
+                // bottom border
+                brand = (l & 1) == 0 ? 7654321 : 5647381;
+                for (int v = 2; v < 4; ++v)
+                {
+                    for (int h = 4; h < tileWidth - 4; ++h)
+                    {
+                        for (int c = 0; c < 4; ++c)
+                        {
+                            int N = (int)(Noise.frandom(ref brand) * 255.0f);
+                            n[4 * (h + v * tileWidth) + c] = N;
+                            n[4 * (tileWidth - 1 - h + (3 - v) * tileWidth) + c] = N;
+                        }
+                    }
+                }
+                // right border
+                brand = (l & 2) == 0 ? 7654321 : 5647381;
+                for (int h = tileWidth - 3; h >= tileWidth - 4; --h)
+                {
+                    for (int v = 4; v < tileWidth - 4; ++v)
+                    {
+                        for (int c = 0; c < 4; ++c)
+                        {
+                            int N = (int)(Noise.frandom(ref brand) * 255.0f);
+                            n[4 * (h + v * tileWidth) + c] = N;
+                            n[4 * (2 * tileWidth - 5 - h + (tileWidth - 1 - v) * tileWidth) + c] = N;
+                        }
+                    }
+                }
+                // top border
+                brand = (l & 4) == 0 ? 7654321 : 5647381;
+                for (int v = tileWidth - 2; v < tileWidth; ++v)
+                {
+                    for (int h = 4; h < tileWidth - 4; ++h)
+                    {
+                        for (int c = 0; c < 4; ++c)
+                        {
+                            int N = (int)(Noise.frandom(ref brand) * 255.0f);
+                            n[4 * (h + v * tileWidth) + c] = N;
+                            n[4 * (tileWidth - 1 - h + (2 * tileWidth - 5 - v) * tileWidth) + c] = N;
+                        }
+                    }
+                }
+                // left border
+                brand = (l & 8) == 0 ? 7654321 : 5647381;
+                for (int h = 1; h >= 0; --h)
+                {
+                    for (int v = 4; v < tileWidth - 4; ++v)
+                    {
+                        for (int c = 0; c < 4; ++c)
+                        {
+                            int N = (int)(Noise.frandom(ref brand) * 255.0f);
+                            n[4 * (h + v * tileWidth) + c] = N;
+                            n[4 * (3 - h + (tileWidth - 1 - v) * tileWidth) + c] = N;
+                        }
+                    }
+                }
+                // center
+                for (int v = 4; v < tileWidth - 4; ++v)
+                {
+                    for (int h = 4; h < tileWidth - 4; ++h)
+                    {
+                        for (int c = 0; c < 4; ++c)
+                        {
+                            n[4 * (h + v * tileWidth) + c] = (int)(Noise.frandom(ref rand) * 255.0f);
+                        }
+                    }
+                }
+            }
+            Texture2DArray noiseTexture = new Texture2DArray(tileWidth, tileWidth, 6, TextureInternalFormat.RGBA8,
+                                                            TextureFormat.RGBA, PixelType.UNSIGNED_BYTE, 
+                                                            new Texture.Parameters().wrapS(TextureWrap.REPEAT).wrapT(TextureWrap.REPEAT).min(TextureFilter.NEAREST).mag(TextureFilter.NEAREST), 
+                                                            new Buffer.Parameters(), new CPUBuffer<byte>(noiseArray));
+            //delete[] noiseArray;
+            return noiseTexture;
+#endif 
+            throw new NotImplementedException();
+        }
+
+        private static Factory<int, Texture2DArray> orthoNoiseFactory = new Factory<int, Texture2DArray>(createOrthoNoise);
+
+        private static FrameBuffer createOrthoFramebuffer(Texture2D orthoTexture)
+        {
+            int tileWidth = orthoTexture.getWidth();
+            FrameBuffer frameBuffer = new FrameBuffer();
+            frameBuffer.setReadBuffer(BufferId.COLOR0);
+            frameBuffer.setDrawBuffer(BufferId.COLOR0);
+            frameBuffer.setViewport(new Vector4i(0, 0, tileWidth, tileWidth));
+            frameBuffer.setTextureBuffer(BufferId.COLOR0, orthoTexture, 0);
+            frameBuffer.setPolygonMode(PolygonMode.FILL, PolygonMode.FILL);
+            return frameBuffer;
+        }
+
+        private static Factory<Texture2D, FrameBuffer> orthoFramebufferFactory = new Factory<Texture2D, FrameBuffer>(createOrthoFramebuffer);
+    }
 }
 
 

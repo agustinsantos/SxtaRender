@@ -36,38 +36,42 @@
  * http://proland.inrialpes.fr/
  */
 /*
-* Main authors: Eric Bruneton, Antoine Begault, Guillaume Piolat.
+ * Main authors: Eric Bruneton, Antoine Begault, Guillaume Piolat.
  * Modified and ported to C# and Sxta Engine by Agustin Santos and Daniel Olmedo 2015-2016
 */
 
-using Sxta.Render;
 using Sxta.Render.Resources;
+using System;
 using System.Xml;
 
-namespace Sxta.Proland.Ocean.XmlResources
+namespace Sxta.Proland.Terrain.Ortho.XmlResources
 {
-    public class DrawOceanTaskResource : ResourceTemplate<DrawOceanTask>
+    public class OrthoProducerResource : ResourceTemplate<OrthoProducer>
     {
-        public static DrawOceanTaskResource Create(ResourceManager manager, string name, ResourceDescriptor desc, XmlElement e = null, object context = null)
+        public static OrthoProducerResource Create(ResourceManager manager, string name, ResourceDescriptor desc, XmlElement e = null, object context = null)
         {
-            return new DrawOceanTaskResource(manager, name, desc, e);
+            return new OrthoProducerResource(manager, name, desc, e);
         }
-        public DrawOceanTaskResource(ResourceManager manager, string name, ResourceDescriptor desc, XmlElement e = null) :
+        public OrthoProducerResource(ResourceManager manager, string name, ResourceDescriptor desc, XmlElement e = null) :
         base(40, manager, name, desc)
         {
             e = e == null ? desc.descriptor : e;
-            checkParameters(desc, e, "name,radius,zmin,brdfShader,");
-            float radius;
-            float zmin;
-            Module brdfShader = null;
-            if (e.GetAttribute("brdfShader") != null)
-            {
-                brdfShader = manager.loadResource(getParameter(desc, e, "brdfShader")).get() as Module;
-            }
-            getFloatParameter(desc, e, "radius", out radius);
-            getFloatParameter(desc, e, "zmin", out zmin);
-            this.valueC = new DrawOceanTask(radius, zmin, brdfShader);
+            checkParameters(desc, e, "name,cache,residuals,face,upsampleProg,rnoise,cnoise,noise,hsv,scale,maxLevel,");
+            this.valueC = new OrthoProducer();
+            this.valueC.init(manager, this, name, desc, e);
         }
-    }
 
+        public override bool prepareUpdate()
+        {
+#if TODO
+            if ((Resource)(this.valueC.upsample).changed())
+            {
+                this.valueC.invalidateTiles();
+            }
+            return base.prepareUpdate();
+#endif 
+            throw new NotImplementedException();
+        }
+
+    }
 }
