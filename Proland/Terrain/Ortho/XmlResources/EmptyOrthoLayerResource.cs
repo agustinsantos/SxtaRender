@@ -36,23 +36,55 @@
  * http://proland.inrialpes.fr/
  */
 /*
- * Main authors: Eric Bruneton, Antoine Begault, Guillaume Piolat.
-* Modified and ported to C# and Sxta Engine by Agustin Santos and Daniel Olmedo 2015-2016
+* Main authors: Eric Bruneton, Antoine Begault, Guillaume Piolat.
+ * Modified and ported to C# and Sxta Engine by Agustin Santos and Daniel Olmedo 2015-2016
 */
 
-using Sxta.Proland.Terrain.Ortho.XmlResources;
+using Sxta.Math;
 using Sxta.Render.Resources;
+using System.Globalization;
+using System.Xml;
 
-namespace Sxta.Proland.Terrain.XmlResources
+namespace Sxta.Proland.Terrain.Ortho.XmlResources
 {
-    public class RegisterResourceReader
+    public class EmptyOrthoLayerResource : ResourceTemplate<EmptyOrthoLayer>
     {
-        public static void RegisterResources()
+        public static EmptyOrthoLayerResource Create(ResourceManager manager, string name, ResourceDescriptor desc, XmlElement e = null, object context = null)
         {
-            ResourceFactory.getInstance().addType("emptyOrthoLayer", EmptyOrthoLayerResource.Create);
-            ResourceFactory.getInstance().addType("orthoProducer", OrthoProducerResource.Create);
-            ResourceFactory.getInstance().addType("orthoCpuProducer", OrthoCPUProducerResource.Create);
-            ResourceFactory.getInstance().addType("textureLayer", TextureLayerResource.Create);
+            return new EmptyOrthoLayerResource(manager, name, desc, e);
+        }
+        public EmptyOrthoLayerResource(ResourceManager manager, string name, ResourceDescriptor desc, XmlElement e = null) :
+        base(40, manager, name, desc)
+        {
+            e = e == null ? desc.descriptor : e;
+            Vector4f color = new Vector4f(1.0f, 1.0f, 1.0f, 1.0f);
+
+            checkParameters(desc, e, "name,color,");
+
+            if (e.GetAttribute("color") != null)
+            {
+                string c = getParameter(desc, e, "color") + ",";
+                int start = 0;
+                int index;
+                float[] val = new float[4];
+                for (int i = 0; i < 3; i++)
+                {
+                    index = c.IndexOf(',', start);
+                    val[i] = float.Parse(c.Substring(start, index - start), CultureInfo.InvariantCulture) / 255;
+                    start = index + 1;
+                }
+                color = new Vector4f(val[0], val[1], val[2], val[3]);
+            }
+
+            this.valueC = new EmptyOrthoLayer(color);
+        }
+
+        public override bool prepareUpdate()
+        {
+            oldValue = null;
+            newDesc = null;
+
+            return true;
         }
     }
 }

@@ -113,9 +113,11 @@
     <Compile Include="Terrain\Dem\NormalProducer.cs" />
     <Compile Include="Terrain\Dem\OriginalElevationProducer.cs" />
     <Compile Include="Terrain\Dem\ResidualProducer.cs" />
+    <Compile Include="Terrain\Ortho\EmptyOrthoLayer.cs" />
     <Compile Include="Terrain\Ortho\OrthoCPUProducer.cs" />
     <Compile Include="Terrain\Ortho\OrthoProducer.cs" />
     <Compile Include="Terrain\Ortho\TextureLayer.cs" />
+    <Compile Include="Terrain\Ortho\XmlResources\EmptyOrthoLayerResource.cs" />
     <Compile Include="Terrain\Ortho\XmlResources\OrthoCPUProducerResource.cs" />
     <Compile Include="Terrain\Ortho\XmlResources\OrthoProducerResource.cs" />
     <Compile Include="Terrain\Ortho\XmlResources\TextureOrthoLayerResource.cs" />
