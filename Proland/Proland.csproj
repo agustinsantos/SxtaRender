@@ -65,9 +65,7 @@
     <Compile Include="Core\Producer\TileStorage.cs" />
     <Compile Include="Core\Producer\XmlResources\CPUByteTileStorageResource.cs" />
     <Compile Include="Core\Producer\XmlResources\CPUFloatTileStorageResource.cs" />
-    <Compile Include="Core\Producer\XmlResources\ElevationProducerResource.cs" />
     <Compile Include="Core\Producer\XmlResources\GPUTileStorageResource.cs" />
-    <Compile Include="Core\Producer\XmlResources\NormalProducerResource.cs" />
     <Compile Include="Core\Producer\XmlResources\ObjectTileStorageResource.cs" />
     <Compile Include="Core\Producer\XmlResources\RegisterResourceReader.cs" />
     <Compile Include="Core\Producer\XmlResources\TileCacheResource.cs" />
