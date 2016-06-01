@@ -220,11 +220,11 @@ namespace proland
             }
 
             Matrix4d view = new Matrix4d(cx.X, cx.Y, cx.Z, 0.0,
-                    cy.X, cy.Y, cy.Z, 0.0,
-                    cz.X, cz.Y, cz.Z, 0.0,
-                    0.0, 0.0, 0.0, 1.0);
+                                        cy.X, cy.Y, cy.Z, 0.0,
+                                        cz.X, cz.Y, cz.Z, 0.0,
+                                        0.0, 0.0, 0.0, 1.0);
             view = Matrix4d.Translate(view, -Position.X, -Position.Y, -Position.Z);
-            //view.Invert();
+            view.Invert();
             node.setLocalToParent(view);
         }
 

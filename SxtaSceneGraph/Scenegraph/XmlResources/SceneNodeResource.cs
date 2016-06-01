@@ -107,7 +107,7 @@ namespace Sxta.Render.Scenegraph.XmlResources
                 else if (f.Name.StartsWith("uniform"))
                 {
                     checkParameters(desc, f, "name,id,x,y,z,w,sampler,texture,type,");
-                    string type = f.GetAttribute("type") == null ? "FLOAT" : f.GetAttribute("type");
+                    string type = string.IsNullOrWhiteSpace(f.GetAttribute("type")) ? "FLOAT" : f.GetAttribute("type");
                     int t;
                     if (type == "BOOL")
                     {

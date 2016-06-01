@@ -12,7 +12,7 @@ using Vector3d = Sxta.Math.Vector3d;
 
 namespace Examples.Tutorials
 {
-    [Example("Example 8.04: Quadtree response to camera", ExampleCategory.Testing, "8. Proland", 1, Source = "Tutorial08_4", Documentation = "Tutorial-TODO")]
+    [Example("Example 8.04: Quadtree response to camera", ExampleCategory.Testing, "08. Proland", 1, Source = "Tutorial08_4", Documentation = "Tutorial-TODO")]
     class Tutorial08_4 : GameWindow
     {
         public Tutorial08_4(string wd) : base(600, 600)

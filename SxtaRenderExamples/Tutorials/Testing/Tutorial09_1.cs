@@ -20,7 +20,7 @@ namespace Examples.Tutorials
     /// <summary>
     /// Demonstrates the GameWindow class.
     /// </summary>
-    [Example("Example 9.1: Atmo", ExampleCategory.Testing, "9. Atmo", 1, Source = "Tutorial09_1", Documentation = "Tutorial-TODO")]
+    [Example("Example 9.1: Atmo", ExampleCategory.Testing, "09. Atmo", 1, Source = "Tutorial09_1", Documentation = "Tutorial-TODO")]
     public class Tutorial09_1 : GameWindow
     {
         public Tutorial09_1(string wd)

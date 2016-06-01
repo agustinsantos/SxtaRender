@@ -111,12 +111,12 @@ namespace Examples.Tutorials
             fb = FrameBuffer.getDefault();
 
             // position the camera 
-            camera = new SGCamera(this);
-            camera.Position = new Vector3d(0, 0, 10);
+            //camera = new SGCamera(this);
+            //camera.Position = new Vector3d(0, 0, 10);
 
             view = resManager.loadResource("viewHandler").get() as BasicViewHandler;
             view.GameWindow = this;
-            ViewManager viewManager = new ViewManager() { SceneManager = manager, ViewController = new TerrainViewController(manager.getCameraNode(), 0)};
+            ViewManager viewManager = new ViewManager() { SceneManager = manager, ViewController = new TerrainViewController(manager.getCameraNode(), 30.0) };
             view.ViewManager = viewManager;
         }
 
@@ -147,8 +147,8 @@ namespace Examples.Tutorials
             FrameBuffer fb = FrameBuffer.getDefault();
             fb.setViewport(new Vector4i(0, 0, Width, Height));
 
-            camera.Resize(Width, Height);
-            manager.setCameraToScreen(camera.ProjectionMatrix);
+            //camera.Resize(Width, Height);
+            //manager.setCameraToScreen(camera.ProjectionMatrix);
         }
 
         #endregion
@@ -196,7 +196,7 @@ namespace Examples.Tutorials
         FrameBuffer fb;
         float fov = 60;
 
-        private SGCamera camera;
+        //private SGCamera camera;
         private BasicViewHandler view;
 
         #endregion

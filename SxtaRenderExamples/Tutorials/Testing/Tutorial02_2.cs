@@ -14,7 +14,7 @@ namespace Examples.Tutorials
     /// <summary>
     /// Demonstrates the GameWindow class.
     /// </summary>
-    [Example("Example 2.2: Drawing with color", ExampleCategory.Testing, "2. Drawing", 1, Source = "Tutorial02_2", Documentation = "Tutorial-TODO")]
+    [Example("Example 2.2: Drawing with color", ExampleCategory.Testing, "02. Drawing", 1, Source = "Tutorial02_2", Documentation = "Tutorial-TODO")]
     public class Tutorial02_2 : GameWindow
     {
         public Tutorial02_2()

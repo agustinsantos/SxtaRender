@@ -21,7 +21,7 @@ namespace Examples.Tutorials
     /// <summary>
     /// Drawing a plane using Scenegraphs
     /// </summary>
-    [Example("Example 8.02: Drawing a plane using Scenegraphs", ExampleCategory.Testing, "8. Proland", 1, Source = "Tutorial08_2", Documentation = "Tutorial-TODO")]
+    [Example("Example 8.02: Drawing a plane using Scenegraphs", ExampleCategory.Testing, "08. Proland", 1, Source = "Tutorial08_2", Documentation = "Tutorial-TODO")]
     public class Tutorial08_2 : GameWindow
     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);

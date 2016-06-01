@@ -15,7 +15,7 @@ namespace Examples.Tutorials
     /// <summary> 
     /// Demonstrates how to draw a simple figure (cube) in 3D
     /// </summary>
-    [Example("Example 8.01: Drawing in 3D (Indices)", ExampleCategory.Testing, "8. Proland", 1, Source = "Tutorial08_1", Documentation = "Tutorial-TODO")]
+    [Example("Example 8.01: Drawing in 3D (Indices)", ExampleCategory.Testing, "08. Proland", 1, Source = "Tutorial08_1", Documentation = "Tutorial-TODO")]
     public class Tutorial08_1 : GameWindow
     {
         public Tutorial08_1()

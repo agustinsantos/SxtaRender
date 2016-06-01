@@ -16,7 +16,7 @@ namespace Examples.Tutorials
     /// <summary>
     /// Demonstrates the GameWindow class.
     /// </summary>
-    [Example("Example 7.1: testing.. vector graphics rendering ", ExampleCategory.Testing, "6. Vector Graphics", 1, Source = "Tutorial07_1", Documentation = "Tutorial-TODO")]
+    [Example("Example 7.1: testing.. vector graphics rendering ", ExampleCategory.Testing, "07. Vector Graphics", 1, Source = "Tutorial07_1", Documentation = "Tutorial-TODO")]
     public class Tutorial07_1 : GameWindow
     {
         public Tutorial07_1()

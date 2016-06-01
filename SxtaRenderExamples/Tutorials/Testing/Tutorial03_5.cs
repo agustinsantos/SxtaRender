@@ -15,7 +15,7 @@ namespace Examples.Tutorials
     /// The idea of this tutorial comes from
     /// http://www.packtpub.com/article/opengl-glsl-4-using-uniform-blocks-buffer-objects
     /// </summary>
-    [Example("Example 3.5: Uniform Blocks", ExampleCategory.Testing, "3. Shaders", 1, Source = "Tutorial03_5", Documentation = "Tutorial-TODO")]
+    [Example("Example 3.5: Uniform Blocks", ExampleCategory.Testing, "03. Shaders", 1, Source = "Tutorial03_5", Documentation = "Tutorial-TODO")]
     public class Tutorial03_5 : GameWindow
     {
         public Tutorial03_5()

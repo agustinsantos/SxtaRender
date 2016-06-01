@@ -21,10 +21,13 @@
     <setTransforms localToScreen="localToScreen" localToWorld="localToWorld"/>
     <drawMesh name="this.geometry"/>
   </sequence>
-  
+
   <module name="cameraShader" version="330" source="camera.glsl"/>
- 
+
   <module name="perspectiveShader" version="330" source="perspective.glsl">
+    <uniformSampler name="sampler" texture="checker"/>
+  </module>
+  <module name="perspectiveColorShader" version="330" source="perspectiveColor.glsl">
     <uniformSampler name="sampler" texture="checker"/>
   </module>
 
@@ -34,7 +37,8 @@
       <method id="draw" value="cameraSGMethod"/>
     </node>
     <!-- By default the camara is at point (0,0,0) looking down negative z-axis -->
-    <node flags="object">
+    <node name="floorPlane" flags="object">
+      <!--this plane is at placed at z=0, with coord x, y= +-10 -->
       <!--<translate x="0" y="3" z="-15.0"/>
       <rotatex angle="90"/>-->
       <scale x="2" y="2" z="0"/>
@@ -42,33 +46,59 @@
       <method id="draw" value="meshSGMethod"/>
       <module id="material" value="perspectiveShader"/>
     </node>
+    <node name="center" flags="object">
+      <!--this cube is at placed at center (0,0,0), with unit size, x, y, z = +-1 --> 
+      <scale x="1" y="1" z="1"/>
+      <translate x="0.0" y="0" z="0.0"/>
+      <mesh id="geometry" value="cube.mesh"/>
+      <method id="draw" value="meshSGMethod"/>
+      <module id="material" value="perspectiveShader"/>
+    </node>
 
-    <node flags="object">
-      <translate x="0.0" y="-2" z="-15.0"/>
-      <rotatex angle="45"/>
-      <rotatey angle="45"/>
+
+    <node name="Xaxis01" flags="object">
+      <translate x="+5" y="0.0" z="0.0"/>
+      <scale x="1.8" y="1" z="1"/>
       <mesh id="geometry" value="cube.mesh"/>
       <method id="draw" value="meshSGMethod"/>
-      <module id="material" value="perspectiveShader"/>
+      <uniform4f id="color" name="color" x="1.0" y="0.0" z="0.0" w="0.0"/>
+      <module id="material" value="perspectiveColorShader"/>
     </node>
-    <node flags="object">
-      <translate x="-2.0" y="-1.0" z="-5.0"/>
-      <rotatex angle="45"/>
-      <rotatey angle="45"/>
-      <scale x="0.5" y="0.5" z="0.5"/>
+    <node name="Xaxis02" flags="object">
+      <translate x="+10" y="0.0" z="0.0"/>
+      <scale x="1.8" y="1" z="1"/>
       <mesh id="geometry" value="cube.mesh"/>
       <method id="draw" value="meshSGMethod"/>
-      <module id="material" value="perspectiveShader"/>
+      <uniform4f id="color" name="color" x="1.0" y="0.0" z="0.0" w="0.0"/>
+      <module id="material" value="perspectiveColorShader"/>
     </node>
-    <node flags="object">
-      <translate x="2.0" y="-3.0" z="-7.0"/>
-      <rotatex angle="45"/>
-      <rotatey angle="45"/>
-      <scale x="0.3" y="0.3" z="0.3"/>
+
+    <node name="Yaxis01" flags="object">
+      <translate x="0.0" y="5" z="0.0"/>
+      <scale x="1" y="1.8" z="1"/>
       <mesh id="geometry" value="cube.mesh"/>
       <method id="draw" value="meshSGMethod"/>
-      <module id="material" value="perspectiveShader"/>
+      <uniform4f id="color" name="color" x="0.0" y="1.0" z="0.0" w="0.0"/>
+      <module id="material" value="perspectiveColorShader"/>
     </node>
+    <node name="Yaxis02" flags="object">
+      <translate x="0.0" y="10" z="0.0"/>
+      <scale x="1" y="1.8" z="1"/>
+      <mesh id="geometry" value="cube.mesh"/>
+      <method id="draw" value="meshSGMethod"/>
+      <uniform4f id="color" name="color" x="0.0" y="1.0" z="0.0" w="0.0"/>
+      <module id="material" value="perspectiveColorShader"/>
+    </node>
+
+    <node name="Zaxis01" flags="object">
+      <translate x="0.0" y="0.0" z="5.0"/>
+      <scale x="1" y="1" z="1.8"/>
+      <mesh id="geometry" value="cube.mesh"/>
+      <method id="draw" value="meshSGMethod"/>
+      <uniform4f id="color" name="color" x="0.0" y="0.0" z="1.0" w="0.0"/>
+      <module id="material" value="perspectiveColorShader"/>
+    </node>
+
   </node>
 
    <basicViewHandler name="viewHandler" viewManager="camaraManager"/>

@@ -10,7 +10,7 @@ using Vector3d = Sxta.Math.Vector3d;
 
 namespace Examples.Tutorials
 {
-    [Example("Example 8.05: TerrainSampler for elevation implementation", ExampleCategory.Testing, "8. Proland", 1, Source = "Tutorial08_5", Documentation = "Tutorial-TODO")]
+    [Example("Example 8.05: TerrainSampler for elevation implementation", ExampleCategory.Testing, "08. Proland", 1, Source = "Tutorial08_5", Documentation = "Tutorial-TODO")]
     class Tutorial08_5 : GameWindow
     {
         public Tutorial08_5(string wd) : base(600, 600)

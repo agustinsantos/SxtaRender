@@ -60,16 +60,16 @@ namespace proland
         public override void turn(double angle)
         {
             double co = Math.Cos(X0); // x0 = longitude
-            double so =Math.Sin(X0);
+            double so = Math.Sin(X0);
             double ca = Math.Cos(Y0); // y0 = latitude
-            double sa =Math.Sin(Y0);
-            double l = Distance *Math.Sin(Theta);
+            double sa = Math.Sin(Y0);
+            double l = Distance * Math.Sin(Theta);
             Vector3d po = new Vector3d(co * ca, so * ca, sa) * R;
             Vector3d px = new Vector3d(-so, co, 0.0);
             Vector3d py = new Vector3d(-co * sa, -so * sa, ca);
-            Vector3d f = -px *Math.Sin(Phi) + py * Math.Cos(Phi);
+            Vector3d f = -px * Math.Sin(Phi) + py * Math.Cos(Phi);
             Vector3d r = px * Math.Cos(Phi) + py * Math.Sin(Phi);
-            Vector3d pd = (po + f * (Math.Cos(angle) - 1.0) * l - r *Math.Sin(angle) * l);
+            Vector3d pd = (po + f * (Math.Cos(angle) - 1.0) * l - r * Math.Sin(angle) * l);
             pd.Normalize();
             X0 = Math.Atan2(pd.Y, pd.X);
             Y0 = Math.Asin(pd.Z);
@@ -79,12 +79,12 @@ namespace proland
         public override double interpolate(double sx0, double sy0, double stheta, double sphi, double sd,
                 double dx0, double dy0, double dtheta, double dphi, double dd, double t)
         {
-            Vector3d s = new Vector3d(Math.Cos(sx0) * Math.Cos(sy0),Math.Sin(sx0) * Math.Cos(sy0),Math.Sin(sy0));
-            Vector3d e = new Vector3d(Math.Cos(dx0) * Math.Cos(dy0),Math.Sin(dx0) * Math.Cos(dy0),Math.Sin(dy0));
-            double dist =Math.Max(Math.Cos(Vector3d.Dot(s, e)) * R, 1e-3);
+            Vector3d s = new Vector3d(Math.Cos(sx0) * Math.Cos(sy0), Math.Sin(sx0) * Math.Cos(sy0), Math.Sin(sy0));
+            Vector3d e = new Vector3d(Math.Cos(dx0) * Math.Cos(dy0), Math.Sin(dx0) * Math.Cos(dy0), Math.Sin(dy0));
+            double dist = Math.Max(Math.Cos(Vector3d.Dot(s, e)) * R, 1e-3);
 
             t = Math.Min(t + Math.Min(0.1, 5000.0 / dist), 1.0);
-            double T = 0.5 *Math.Atan(4.0 * (t - 0.5)) /Math.Atan(4.0 * 0.5) + 0.5;
+            double T = 0.5 * Math.Atan(4.0 * (t - 0.5)) / Math.Atan(4.0 * 0.5) + 0.5;
 
             interpolateDirection(sx0, sy0, dx0, dy0, T, X0, Y0);
             interpolateDirection(sphi, stheta, dphi, dtheta, T, Phi, Theta);
