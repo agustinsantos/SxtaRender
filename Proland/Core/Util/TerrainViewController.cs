@@ -268,8 +268,8 @@ namespace proland
             }
             // Matrix4d.CreateOrthographic AND Matrix4d.perspectiveProjection C++
             Matrix4d clip = new Matrix4d();
-            Matrix4d.CreateOrthographic(viewport.Y, viewport.X, viewport.W, viewport.Z, out clip);
-            Matrix4d cameraToScreen = Matrix4d.CreatePerspectiveFieldOfView(vfov, width / height, znear, zfar);
+            Matrix4d.CreateOrthographicOffCenter(viewport.X, viewport.Y, viewport.Z, viewport.W, 1.0f, -1.0f, out clip);
+            Matrix4d cameraToScreen = Matrix4d.CreatePerspectiveFieldOfView(vfov, ((double)width) / (double)height, znear, zfar);
             node.getOwner().setCameraToScreen(clip * cameraToScreen);
 
         }

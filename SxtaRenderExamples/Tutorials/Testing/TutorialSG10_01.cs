@@ -116,7 +116,7 @@ namespace Examples.Tutorials
 
             view = resManager.loadResource("viewHandler").get() as BasicViewHandler;
             view.GameWindow = this;
-            ViewManager viewManager = new ViewManager() { SceneManager = manager, ViewController = new TerrainViewController(manager.getCameraNode(), 30.0) };
+            ViewManager viewManager = new ViewManager() { SceneManager = manager, ViewController = new TerrainViewController(manager.getCameraNode(), 20.0) };
             view.ViewManager = viewManager;
         }
 
