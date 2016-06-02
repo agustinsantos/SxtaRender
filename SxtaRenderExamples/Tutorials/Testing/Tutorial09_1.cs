@@ -14,6 +14,7 @@ using MathHelper = Sxta.Math.MathHelper;
 using Vector3d = Sxta.Math.Vector3d;
 using Sxta.Proland.Atmo;
 using Sxta.Render.Scenegraph.Controller;
+using proland;
 
 namespace Examples.Tutorials
 {
@@ -24,7 +25,7 @@ namespace Examples.Tutorials
     public class Tutorial09_1 : GameWindow
     {
         public Tutorial09_1(string wd)
-            : base(600, 600)
+            : base(1024, 768)
         {
             if (!string.IsNullOrWhiteSpace(wd))
                 dir = wd;
@@ -77,12 +78,14 @@ namespace Examples.Tutorials
 
             view = resManager.loadResource("viewHandler").get() as BasicViewHandler;
             view.GameWindow = this;
+            ViewManager viewManager = new ViewManager() { SceneManager = manager, ViewController = new TerrainViewController(manager.getCameraNode(), 50000.0) };
+            view.ViewManager = viewManager;
 
             fb = FrameBuffer.getDefault();
 
-            camera = new SGCamera(this);
+            //camera = new SGCamera(this);
             //camera.Position = new Vector3d(0, 0, 5);
-            camera.Yaw((float)MathHelper.ToRadians(90));
+            //camera.Yaw((float)MathHelper.ToRadians(90));
             //camera.Pitch((float)MathHelper.ToRadians(90));
         }
 
@@ -113,8 +116,8 @@ namespace Examples.Tutorials
             FrameBuffer fb = FrameBuffer.getDefault();
             fb.setViewport(new Vector4i(0, 0, Width, Height));
 
-            camera.Resize(Width, Height);
-            manager.setCameraToScreen(camera.ProjectionMatrix);
+            //camera.Resize(Width, Height);
+            //manager.setCameraToScreen(camera.ProjectionMatrix);
         }
 
         #endregion
@@ -128,8 +131,8 @@ namespace Examples.Tutorials
         /// <remarks>There is no need to call the base implementation.</remarks>
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
-            camera.Update((float)e.Time);
-            //view.OnUpdateFrame(e.Time);
+            //camera.Update((float)e.Time);
+            view.OnUpdateFrame(e.Time);
         }
 
         #endregion
@@ -143,10 +146,11 @@ namespace Examples.Tutorials
         /// <remarks>There is no need to call the base implementation.</remarks>
         protected override void OnRenderFrame(FrameEventArgs e)
         {
-            manager.getCameraNode().setLocalToParent(camera.ViewMatrix);
+            view.OnRenderFrame(e.Time, e.Time);
+            //manager.getCameraNode().setLocalToParent(camera.ViewMatrix);
 
-            manager.update(e.Time / 100000); // from Seconds to microseconds);
-            manager.draw();
+            //manager.update(e.Time / 100000); // from Seconds to microseconds);
+            //manager.draw();
             this.SwapBuffers();
         }
 

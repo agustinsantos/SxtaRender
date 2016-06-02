@@ -3928,6 +3928,15 @@ namespace Sxta.Render
             }
         }
 
+        public static void Flush()
+        {
+            GL.Flush();
+        }
+        public static void Finish()
+        {
+            GL.Finish();
+        }
+
         private class FrameBufferMap
         {
             public IDictionary<object, FrameBuffer> buffers = new Dictionary<object, FrameBuffer>();

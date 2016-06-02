@@ -94,7 +94,7 @@
         </node>
 
         <node name="sun" flags="light">
-            <translate x="-1" y="0.01" z="0"/>
+            <translate x="-1" y="0" z="0"/>
             <method id="draw" value="sunMethod"/>
         </node>
 
