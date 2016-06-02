@@ -55,7 +55,7 @@ using System.Xml;
 
 namespace Sxta.Proland.Terrain
 {
-    class NormalProducer : TileProducer, ISwappable<NormalProducer>
+    public class NormalProducer : TileProducer, ISwappable<NormalProducer>
     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -446,6 +446,7 @@ namespace Sxta.Proland.Terrain
 
         private FrameBuffer old;
     }
+    #if TODO
     class NormalProducerResource : ResourceTemplate<NormalProducer>
     {
         public NormalProducerResource(ResourceManager manager, string name, ResourceDescriptor desc, XmlElement e = null) :
@@ -491,13 +492,13 @@ namespace Sxta.Proland.Terrain
 
         public override bool prepareUpdate()
         {
-#if TODO
         if (dynamic_cast<Resource*>(normals.get())->changed()) {
             invalidateTiles();
         }
         return ResourceTemplate<50, NormalProducer>::prepareUpdate();
-#endif
+
             throw new NotImplementedException();
         }
     }
+#endif
 }

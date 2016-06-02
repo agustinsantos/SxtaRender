@@ -40,6 +40,7 @@
 * Modified and ported to C# and Sxta Engine by Agustin Santos and Daniel Olmedo 2015-2016
 */
 
+using Sxta.Proland.Core.Producer.XmlResources;
 using Sxta.Proland.Terrain.Ortho.XmlResources;
 using Sxta.Render.Resources;
 
@@ -54,6 +55,9 @@ namespace Sxta.Proland.Terrain.XmlResources
             ResourceFactory.getInstance().addType("orthoCpuProducer", OrthoCPUProducerResource.Create);
             ResourceFactory.getInstance().addType("orthoGpuProducer", OrthoGPUProducerResource.Create);
             ResourceFactory.getInstance().addType("textureLayer", TextureLayerResource.Create);
+
+            ResourceFactory.getInstance().addType("elevationProducer", ElevationProducerResource.Create);
+            ResourceFactory.getInstance().addType("normalProducer", NormalProducerResource.Create);
         }
     }
 }

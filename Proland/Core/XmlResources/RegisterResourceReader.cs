@@ -10,6 +10,9 @@
             //TERRAIN RESOURCES
             Sxta.Proland.Core.Terrain.XmlResources.RegisterResourceReader.RegisterResources();
 
+            //DERIVED TERRAIN RESOURCES
+            Sxta.Proland.Terrain.XmlResources.RegisterResourceReader.RegisterResources();
+
         }
     }
 }

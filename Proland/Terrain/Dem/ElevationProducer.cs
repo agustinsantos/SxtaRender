@@ -56,7 +56,7 @@ using System.Xml;
 
 namespace Sxta.Proland.Terrain
 {
-    class ElevationProducer : TileProducer, ISwappable<ElevationProducer>
+    public class ElevationProducer : TileProducer, ISwappable<ElevationProducer>
     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -259,7 +259,7 @@ namespace Sxta.Proland.Terrain
         /// <summary>
         ///  Creates an uninitialized ElevationProducer.
         /// </summary>
-        protected ElevationProducer() : base("ElevationProducer", "CreateElevationTile")
+        public ElevationProducer() : base("ElevationProducer", "CreateElevationTile")
         {
 
         }
@@ -794,6 +794,7 @@ namespace Sxta.Proland.Terrain
 
         private FrameBuffer old;
     }
+#if TODO
     class ElevationProducerResource : ResourceTemplate<ElevationProducer>
     {
         public ElevationProducerResource(ResourceManager manager, string name, ResourceDescriptor desc, XmlElement e = null) :
@@ -806,7 +807,7 @@ namespace Sxta.Proland.Terrain
 
         public override bool prepareUpdate()
         {
-#if TODO
+
 
                 if (dynamic_cast<Resource*>(upsample.get())->changed()) {
                     invalidateTiles();
@@ -825,9 +826,10 @@ namespace Sxta.Proland.Terrain
                 valueC.invalidateTiles();
             }
             return new ResourceTemplate <ElevationProducer>(40,null,null,null).prepareUpdate();
-#endif
+
             throw new NotImplementedException();
 
         }
     }
+#endif
 }
