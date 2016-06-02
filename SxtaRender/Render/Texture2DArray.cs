@@ -302,7 +302,6 @@ namespace Sxta.Render
             this.h = h;
             this.l = l;
             pixels.bind(BufferTarget.PixelUnpackBuffer);
-#if TODO
             if (isCompressed() && s.compressedSize() > 0)
             {
 #if OPENTK
@@ -329,8 +328,6 @@ namespace Sxta.Render
             {
                 throw new Exception();
             }  
-#endif
-            throw new NotImplementedException();
         }
 
         public override void swap(Texture t)

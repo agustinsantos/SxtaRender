@@ -25,15 +25,15 @@ namespace Sxta.Proland.Core.Producer.XmlResources
             int gridSize = 24;
             bool deform = false;
             checkParameters(desc, e, "name,cache,elevations,normalProg,gridSize,deform,");
-            cache = (TileCache)manager.loadResource(getParameter(desc, e, "cache")).get();
-            elevations = (TileProducer)manager.loadResource(getParameter(desc, e, "elevations")).get();
+            cache = manager.loadResource(getParameter(desc, e, "cache")).get() as TileCache ;
+            elevations = manager.loadResource(getParameter(desc, e, "elevations")).get() as TileProducer;
             string normals = "normalShader;";
-            if (e.GetAttribute("normalProg") != null)
+            if (!string.IsNullOrWhiteSpace(e.GetAttribute("normalProg")))
             {
                 normals = getParameter(desc, e, "normalProg");
             }
-            normalsProg = (Program)(manager.loadResource(normals).get());
-            if (e.GetAttribute("gridSize") != null)
+            normalsProg =  manager.loadResource(normals).get() as Program;
+            if (!string.IsNullOrWhiteSpace(e.GetAttribute("gridSize")))
             {
                 getIntParameter(desc, e, "gridSize", out gridSize);
             }

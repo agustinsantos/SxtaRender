@@ -396,6 +396,8 @@ namespace Sxta.Render.Resources.XmlResources
                 s.compressedSize(desc.getSize());
                 valueC = new Texture2D();
                 buff = (Buffer)desc.getData();
+                if (buff == null)
+                    buff = new CPUBuffer<byte>(null);
                 this.valueC.init(w, h, tf, f, t, params_, s, buff);
                 this.valueC.Name = name;
                 desc.clearData();

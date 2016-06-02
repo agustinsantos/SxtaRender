@@ -50,6 +50,7 @@ using Sxta.Render.Scenegraph;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Xml;
@@ -402,7 +403,7 @@ namespace Sxta.Proland.Terrain
             Texture2D layerTexture = new Texture2D();
             Texture2D residualTexture;
             int gridSize = 24;
-            List<float> noiseAmp = null;
+            List<float> noiseAmp = new List<float>();
             bool flip = false;
             cache = (TileCache)(manager.loadResource(Resource.getParameter(desc, e, "cache"))).get();
             if (!string.IsNullOrWhiteSpace(e.GetAttribute("residuals")))
@@ -423,16 +424,17 @@ namespace Sxta.Proland.Terrain
             {
                 string noiseAmps = e.GetAttribute("noise") + ",";
                 string[] stringSeparator = new string[] { "," };
-                string[] result = noiseAmps.Split(stringSeparator, StringSplitOptions.None); //Maybe StringSplitOptions.RemoveEmptyEntries?
+                string[] result = noiseAmps.Split(stringSeparator, StringSplitOptions.RemoveEmptyEntries);
                 foreach (var node in result)
                 //while ((index = noiseAmps.find(',', start)) != string::npos)
                 {
                     //float value;
                     //sscanf(node.c_str(), "%f", value);
-                    noiseAmp.Add((float)Convert.ToDouble(node));
+                    noiseAmp.Add((float)Convert.ToDouble(node, CultureInfo.InvariantCulture));
                 }
             }
-            if (e.GetAttribute("flip") != null && e.GetAttribute("flip") == "false")
+            string attr = e.GetAttribute("flip");
+            if (!string.IsNullOrWhiteSpace(attr) && attr == "false")
             {
                 flip = true;
             }
@@ -452,10 +454,10 @@ namespace Sxta.Proland.Terrain
             int tileWidth = cache.getStorage().getTileSize();
 
             string demTex = "renderbuffer-" + tileWidth + "-RGBA32F";
-            demTexture = (Texture2D)(manager.loadResource(demTex)).get();
+            demTexture = manager.loadResource(demTex).get() as Texture2D;
 
             string residualTex = "renderbuffer-" + tileWidth + "-R32F";
-            residualTexture = (Texture2D)(manager.loadResource(residualTex)).get();
+            residualTexture = manager.loadResource(residualTex).get() as Texture2D;
 
             XmlNode n = e.FirstChild;
             while (n != null)

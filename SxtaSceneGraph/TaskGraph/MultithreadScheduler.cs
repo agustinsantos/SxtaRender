@@ -14,6 +14,7 @@
 
 using log4net;
 using SD.Tools.Algorithmia.PriorityQueues;
+using Sxta.Render.Resources;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -36,7 +37,7 @@ namespace Sxta.Render.Scenegraph
     /// Otherwise, if several threads are used, prefetching of cpu tasks is supported,
     /// but not prefetching of gpu tasks.
     /// </summary>
-    public class MultithreadScheduler : Scheduler
+    public class MultithreadScheduler : Scheduler,  ISwappable<MultithreadScheduler>
     {
 
         /*
@@ -1175,6 +1176,11 @@ namespace Sxta.Render.Scenegraph
         private static void getAbsoluteTime(out DateTime time)
         {
             time = DateTime.Now;
+        }
+
+        public void swap(MultithreadScheduler obj)
+        {
+            throw new NotImplementedException();
         }
 
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);

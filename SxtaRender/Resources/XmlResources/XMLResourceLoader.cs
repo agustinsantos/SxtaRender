@@ -73,10 +73,8 @@ namespace Sxta.Render.Resources
          */
         public override string findResource(string name)
         {
-            //XmlElement desc = new XmlElement(); // (name);
-            //return findFile(desc, paths, name);
-            throw new NotImplementedException();
-
+            XmlElement desc = new XmlDocument().CreateElement(name);
+            return findFile(desc, paths, name);
         }
 
         /**
@@ -103,7 +101,7 @@ namespace Sxta.Render.Resources
                 // 2D texture resources can be loaded directly from an image file; the
                 // texture parameters (internal format, filters, etc) then get default values
 
-                //TODO desc = new XmlElement("texture2D");
+                desc = new XmlDocument().CreateElement("texture2D");
                 desc.SetAttribute("name", name);
                 desc.SetAttribute("source", name);
                 desc.SetAttribute("internalformat", "RGBA8");
@@ -382,7 +380,22 @@ namespace Sxta.Render.Resources
          */
         private static XmlElement buildTextureDescriptor(string name)
         {
-            throw new NotImplementedException();
+            int index1 = name.IndexOf('-', 0);
+            int index2 = name.IndexOf('-', index1 + 1);
+            string size = name.Substring(index1 + 1, index2 - index1 - 1);
+            int index3 = name.IndexOf('-', index2 + 1);
+            string internalformat = name.Substring(index2 + 1, (index3 == -1 ? name.Length : index3) - index2 - 1);
+
+            XmlElement p = new XmlDocument().CreateElement("texture2D");
+            p.SetAttribute("name", name);
+            p.SetAttribute("internalformat", internalformat);
+            p.SetAttribute("width", size);
+            p.SetAttribute("height", size);
+            p.SetAttribute("format", "RED");
+            p.SetAttribute("type", "FLOAT");
+            p.SetAttribute("min", "NEAREST");
+            p.SetAttribute("mag", "NEAREST");
+            return p;
         }
 
 
@@ -493,33 +506,14 @@ namespace Sxta.Render.Resources
                 desc.Name == "textureCubeArray" ||
                 desc.Name == "textureRectangle" ||
                 desc.Name == "module" ||
-                desc.Name == "mesh" ||
-                desc.Name == "program")
+                desc.Name == "mesh" )
             {
                 // we first get the name of the file containing this ASCII or binary part
                 string file = desc.GetAttribute("source");
-                if (string.IsNullOrWhiteSpace(file) && desc.Name == "program")
+                if (string.IsNullOrWhiteSpace(file))
                 {
-#if TODO
-                    string str = desc.GetAttribute("name") + ".bin";
-                    try
-                    {
-                        findFile(null, paths, str);
-                        file = str;
-                    }
-                    catch (Exception)
-                    {
-                    }
-#endif
-                    if (string.IsNullOrWhiteSpace(file))
-                    {
-                        return null;
-                    }
-                }
-                else if (string.IsNullOrWhiteSpace(file))
-                {
-                    if (desc.Name == "module" &&
-                        desc.Name == "mesh" &&
+                    if (desc.Name != "module" &&
+                        desc.Name != "mesh" &&
                         !string.IsNullOrWhiteSpace(desc.GetAttribute("width")))
                     {
                         // a texture resource can have no binary part, provided its
@@ -630,8 +624,7 @@ namespace Sxta.Render.Resources
                     return new string[] { loadShaderData(desc, paths, path, data, stamps) };
 
                 }
-                else if (desc.Name == "mesh" ||
-                         desc.Name == "program")
+                else if (desc.Name == "mesh")
                 {
                     // for a mesh or compiled program resource, no processing is needed
                     DateTime t;

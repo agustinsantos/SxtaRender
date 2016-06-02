@@ -446,59 +446,5 @@ namespace Sxta.Proland.Terrain
 
         private FrameBuffer old;
     }
-    #if TODO
-    class NormalProducerResource : ResourceTemplate<NormalProducer>
-    {
-        public NormalProducerResource(ResourceManager manager, string name, ResourceDescriptor desc, XmlElement e = null) :
-        base(50, manager, name, desc)
-        {
-            e = e == null ? desc.descriptor : e;
-            TileCache cache;
-            TileProducer elevations;
-            Texture2D normalTexture;
-            Program normalsProg;
-            int gridSize = 24;
-            bool deform = false;
-            checkParameters(desc, e, "name,cache,elevations,normalProg,gridSize,deform,");
-            cache = (TileCache)manager.loadResource(getParameter(desc, e, "cache")).get();
-            elevations = (TileProducer)manager.loadResource(getParameter(desc, e, "elevations")).get();
-            string normals = "normalShader;";
-            if (!string.IsNullOrWhiteSpace(e.GetAttribute("normalProg")))
-            {
-                normals = getParameter(desc, e, "normalProg");
-            }
-            normalsProg = (Program)(manager.loadResource(normals).get());
-            if (!string.IsNullOrWhiteSpace(e.GetAttribute("gridSize")))
-            {
-                getIntParameter(desc, e, "gridSize", out gridSize);
-            }
-            if (e.GetAttribute("deform") != null && e.GetAttribute("deform") == "sphere")
-            {
-                deform = true;
-            }
 
-            int tileSize = cache.getStorage().getTileSize();
-            string format = ((GPUTileStorage)(cache.getStorage())).getTexture(0).getInternalFormatName();
-            if (format.Substring(0, 3) == "RG8")
-            {
-                format = "RGBA8";
-            }
-
-            string normalTex = "rendebuffer-" + tileSize + "-" + format;
-            normalTexture = (Texture2D)manager.loadResource(normalTex).get();
-
-            valueC.init(cache, elevations, normalTexture, normalsProg, gridSize, deform);
-        }
-
-        public override bool prepareUpdate()
-        {
-        if (dynamic_cast<Resource*>(normals.get())->changed()) {
-            invalidateTiles();
-        }
-        return ResourceTemplate<50, NormalProducer>::prepareUpdate();
-
-            throw new NotImplementedException();
-        }
-    }
-#endif
 }

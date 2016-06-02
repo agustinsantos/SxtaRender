@@ -224,7 +224,7 @@ namespace proland
                 }
                 if (t != null)
                 {
-                    if (users != null)
+                    if (users != 0)
                     {
                         users = t.users;
                     }
@@ -533,7 +533,7 @@ namespace proland
         * The producers that use this TileCache. Maps local %producer identifiers to
         * actual producers.
         */
-        internal Dictionary<int, TileProducer> producers;
+        internal Dictionary<int, TileProducer> producers = new Dictionary<int, TileProducer>();
 
         /*
          * The storage to store the tiles data.
@@ -551,19 +551,19 @@ namespace proland
          * and from the TileStorage, until they become unused. Maps tile identifiers
          * to actual tiles.
          */
-        private Dictionary<Tile.TId, Tile> usedTiles;
+        private Dictionary<Tile.TId, Tile> usedTiles = new Dictionary<Tile.TId, Tile>();
 
         /*
          * The unused tiles. These tiles can be evicted from the cache at any
          * moment. Maps tile identifiers to positions in the ordered list of tiles
          * #unusedTilesOrder (used to implement a LRU cache).
          */
-        private Cache unusedTiles;
+        private Cache unusedTiles = new Cache();
 
         /*
          * The unused tiles, ordered by date of last use (to implement a LRU cache).
          */
-        private List<Tile> unusedTilesOrder;
+        private List<Tile> unusedTilesOrder = new List<Tile>();
 
         /*
          * The tasks to produce the data of deleted tiles. When an unused tile is
@@ -580,7 +580,7 @@ namespace proland
          * problem to recreate a new Task, there will be no duplication). So the size
          * of this map cannot grow unbounded.
          */
-        private Dictionary<Tile.TId, Task> deletedTiles;
+        private Dictionary<Tile.TId, Task> deletedTiles = new Dictionary<Tile.TId, Task>();
 
         /*
          * The number of queries to this tile cache. Only used for statistics.
@@ -597,7 +597,7 @@ namespace proland
         /*
          * A mutex to serialize parallel accesses to this cache.
          */
-        private object mutex;
+        private object mutex = new object();
 
         /*
          * Notifies this TileCache that a tile creation task has been deleted.

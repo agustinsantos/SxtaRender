@@ -81,6 +81,7 @@
     <Compile Include="Scenegraph\ShowInfoTask.cs" />
     <Compile Include="Scenegraph\ShowLogTask.cs" />
     <Compile Include="Scenegraph\XmlResources\BasicViewHandlerResource.cs" />
+    <Compile Include="Scenegraph\XmlResources\MultithreadSchedulerResource.cs" />
     <Compile Include="Scenegraph\XmlResources\RegisterResourceReader.cs" />
     <Compile Include="Scenegraph\XmlResources\SceneNodeResource.cs" />
     <Compile Include="Scenegraph\XmlResources\TaskResource.cs" />

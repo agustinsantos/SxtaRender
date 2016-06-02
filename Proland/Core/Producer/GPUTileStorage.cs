@@ -1,4 +1,45 @@
-﻿using Sxta.Render;
+﻿/*
+ * Proland: a procedural landscape rendering library.
+ * Website : http://proland.inrialpes.fr/
+ * Copyright (c) 2008-2015 INRIA - LJK (CNRS - Grenoble University)
+ * All rights reserved.
+ * Redistribution and use in source and binary forms, with or without 
+ * modification, are permitted provided that the following conditions are met:
+ * 
+ * 1. Redistributions of source code must retain the above copyright notice, 
+ * this list of conditions and the following disclaimer.
+ * 
+ * 2. Redistributions in binary form must reproduce the above copyright notice, 
+ * this list of conditions and the following disclaimer in the documentation 
+ * and/or other materials provided with the distribution.
+ * 
+ * 3. Neither the name of the copyright holder nor the names of its contributors 
+ * may be used to endorse or promote products derived from this software without 
+ * specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+ * IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
+ * OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+/*
+ * Proland is distributed under the Berkeley Software Distribution 3 Licence. 
+ * For any assistance, feedback and enquiries about training programs, you can check out the 
+ * contact page on our website : 
+ * http://proland.inrialpes.fr/
+ */
+/*
+ * Main authors: Eric Bruneton, Antoine Begault, Guillaume Piolat.
+* Modified and ported to C# and Sxta Engine by Agustin Santos and Daniel Olmedo 2015-2016
+*/
+using Sxta.Render;
 using Sxta.Render.Resources;
 using System;
 using System.Collections.Generic;
@@ -172,7 +213,7 @@ vec4 uv = vec4(xy + vec2(0.25), xy + vec2(0.75)) / float(bufferLayerLevelWidth.w
         /// <summary>
         /// Creates a new GPUTileStorage. See #init.
         /// </summary>
-        GPUTileStorage(int tileSize, int nTiles, TextureInternalFormat internalf, TextureFormat f, PixelType t, Texture.Parameters _params, bool useTileMap = false) : base(tileSize, nTiles)
+        public GPUTileStorage(int tileSize, int nTiles, TextureInternalFormat internalf, TextureFormat f, PixelType t, Texture.Parameters _params, bool useTileMap = false) : base(tileSize, nTiles)
         {
             init(tileSize, nTiles, internalf, f, t, _params, useTileMap);
         }
@@ -313,27 +354,33 @@ vec4 uv = vec4(xy + vec2(0.25), xy + vec2(0.75)) / float(bufferLayerLevelWidth.w
         /// <summary>
         /// The storage textures used to store the tiles.
         /// </summary>
-        private List<Texture2DArray> textures;
+        private List<Texture2DArray> textures = new List<Texture2DArray>();
+
         /// <summary>
         /// True if the storage texture format needs mipmaping.
         /// </summary>
         private bool needMipmaps;
+
         /// <summary>
         /// True if a least one storage texture has changed since the last call to #generateMipMap.
         /// </summary>
         private bool changes;
+
         /// <summary>
         /// The slots whose mipmap levels are not up to date (one set per texture).
         /// </summary>
         private SortedSet<GPUSlot>[] dirtySlots;
+
         /// <summary>
         /// Framebuffer used to generate mipmaps.
         /// </summary>
         private FrameBuffer fbo;
+
         /// <summary>
         /// Program used to generate mipmaps
         /// </summary>
         private Program mipmapProg;
+
         /// <summary>
         /// Parameters used to generate a mipmap level.
         /// </summary>

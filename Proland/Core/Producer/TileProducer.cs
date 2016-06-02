@@ -757,12 +757,12 @@ namespace proland
         ///<summary>
         /// The list of all the Layers used by this %producer.
         ///</summary>
-        private List<TileLayer> layers;
+        private List<TileLayer> layers = new List<TileLayer>();
 
         ///<summary>
         /// The list of all the Tasks created by this %producer.
         ///</summary>
-        private List<Task> tasks;
+        private List<Task> tasks = new List<Task>();
 
         ///<summary>
         /// The type of the Task that produce the actual tile data.

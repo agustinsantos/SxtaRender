@@ -17,6 +17,8 @@ namespace Sxta.Render.Scenegraph.XmlResources
             ResourceFactory.getInstance().addType("showInfo", ShowInfoTaskResource.Create);
             ResourceFactory.getInstance().addType("showLog", ShowLogTaskResource.Create);
 
+            ResourceFactory.getInstance().addType("multithreadScheduler", MultithreadSchedulerResource.Create);
+
             ResourceFactory.getInstance().addType("node", SceneNodeResource.Create);
 
             ResourceFactory.getInstance().addType("basicViewHandler", BasicViewHandlerResource.Create);
