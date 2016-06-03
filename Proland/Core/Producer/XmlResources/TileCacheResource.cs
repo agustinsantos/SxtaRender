@@ -59,7 +59,7 @@ namespace Sxta.Proland.Core.Producer.XmlResources
             return new TileCacheResource(manager, name, desc, e);
         }
         public TileCacheResource(ResourceManager manager, string name, ResourceDescriptor desc, XmlElement e = null) :
-        base(50, manager, name, desc)
+        base(1, manager, name, desc)
         {
             e = e == null ? desc.descriptor : e;
             TileStorage storage = new TileStorage();

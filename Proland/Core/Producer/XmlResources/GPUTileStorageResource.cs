@@ -55,7 +55,7 @@ namespace Sxta.Proland.Core.Producer.XmlResources
             return new GPUTileStorageResource(manager, name, desc, e);
         }
         public GPUTileStorageResource(ResourceManager manager, string name, ResourceDescriptor desc, XmlElement e = null) :
-            base(20, manager, name, desc)
+            base(0, manager, name, desc)
         {
             e = e == null ? desc.descriptor : e;
             int tileSize;

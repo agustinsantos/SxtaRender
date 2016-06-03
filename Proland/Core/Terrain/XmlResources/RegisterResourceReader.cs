@@ -11,6 +11,7 @@ namespace Sxta.Proland.Core.Terrain.XmlResources
             //TERRAIN RESOURCES
             ResourceFactory.getInstance().addType("terrainNode", TerrainNodeResource.Create);
             ResourceFactory.getInstance().addType("updateTerrain", UpdateTerrainTaskResource.Create);
+            ResourceFactory.getInstance().addType("updateTileSamplers", UpdateTileSamplersTaskResource.Create);
             ResourceFactory.getInstance().addType("drawTerrain", DrawTerrainTaskResource.Create);
             ResourceFactory.getInstance().addType("tileSampler", TileSamplerResource.Create);
             ResourceFactory.getInstance().addType("tileSamplerZ", TileSamplerResource.Create);
