@@ -33,11 +33,11 @@ namespace proland
             TerrainNode t = new TerrainNode();
             if (target == null)
             {
-                t = (TerrainNode)n.getOwner().getResourceManager().loadResource(terrain.name).get();
+                t = n.getOwner().getResourceManager().loadResource(terrain.name).get() as TerrainNode;
             }
             else
             {
-                t = (TerrainNode)target.getField(terrain.name);
+                t = ((Resource)target.getField(terrain.name)).get() as TerrainNode;
             }
             if (t == null)
             {
@@ -53,7 +53,7 @@ namespace proland
             foreach (KeyValuePair<string, object> i in n.getFields())
             {
                 //TOSEE
-                TileSampler u = (TileSampler)i.Value;
+                TileSampler u = ((Resource)i.Value).get() as TileSampler;
                 if (u != null)
                 {
                     Sxta.Render.Scenegraph.Task ut = u.update(n.getOwner(), t.root);

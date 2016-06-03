@@ -150,8 +150,7 @@ namespace proland
             {
                 Tile.TId id = Tile.getTId(producerId, level, tx, ty);
                 Tile t = null;
-                usedTiles.TryGetValue(id, out t);
-                if (t != null)
+                if (!usedTiles.TryGetValue(id, out t))
                 {
                     bool deletedTile = false;
                     ++queries;

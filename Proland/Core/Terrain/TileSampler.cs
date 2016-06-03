@@ -802,7 +802,7 @@ namespace proland
         /**
          * The terrains associated with this uniform. Only used with #setTileMap.
          */
-        private List<TerrainNode> terrains;
+        private List<TerrainNode> terrains = new List<TerrainNode>();
 
         /**
          * Last used GLSL program. Updated each time #setTile or #setTileMap is called with a
