@@ -49,10 +49,10 @@ namespace Sxta.Proland.Core.Producer.XmlResources
                 format = "RGBA8";
             }
 
-            string normalTex = "rendebuffer-" + tileSize + "-" + format;
+            string normalTex = "renderbuffer-" + tileSize + "-" + format;
             normalTexture = (Texture2D)manager.loadResource(normalTex).get();
 
-            valueC.init(cache, elevations, normalTexture, normalsProg, gridSize, deform);
+            this.valueC = new NormalProducer(cache, elevations, normalTexture, normalsProg, gridSize, deform);
         }
 
         public override bool prepareUpdate()
