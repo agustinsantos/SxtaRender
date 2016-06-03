@@ -40,7 +40,8 @@ namespace Sxta.Render.Scenegraph.Controller
             }
             return p;
 #endif 
-            throw new NotImplementedException();
+            return new Vector3d(double.NaN, double.NaN, double.NaN);
+            //throw new NotImplementedException();
         }
     }
 }

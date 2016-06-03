@@ -80,13 +80,10 @@ namespace Examples.Tutorials
             view.GameWindow = this;
             ViewManager viewManager = new ViewManager() { SceneManager = manager, ViewController = new TerrainViewController(manager.getCameraNode(), 50000.0) };
             view.ViewManager = viewManager;
+            view.ViewManager.ViewController.Theta = System.Math.PI / 2;
+            view.ViewManager.ViewController.Phi = System.Math.PI / 2;
 
             fb = FrameBuffer.getDefault();
-
-            //camera = new SGCamera(this);
-            //camera.Position = new Vector3d(0, 0, 5);
-            //camera.Yaw((float)MathHelper.ToRadians(90));
-            //camera.Pitch((float)MathHelper.ToRadians(90));
         }
 
         #endregion
@@ -115,9 +112,6 @@ namespace Examples.Tutorials
         {
             FrameBuffer fb = FrameBuffer.getDefault();
             fb.setViewport(new Vector4i(0, 0, Width, Height));
-
-            //camera.Resize(Width, Height);
-            //manager.setCameraToScreen(camera.ProjectionMatrix);
         }
 
         #endregion
@@ -131,7 +125,6 @@ namespace Examples.Tutorials
         /// <remarks>There is no need to call the base implementation.</remarks>
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
-            //camera.Update((float)e.Time);
             view.OnUpdateFrame(e.Time);
         }
 
@@ -147,10 +140,6 @@ namespace Examples.Tutorials
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             view.OnRenderFrame(e.Time, e.Time);
-            //manager.getCameraNode().setLocalToParent(camera.ViewMatrix);
-
-            //manager.update(e.Time / 100000); // from Seconds to microseconds);
-            //manager.draw();
             this.SwapBuffers();
         }
 
@@ -162,7 +151,6 @@ namespace Examples.Tutorials
         private ResourceManager resManager;
         private SceneManager manager;
         private FrameBuffer fb;
-        private SGCamera camera;
         private BasicViewHandler view;
         #endregion
 

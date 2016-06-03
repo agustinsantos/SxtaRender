@@ -31,16 +31,40 @@ namespace Sxta.Render.Scenegraph.Controller
         /// </summary>
         public float groundHeightAtCamera = 0.0f;
 
-        public GameWindow GameWindow { get; set; }
 
         private float moveSpeed = 0.5f;
         private float turnSpeed = 0.5f;
         private float lerpFactor = 2.301f; // original lerp factor was 2.301e-6
+        private GameWindow gameWindow;
+
         private float mouseSensitivity = 700f;
- 
+
         private double Mix2(double x, double y, double t)
         {
             return System.Math.Abs(x - y) < System.Math.Max(x, y) * 1e-5 ? y : (1 - t) * x + t * y;
+        }
+        public GameWindow GameWindow
+        {
+            get { return gameWindow; }
+            set
+            {
+                if (gameWindow != null)
+                {
+                    gameWindow.Keyboard.KeyDown -= OnKeyDownEvent;
+                    gameWindow.Keyboard.KeyUp -= OnKeyUpEvent;
+                    gameWindow.MouseWheel -= OnMouseWheelEvent;
+                    gameWindow.MouseDown -= OnMouseDownEvent;
+                }
+                gameWindow = value;
+                if (gameWindow != null)
+                {
+                    gameWindow.Keyboard.KeyDown += OnKeyDownEvent;
+                    gameWindow.Keyboard.KeyUp += OnKeyUpEvent;
+                    gameWindow.MouseWheel += OnMouseWheelEvent;
+                    gameWindow.MouseDown += OnMouseDownEvent;
+                }
+
+            }
         }
 
         /// <summary>
@@ -69,7 +93,7 @@ namespace Sxta.Render.Scenegraph.Controller
         {
             if (!initialized)
             {
-                target = GetPosition();
+                GetPosition(ref target);
                 initialized = true;
             }
 
@@ -93,7 +117,7 @@ namespace Sxta.Render.Scenegraph.Controller
 
                 if (animation == 1.0)
                 {
-                    target = GetPosition();
+                    GetPosition(ref target);
                     animation = -1.0;
                 }
             }
@@ -117,40 +141,73 @@ namespace Sxta.Render.Scenegraph.Controller
 
         public void OnUpdateFrame(double time)
         {
+            CheckMouseMode();
             // get current mouse position
             OpenTK.Input.MouseState currentMouseState = OpenTK.Input.Mouse.GetState();
-             MouseMotion( currentMouseState.X,  currentMouseState.Y);
+            MouseMotion(currentMouseState.X, currentMouseState.Y);
         }
 
-        public virtual bool OnMouseDown(MouseButtonEventArgs e)
+        private bool CheckMouseMode()
+        {
+            var keyboardState = OpenTK.Input.Keyboard.GetState();
+            if (keyboardState.IsKeyDown(Key.ControlLeft))
+            {
+                mode = userMode.Light;
+                return true;
+            }
+            else
+            { // no modifier
+                if (keyboardState.IsKeyDown(Key.ShiftLeft))
+                {
+                    mode = userMode.Move;
+                }
+                else
+                {
+                    mode = userMode.Rotate;
+                }
+                return true;
+            }
+        }
+        private void OnMouseDownEvent(object sender, MouseButtonEventArgs e)
+        {
+            //if (this.OnMouseDown(e))
+            return;
+        }
+
+        private void OnMouseWheelEvent(object sender, MouseWheelEventArgs e)
+        {
+            if (this.OnMouseWheel(e))
+                return;
+        }
+        /// <summary>
+        /// Occurs when a key is pressed.
+        /// </summary>
+        /// <param name="sender">The KeyboardDevice which generated this event.</param>
+        /// <param name="e">The key that was pressed.</param>
+        private void OnKeyDownEvent(object sender, KeyboardKeyEventArgs e)
+        {
+            if (this.OnKeyDown(e))
+                return;
+        }
+
+        private void OnKeyUpEvent(object sender, KeyboardKeyEventArgs e)
+        {
+            if (this.OnKeyRelease(e))
+                return;
+        }
+
+        public bool OnMouseDown(MouseButtonEventArgs e)
         {
             oldx = e.X;
             oldy = e.Y;
-            //if (OpenTK.Input.Key.ControlLeft != 0)
-            //{
-            //    mode = userMode.rotate;
-            //    return true;
-            //}
-            //else if (m == 0)
-            //{ // no modifier
-            //    if (parentWindow.Keyboard[OpenTK.Input.Key.Left])
-            //    {
-            //        mode = userMode.move;
-            //    }
-            //    else
-            //    {
-            //        mode = userMode.light;
-            //    }
-            //    return true;
-            //}
-            return false;
+            return CheckMouseMode();
         }
 
         public virtual bool MouseMotion(int x, int y)
         {
             if (!initialized)
             {
-                target = GetPosition();
+                GetPosition(ref target);
                 initialized = true;
             }
             if (mode == userMode.Rotate)
@@ -169,11 +226,11 @@ namespace Sxta.Render.Scenegraph.Controller
                 if (!(double.IsNaN(oldp.X) || double.IsNaN(oldp.Y) || double.IsNaN(oldp.Z) || double.IsNaN(p.X) || double.IsNaN(p.Y) || double.IsNaN(p.Z)))
                 {
                     Position current = new Position();
-                    current = GetPosition(false);
+                    GetPosition(ref current, false);
                     SetPosition(target, false);
                     ViewController controller = viewManager.ViewController;
                     controller.move(oldp, p);
-                    target = GetPosition(false);
+                    GetPosition(ref target, false);
                     SetPosition(current, false);
                 }
                 oldx = x;
@@ -210,7 +267,7 @@ namespace Sxta.Render.Scenegraph.Controller
         {
             if (!initialized)
             {
-                target = GetPosition();
+                GetPosition(ref target);
                 initialized = true;
             }
             ViewController controller = viewManager.ViewController;
@@ -230,64 +287,35 @@ namespace Sxta.Render.Scenegraph.Controller
 
         public virtual bool OnKeyDown(KeyboardKeyEventArgs e)
         {
-            if (e.Key == OpenTK.Input.Key.F10)
-            {
-                smooth = !smooth;
-                return true;
-            }
             if (e.Key == OpenTK.Input.Key.PageUp)
             {
                 far = true;
                 return true;
-            }
-            else
-            {
-                far = false;
             }
             if (e.Key == OpenTK.Input.Key.PageDown)
             {
                 near = true;
                 return true;
             }
-            else
-            {
-                near = false;
-            }
             if (e.Key == OpenTK.Input.Key.Up || e.Key == OpenTK.Input.Key.W)
             {
                 forward = true;
                 return true;
-            }
-            else
-            {
-                forward = false;
             }
             if (e.Key == OpenTK.Input.Key.Down || e.Key == OpenTK.Input.Key.S)
             {
                 backward = true;
                 return true;
             }
-            else
-            {
-                backward = false;
-            }
             if (e.Key == OpenTK.Input.Key.Left || e.Key == OpenTK.Input.Key.A)
             {
                 left = true;
                 return true;
             }
-            else
-            {
-                left = false;
-            }
             if (e.Key == OpenTK.Input.Key.Right || e.Key == OpenTK.Input.Key.D)
             {
                 right = true;
                 return true;
-            }
-            else
-            {
-                right = false;
             }
             return false;
         }
@@ -339,10 +367,9 @@ namespace Sxta.Render.Scenegraph.Controller
         /// <param name="light">the current view and light position.</param>
         /// <returns></returns>
         /// </summary>
-        public Position GetPosition(bool light = true)
+        public void GetPosition(ref Position p, bool light = true)
         {
             ViewController view = viewManager.ViewController;
-            Position p = new Position();
             p.x0 = view.X0;
             p.y0 = view.Y0;
             p.theta = view.Theta;
@@ -360,7 +387,6 @@ namespace Sxta.Render.Scenegraph.Controller
                     p.sz = l.Z;
                 }
             }
-            return p;
         }
 
 
@@ -396,7 +422,7 @@ namespace Sxta.Render.Scenegraph.Controller
         /// <param name="p">the target position.</param>
         public virtual void GoToPosition(Position p)
         {
-            start = GetPosition();
+            GetPosition(ref start);
             end = p;
             animation = 0.0;
         }
@@ -462,7 +488,7 @@ namespace Sxta.Render.Scenegraph.Controller
         protected virtual void updateView(double t, double dt)
         {
             ViewController controller = viewManager.ViewController;
-            float dzFactor = (float)(System.Math.Pow(1.02f, System.Math.Min((float)(50.0e-6 * dt), 1.0f)));
+            float dzFactor = (float)(System.Math.Pow(1.02f, System.Math.Min((float)(50.0 * dt), 1.0f)));
             if (near)
             {
                 target.d = target.d / dzFactor;
@@ -471,7 +497,8 @@ namespace Sxta.Render.Scenegraph.Controller
             {
                 target.d = target.d * dzFactor;
             }
-            Position p = GetPosition(true);
+            Position p = new Position();
+            GetPosition(ref p, true);
             SetPosition(target, false);
             //specialkey();
             if (forward)
@@ -492,13 +519,14 @@ namespace Sxta.Render.Scenegraph.Controller
             {
                 controller.turn(-dt * turnSpeed);
             }
-            target = GetPosition(false);
+            GetPosition(ref target, false);
 
             if (smooth)
             {
                 double lerp = 1.0 - System.Math.Exp(-dt * lerpFactor);// original lerp factor was 2.301e-6
                 double x0;
                 double y0;
+
                 controller.interpolatePos(p.x0, p.y0, target.x0, target.y0, lerp, out x0, out y0);
                 p.x0 = x0;
                 p.y0 = y0;

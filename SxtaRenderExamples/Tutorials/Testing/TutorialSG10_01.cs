@@ -37,9 +37,9 @@ namespace Examples.Tutorials
                 dir = wd;
 
             Keyboard.KeyDown += OnKeyDown;
-            Keyboard.KeyUp += OnKeyUp;
-            MouseWheel += OnMouseWheel;
-            MouseDown += OnMouseDownEvent;
+            //Keyboard.KeyUp += OnKeyUp;
+            //MouseWheel += OnMouseWheel;
+            //MouseDown += OnMouseDownEvent;
         }
 
         private void OnMouseDownEvent(object sender, MouseButtonEventArgs e)
@@ -63,8 +63,8 @@ namespace Examples.Tutorials
         /// <param name="e">The key that was pressed.</param>
         void OnKeyDown(object sender, KeyboardKeyEventArgs e)
         {
-            if (view.OnKeyDown(e))
-                return;
+            //if (view.OnKeyDown(e))
+            //    return;
 
             if (e.Key == Key.Escape)
                 this.Exit();
