@@ -24,7 +24,7 @@
  * Authors: Eric Bruneton, Antoine Begault, Guillaume Piolat.
 -->
 <archive>
-  <multithreadScheduler name="defaultScheduler" nthreads="3" fps="0"/>
+  <multithreadScheduler name="defaultScheduler" nthreads="0" fps="0"/>
   
    <tileCache name="groundElevations" scheduler="defaultScheduler">
     <gpuTileStorage tileSize="101" nTiles="512"

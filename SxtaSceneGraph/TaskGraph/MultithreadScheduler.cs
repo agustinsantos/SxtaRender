@@ -13,7 +13,6 @@
 //#define BUSY_WAITING
 
 using log4net;
-using SD.Tools.Algorithmia.PriorityQueues;
 using Sxta.Render.Resources;
 using System;
 using System.Collections.Generic;
@@ -21,7 +20,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading;
 
 namespace Sxta.Render.Scenegraph
@@ -37,7 +35,7 @@ namespace Sxta.Render.Scenegraph
     /// Otherwise, if several threads are used, prefetching of cpu tasks is supported,
     /// but not prefetching of gpu tasks.
     /// </summary>
-    public class MultithreadScheduler : Scheduler,  ISwappable<MultithreadScheduler>
+    public class MultithreadScheduler : Scheduler, ISwappable<MultithreadScheduler>
     {
 
         /*
@@ -970,74 +968,81 @@ namespace Sxta.Render.Scenegraph
          */
         private void schedulerThread()
         {
-            Sxta.Core.Timer timer = new Sxta.Core.Timer();
-
-            // loop to execute tasks, until the scheduler must be deleted
-            while (!stop)
+            try
             {
-                Task t = null;
-                lock (mutex)
+                Sxta.Core.Timer timer = new Sxta.Core.Timer();
+
+                // loop to execute tasks, until the scheduler must be deleted
+                while (!stop)
                 {
-                    // wait until we have a CPU task ready to be executed (the additional
-                    // threads cannot execute GPU tasks, because OpenGL supports only one
-                    // thread at a time), or the scheduler is being deleted
-                    while (readyCpuTasks.Count == 0 && !stop)
+                    Task t = null;
+                    lock (mutex)
                     {
-                        lock (cpuTasksCond)
+                        // wait until we have a CPU task ready to be executed (the additional
+                        // threads cannot execute GPU tasks, because OpenGL supports only one
+                        // thread at a time), or the scheduler is being deleted
+                        while (readyCpuTasks.Count == 0 && !stop)
                         {
-                            Monitor.Wait(cpuTasksCond);
-                            //pthread_cond_wait(cpuTasksCond, mutex);
+                            lock (cpuTasksCond)
+                            {
+                                Monitor.Wait(cpuTasksCond);
+                                //pthread_cond_wait(cpuTasksCond, mutex);
+                            }
+                        }
+                        if (!stop)
+                        {
+                            //SortedTaskSet.iterator i = readyCpuTasks.begin();
+                            //Debug.Assert(i != readyCpuTasks.end());
+                            //Debug.Assert(i.second.begin() != i.second.end());
+                            // selects the first ready task
+                            t = readyCpuTasks.First().Value.First();
+                            //t = *(i.second.begin());
+#if STRICT_PREFETCH
+                            Debug.Assert(t.getDeadline() > 0);
+#endif
+                            // and removes it from the task sets,
+                            // so that other threads will not select it again
+                            if (t.getDeadline() == 0)
+                            {
+                                immediateTasks.Remove(t);
+                            }
+                            removeTask(allReadyTasks, t);
+                            removeTask(readyCpuTasks, t);
                         }
                     }
+
                     if (!stop)
                     {
-                        //SortedTaskSet.iterator i = readyCpuTasks.begin();
-                        //Debug.Assert(i != readyCpuTasks.end());
-                        //Debug.Assert(i.second.begin() != i.second.end());
-                        // selects the first ready task
-                        t = readyCpuTasks.First().Value.First();
-                        //t = *(i.second.begin());
-#if STRICT_PREFETCH
-                        Debug.Assert(t.getDeadline() > 0);
-#endif
-                        // and removes it from the task sets,
-                        // so that other threads will not select it again
-                        if (t.getDeadline() == 0)
+                        Debug.Assert(!t.isGpuTask());
+                        bool changes = false;
+                        if (!t.isDone())
                         {
-                            immediateTasks.Remove(t);
+                            log.Debug("PREFETCH " + t.GetType());
+
+                            // same thing as in the #run method
+                            if (t.getCompletionDate() >= t.getPredecessorsCompletionDate())
+                            {
+                                // t is up to date, it is not necessary to run it
+                            }
+                            else if (framePeriod > 0.0)
+                            {
+                                timer.start();
+                                changes = t.run();
+                                double duration = timer.end();
+                                t.setActualDuration((float)duration);
+                            }
+                            else
+                            {
+                                changes = t.run();
+                            }
                         }
-                        removeTask(allReadyTasks, t);
-                        removeTask(readyCpuTasks, t);
+                        taskDone(t, changes);
                     }
                 }
-
-                if (!stop)
-                {
-                    Debug.Assert(!t.isGpuTask());
-                    bool changes = false;
-                    if (!t.isDone())
-                    {
-                        log.Debug("PREFETCH " + t.GetType());
-
-                        // same thing as in the #run method
-                        if (t.getCompletionDate() >= t.getPredecessorsCompletionDate())
-                        {
-                            // t is up to date, it is not necessary to run it
-                        }
-                        else if (framePeriod > 0.0)
-                        {
-                            timer.start();
-                            changes = t.run();
-                            double duration = timer.end();
-                            t.setActualDuration((float)duration);
-                        }
-                        else
-                        {
-                            changes = t.run();
-                        }
-                    }
-                    taskDone(t, changes);
-                }
+            }
+            catch (Exception ex)
+            {
+                Debugger.Break();
             }
         }
 

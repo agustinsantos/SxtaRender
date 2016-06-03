@@ -265,6 +265,8 @@ namespace Sxta.Proland.Terrain
 
         }
 
+       // ~ElevationProducer() { Debugger.Break(); }
+
         public override void getReferencedProducers(List<TileProducer> producers)
         {
             if (residualTiles != null)
@@ -398,14 +400,14 @@ namespace Sxta.Proland.Terrain
             TileCache cache;
             TileProducer residuals = null;
             Program upsampleProg;
-            Program blendProg = new Program();
+            Program blendProg = null;
             Texture2D demTexture;
-            Texture2D layerTexture = new Texture2D();
+            Texture2D layerTexture = null;
             Texture2D residualTexture;
             int gridSize = 24;
             List<float> noiseAmp = new List<float>();
             bool flip = false;
-            cache = (TileCache)(manager.loadResource(Resource.getParameter(desc, e, "cache"))).get();
+            cache = manager.loadResource(Resource.getParameter(desc, e, "cache")).get() as TileCache;
             if (!string.IsNullOrWhiteSpace(e.GetAttribute("residuals")))
             {
                 residuals = (TileProducer)(manager.loadResource(Resource.getParameter(desc, e, "residuals")).get());
@@ -415,7 +417,7 @@ namespace Sxta.Proland.Terrain
             {
                 upsample = Resource.getParameter(desc, e, "upsampleProg");
             }
-            upsampleProg = (Program)(manager.loadResource(upsample)).get();
+            upsampleProg = manager.loadResource(upsample).get() as Program;
             if (!string.IsNullOrWhiteSpace(e.GetAttribute("gridSize")))
             {
                 Resource.getIntParameter(desc, e, "gridSize", out gridSize);
@@ -487,14 +489,14 @@ namespace Sxta.Proland.Terrain
             if (hasLayers())
             {
                 string _demTex = "-1";
-                layerTexture = (Texture2D)manager.loadResource(_demTex).get();
+                layerTexture = manager.loadResource(_demTex).get() as Texture2D;
 
                 string blend = "blendShader;";
                 if (!string.IsNullOrWhiteSpace(e.GetAttribute("blendProg")))
                 {
                     blend = Resource.getParameter(desc, e, "blendProg");
                 }
-                blendProg = (Program)manager.loadResource(blend).get();
+                blendProg = manager.loadResource(blend).get() as Program;
             }
 
             init(cache, residuals, demTexture, layerTexture, residualTexture, upsampleProg, blendProg, gridSize, noiseAmp, flip);
@@ -547,8 +549,7 @@ namespace Sxta.Proland.Terrain
         {
             if (log.IsDebugEnabled)
             {
-                string oss = "Elevation tile " + getId() + " " + level + " " + tx + " " + ty;
-                log.DebugFormat("DEM", oss);
+                log.Debug("Elevation tile " + getId() + " " + level + " " + tx + " " + ty);
             }
 
             GPUTileStorage.GPUSlot gpuData = (GPUTileStorage.GPUSlot)(data);

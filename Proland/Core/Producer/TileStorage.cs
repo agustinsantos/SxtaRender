@@ -42,6 +42,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 
@@ -69,9 +70,9 @@ namespace proland
         /// </summary>
         public class Slot
         {
-             /// <summary>
-             /// The id of the tile currently stored in this slot.
-             /// </summary>
+            /// <summary>
+            /// The id of the tile currently stored in this slot.
+            /// </summary>
             public Tuple<int, Tuple<int, Tuple<int, int>>> id;
 
             /*
@@ -87,14 +88,19 @@ namespace proland
              */
             public Slot(TileStorage owner)
             {
-                Mutex mutex = new Mutex(true, "Mutex");
+                this.owner = owner;
             }
 
             /*
              * Deletes this TileStorage::Slot. This destroys the data of the tile
              * stored in this slot, if any.
              */
-            // public virtual ~Slot();
+            ~Slot() {
+                if (isLocked) {
+                    Debugger.Break();
+                    System.Threading.Monitor.Exit(mutex);
+                }
+            }
 
             /*
              * Returns the TileStorage that manages this slot.
@@ -117,10 +123,16 @@ namespace proland
                 if (lock_)
                 {
                     //lock (mutex)
+                    //Debugger.Break();
+                    System.Threading.Monitor.Enter(mutex);
+                    isLocked = true;
                 }
                 else
                 {
                     //unlock(mutex)
+                    //Debugger.Break();
+                    System.Threading.Monitor.Exit(mutex);
+                    isLocked = false;
                 }
             }
 
@@ -133,7 +145,8 @@ namespace proland
             /*
              * A mutex used to serialize parallel accesses to this slot.
              */
-            private object mutex;
+            private object mutex = new object();
+            private bool isLocked = false;
         }
 
         /*
@@ -241,7 +254,7 @@ namespace proland
          */
         internal TileStorage()
         {
-            
+
         }
 
         /*

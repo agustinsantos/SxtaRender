@@ -529,6 +529,8 @@ namespace proland
 
         }
 
+        // ~TileSampler() { Debugger.Break(); }
+
         /**
          * Initializes this TileSampler.
          *
@@ -548,7 +550,7 @@ namespace proland
             this.storeInvisible = true;
             this.async = false;
             this.mipmap = false;
-            GPUTileStorage storage = (GPUTileStorage)producer.getCache().getStorage();
+            GPUTileStorage storage = producer.getCache().getStorage() as GPUTileStorage;
             Debug.Assert(storage != null);
             lastProgram = null;
         }
@@ -846,7 +848,7 @@ namespace proland
          * The current camera position in local space for each %terrain associated
          * with this uniform (only used with #setTileMap).
          */
-        private List<Uniform4f> cameraU;
+        private List<Uniform4f> cameraU = new List<Uniform4f>();
 
         /**
          * True to store texture tiles for leaf quads.
@@ -868,7 +870,7 @@ namespace proland
          * for a given quad. A texture is stored if at least one filter returns
          * true.
          */
-        private List<TileFilter> storeFilters;
+        private List<TileFilter> storeFilters = new List<TileFilter>();
 
         /**
          * True if tiles must be loaded in an asynchronous way, using prefetching.

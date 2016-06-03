@@ -6,6 +6,7 @@ using Sxta.Render;
 using Sxta.Render.Resources;
 using Sxta.Render.Scenegraph;
 using System;
+using System.Diagnostics;
 using Vector3d = Sxta.Math.Vector3d;
 
 namespace Examples.Tutorials

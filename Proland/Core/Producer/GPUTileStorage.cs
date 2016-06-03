@@ -141,12 +141,12 @@ vec4 uv = vec4(xy + vec2(0.25), xy + vec2(0.75)) / float(bufferLayerLevelWidth.w
             /// </summary>
             public const int l = 1;
 
-             /// <summary>
+            /// <summary>
             /// Creates a new GPUSlot.
             /// </summary>
             /// <param name="owner">the TileStorage that manages this slot.</param>
             /// <param name="index">the index of t in the list of textures managed by the
-	        ///       tile storage.</param>
+            ///       tile storage.</param>
             /// <param name="t">the 2D array texture in which the tile is stored.</param>
             /// <param name="l">the layer of the tile in the 2D texture array t.</param>
             public GPUSlot(TileStorage owner, int index, Texture2DArray t, int l) : base(owner)
@@ -218,6 +218,8 @@ vec4 uv = vec4(xy + vec2(0.25), xy + vec2(0.75)) / float(bufferLayerLevelWidth.w
             init(tileSize, nTiles, internalf, f, t, _params, useTileMap);
         }
 
+        // ~GPUTileStorage() { Debugger.Break(); }
+
         /// <summary>
         /// Returns the texture storage whose index is given.
         /// </summary>
@@ -273,11 +275,11 @@ vec4 uv = vec4(xy + vec2(0.25), xy + vec2(0.75)) / float(bufferLayerLevelWidth.w
                     fbo.setViewport(new Sxta.Math.Vector4i(0, 0, width, width));
                     for (int n = 0; n < textures.Count(); n++)
                     {
-                        fbo.setTextureBuffer((BufferId)(1 << n),textures[n],level, -1);
+                        fbo.setTextureBuffer((BufferId)(1 << n), textures[n], level, -1);
                     }
                     for (int n = 0; n < textures.Count(); n++)
                     {
-                        fbo.setDrawBuffer((BufferId)(1<<n));
+                        fbo.setDrawBuffer((BufferId)(1 << n));
                         foreach (GPUSlot s in dirtySlots[n])
                         {
                             mipmapParams.set(new Sxta.Math.Vector4i(s.index, GPUSlot.l, level - 1, width));
@@ -310,8 +312,9 @@ vec4 uv = vec4(xy + vec2(0.25), xy + vec2(0.75)) / float(bufferLayerLevelWidth.w
                 needMipmaps = needMipmaps || (tex.hasMipmaps());
                 textures.Add(tex);
                 tex.generateMipMap();
-                for (int j = 0; j < nLayers; j++) {
-                    freeSlots.Add(new GPUSlot(this, i, textures[i],j));
+                for (int j = 0; j < nLayers; j++)
+                {
+                    freeSlots.Add(new GPUSlot(this, i, textures[i], j));
                 }
             }
 
@@ -323,7 +326,7 @@ vec4 uv = vec4(xy + vec2(0.25), xy + vec2(0.75)) / float(bufferLayerLevelWidth.w
                 fbo.setReadBuffer(BufferId.DEFAULT);
                 fbo.setDrawBuffers(BufferId.COLOR0 | BufferId.COLOR1);
                 mipmapProg = new Program(new Module(330, mipmapShader));
-                Sampler s = new Sampler(new Sampler.Parameters().min(TextureFilter.NEAREST).mag(TextureFilter.NEAREST).wrapS(TextureWrap.CLAMP_TO_EDGE).wrapT(TextureWrap.CLAMP_TO_EDGE)); 
+                Sampler s = new Sampler(new Sampler.Parameters().min(TextureFilter.NEAREST).mag(TextureFilter.NEAREST).wrapS(TextureWrap.CLAMP_TO_EDGE).wrapT(TextureWrap.CLAMP_TO_EDGE));
                 for (int i = 0; i < nTextures; i++)
                 {
                     string buf = String.Format("input_[{0}]", i);
@@ -340,8 +343,8 @@ vec4 uv = vec4(xy + vec2(0.25), xy + vec2(0.75)) / float(bufferLayerLevelWidth.w
             if (useTileMap)
             {
                 Debug.Assert(nTextures == 1);
-                tileMap = new Texture2D(4096, 8, TextureInternalFormat.RG8, TextureFormat.RG, PixelType.UNSIGNED_BYTE, 
-                    new Texture.Parameters().wrapS(TextureWrap.CLAMP_TO_EDGE).wrapT(TextureWrap.CLAMP_TO_EDGE).min(TextureFilter.NEAREST).mag(TextureFilter.NEAREST), 
+                tileMap = new Texture2D(4096, 8, TextureInternalFormat.RG8, TextureFormat.RG, PixelType.UNSIGNED_BYTE,
+                    new Texture.Parameters().wrapS(TextureWrap.CLAMP_TO_EDGE).wrapT(TextureWrap.CLAMP_TO_EDGE).min(TextureFilter.NEAREST).mag(TextureFilter.NEAREST),
                     new Sxta.Render.Buffer.Parameters(), new CPUBuffer<byte>());
             }
         }

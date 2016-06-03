@@ -62,13 +62,13 @@ namespace Sxta.Proland.Core.Producer.XmlResources
         base(1, manager, name, desc)
         {
             e = e == null ? desc.descriptor : e;
-            TileStorage storage = new TileStorage();
+            TileStorage storage = null;
             Scheduler scheduler;
             checkParameters(desc, e, "name,storage,scheduler,");
             if (!string.IsNullOrWhiteSpace(e.GetAttribute("storage")))
             {
                 string _id = getParameter(desc, e, "storage");
-                storage = (TileStorage)manager.loadResource(_id).get();
+                storage =  manager.loadResource(_id).get() as TileStorage;
             }
             else
             {

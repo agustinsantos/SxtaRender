@@ -12,13 +12,13 @@ namespace Sxta.Render
     /// </summary>
     public class CPUBuffer<T> : Buffer where T : struct
     {
-		/// <summary>
-		/// Creates a new CPU buffer with the given data.
-		/// Initializes a new instance of the <see cref="Sxta.Render.CPUBuffer`1"/> class.
-		/// </summary>
-		/// <param name='data'>
-		/// Data  the buffer data. May be NULL.
-		/// </param>
+        /// <summary>
+        /// Creates a new CPU buffer with the given data.
+        /// Initializes a new instance of the <see cref="Sxta.Render.CPUBuffer`1"/> class.
+        /// </summary>
+        /// <param name='data'>
+        /// Data  the buffer data. May be NULL.
+        /// </param>
         public CPUBuffer(T[] data = null)
         {
             p = data;
@@ -27,14 +27,14 @@ namespace Sxta.Render
         /*
          * Destroys this CPU buffer. The buffer data itself is NOT destroyed.
          */
-        // public virtual ~CPUBuffer() { }
+        //  ~CPUBuffer() { Debugger.Break(); }
 
-		/// <summary>
-		///  Binds this buffer to the given target. 
-		/// </summary>
-		/// <param name='target'>
-		///  Target an OpenGL buffer target (GL_ARRAY_BUFFER, etc). 
-		/// </param>
+        /// <summary>
+        ///  Binds this buffer to the given target. 
+        /// </summary>
+        /// <param name='target'>
+        ///  Target an OpenGL buffer target (GL_ARRAY_BUFFER, etc). 
+        /// </param>
         internal override void bind(BufferTarget target)
         {
 #if OPENTK
@@ -56,9 +56,9 @@ namespace Sxta.Render
         internal override void unbind(BufferTarget target) { }
 
 
-		/// <summary>
-		/// The p. The buffer data. May be NULL.
-		/// </summary>
+        /// <summary>
+        /// The p. The buffer data. May be NULL.
+        /// </summary>
         private T[] p;
     }
 }
