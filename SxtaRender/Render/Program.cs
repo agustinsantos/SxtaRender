@@ -17,39 +17,39 @@ namespace Sxta.Render
     /// </summary>
     public class Program : ISwappable<Program>, IDisposable
     {
-        
-		/// <summary>
-		/// Creates a new program.
-		/// Initializes a new instance of the <see cref="Sxta.Render.Program"/> class.
-		/// </summary>
-		/// <param name='modules'>
-		/// Modules the modules that will compose this program.
-		/// </param>
+
+        /// <summary>
+        /// Creates a new program.
+        /// Initializes a new instance of the <see cref="Sxta.Render.Program"/> class.
+        /// </summary>
+        /// <param name='modules'>
+        /// Modules the modules that will compose this program.
+        /// </param>
         public Program(List<Module> modules)
         {
             init(modules);
         }
 
 
-		/// <summary>
-		/// Creates a new program.
-		/// Initializes a new instance of the <see cref="Sxta.Render.Program"/> class.
-		/// </summary>
-		/// <param name='module'>
-		/// module the single module that will compose this program
-		/// </param>
+        /// <summary>
+        /// Creates a new program.
+        /// Initializes a new instance of the <see cref="Sxta.Render.Program"/> class.
+        /// </summary>
+        /// <param name='module'>
+        /// module the single module that will compose this program
+        /// </param>
         public Program(Module module)
         {
             List<Module> modules = new List<Module>() { module };
             init(modules);
         }
 
-      
-		/// <summary>
-		/// Deletes this program.
-		/// Releases unmanaged resources and performs other cleanup operations before the <see cref="Sxta.Render.Program"/> is
-		/// reclaimed by garbage collection.
-		/// </summary>
+
+        /// <summary>
+        /// Deletes this program.
+        /// Releases unmanaged resources and performs other cleanup operations before the <see cref="Sxta.Render.Program"/> is
+        /// reclaimed by garbage collection.
+        /// </summary>
         ~Program()
         {
             // Do not re-create Dispose clean-up code here. 
@@ -60,53 +60,53 @@ namespace Sxta.Render
 
         public string Name { get; set; }
 
-		/// <summary>
-		/// Returns the id of this program.
-		/// </summary>
-		/// <returns>
-		/// The identifier.
-		/// </returns>
+        /// <summary>
+        /// Returns the id of this program.
+        /// </summary>
+        /// <returns>
+        /// The identifier.
+        /// </returns>
         public virtual int getId()
         {
             return programId;
         }
 
-      
-		/// <summary>
-		/// Returns the number of Module objects in this program.
-		/// </summary>
-		/// <returns>
-		/// The module count.
-		/// </returns>
+
+        /// <summary>
+        /// Returns the number of Module objects in this program.
+        /// </summary>
+        /// <returns>
+        /// The module count.
+        /// </returns>
         public int getModuleCount()
         {
             return modules.Count;
         }
 
-		/// <summary>
-		/// Returns the Module of this program whose index is given.
-		/// </summary>
-		/// <returns>
-		/// The module.
-		/// </returns>
-		/// <param name='index'>
-		/// Index.
-		/// </param>
+        /// <summary>
+        /// Returns the Module of this program whose index is given.
+        /// </summary>
+        /// <returns>
+        /// The module.
+        /// </returns>
+        /// <param name='index'>
+        /// Index.
+        /// </param>
         public Module getModule(int index)
         {
             return modules[index];
         }
 
-       
-		/// <summary>
-		/// Returns the uniform of this program whose name is given.
-		/// <returns>
-		/// The uniform of this program whose name is given,
+
+        /// <summary>
+        /// Returns the uniform of this program whose name is given.
+        /// <returns>
+        /// The uniform of this program whose name is given,
         /// or null if there is no such uniform.
-		/// </returns>
-		/// <param name='name'>
-		/// Name a GLSL uniform name.
-		/// </param>
+        /// </returns>
+        /// <param name='name'>
+        /// Name a GLSL uniform name.
+        /// </param>
         public Uniform getUniform(string name)
         {
             Uniform val;
@@ -119,625 +119,625 @@ namespace Sxta.Render
             return val;
         }
 
-    
-		/// <summary>
-		/// Returns the uniform1f of this program whose name is given.
-		/// </summary>
-		/// <returns>
-		/// The uniform1f.
-		/// </returns>
-		/// <param name='name'>
-		/// name a GLSL uniform name.
-		/// </param>
+
+        /// <summary>
+        /// Returns the uniform1f of this program whose name is given.
+        /// </summary>
+        /// <returns>
+        /// The uniform1f.
+        /// </returns>
+        /// <param name='name'>
+        /// name a GLSL uniform name.
+        /// </param>
         public Uniform1f getUniform1f(string name)
         {
             return (Uniform1f)getUniform(name);
         }
 
-		/// <summary>
-		/// Returns the uniform1d of this program whose name is given.
-		/// </summary>
-		/// <returns>
-		/// The uniform1d the uniform of this program whose name is given,
+        /// <summary>
+        /// Returns the uniform1d of this program whose name is given.
+        /// </summary>
+        /// <returns>
+        /// The uniform1d the uniform of this program whose name is given,
         /// or null if there is no such uniform.
-		/// </returns>
-		/// <param name='name'>
-		/// Name a GLSL uniform name.
-		/// </param>
+        /// </returns>
+        /// <param name='name'>
+        /// Name a GLSL uniform name.
+        /// </param>
         public Uniform1d getUniform1d(string name)
         {
             return (Uniform1d)getUniform(name);
         }
 
-		/// <summary>
-		/// Returns the uniform1i of this program whose name is given.
-		/// </summary>
-		/// <returns>
-		/// The uniform1i of this program whose name is given,
+        /// <summary>
+        /// Returns the uniform1i of this program whose name is given.
+        /// </summary>
+        /// <returns>
+        /// The uniform1i of this program whose name is given,
         /// or null if there is no such uniform.
-		/// </returns>
-		/// <param name='name'>
-		/// Name a GLSL uniform name.
-		/// </param>
+        /// </returns>
+        /// <param name='name'>
+        /// Name a GLSL uniform name.
+        /// </param>
         public Uniform1i getUniform1i(string name)
         {
             return (Uniform1i)getUniform(name);
         }
 
 
-		/// <summary>
-		/// Returns the uniform1ui of this program whose name is given.
-		/// </summary>
-		/// <returns>
-		/// The uniform1ui of this program whose name is given,
+        /// <summary>
+        /// Returns the uniform1ui of this program whose name is given.
+        /// </summary>
+        /// <returns>
+        /// The uniform1ui of this program whose name is given,
         /// or null if there is no such uniform.
-		/// </returns>
-		/// <param name='name'>
-		/// Name a GLSL uniform name.
-		/// </param>
+        /// </returns>
+        /// <param name='name'>
+        /// Name a GLSL uniform name.
+        /// </param>
         public Uniform1ui getUniform1ui(string name)
         {
             return (Uniform1ui)getUniform(name);
         }
 
 
-		/// <summary>
-		/// Returns the uniform1b of this program whose name is given.
-		/// </summary>
-		/// <returns>
-		/// The uniform1b  the uniform of this program whose name is given,
+        /// <summary>
+        /// Returns the uniform1b of this program whose name is given.
+        /// </summary>
+        /// <returns>
+        /// The uniform1b  the uniform of this program whose name is given,
         /// or null if there is no such uniform.
-		/// </returns>
-		/// <param name='name'>
-		/// Name name a GLSL uniform name.
-		/// </param>
+        /// </returns>
+        /// <param name='name'>
+        /// Name name a GLSL uniform name.
+        /// </param>
         public Uniform1b getUniform1b(string name)
         {
             return (Uniform1b)getUniform(name);
         }
 
-		/// <summary>
-		/// Returns the uniform2f of this program whose name is given.
-		/// </summary>
-		/// <returns>
-		/// The uniform2f the uniform of this program whose name is given,
+        /// <summary>
+        /// Returns the uniform2f of this program whose name is given.
+        /// </summary>
+        /// <returns>
+        /// The uniform2f the uniform of this program whose name is given,
         /// or null if there is no such uniform.
-		/// </returns>
-		/// <param name='name'>
-		/// Name a GLSL uniform name.
-		/// </param>
+        /// </returns>
+        /// <param name='name'>
+        /// Name a GLSL uniform name.
+        /// </param>
         public Uniform2f getUniform2f(string name)
         {
             return (Uniform2f)getUniform(name);
         }
 
 
-		/// <summary>
-		/// Returns the uniform2d of this program whose name is given.
-		/// </summary>
-		/// <returns>
-		/// The uniform2d the uniform of this program whose name is given,
+        /// <summary>
+        /// Returns the uniform2d of this program whose name is given.
+        /// </summary>
+        /// <returns>
+        /// The uniform2d the uniform of this program whose name is given,
         /// or null if there is no such uniform.
-		/// </returns>
-		/// <param name='name'>
-		/// Name a GLSL uniform name.
-		/// </param>
+        /// </returns>
+        /// <param name='name'>
+        /// Name a GLSL uniform name.
+        /// </param>
         public Uniform2d getUniform2d(string name)
         {
             return (Uniform2d)getUniform(name);
         }
 
-		/// <summary>
-		/// Returns the uniform2i of this program whose name is given.
-		/// </summary>
-		/// <returns>
-		/// The uniform2i  the uniform of this program whose name is given,
+        /// <summary>
+        /// Returns the uniform2i of this program whose name is given.
+        /// </summary>
+        /// <returns>
+        /// The uniform2i  the uniform of this program whose name is given,
         ///  or null if there is no such uniform.
-		/// </returns>
-		/// <param name='name'>
-		/// Name a GLSL uniform name.
-		/// </param>
+        /// </returns>
+        /// <param name='name'>
+        /// Name a GLSL uniform name.
+        /// </param>
         public Uniform2i getUniform2i(string name)
         {
             return (Uniform2i)getUniform(name);
         }
 
-		/// <summary>
-		/// Returns the uniform2ui of this program whose name is given.
-		/// </summary>
-		/// <returns>
-		/// The uniform2ui of this program whose name is given,
+        /// <summary>
+        /// Returns the uniform2ui of this program whose name is given.
+        /// </summary>
+        /// <returns>
+        /// The uniform2ui of this program whose name is given,
         /// or null if there is no such uniform.
-		/// </returns>
-		/// <param name='name'>
-		/// Name a GLSL uniform name.
-		/// </param>
+        /// </returns>
+        /// <param name='name'>
+        /// Name a GLSL uniform name.
+        /// </param>
         public Uniform2ui getUniform2ui(string name)
         {
             return (Uniform2ui)getUniform(name);
         }
 
-		/// <summary>
-		/// Returns the uniform2b of this program whose name is given.
-		/// </summary>
-		/// <returns>
-		/// The uniform2b the uniform of this program whose name is given,
+        /// <summary>
+        /// Returns the uniform2b of this program whose name is given.
+        /// </summary>
+        /// <returns>
+        /// The uniform2b the uniform of this program whose name is given,
         /// or null if there is no such uniform.
-		/// </returns>
-		/// <param name='name'>
-		/// Name a GLSL uniform name.
-		/// </param>
+        /// </returns>
+        /// <param name='name'>
+        /// Name a GLSL uniform name.
+        /// </param>
         public Uniform2b getUniform2b(string name)
         {
             return (Uniform2b)getUniform(name);
         }
 
-		/// <summary>
-		/// Returns the uniform3f of this program whose name is given.
-		/// </summary>
-		/// <returns>
-		/// The uniform3f of this program whose name is given,
+        /// <summary>
+        /// Returns the uniform3f of this program whose name is given.
+        /// </summary>
+        /// <returns>
+        /// The uniform3f of this program whose name is given,
         /// or null if there is no such uniform.
-		/// </returns>
-		/// <param name='name'>
-		/// Name a GLSL uniform name.
-		/// </param>
+        /// </returns>
+        /// <param name='name'>
+        /// Name a GLSL uniform name.
+        /// </param>
         public Uniform3f getUniform3f(string name)
         {
             return (Uniform3f)getUniform(name);
         }
 
-		/// <summary>
-		/// Returns the uniform3d of this program whose name is given.
-		/// </summary>
-		/// <returns>
-		/// The uniform3d of this program whose name is given,
+        /// <summary>
+        /// Returns the uniform3d of this program whose name is given.
+        /// </summary>
+        /// <returns>
+        /// The uniform3d of this program whose name is given,
         /// or null if there is no such uniform.
-		/// </returns>
-		/// <param name='name'>
-		/// Name a GLSL uniform name.
-		/// </param>
+        /// </returns>
+        /// <param name='name'>
+        /// Name a GLSL uniform name.
+        /// </param>
         public Uniform3d getUniform3d(string name)
         {
             return (Uniform3d)getUniform(name);
         }
 
-		/// <summary>
-		/// Returns the uniform3i of this program whose name is given.
-		/// </summary>
-		/// <returns>
-		/// The uniform3i  of this program whose name is given,
+        /// <summary>
+        /// Returns the uniform3i of this program whose name is given.
+        /// </summary>
+        /// <returns>
+        /// The uniform3i  of this program whose name is given,
         /// or null if there is no such uniform.
-		/// </returns>
-		/// <param name='name'>
-		/// Name a GLSL uniform name.
-		/// </param>
+        /// </returns>
+        /// <param name='name'>
+        /// Name a GLSL uniform name.
+        /// </param>
         public Uniform3i getUniform3i(string name)
         {
             return (Uniform3i)getUniform(name);
         }
 
-        
-		/// <summary>
-		/// Returns the uniform3ui of this program whose name is given.
-		/// </summary>
-		/// <returns>
-		/// The uniform3ui the uniform of this program whose name is given,
+
+        /// <summary>
+        /// Returns the uniform3ui of this program whose name is given.
+        /// </summary>
+        /// <returns>
+        /// The uniform3ui the uniform of this program whose name is given,
         /// or null if there is no such uniform.
-		/// </returns>
-		/// <param name='name'>
-		/// Name a GLSL uniform name.
-		/// </param>
+        /// </returns>
+        /// <param name='name'>
+        /// Name a GLSL uniform name.
+        /// </param>
         public Uniform3ui getUniform3ui(string name)
         {
             return (Uniform3ui)getUniform(name);
         }
 
-		/// <summary>
-		/// Returns the uniform3b of this program whose name is given.
-		/// </summary>
-		/// <returns>
-		/// The uniform3b of this program whose name is given,
+        /// <summary>
+        /// Returns the uniform3b of this program whose name is given.
+        /// </summary>
+        /// <returns>
+        /// The uniform3b of this program whose name is given,
         /// or null if there is no such uniform.
-		/// </returns>
-		/// <param name='name'>
-		/// Name a GLSL uniform name.
-		/// </param>
+        /// </returns>
+        /// <param name='name'>
+        /// Name a GLSL uniform name.
+        /// </param>
         public Uniform3b getUniform3b(string name)
         {
             return (Uniform3b)getUniform(name);
         }
 
-		/// <summary>
-		/// Returns the uniform4f of this program whose name is given.
-		/// </summary>
-		/// <returns>
-		/// The uniform4f of this program whose name is given,
+        /// <summary>
+        /// Returns the uniform4f of this program whose name is given.
+        /// </summary>
+        /// <returns>
+        /// The uniform4f of this program whose name is given,
         /// or null if there is no such uniform.
-		/// </returns>
-		/// <param name='name'>
-		/// Name a GLSL uniform name.
-		/// </param>
+        /// </returns>
+        /// <param name='name'>
+        /// Name a GLSL uniform name.
+        /// </param>
         public Uniform4f getUniform4f(string name)
         {
             return (Uniform4f)getUniform(name);
         }
 
-		/// <summary>
-		/// Returns the uniform4d of this program whose name is given.
-		/// </summary>
-		/// <returns>
-		/// The uniform4d of this program whose name is given,
+        /// <summary>
+        /// Returns the uniform4d of this program whose name is given.
+        /// </summary>
+        /// <returns>
+        /// The uniform4d of this program whose name is given,
         /// or null if there is no such uniform.
-		/// </returns>
-		/// <param name='name'>
-		/// Name a GLSL uniform name.
-		/// </param>
+        /// </returns>
+        /// <param name='name'>
+        /// Name a GLSL uniform name.
+        /// </param>
         public Uniform4d getUniform4d(string name)
         {
             return (Uniform4d)getUniform(name);
         }
 
-        
-		/// <summary>
-		/// Returns the uniform4i of this program whose name is given.
-		/// </summary>
-		/// <returns>
-		/// The uniform4i of this program whose name is given,
+
+        /// <summary>
+        /// Returns the uniform4i of this program whose name is given.
+        /// </summary>
+        /// <returns>
+        /// The uniform4i of this program whose name is given,
         /// or null if there is no such uniform.
-		/// </returns>
-		/// <param name='name'>
-		/// Name a GLSL uniform name.
-		/// </param>
+        /// </returns>
+        /// <param name='name'>
+        /// Name a GLSL uniform name.
+        /// </param>
         public Uniform4i getUniform4i(string name)
         {
             return (Uniform4i)getUniform(name);
         }
 
-     
-		/// <summary>
-		/// Returns the uniform4ui of this program whose name is given.
-		/// </summary>
-		/// <returns>
-		/// The uniform4ui the uniform of this program whose name is given,
+
+        /// <summary>
+        /// Returns the uniform4ui of this program whose name is given.
+        /// </summary>
+        /// <returns>
+        /// The uniform4ui the uniform of this program whose name is given,
         ///  or null if there is no such uniform.
-		/// </returns>
-		/// <param name='name'>
-		/// Name  GLSL uniform name.
-		/// </param>
+        /// </returns>
+        /// <param name='name'>
+        /// Name  GLSL uniform name.
+        /// </param>
         public Uniform4ui getUniform4ui(string name)
         {
             return (Uniform4ui)getUniform(name);
         }
 
-  
-		/// <summary>
-		/// Returns the uniform4b of this program whose name is given.
-		/// </summary>
-		/// <returns>
-		/// The uniform4b the uniform of this program whose name is given,
+
+        /// <summary>
+        /// Returns the uniform4b of this program whose name is given.
+        /// </summary>
+        /// <returns>
+        /// The uniform4b the uniform of this program whose name is given,
         /// or null if there is no such uniform.
-		/// </returns>
-		/// <param name='name'>
-		/// name a GLSL uniform name.
-		/// </param>
+        /// </returns>
+        /// <param name='name'>
+        /// name a GLSL uniform name.
+        /// </param>
         public Uniform4b getUniform4b(string name)
         {
             return (Uniform4b)getUniform(name);
         }
 
-		/// <summary>
-		/// Returns the uniformMatrix2f of this program whose name is given.
-		/// </summary>
-		/// <returns>
-		/// The uniform matrix2f  the uniform of this program whose name is given,
+        /// <summary>
+        /// Returns the uniformMatrix2f of this program whose name is given.
+        /// </summary>
+        /// <returns>
+        /// The uniform matrix2f  the uniform of this program whose name is given,
         ///  or null if there is no such uniform.
-		/// </returns>
-		/// <param name='name'>
-		/// name a GLSL uniform name.
-		/// </param>
+        /// </returns>
+        /// <param name='name'>
+        /// name a GLSL uniform name.
+        /// </param>
         public UniformMatrix2f getUniformMatrix2f(string name)
         {
             return (UniformMatrix2f)getUniform(name);
         }
 
-		/// <summary>
-		/// Returns the uniformMatrix2d of this program whose name is given.
-		/// </summary>
-		/// <returns>
-		/// The uniform matrix2d the uniform of this program whose name is given,
+        /// <summary>
+        /// Returns the uniformMatrix2d of this program whose name is given.
+        /// </summary>
+        /// <returns>
+        /// The uniform matrix2d the uniform of this program whose name is given,
         ///  or null if there is no such uniform.
-		/// </returns>
-		/// <param name='name'>
-		/// name a GLSL uniform name.
-		/// </param>
+        /// </returns>
+        /// <param name='name'>
+        /// name a GLSL uniform name.
+        /// </param>
         public UniformMatrix2d getUniformMatrix2d(string name)
         {
             return (UniformMatrix2d)getUniform(name);
         }
 
-        
-		/// <summary>
-		/// Returns the uniformMatrix3f of this program whose name is given.
-		/// </summary>
-		/// <returns>
-		/// The uniform matrix3f  the uniform of this program whose name is given,
+
+        /// <summary>
+        /// Returns the uniformMatrix3f of this program whose name is given.
+        /// </summary>
+        /// <returns>
+        /// The uniform matrix3f  the uniform of this program whose name is given,
         /// or null if there is no such uniform.
-		/// </returns>
-		/// <param name='name'>
-		/// Name a GLSL uniform name.
-		/// </param>
+        /// </returns>
+        /// <param name='name'>
+        /// Name a GLSL uniform name.
+        /// </param>
         public UniformMatrix3f getUniformMatrix3f(string name)
         {
             return (UniformMatrix3f)getUniform(name);
         }
 
-       
-		/// <summary>
-		/// Returns the uniformMatrix3d of this program whose name is given.
-		/// </summary>
-		/// <returns>
-		/// The uniform matrix3d f this program whose name is given,
+
+        /// <summary>
+        /// Returns the uniformMatrix3d of this program whose name is given.
+        /// </summary>
+        /// <returns>
+        /// The uniform matrix3d f this program whose name is given,
         /// or null if there is no such uniform.
-		/// </returns>
-		/// <param name='name'>
-		/// Name a GLSL uniform name.
-		/// </param>
+        /// </returns>
+        /// <param name='name'>
+        /// Name a GLSL uniform name.
+        /// </param>
         public UniformMatrix3d getUniformMatrix3d(string name)
         {
             return (UniformMatrix3d)getUniform(name);
         }
 
-        
-		/// <summary>
-		///  Returns the uniformMatrix4f of this program whose name is given.
-		/// </summary>
-		/// <returns>
-		/// The uniform matrix4f the uniform of this program whose name is given,
+
+        /// <summary>
+        ///  Returns the uniformMatrix4f of this program whose name is given.
+        /// </summary>
+        /// <returns>
+        /// The uniform matrix4f the uniform of this program whose name is given,
         ///  or null if there is no such uniform.
-		/// </returns>
-		/// <param name='name'>
-		/// Name a GLSL uniform name.
-		/// </param>
+        /// </returns>
+        /// <param name='name'>
+        /// Name a GLSL uniform name.
+        /// </param>
         public UniformMatrix4f getUniformMatrix4f(string name)
         {
             return (UniformMatrix4f)getUniform(name);
         }
 
-      
-		/// <summary>
-		/// Returns the uniformMatrix4d of this program whose name is given.
-		/// </summary>
-		/// <returns>
-		/// The uniform matrix4d  of this program whose name is given,
+
+        /// <summary>
+        /// Returns the uniformMatrix4d of this program whose name is given.
+        /// </summary>
+        /// <returns>
+        /// The uniform matrix4d  of this program whose name is given,
         /// or null if there is no such uniform.
-		/// </returns>
-		/// <param name='name'>
-		/// Name  a GLSL uniform name.
-		/// </param>/
+        /// </returns>
+        /// <param name='name'>
+        /// Name  a GLSL uniform name.
+        /// </param>/
         public UniformMatrix4d getUniformMatrix4d(string name)
         {
             return (UniformMatrix4d)getUniform(name);
         }
 
-		/// <summary>
-		/// Returns the uniformMatrix2x3f of this program whose name is given.
-		/// </summary>
-		/// <returns>
-		/// The uniform matrix2x3f the uniform of this program whose name is given,
+        /// <summary>
+        /// Returns the uniformMatrix2x3f of this program whose name is given.
+        /// </summary>
+        /// <returns>
+        /// The uniform matrix2x3f the uniform of this program whose name is given,
         /// or null if there is no such uniform.
-		/// </returns>
-		/// <param name='name'>
-		/// Name a GLSL uniform name.
-		/// </param>
+        /// </returns>
+        /// <param name='name'>
+        /// Name a GLSL uniform name.
+        /// </param>
         public UniformMatrix2x3f getUniformMatrix2x3f(string name)
         {
             return (UniformMatrix2x3f)getUniform(name);
         }
 
- 
-		/// <summary>
-		///  Returns the uniformMatrix2x3d of this program whose name is given.
-		/// </summary>
-		/// <returns>
-		/// The uniform matrix2x3d of this program whose name is given,
+
+        /// <summary>
+        ///  Returns the uniformMatrix2x3d of this program whose name is given.
+        /// </summary>
+        /// <returns>
+        /// The uniform matrix2x3d of this program whose name is given,
         ///  or null if there is no such uniform.
-		/// </returns>
-		/// <param name='name'>
-		/// Name a GLSL uniform name.
-		/// </param>
+        /// </returns>
+        /// <param name='name'>
+        /// Name a GLSL uniform name.
+        /// </param>
         public UniformMatrix2x3d getUniformMatrix2x3d(string name)
         {
             return (UniformMatrix2x3d)getUniform(name);
         }
 
-        
-		/// <summary>
-		/// Gets the uniform matrix2x4f of this program whose name is given.
-		/// </summary>
-		/// <returns>
-		/// The uniform matrix2x4f of this program whose name is given,
+
+        /// <summary>
+        /// Gets the uniform matrix2x4f of this program whose name is given.
+        /// </summary>
+        /// <returns>
+        /// The uniform matrix2x4f of this program whose name is given,
         /// or null if there is no such uniform.
-		/// </returns>
-		/// <param name='name'>
-		/// Name GLSL uniform name.
-		/// </param>
+        /// </returns>
+        /// <param name='name'>
+        /// Name GLSL uniform name.
+        /// </param>
         public UniformMatrix2x4f getUniformMatrix2x4f(string name)
         {
             return (UniformMatrix2x4f)getUniform(name);
         }
 
- 
-		/// <summary>
-		/// Returns the uniformMatrix2x4d of this program whose name is given.
-		/// </summary>
-		/// <returns>
-		/// The uniform matrix2x4d of this program whose name is given,
+
+        /// <summary>
+        /// Returns the uniformMatrix2x4d of this program whose name is given.
+        /// </summary>
+        /// <returns>
+        /// The uniform matrix2x4d of this program whose name is given,
         ///  or null if there is no such uniform.
-		/// </returns>
-		/// <param name='name'>
-		/// Name a GLSL uniform name.
-		/// </param>
+        /// </returns>
+        /// <param name='name'>
+        /// Name a GLSL uniform name.
+        /// </param>
         public UniformMatrix2x4d getUniformMatrix2x4d(string name)
         {
             return (UniformMatrix2x4d)getUniform(name);
         }
 
 
-		/// <summary>
-		/// Returns the uniformMatrix3x2f of this program whose name is given.
-		/// </summary>
-		/// <returns>
-		/// The uniform matrix3x2f of this program whose name is given,
+        /// <summary>
+        /// Returns the uniformMatrix3x2f of this program whose name is given.
+        /// </summary>
+        /// <returns>
+        /// The uniform matrix3x2f of this program whose name is given,
         /// or null if there is no such uniform.
-		/// </returns>
-		/// <param name='name'>
-		/// Name a GLSL uniform name.
-		/// </param>
+        /// </returns>
+        /// <param name='name'>
+        /// Name a GLSL uniform name.
+        /// </param>
         public UniformMatrix3x2f getUniformMatrix3x2f(string name)
         {
             return (UniformMatrix3x2f)getUniform(name);
         }
 
 
-		/// <summary>
-		/// Returns the uniformMatrix3x2d of this program whose name is given.
-		/// </summary>
-		/// <returns>
-		/// The uniform matrix3x2d f this program whose name is given,
+        /// <summary>
+        /// Returns the uniformMatrix3x2d of this program whose name is given.
+        /// </summary>
+        /// <returns>
+        /// The uniform matrix3x2d f this program whose name is given,
         /// or null if there is no such uniform.
-		/// </returns>
-		/// <param name='name'>
-		/// Name a GLSL uniform name.
-		/// </param>
+        /// </returns>
+        /// <param name='name'>
+        /// Name a GLSL uniform name.
+        /// </param>
         public UniformMatrix3x2d getUniformMatrix3x2d(string name)
         {
             return (UniformMatrix3x2d)getUniform(name);
         }
 
 
-		/// <summary>
-		/// Returns the uniformMatrix3x4f of this program whose name is given.
-		/// </summary>
-		/// <returns>
-		/// The uniform matrix3x4f of this program whose name is given,
+        /// <summary>
+        /// Returns the uniformMatrix3x4f of this program whose name is given.
+        /// </summary>
+        /// <returns>
+        /// The uniform matrix3x4f of this program whose name is given,
         /// or null if there is no such uniform.
-		/// </returns>
-		/// <param name='name'>
-		/// Name a GLSL uniform name.
-		/// </param>
+        /// </returns>
+        /// <param name='name'>
+        /// Name a GLSL uniform name.
+        /// </param>
         public UniformMatrix3x4f getUniformMatrix3x4f(string name)
         {
             return (UniformMatrix3x4f)getUniform(name);
         }
 
-  
-		/// <summary>
-		/// Returns the uniformMatrix3x4d of this program whose name is given.
-		/// </summary>
-		/// <returns>
-		/// The uniform matrix3x4d the uniform of this program whose name is given,
+
+        /// <summary>
+        /// Returns the uniformMatrix3x4d of this program whose name is given.
+        /// </summary>
+        /// <returns>
+        /// The uniform matrix3x4d the uniform of this program whose name is given,
         /// or null if there is no such uniform.
-		/// </returns>
-		/// <param name='name'>
-		/// Name a GLSL uniform name.
-		/// </param>
+        /// </returns>
+        /// <param name='name'>
+        /// Name a GLSL uniform name.
+        /// </param>
         public UniformMatrix3x4d getUniformMatrix3x4d(string name)
         {
             return (UniformMatrix3x4d)getUniform(name);
         }
 
-        
-		/// <summary>
-		/// Returns the uniformMatrix4x2f of this program whose name is given.
-		/// </summary>
-		/// <returns>
-		/// The uniform matrix4x2f  the uniform of this program whose name is given,
+
+        /// <summary>
+        /// Returns the uniformMatrix4x2f of this program whose name is given.
+        /// </summary>
+        /// <returns>
+        /// The uniform matrix4x2f  the uniform of this program whose name is given,
         /// or null if there is no such uniform.
-		/// </returns>
-		/// <param name='name'>
-		/// Name a GLSL uniform name.
-		/// </param>
+        /// </returns>
+        /// <param name='name'>
+        /// Name a GLSL uniform name.
+        /// </param>
         public UniformMatrix4x2f getUniformMatrix4x2f(string name)
         {
             return (UniformMatrix4x2f)getUniform(name);
         }
 
-  
-		/// <summary>
-		/// Returns the uniformMatrix4x2d of this program whose name is given.
-		/// </summary>
-		/// <returns>
-		/// The uniform matrix4x2d  of this program whose name is given,
+
+        /// <summary>
+        /// Returns the uniformMatrix4x2d of this program whose name is given.
+        /// </summary>
+        /// <returns>
+        /// The uniform matrix4x2d  of this program whose name is given,
         /// or null if there is no such uniform.
-		/// </returns>
-		/// <param name='name'>
-		/// Name a GLSL uniform name.
-		/// </param>
+        /// </returns>
+        /// <param name='name'>
+        /// Name a GLSL uniform name.
+        /// </param>
         public UniformMatrix4x2d getUniformMatrix4x2d(string name)
         {
             return (UniformMatrix4x2d)getUniform(name);
         }
 
-      
-		/// <summary>
-		/// Returns the uniformMatrix4x3f of this program whose name is given.
-		/// </summary>
-		/// <returns>
-		/// The uniform matrix4x3f  of this program whose name is given,
+
+        /// <summary>
+        /// Returns the uniformMatrix4x3f of this program whose name is given.
+        /// </summary>
+        /// <returns>
+        /// The uniform matrix4x3f  of this program whose name is given,
         /// or null if there is no such uniform.
-		/// </returns>
-		/// <param name='name'>
-		/// Name a GLSL uniform name.
-		/// </param>
+        /// </returns>
+        /// <param name='name'>
+        /// Name a GLSL uniform name.
+        /// </param>
         public UniformMatrix4x3f getUniformMatrix4x3f(string name)
         {
             return (UniformMatrix4x3f)getUniform(name);
         }
 
-   
-		/// <summary>
-		/// Returns the uniformMatrix4x2d of this program whose name is given.
-		/// </summary>
-		/// <returns>
-		/// The uniform matrix4x3d of this program whose name is given,
+
+        /// <summary>
+        /// Returns the uniformMatrix4x2d of this program whose name is given.
+        /// </summary>
+        /// <returns>
+        /// The uniform matrix4x3d of this program whose name is given,
         /// or null if there is no such uniform.
-		/// </returns>
-		/// <param name='name'>
-		/// Name a GLSL uniform name.
-		/// </param>
+        /// </returns>
+        /// <param name='name'>
+        /// Name a GLSL uniform name.
+        /// </param>
         public UniformMatrix4x3d getUniformMatrix4x3d(string name)
         {
             return (UniformMatrix4x3d)getUniform(name);
         }
 
-  
-		/// <summary>
-		/// Returns the uniform sampler of this program whose name is given.
-		/// </summary>
-		/// <returns>
-		/// The uniform sampler of this program whose name is given,
+
+        /// <summary>
+        /// Returns the uniform sampler of this program whose name is given.
+        /// </summary>
+        /// <returns>
+        /// The uniform sampler of this program whose name is given,
         /// or null if there is no such uniform.
-		/// </returns>
-		/// <param name='name'>
-		/// Name a GLSL uniform name.
-		/// </param>
+        /// </returns>
+        /// <param name='name'>
+        /// Name a GLSL uniform name.
+        /// </param>
         public UniformSampler getUniformSampler(string name)
         {
             return (UniformSampler)getUniform(name);
         }
 
-    
-		/// <summary>
-		/// Returns the uniform block of this program whose name is given.
-		/// </summary>
-		/// <returns>
-		/// The uniform block of this program whose name is given,
+
+        /// <summary>
+        /// Returns the uniform block of this program whose name is given.
+        /// </summary>
+        /// <returns>
+        /// The uniform block of this program whose name is given,
         /// or null if there is no such uniform.
-		/// </returns>
-		/// <param name='name'>
-		/// Name a GLSL uniform block name.
-		/// </param>
+        /// </returns>
+        /// <param name='name'>
+        /// Name a GLSL uniform block name.
+        /// </param>
         public UniformBlock getUniformBlock(string name)
         {
             UniformBlock rst;
@@ -749,25 +749,25 @@ namespace Sxta.Render
         }
 
 
-    
-		/// <summary>
-		/// The modules of this program.
-		/// </summary>
+
+        /// <summary>
+        /// The modules of this program.
+        /// </summary>
         protected List<Module> modules;
 
-		/// <summary>
-		/// Creates an unitialized program.
-		/// Initializes a new instance of the <see cref="Sxta.Render.Program"/> class.
-		/// </summary>
+        /// <summary>
+        /// Creates an unitialized program.
+        /// Initializes a new instance of the <see cref="Sxta.Render.Program"/> class.
+        /// </summary>
         public Program() { }
 
-  
-		/// <summary>
-		/// Initializes this program.
-		/// </summary>
-		/// <param name='modules'>
-		/// Modules the modules that will compose this program.
-		/// </param>
+
+        /// <summary>
+        /// Initializes this program.
+        /// </summary>
+        /// <param name='modules'>
+        /// Modules the modules that will compose this program.
+        /// </param>
         public void init(List<Module> modules)
         {
             this.modules = modules;
@@ -1335,13 +1335,13 @@ namespace Sxta.Render
             }
         }
 
-   
-		/// <summary>
-		/// Swaps this program with the given one.
-		/// </summary>
-		/// <param name='p'>
-		/// P.
-		/// </param>
+
+        /// <summary>
+        /// Swaps this program with the given one.
+        /// </summary>
+        /// <param name='p'>
+        /// P.
+        /// </param>
         public virtual void swap(Program p)
         {
 
@@ -1352,9 +1352,9 @@ namespace Sxta.Render
             p.updateUniformBlocks(false);
 
             Std.Swap(ref modules, ref p.modules);
-            Std.Swap(ref programId, ref  p.programId);
+            Std.Swap(ref programId, ref p.programId);
             Std.Swap(ref uniforms, ref p.uniforms);
-            Std.Swap(ref uniformBlocks, ref  p.uniformBlocks);
+            Std.Swap(ref uniformBlocks, ref p.uniformBlocks);
 #if TODO
             map<string, Uniform>.iterator i = p.uniforms.begin();
             while (i != p.uniforms.end())
@@ -1444,51 +1444,51 @@ namespace Sxta.Render
             throw new NotImplementedException();
         }
 
-    
-		/// <summary>
-		/// The id of this program.
-		/// </summary>
+
+        /// <summary>
+        /// The id of this program.
+        /// </summary>
         private int programId;
 
-        
-		/// <summary>
-		/// The uniforms of this program. This includes all uniforms,
+
+        /// <summary>
+        /// The uniforms of this program. This includes all uniforms,
         /// whether outside or inside a uniform block, including uniform samplers.
-		/// </summary>
+        /// </summary>
         private IDictionary<string, Uniform> uniforms = new Dictionary<string, Uniform>();
 
-        
-		/// <summary>
-		/// The uniforms of this program that were present in old versions,
+
+        /// <summary>
+        /// The uniforms of this program that were present in old versions,
         /// but are no longer present in the current one.
-		/// </summary>
+        /// </summary>
         private IDictionary<string, Uniform> oldUniforms = new Dictionary<string, Uniform>();
 
-    
-		/// <summary>
-		/// The uniform samplers of this program.
-		/// </summary>
+
+        /// <summary>
+        /// The uniform samplers of this program.
+        /// </summary>
         private List<UniformSampler> uniformSamplers = new List<UniformSampler>();
 
-      
-		/// <summary>
-		/// The uniform blocks of this program.
-		/// </summary>
+
+        /// <summary>
+        /// The uniform blocks of this program.
+        /// </summary>
         private IDictionary<string, UniformBlock> uniformBlocks = new Dictionary<string, UniformBlock>();
 
-       
-		/// <summary>
-		/// The program currently in use.
-		/// </summary>
+
+        /// <summary>
+        /// The program currently in use.
+        /// </summary>
         internal static Program CURRENT;
 
-  
-		/// <summary>
-		/// Checks that each active program sampler is bound to a texture.
-		/// </summary>
-		/// <returns>
-		/// true if all samplers are bound.
-		/// </returns>
+
+        /// <summary>
+        /// Checks that each active program sampler is bound to a texture.
+        /// </summary>
+        /// <returns>
+        /// true if all samplers are bound.
+        /// </returns>
         internal bool checkSamplers()
         {
             for (int i = 0; i < uniformSamplers.Count; ++i)
@@ -1503,10 +1503,10 @@ namespace Sxta.Render
             return true;
         }
 
-     
-		/// <summary>
-		/// Sets this program as the current program.
-		/// </summary>
+
+        /// <summary>
+        /// Sets this program as the current program.
+        /// </summary>
         public void set()
         {
             Debug.Assert(FrameBuffer.getError() == ErrorCode.NoError);
@@ -1579,16 +1579,16 @@ namespace Sxta.Render
 #endif
         }
 
-		/// <summary>
-		/// Adds or removes this program as a user of the textures bound to
+        /// <summary>
+        /// Adds or removes this program as a user of the textures bound to
         /// the uniform samplers of this program.
-		/// </summary>
-		/// <returns>
-		/// The texture users.
-		/// </returns>
-		/// <param name='add'>
-		/// Add.
-		/// </param>
+        /// </summary>
+        /// <returns>
+        /// The texture users.
+        /// </returns>
+        /// <param name='add'>
+        /// Add.
+        /// </param>
         private void updateTextureUsers(bool add)
         {
             for (int i = 0; i < uniformSamplers.Count; ++i)
@@ -1610,17 +1610,17 @@ namespace Sxta.Render
             }
         }
 
-       
-		/// <summary>
-		/// Adds to or removes from #uniforms the uniforms that are inside
+
+        /// <summary>
+        /// Adds to or removes from #uniforms the uniforms that are inside
         /// unifom blocks.
-		/// </summary>
-		/// <returns>
-		/// The uniform blocks.
-		/// </returns>
-		/// <param name='add'>
-		/// Add.
-		/// </param>
+        /// </summary>
+        /// <returns>
+        /// The uniform blocks.
+        /// </returns>
+        /// <param name='add'>
+        /// Add.
+        /// </param>
         private void updateUniformBlocks(bool add)
         {
 #if TODO
@@ -1660,18 +1660,18 @@ namespace Sxta.Render
             throw new NotImplementedException();
         }
 
-        
-		/// <summary>
-		/// Sets the owner program of the uniforms and uniform blocks of this
-         /// program to the given valueC.
-		/// Updates the uniforms.
-		/// </summary>
-		/// <returns>
-		/// The uniforms.
-		/// </returns>
-		/// <param name='owner'>
-		/// Owner the new owner for the uniforms of this program.
-		/// </param>/
+
+        /// <summary>
+        /// Sets the owner program of the uniforms and uniform blocks of this
+        /// program to the given valueC.
+        /// Updates the uniforms.
+        /// </summary>
+        /// <returns>
+        /// The uniforms.
+        /// </returns>
+        /// <param name='owner'>
+        /// Owner the new owner for the uniforms of this program.
+        /// </param>/
         private void updateUniforms(Program owner)
         {
             uniformSamplers.Clear();
@@ -1707,7 +1707,7 @@ namespace Sxta.Render
             }
         }
 
-#region Dispose
+        #region Dispose
 
         // Track whether Dispose has been called. 
         private bool disposed = false;
@@ -1778,10 +1778,10 @@ namespace Sxta.Render
 
             }
         }
-#endregion
+        #endregion
 
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
     }
 
-    
+
 }

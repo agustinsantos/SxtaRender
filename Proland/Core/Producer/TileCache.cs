@@ -37,7 +37,7 @@
  */
 /*
  * Main authors: Eric Bruneton, Antoine Begault, Guillaume Piolat.
-* Modified and ported to C# and Sxta Engine by Agustin Santos and Daniel Olmedo 2015-2016
+ * Modified and ported to C# and Sxta Engine by Agustin Santos and Daniel Olmedo 2015-2016
 */
 
 using log4net;
@@ -48,8 +48,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using System.Threading;
-//using Cache = System.Collections.Generic.Dictionary<proland.TileCache.Tile.TId, System.Collections.Generic.List<proland.TileCache.Tile>>;
 
 namespace proland
 {
@@ -841,8 +839,3 @@ namespace proland
         }
     }
 }
-#if TODO
-extern const string tileCache = "tileCache";
-
-static ResourceFactory.Type<tileCache, TileCacheResource> TileCacheType;
-#endif

@@ -37,7 +37,7 @@
  */
 /*
  * Main authors: Eric Bruneton, Antoine Begault, Guillaume Piolat.
-* Modified and ported to C# and Sxta Engine by Agustin Santos and Daniel Olmedo 2015-2016
+ * Modified and ported to C# and Sxta Engine by Agustin Santos and Daniel Olmedo 2015-2016
 */
 
 using log4net;
@@ -250,9 +250,10 @@ namespace Sxta.Proland.Terrain
         /// <param name="flipDiagonals">true if the grid used to render each tile will use diagonal
         /// flipping to reduce geometric aliasing.</param>
         public ElevationProducer(TileCache cache, TileProducer residualTiles,
-        Texture2D demTexture, Texture2D layerTexture, Texture2D residualTexture,
-        Program upsample, Program blend, int gridMeshSize,
-        List<float> noiseAmp, bool flipDiagonals = false) : base("ElevationProducer", "CreateElevationTile")
+                                Texture2D demTexture, Texture2D layerTexture, Texture2D residualTexture,
+                                Program upsample, Program blend, int gridMeshSize,
+                                List<float> noiseAmp, bool flipDiagonals = false) :
+            base("ElevationProducer", "CreateElevationTile")
         {
             init(cache, residualTiles, demTexture, layerTexture, residualTexture, upsample, blend, gridMeshSize, noiseAmp, flipDiagonals);
         }
@@ -265,7 +266,7 @@ namespace Sxta.Proland.Terrain
 
         }
 
-       // ~ElevationProducer() { Debugger.Break(); }
+        //~ElevationProducer() { Debugger.Break(); }
 
         public override void getReferencedProducers(List<TileProducer> producers)
         {
@@ -342,9 +343,9 @@ namespace Sxta.Proland.Terrain
         /// </summary>
 
         internal void init(TileCache cache, TileProducer residualTiles,
-            Texture2D demTexture, Texture2D layerTexture, Texture2D residualTexture,
-            Program upsample, Program blend, int gridMeshSize,
-            List<float> noiseAmp, bool flipDiagonals = false)
+                            Texture2D demTexture, Texture2D layerTexture, Texture2D residualTexture,
+                            Program upsample, Program blend, int gridMeshSize,
+                            List<float> noiseAmp, bool flipDiagonals = false)
         {
             int tileWidth = cache.getStorage().getTileSize();
             base.init(cache, true);
@@ -397,7 +398,6 @@ namespace Sxta.Proland.Terrain
 
         internal void init(ResourceManager manager, Resource r, string name, ResourceDescriptor desc, XmlElement e = null)
         {
-            TileCache cache;
             TileProducer residuals = null;
             Program upsampleProg;
             Program blendProg = null;
@@ -407,7 +407,7 @@ namespace Sxta.Proland.Terrain
             int gridSize = 24;
             List<float> noiseAmp = new List<float>();
             bool flip = false;
-            cache = manager.loadResource(Resource.getParameter(desc, e, "cache")).get() as TileCache;
+            TileCache cache = manager.loadResource(Resource.getParameter(desc, e, "cache")).get() as TileCache;
             if (!string.IsNullOrWhiteSpace(e.GetAttribute("residuals")))
             {
                 residuals = (TileProducer)(manager.loadResource(Resource.getParameter(desc, e, "residuals")).get());

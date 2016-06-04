@@ -88,7 +88,7 @@ const mat4 curvatureMatrix[4] = mat4[4]  (
          0.0, -0.25, -0.25, 0.0)
 );
 
-mat4 upsampleMatrix[4] = mat4[4]  (
+const mat4 upsampleMatrix[4] = mat4[4]  (
     mat4(0.0, 0.0, 0.0, 0.0,
          0.0, 1.0, 0.0, 0.0,
          0.0, 0.0, 0.0, 0.0,
@@ -154,8 +154,9 @@ void main() {
 
     float zc = zf;
     if (coarseLevelOSL.x != -1.0) {
+	//* TODO. UNCOMMENT THIS LINE TO CRASH OUR PROGRAM
         zf = zf + mdot(cz, upsampleMatrix[i]);
-
+	//*/
         vec2 ij = floor(st - vec2(BORDER));
         vec4 uvc = vec4(BORDER + 0.5) + tileWSDF.z * floor((ij / (2.0 * tileWSDF.z)).xyxy + vec4(0.5, 0.0, 0.0, 0.5));
         float zc1 = textureLod(coarseLevelSampler, vec3(uvc.xy * coarseLevelOSL.z, 0.0) + coarseLevelOSL.xyw, 0.0).z;

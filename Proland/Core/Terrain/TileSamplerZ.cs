@@ -37,7 +37,7 @@
  */
 /*
  * Main authors: Eric Bruneton, Antoine Begault, Guillaume Piolat.
-* Modified and ported to C# and Sxta Engine by Agustin Santos and Daniel Olmedo 2015-2016
+ * Modified and ported to C# and Sxta Engine by Agustin Santos and Daniel Olmedo 2015-2016
 */
 
 using Sxta.Core;
@@ -159,7 +159,7 @@ void main() {
         {
 
         }
-       // ~TileSamplerZ() { Debugger.Break(); }
+        // ~TileSamplerZ() { Debugger.Break(); }
 
         public override Sxta.Render.Scenegraph.Task update(SceneManager scene, TerrainQuad root)
         {
@@ -298,7 +298,7 @@ void main() {
         /// proland.GPUTileStorage.</param>
         internal override void init(string name, TileProducer producer = null)
         {
-            init(name, producer);
+            base.init(name, producer);
             factory = stateFactory;
             state = factory.Get((GPUTileStorage)get().getCache().getStorage());
             cameraQuad = null;
@@ -477,12 +477,11 @@ void main() {
         }
 
         /// <summary>
-        ///A state object to share the readback managers between all
-        ///TileSamplerZ instances with the same tile storage.
+        /// A state object to share the readback managers between all
+        /// TileSamplerZ instances with the same tile storage.
         /// </summary>
-        public class State //TODO Object
+        public class State
         {
-
             /// <summary>
             ///The tile storage for which this State is built.
             /// </summary>
@@ -585,10 +584,10 @@ void main() {
 
         /// <summary>
         ///Creates a new State for elevation tiles of the given size.
-        ///
-        ///@param tileSize an elevation tile size.
         /// </summary>
-        static State newState(GPUTileStorage storage)
+        /// <param name="storage">an elevation tile size.</param>
+        /// <returns></returns>
+        private static State newState(GPUTileStorage storage)
         {
             return new State(storage);
         }
@@ -597,7 +596,7 @@ void main() {
         ///The ork.Factory to create shared State objects for a given
         ///elevation tile size.
         /// </summary>
-        static Factory<GPUTileStorage, State> stateFactory;
+        private static Factory<GPUTileStorage, State> stateFactory = new Factory<GPUTileStorage, TileSamplerZ.State>(TileSamplerZ.newState);
     }
 }
 

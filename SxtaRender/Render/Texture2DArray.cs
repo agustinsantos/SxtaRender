@@ -56,7 +56,7 @@ namespace Sxta.Render
         /*
          * Destroys this 2D texture.
          */
-        // ~Texture2DArray();
+        //~Texture2DArray() { Debugger.Break(); }
 
         /// <summary>
         /// Returns the width of this texture.
@@ -326,7 +326,7 @@ namespace Sxta.Render
 
             if (FrameBuffer.getError() != ErrorCode.NoError)
             {
-                throw new Exception();
+                throw new Exception("Texture2DArray.init");
             }  
         }
 

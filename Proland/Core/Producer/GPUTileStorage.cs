@@ -218,7 +218,7 @@ vec4 uv = vec4(xy + vec2(0.25), xy + vec2(0.75)) / float(bufferLayerLevelWidth.w
             init(tileSize, nTiles, internalf, f, t, _params, useTileMap);
         }
 
-        // ~GPUTileStorage() { Debugger.Break(); }
+        //~GPUTileStorage() { Debugger.Break(); }
 
         /// <summary>
         /// Returns the texture storage whose index is given.
@@ -299,12 +299,11 @@ vec4 uv = vec4(xy + vec2(0.25), xy + vec2(0.75)) / float(bufferLayerLevelWidth.w
 
         internal void init(int tileSize, int nTiles, TextureInternalFormat internalf, TextureFormat f, PixelType t, Texture.Parameters _params, bool useTileMap)
         {
-            init(tileSize, nTiles);
+            base.init(tileSize, nTiles);
 
             int maxLayers = Texture2DArray.getMaxLayers();
             int nTextures = nTiles / maxLayers + (nTiles % maxLayers == 0 ? 0 : 1);
             needMipmaps = false;
-
             for (int i = 0; i < nTextures; i++)
             {
                 int nLayers = i == nTextures - 1 && nTiles % maxLayers != 0 ? nTiles % maxLayers : maxLayers;
