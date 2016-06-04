@@ -1,7 +1,6 @@
 ﻿// This code is in the Public Domain. It is provided "as is"
 // without express or implied warranty of any kind.
 
-using Microsoft.CSharp;
 using OpenTK;
 using OpenTK.Input;
 using proland;
@@ -11,16 +10,6 @@ using Sxta.Render.Resources;
 using Sxta.Render.Scenegraph;
 using Sxta.Render.Scenegraph.Controller;
 using System;
-using System.CodeDom.Compiler;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
-using MathHelper = Sxta.Math.MathHelper;
-using Matrix4d = Sxta.Math.Matrix4d;
-using Vector3d = Sxta.Math.Vector3d;
 
 namespace Examples.Tutorials
 {

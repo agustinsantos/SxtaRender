@@ -13,32 +13,32 @@ namespace Sxta.Render
     /// </summary>
     public class Texture1D : Texture
     {
-       
-		/// <summary>
-		/// Creates a new 1D texture.
-		/// Initializes a new instance of the <see cref="Sxta.Render.Texture1D"/> class.
-		/// </summary>
-		/// <param name='w'>
-		/// W. the width of this texture in pixels.
-		/// </param>
-		/// <param name='tf'>
-		/// Tf.  texture data format on GPU.
-		/// </param>
-		/// <param name='f'>
-		/// F.  the texture components in 'pixels'.
-		/// </param>
-		/// <param name='t'>
-		/// T. the type of each component in 'pixels'.
-		/// </param>
-		/// <param name='params'>
-		/// Parameters. optional additional texture parameters.
-		/// </param>
-		/// <param name='s'>
-		/// S. optional pixel storage parameters for 'pixels'.
-		/// </param>
-		/// <param name='pixels'>
-		/// Pixels. the pixels to be written into this texture.
-		/// </param>
+
+        /// <summary>
+        /// Creates a new 1D texture.
+        /// Initializes a new instance of the <see cref="Sxta.Render.Texture1D"/> class.
+        /// </summary>
+        /// <param name='w'>
+        /// W. the width of this texture in pixels.
+        /// </param>
+        /// <param name='tf'>
+        /// Tf.  texture data format on GPU.
+        /// </param>
+        /// <param name='f'>
+        /// F.  the texture components in 'pixels'.
+        /// </param>
+        /// <param name='t'>
+        /// T. the type of each component in 'pixels'.
+        /// </param>
+        /// <param name='params'>
+        /// Parameters. optional additional texture parameters.
+        /// </param>
+        /// <param name='s'>
+        /// S. optional pixel storage parameters for 'pixels'.
+        /// </param>
+        /// <param name='pixels'>
+        /// Pixels. the pixels to be written into this texture.
+        /// </param>
         public Texture1D(int w, TextureInternalFormat tf, TextureFormat f, PixelType t,
                          Parameters @params, Buffer.Parameters s, Buffer pixels)
             : this()
@@ -51,46 +51,46 @@ namespace Sxta.Render
          */
         //~Texture1D();
 
-        
-		/// <summary>
-		/// Returns the width of this texture.
-		/// </summary>
-		/// <returns>
-		/// The width.
-		/// </returns>
+
+        /// <summary>
+        /// Returns the width of this texture.
+        /// </summary>
+        /// <returns>
+        /// The width.
+        /// </returns>
         public int getWidth()
         {
             return w;
         }
 
 
-		/// <summary>
-		/// Replaces a part of the content of this texture.
-		/// </summary>
-		/// <returns>
-		/// The sub image.
-		/// </returns>
-		/// <param name='level'>
-		/// Level. the LOD level to be changed.
-		/// </param>
-		/// <param name='x'>
-		/// X. left border of the part to be replaced, in pixels.
-		/// </param>
-		/// <param name='w'>
-		/// W. size of the part to be replaced, in pixels.
-		/// </param>
-		/// <param name='f'>
-		/// F. texture components in 'pixels'.
-		/// </param>
-		/// <param name='t'>
-		/// T. type of each component in 'pixels'.
-		/// </param>
-		/// <param name='s'>
-		/// S.  optional pixel storage parameters for 'pixels'.
-		/// </param>
-		/// <param name='pixels'>
-		/// Pixels. the pixels to be written into this texture LOD level.
-		/// </param>/
+        /// <summary>
+        /// Replaces a part of the content of this texture.
+        /// </summary>
+        /// <returns>
+        /// The sub image.
+        /// </returns>
+        /// <param name='level'>
+        /// Level. the LOD level to be changed.
+        /// </param>
+        /// <param name='x'>
+        /// X. left border of the part to be replaced, in pixels.
+        /// </param>
+        /// <param name='w'>
+        /// W. size of the part to be replaced, in pixels.
+        /// </param>
+        /// <param name='f'>
+        /// F. texture components in 'pixels'.
+        /// </param>
+        /// <param name='t'>
+        /// T. type of each component in 'pixels'.
+        /// </param>
+        /// <param name='s'>
+        /// S.  optional pixel storage parameters for 'pixels'.
+        /// </param>
+        /// <param name='pixels'>
+        /// Pixels. the pixels to be written into this texture LOD level.
+        /// </param>/
         public void setSubImage(int level, int x, int w, TextureFormat f, PixelType t, Buffer.Parameters s, Buffer pixels)
         {
 #if TODO
@@ -109,29 +109,29 @@ namespace Sxta.Render
             throw new NotImplementedException();
         }
 
-      
-		/// <summary>
-		/// Replaces a part of the content of this texture.
-		/// Sets the compressed sub image.
-		/// </summary>
-		/// <returns>
-		/// The compressed sub image.
-		/// </returns>
-		/// <param name='level'>
-		/// Level. the LOD level to be changed.
-		/// </param>
-		/// <param name='x'>
-		/// X. the left border of the part to be replaced, in pixels.
-		/// </param>
-		/// <param name='w'>
-		/// W. the size of the part to be replaced, in pixels.
-		/// </param>
-		/// <param name='s'>
-		/// S. the size of 'pixels' in bytes.
-		/// </param>
-		/// <param name='pixels'>
-		/// Pixels.  the pixels to be written into this texture LOD level.
-		/// </param>
+
+        /// <summary>
+        /// Replaces a part of the content of this texture.
+        /// Sets the compressed sub image.
+        /// </summary>
+        /// <returns>
+        /// The compressed sub image.
+        /// </returns>
+        /// <param name='level'>
+        /// Level. the LOD level to be changed.
+        /// </param>
+        /// <param name='x'>
+        /// X. the left border of the part to be replaced, in pixels.
+        /// </param>
+        /// <param name='w'>
+        /// W. the size of the part to be replaced, in pixels.
+        /// </param>
+        /// <param name='s'>
+        /// S. the size of 'pixels' in bytes.
+        /// </param>
+        /// <param name='pixels'>
+        /// Pixels.  the pixels to be written into this texture LOD level.
+        /// </param>
         public void setCompressedSubImage(int level, int x, int w, int s, Buffer pixels)
         {
 #if TODO
@@ -149,10 +149,10 @@ namespace Sxta.Render
         }
 
 
-       
-		/// <summary>
-		/// The width of this texture.
-		/// </summary>
+
+        /// <summary>
+        /// The width of this texture.
+        /// </summary>
         protected int w;
 
         public override int Width
@@ -180,39 +180,38 @@ namespace Sxta.Render
             : base("Texture1D", TextureTarget.Texture1D)
         { }
 
-   
-		/// <summary>
-		/// Initializes this texture.
-		/// Init the specified w, tf, f, t, params, s and pixels.
-		/// </summary>
-		/// <param name='w'>
-		/// W. the width of this texture in pixels.
-		/// </param>
-		/// <param name='tf'>
-		/// Tf. texture data format on GPU.
-		/// </param>
-		/// <param name='f'>
-		/// F. the texture components in 'pixels'.
-		/// </param>
-		/// <param name='t'>
-		/// T. the type of each component in 'pixels'.
-		/// </param>
-		/// <param name='params'>
-		/// Parameters. optional additional texture parameters.
-		/// </param>
-		/// <param name='s'>
-		/// S. optional pixel storage parameters for 'pixels'.
-		/// </param>
-		/// <param name='pixels'>
-		/// Pixels. the pixels to be written into this texture.
-		/// </param>
+
+        /// <summary>
+        /// Initializes this texture.
+        /// Init the specified w, tf, f, t, params, s and pixels.
+        /// </summary>
+        /// <param name='w'>
+        /// W. the width of this texture in pixels.
+        /// </param>
+        /// <param name='tf'>
+        /// Tf. texture data format on GPU.
+        /// </param>
+        /// <param name='f'>
+        /// F. the texture components in 'pixels'.
+        /// </param>
+        /// <param name='t'>
+        /// T. the type of each component in 'pixels'.
+        /// </param>
+        /// <param name='params'>
+        /// Parameters. optional additional texture parameters.
+        /// </param>
+        /// <param name='s'>
+        /// S. optional pixel storage parameters for 'pixels'.
+        /// </param>
+        /// <param name='pixels'>
+        /// Pixels. the pixels to be written into this texture.
+        /// </param>
         public void init(int w, TextureInternalFormat tf, TextureFormat f, PixelType t,
             Parameters @params, Buffer.Parameters s, Buffer pixels)
         {
             base.init(tf, @params);
             this.w = w;
 
-#if TODO
             pixels.bind(BufferTarget.PixelUnpackBuffer);
             if (isCompressed() && s.compressedSize() > 0)
             {
@@ -240,9 +239,6 @@ namespace Sxta.Render
             {
                 throw new Exception();
             }
- 
-#endif
-            throw new NotImplementedException();
         }
 
         public override void swap(Texture t)

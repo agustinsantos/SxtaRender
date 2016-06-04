@@ -1,3 +1,4 @@
+<?xml version="1.0" ?>
 <!--
  * Proland: a procedural landscape rendering library.
  * Copyright (c) 2008-2011 INRIA
@@ -22,9 +23,8 @@
 <!--
  * Authors: Eric Bruneton, Antoine Begault, Guillaume Piolat.
 -->
-<?xml version="1.0" ?>
 <archive>
-    <multithreadScheduler name="defaultScheduler" nthreads="3" fps="0"/>
+    <multithreadScheduler name="defaultScheduler" nthreads="0" fps="0"/>
 
     <sequence name="cameraMethod">
         <setTransforms module="globalsShader" worldPos="worldCameraPos"/>
@@ -37,9 +37,9 @@
         <foreach var="o" flag="object" culling="true">
             <callMethod name="$o.draw"/>
         </foreach>
-        <foreach var="o" flag="overlay">
+        <!--<foreach var="o" flag="overlay">
             <callMethod name="$o.draw"/>
-        </foreach>
+        </foreach>-->
     </sequence>
 
     <sequence name="drawOceanMethod">
@@ -90,7 +90,7 @@
 
     <texture2D name="sunglare" source="sunglare.png" internalformat="RGB8" min="LINEAR_MIPMAP_LINEAR" mag="LINEAR"/>
 
-    <texture2D name="font" source="text.png" internalformat="R8" min="LINEAR_MIPMAP_LINEAR" mag="LINEAR"/>
+    <!--<texture2D name="font" source="text.png" internalformat="R8" min="LINEAR_MIPMAP_LINEAR" mag="LINEAR"/>
 
     <font name="basicFont" tex="font" nRows="8" nCols="12" minChar="32" maxChar="127" invalidChar="63" charWidths="19"/>
 
@@ -100,7 +100,7 @@
 
     <showLog name="logMethod" x="4" y="-4" maxLines="32" fontSize="16" font="basicFont" fontProgram="textShader;"/>
 
-    <drawTweakBar name="drawTweakBarMethod"/>
+    <drawTweakBar name="drawTweakBarMethod"/>-->
 
     <node name="scene">
         <node flags="camera">
@@ -125,7 +125,7 @@
             <module id="material" value="skyShader"/>
         </node>
 
-        <node flags="overlay">
+        <!--<node flags="overlay">
             <method id="draw" value="drawTweakBarMethod"/>
         </node>
         <node flags="overlay">
@@ -133,12 +133,12 @@
         </node>
         <node flags="overlay">
             <method id="draw" value="infoMethod"/>
-        </node>
+        </node>-->
     </node>
 
     <basicViewHandler name="viewHandler" viewManager="window"/>
 
-    <tweakScene name="editScene" scene="scene" active="false"/>
+    <!--<tweakScene name="editScene" scene="scene" active="false"/>
 
     <tweakBar name="settings" label="Options">
         <float label="Exposure" keyincr="+" keydecr="-"
@@ -151,6 +151,6 @@
         <editor id="scene" bar="editScene" exclusive="false"/>
     </tweakBarManager>
 
-    <helloworld name="window" ui="tweakBar" view="viewHandler" radius="6360000"/>
+    <helloworld name="window" ui="tweakBar" view="viewHandler" radius="6360000"/>-->
 
 </archive>
