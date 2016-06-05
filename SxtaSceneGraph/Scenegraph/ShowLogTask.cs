@@ -1,9 +1,12 @@
 ﻿using log4net;
+using log4net.Appender;
+using log4net.Core;
 using Sxta.Math;
 using Sxta.Render.OpenGLExt;
 using Sxta.Render.Resources;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -21,7 +24,7 @@ namespace Sxta.Render.Scenegraph
          * True if this task is enabled. When disabled the message logs are not
          * displayed.
          */
-        public static bool enabled;
+        public bool Enabled { get; set; }
 
         /**
          * Creates a new ShowLogTask.
@@ -59,19 +62,25 @@ namespace Sxta.Render.Scenegraph
          * @param fontHeight the used font height.
          * @param pos x,y position and maximum number of lines of text to display.
          */
-        public void init(Font f, Program p, float fontHeight, Vector3i pos)
+        public void init(Font f, Program p, float fontHeight, Vector3i pos, int capacity = 10)
         {
             if (!initialized)
             {
-                int capacity = 256;
                 LogBuffer buf = LogBuffer.getInstance(capacity);
-                //if (log.IsDebugEnabled) {
-                //    Logger::DEBUG_LOGGER = new MemLogger("DEBUG_LOGGER", LogBuffer::DEBUG_LOG, buf, Logger::DEBUG_LOGGER);
-                //}
-                //Logger::INFO_LOGGER = new MemLogger("INFO", LogBuffer::INFO_LOG, buf, Logger::INFO_LOGGER);
-                //Logger::WARNING_LOGGER = new MemLogger("WARNING", LogBuffer::WARNING_LOG, buf, Logger::WARNING_LOGGER);
-                //Logger::ERROR_LOGGER = new MemLogger("ERROR", LogBuffer::ERROR_LOG, buf, Logger::ERROR_LOGGER);
+                var root = ((log4net.Repository.Hierarchy.Hierarchy)LogManager.GetRepository()).Root;
+                var attachable = root as IAppenderAttachable;
+                var appender = CreateLogBufferAppender();
+                if (attachable != null)
+                {
+                    attachable.AddAppender(appender);
+                    //((log4net.Repository.Hierarchy.Logger)log.Logger.).AddAppender(CreateLogBufferAppender());
+                    if (log.IsDebugEnabled)
+                    {
+                        log.Debug("Logger is connected");
+                    }
+                }
                 initialized = true;
+                Enabled = false;
             }
             base.init(f, p, 0, fontHeight, pos);
 
@@ -79,42 +88,33 @@ namespace Sxta.Render.Scenegraph
 
         protected override void draw(Method context)
         {
-#if TODO
-            if (log.IsDebugEnabled)
-            {
-                log.Debug("ShowLog");
-            }
-            LogBuffer buf = LogBuffer.getInstance();
-            if (buf.hasNewErrors)
-            {
-                enabled = true;
-                buf.hasNewErrors = false;
-            }
-            if (!enabled)
+            if (!Enabled)
             {
                 return;
             }
+            LogBuffer buf = LogBuffer.getInstance();
+
             FrameBuffer fb = SceneManager.getCurrentFrameBuffer();
-            fb.setBlend(true, ADD, SRC_ALPHA, ONE_MINUS_SRC_ALPHA, ADD, ZERO, ONE);
+            fb.setBlend(true, BlendEquation.ADD, BlendArgument.SRC_ALPHA, BlendArgument.ONE_MINUS_SRC_ALPHA, BlendEquation.ADD, BlendArgument.ZERO, BlendArgument.ONE);
 
             fontMesh.clear();
 
-            Vector4f vp = fb.getViewport();
+            Vector4f vp = (Vector4f)fb.getViewport();
 
             float xs = (float)position.X;
-            float ys = (float)((position.Y > 0) ? position.Y : vp.W + position.Y - min(buf.getSize(), position.Z) * fontHeight);
-            for (int l = max(0, buf.getSize() - position.Z); l < buf.getSize(); ++l)
+            float ys = (float)((position.Y > 0) ? position.Y : vp.W + position.Y - System.Math.Min(buf.getSize(), position.Z) * fontHeight);
+            for (int l = System.Math.Max(0, buf.getSize() - position.Z); l < buf.getSize(); ++l)
             {
-                LogBuffer.type t = buf.getType(l);
-                if (t == LogBuffer.DEBUG_LOG)
+                LogBuffer.LogType t = buf.getType(l);
+                if (t == LogBuffer.LogType.DEBUG_LOG)
                 {
                     drawLine(vp, xs, ys, 0x00800000, buf.getLine(l));
                 }
-                else if (t == LogBuffer.INFO_LOG)
+                else if (t == LogBuffer.LogType.INFO_LOG)
                 {
                     drawLine(vp, xs, ys, 0x00FF0000, buf.getLine(l));
                 }
-                else if (t == LogBuffer.WARNING_LOG)
+                else if (t == LogBuffer.LogType.WARN_LOG)
                 {
                     drawLine(vp, xs, ys, 0xFFCC0000, buf.getLine(l));
                 }
@@ -127,8 +127,6 @@ namespace Sxta.Render.Scenegraph
 
             fb.draw(fontProgram, fontMesh);
             fb.setBlend(false);
-#endif
-            throw new NotImplementedException();
         }
 
         public void swap(ShowLogTask obj)
@@ -136,9 +134,63 @@ namespace Sxta.Render.Scenegraph
             throw new NotImplementedException();
         }
 
+        // Create a new LogBuffer appender
+        private static LogBufferAppender CreateLogBufferAppender(string name = "LogBuffer")
+        {
+            LogBufferAppender appender = new LogBufferAppender();
+            appender.Name = name;
+
+            log4net.Layout.PatternLayout layout = new log4net.Layout.PatternLayout();
+            //"%date [%thread] %-5level %logger - %message%newline"
+            layout.ConversionPattern = "%date{HH:mm:ss,fff} %-5level %logger - %message";
+            layout.ActivateOptions();
+
+            appender.Layout = layout;
+            appender.ActivateOptions();
+
+            return appender;
+        }
+
         static bool initialized = false;
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
+    }
+    public class LogBufferAppender : AppenderSkeleton
+    {
+        /// <summary>
+        /// Writes the logging event to a MessageBox
+        /// </summary>
+        override protected void Append(LoggingEvent loggingEvent)
+        {
+            LogBuffer.LogType logLevel = LogBuffer.LogType.ERROR_LOG;
+            switch (loggingEvent.Level.Name)
+            {
+                case "DEBUG":
+                    logLevel = LogBuffer.LogType.DEBUG_LOG;
+                    break;
+                case "INFO":
+                    logLevel = LogBuffer.LogType.INFO_LOG;
+                    break;
+                case "WARN":
+                    logLevel = LogBuffer.LogType.WARN_LOG;
+                    break;
+                case "ERROR":
+                    logLevel = LogBuffer.LogType.ERROR_LOG;
+                    break;
+                case "FATAL":
+                    logLevel = LogBuffer.LogType.FATAL_LOG;
+                    break;
+            }
+            LogBuffer.getInstance().addLine(logLevel, RenderLoggingEvent(loggingEvent));
+        }
+
+        /// <summary>
+        /// This appender requires a <see cref="Layout"/> to be set.
+        /// </summary>
+        override protected bool RequiresLayout
+        {
+            get { return true; }
+        }
     }
 
     public class LogBuffer
@@ -159,8 +211,9 @@ namespace Sxta.Render.Scenegraph
         {
             DEBUG_LOG,
             INFO_LOG,
-            WARNING_LOG,
-            ERROR_LOG
+            WARN_LOG,
+            ERROR_LOG,
+            FATAL_LOG
         }
 
         public bool hasNewErrors;
@@ -175,12 +228,12 @@ namespace Sxta.Render.Scenegraph
             lines = new string[capacity];
         }
 
-        ~LogBuffer()
-        {
-            // delete[] types;
-            // delete[] lines;
-            throw new NotImplementedException();
-        }
+        //~LogBuffer()
+        //{
+        //    // delete[] types;
+        //    // delete[] lines;
+        //    Debugger.Break();
+        //}
 
         public int getSize()
         {
@@ -211,7 +264,7 @@ namespace Sxta.Render.Scenegraph
                 lines[first] = s;
                 first = (first + 1) % capacity;
             }
-            if (t == LogType.WARNING_LOG || t == LogType.ERROR_LOG)
+            if (t >= LogType.WARN_LOG)
             {
                 hasNewErrors = true;
             }

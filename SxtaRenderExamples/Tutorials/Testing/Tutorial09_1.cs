@@ -15,6 +15,9 @@ using Vector3d = Sxta.Math.Vector3d;
 using Sxta.Proland.Atmo;
 using Sxta.Render.Scenegraph.Controller;
 using proland;
+using log4net;
+using System.Reflection;
+using Sxta.Render.OpenGLExt;
 
 namespace Examples.Tutorials
 {
@@ -24,6 +27,8 @@ namespace Examples.Tutorials
     [Example("Example 9.1: Atmo", ExampleCategory.Testing, "09. Atmo", 1, Source = "Tutorial09_1", Documentation = "Tutorial-TODO")]
     public class Tutorial09_1 : GameWindow
     {
+        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
         public Tutorial09_1(string wd)
             : base(1024, 768)
         {
@@ -44,11 +49,26 @@ namespace Examples.Tutorials
             if (e.Key == Key.Escape)
                 this.Exit();
 
+            if (e.Key == Key.F10)
+            {
+                ShowLogTask showLogTask = resManager.loadResource("logMethod").get() as ShowLogTask;
+                if (showLogTask != null)
+                    showLogTask.Enabled = !showLogTask.Enabled;
+            }
+            else
             if (e.Key == Key.F11)
+            {
                 if (this.WindowState == WindowState.Fullscreen)
                     this.WindowState = WindowState.Normal;
                 else
                     this.WindowState = WindowState.Fullscreen;
+            }
+            else
+            if (e.Key == Key.F12)
+            {
+                string filename = ScreenShot.SaveScreenShot(this.ClientSize, this.ClientRectangle);
+                log.Debug("Saved screenshot with name " + filename);
+            }
         }
 
         #endregion

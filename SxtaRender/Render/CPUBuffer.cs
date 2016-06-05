@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace Sxta.Render
@@ -21,7 +22,8 @@ namespace Sxta.Render
         /// </param>
         public CPUBuffer(T[] data = null)
         {
-            p = data;
+            if (data != null)
+                p = ToByteArray(data);
         }
 
         /*
@@ -50,15 +52,62 @@ namespace Sxta.Render
         internal override IntPtr data(int offset)
         {
             //return (void*)((char*)p + offset);
-            return (IntPtr)offset;
+            if (p != null)
+                unsafe
+                {
+                    fixed (byte* ptr = &p[0])
+                    {
+                        return (IntPtr)(ptr) + offset;
+                    }
+                }
+            else
+                return (IntPtr)offset;
         }
 
         internal override void unbind(BufferTarget target) { }
 
+        /// <summary>
+        /// code from http://stackoverflow.com/questions/25311361/copy-array-to-struct-array-as-fast-as-possible-in-c-sharp
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        private static byte[] ToByteArray(T[] source)
+        {
+            GCHandle handle = GCHandle.Alloc(source, GCHandleType.Pinned);
+            try
+            {
+                IntPtr pointer = handle.AddrOfPinnedObject();
+                byte[] destination = new byte[source.Length * Marshal.SizeOf(typeof(T))];
+                Marshal.Copy(pointer, destination, 0, destination.Length);
+                return destination;
+            }
+            finally
+            {
+                if (handle.IsAllocated)
+                    handle.Free();
+            }
+        }
 
+        private static T[] FromByteArray(byte[] source)
+        {
+            T[] destination = new T[source.Length / Marshal.SizeOf(typeof(T))];
+            GCHandle handle = GCHandle.Alloc(destination, GCHandleType.Pinned);
+            try
+            {
+                IntPtr pointer = handle.AddrOfPinnedObject();
+                Marshal.Copy(source, 0, pointer, source.Length);
+                return destination;
+            }
+            finally
+            {
+                if (handle.IsAllocated)
+                    handle.Free();
+            }
+        }
         /// <summary>
         /// The p. The buffer data. May be NULL.
         /// </summary>
-        private T[] p;
+        private byte[] p;
     }
 }
