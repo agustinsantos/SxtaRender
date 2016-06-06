@@ -50,13 +50,14 @@ namespace proland
         // ----------------------------------------------------------------------------
         // CLASSIC PERLIN NOISE
         // ----------------------------------------------------------------------------
+        const int FLOAT_SIZE = 4;
 
         static bool initialized = false;
 
         static int[] p = new int[2 * 256 + 2];
         static float[] g1 = new float[2 * 256 + 2];
-        static float[][] g2 = new float[][] { new float[2 * 256 + 2], new float[2] };
-        static float[][] g3 = new float[][] { new float[2 * 256 + 2], new float[3] };
+        static float[,] g2 = new float[2 * 256 + 2,2];
+        static float[,] g3 = new float[2 * 256 + 2,3];
 
         /**
          * @defgroup proland_math math
@@ -142,19 +143,19 @@ namespace proland
                 g1[i] = (float)((lrandom(ref seed) % (2 * 256)) - 256) / 256;
                 for (j = 0; j < 2; ++j)
                 {
-                    g2[i][j] = (float)((lrandom(ref seed) % (2 * 256)) - 256) / 256;
+                    g2[i,j] = (float)((lrandom(ref seed) % (2 * 256)) - 256) / 256;
                 }
-                float l = Convert.ToSingle(Math.Sqrt(g2[i][0] * g2[i][0] + g2[i][1] * g2[i][1]));
-                g2[i][0] /= l;
-                g2[i][1] /= l;
+                float l = Convert.ToSingle(Math.Sqrt(g2[i,0] * g2[i,0] + g2[i,1] * g2[i,1]));
+                g2[i,0] /= l;
+                g2[i,1] /= l;
                 for (j = 0; j < 3; ++j)
                 {
-                    g3[i][j] = (float)((lrandom(ref seed) % (2 * 256)) - 256) / 256;
+                    g3[i,j] = (float)((lrandom(ref seed) % (2 * 256)) - 256) / 256;
                 }
-                l = Convert.ToSingle(Math.Sqrt(g3[i][0] * g3[i][0] + g3[i][1] * g3[i][1] + g3[i][2] * g3[i][2]));
-                g3[i][0] /= l;
-                g3[i][1] /= l;
-                g3[i][2] /= l;
+                l = Convert.ToSingle(Math.Sqrt(g3[i,0] * g3[i,0] + g3[i,1] * g3[i,1] + g3[i,2] * g3[i,2]));
+                g3[i,0] /= l;
+                g3[i,1] /= l;
+                g3[i,2] /= l;
             }
             while (i >= 1)
             {
@@ -168,11 +169,11 @@ namespace proland
                 g1[256 + i] = g1[i];
                 for (j = 0; j < 2; ++j)
                 {
-                    g2[256 + i][j] = g2[i][j];
+                    g2[256 + i,j] = g2[i,j];
                 }
                 for (j = 0; j < 3; ++j)
                 {
-                    g3[256 + i][j] = g3[i][j];
+                    g3[256 + i,j] = g3[i,j];
                 }
             }
         }
@@ -218,7 +219,7 @@ namespace proland
         {
             int bx0, bx1, by0, by1, b00, b10, b01, b11;
             float rx0, rx1, ry0, ry1, sx, sy, a, b, t, u, v;
-            float[] q;
+            float[] q = new float[2];
             int i, j;
 
             if (!initialized)
@@ -251,15 +252,19 @@ namespace proland
             sx = S_CURVE(rx0);
             sy = S_CURVE(ry0);
 
-            q = g2[b00];
+            Buffer.BlockCopy(g2, FLOAT_SIZE * 2 * b00, q, 0, FLOAT_SIZE * 2);
+            //q = g2[b00];
             u = AT2(rx0, ry0, q);
-            q = g2[b10];
+            Buffer.BlockCopy(g2, FLOAT_SIZE * 2 * b10, q, 0, FLOAT_SIZE * 2);
+            //q = g2[b10];
             v = AT2(rx1, ry0, q);
             a = LERP(sx, u, v);
 
-            q = g2[b01];
+            Buffer.BlockCopy(g2, FLOAT_SIZE * 2 * b01, q, 0, FLOAT_SIZE * 2);
+            //q = g2[b01];
             u = AT2(rx0, ry1, q);
-            q = g2[b11];
+            Buffer.BlockCopy(g2, FLOAT_SIZE * 2 * b11, q, 0, FLOAT_SIZE * 2);
+            //q = g2[b11];
             v = AT2(rx1, ry1, q);
             b = LERP(sx, u, v);
 
@@ -282,7 +287,7 @@ namespace proland
         {
             int bx0, bx1, by0, by1, bz0, bz1, b00, b10, b01, b11;
             float rx0, rx1, ry0, ry1, rz0, rz1, sy, sz, a, b, c, d, t, u, v;
-            float[] q;
+            float[] q = new float[3];
             int i, j;
 
             if (!initialized)
@@ -320,30 +325,37 @@ namespace proland
             sy = S_CURVE(ry0);
             sz = S_CURVE(rz0);
 
-
-            q = g3[b00 + bz0];
+            Buffer.BlockCopy(g3, FLOAT_SIZE * 3 *(b00 + bz0), q, 0, FLOAT_SIZE * 3);
+            //q = g3[b00 + bz0];
             u = AT3(rx0, ry0, rz0, q);
-            q = g3[b10 + bz0];
+            Buffer.BlockCopy(g3, FLOAT_SIZE * 3 * (b10 + bz0), q, 0, FLOAT_SIZE * 3);
+            //q = g3[b10 + bz0];
             v = AT3(rx1, ry0, rz0, q);
             a = LERP(t, u, v);
 
-            q = g3[b01 + bz0];
+            Buffer.BlockCopy(g3, FLOAT_SIZE * 3 * (b01 + bz0), q, 0, FLOAT_SIZE * 3);
+            //q = g3[b01 + bz0];
             u = AT3(rx0, ry1, rz0, q);
-            q = g3[b11 + bz0];
+            Buffer.BlockCopy(g3, FLOAT_SIZE * 3 * (b11 + bz0), q, 0, FLOAT_SIZE * 3);
+            //q = g3[b11 + bz0];
             v = AT3(rx1, ry1, rz0, q);
             b = LERP(t, u, v);
 
             c = LERP(sy, a, b);
 
-            q = g3[b00 + bz1];
+            Buffer.BlockCopy(g3, FLOAT_SIZE * 3 * (b00 + bz1), q, 0, FLOAT_SIZE * 3);
+            //q = g3[b00 + bz1];
             u = AT3(rx0, ry0, rz1, q);
-            q = g3[b10 + bz1];
+            Buffer.BlockCopy(g3, FLOAT_SIZE * 3 * (b10 + bz1), q, 0, FLOAT_SIZE * 3);
+            //q = g3[b10 + bz1];
             v = AT3(rx1, ry0, rz1, q);
             a = LERP(t, u, v);
 
-            q = g3[b01 + bz1];
+            Buffer.BlockCopy(g3, FLOAT_SIZE * 3 * (b01 + bz1), q, 0, FLOAT_SIZE * 3);
+            //q = g3[b01 + bz1];
             u = AT3(rx0, ry1, rz1, q);
-            q = g3[b11 + bz1];
+            Buffer.BlockCopy(g3, FLOAT_SIZE * 3 * (b11 + bz1), q, 0, FLOAT_SIZE * 3);
+            //q = g3[b11 + bz1];
             v = AT3(rx1, ry1, rz1, q);
             b = LERP(t, u, v);
 
