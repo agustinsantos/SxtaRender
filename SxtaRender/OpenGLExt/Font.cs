@@ -4,6 +4,7 @@ using Sxta.Render.Resources;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace Sxta.Render.OpenGLExt
 {
@@ -18,10 +19,11 @@ namespace Sxta.Render.OpenGLExt
     /// </summary>
     public class Font : ISwappable<Font>
     {
-
         /// <summary>
         /// Vertex format for a text mesh.
         /// </summary>
+        [Serializable]
+        [StructLayout(LayoutKind.Sequential)]
         public struct Vertex
         {
 
@@ -29,7 +31,7 @@ namespace Sxta.Render.OpenGLExt
 
             public byte r, g, b, a;
 
-            public Vertex(Vector4f pos_uv, int color)
+            public Vertex(Vector4f pos_uv, uint color)
             {
                 this.pos_uv = pos_uv;
                 r = (byte)(color >> 24);
@@ -199,12 +201,12 @@ namespace Sxta.Render.OpenGLExt
         /// Text meshthe mesh to write into.
         /// </param>
         public Vector2f addLine(Vector4i v, float xs, float ys, string line, float height,
-        int color, Mesh<Vertex, uint> textMesh)
+                                uint color, Mesh<Vertex, uint> textMesh)
         {
             return addLine(new Vector4f(v.X, v.Y, v.Z, v.W), xs, ys, line, height, color, textMesh);
         }
         public Vector2f addLine(Vector4f viewport, float xs, float ys, string line, float height,
-                int color, Mesh<Vertex, uint> textMesh)
+                                uint color, Mesh<Vertex, uint> textMesh)
         {
             for (int i = 0; i < line.Length; ++i)
             {
@@ -282,7 +284,7 @@ namespace Sxta.Render.OpenGLExt
         /// TextMesh the mesh to write into.
         /// </param>
         public Vector2f addCenteredLine(Vector4f viewport, float xs, float ys, string line, float height,
-                int color, Mesh<Vertex, uint> textMesh)
+                uint color, Mesh<Vertex, uint> textMesh)
         {
             Vector2f size = getSize(line, height);
             xs -= size.X * 0.5f;

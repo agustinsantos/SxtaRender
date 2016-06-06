@@ -5,6 +5,7 @@ using Sxta.Render.OpenGLExt;
 using Sxta.Render.Resources;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -16,7 +17,7 @@ namespace Sxta.Render.Scenegraph
      * An AbstractTask to display the framerate and other information.
      * @ingroup scenegraph
      */
-    public class ShowInfoTask : AbstractTask, ISwappable<ShowInfoTask>
+    public class ShowInfoTask : AbstractTask, ISwappable<ShowInfoTask>, IDisposable
     {
 
         /**
@@ -28,7 +29,7 @@ namespace Sxta.Render.Scenegraph
          * @param size the font height.
          * @param pos x,y position and maximum number of lines of text to display.
          */
-        public ShowInfoTask(Font font, Program p, int color, float size, Vector3i pos)
+        public ShowInfoTask(Font font, Program p, uint color, float size, Vector3i pos)
             : base("ShowInfoTask")
         {
             init(font, p, color, size, pos);
@@ -90,7 +91,7 @@ namespace Sxta.Render.Scenegraph
         /**
          * The font color in RGBA8 format.
          */
-        protected int fontColor;
+        protected uint fontColor;
 
         /**
          * The used font height.
@@ -119,7 +120,7 @@ namespace Sxta.Render.Scenegraph
          * @param size the font height.
          * @param pos x,y position and maximum number of lines of text to display.
          */
-        public virtual void init(Font font, Program p, int color, float size, Vector3i pos)
+        public virtual void init(Font font, Program p, uint color, float size, Vector3i pos)
         {
             this.fps = 0;
             this.frames = 0;
@@ -132,8 +133,8 @@ namespace Sxta.Render.Scenegraph
             this.fontHeight = size;
             if (fontMesh == null)
             {
-                fontMesh = new Mesh<Font.Vertex, uint>(Font.Vertex.SizeInBytes, MeshMode.TRIANGLES, MeshUsage.CPU);
-                fontMesh.addAttributeType(0, 4, AttributeType.A16F, false);
+                fontMesh = new Mesh<Font.Vertex, uint>(Font.Vertex.SizeInBytes, MeshMode.TRIANGLES, MeshUsage.GPU_DYNAMIC);
+                fontMesh.addAttributeType(0, 4, AttributeType.A32F, false);
                 fontMesh.addAttributeType(1, 4, AttributeType.A8UI, true);
             }
         }
@@ -145,12 +146,12 @@ namespace Sxta.Render.Scenegraph
          */
         public virtual void swap(ShowInfoTask t)
         {
-            Std.Swap(ref fontProgram, ref  t.fontProgram);
+            Std.Swap(ref fontProgram, ref t.fontProgram);
             Std.Swap(ref fontU, ref t.fontU);
             Std.Swap(ref font, ref t.font);
             Std.Swap(ref fontColor, ref t.fontColor);
             Std.Swap(ref fontHeight, ref t.fontHeight);
-            Std.Swap(ref  position, ref t.position);
+            Std.Swap(ref position, ref t.position);
             Std.Swap(ref fps, ref t.fps);
             Std.Swap(ref frames, ref t.frames);
             Std.Swap(ref start, ref t.start);
@@ -165,11 +166,11 @@ namespace Sxta.Render.Scenegraph
          * @param color the color of this line of text, in RGBA8 format.
          * @param s the line of text to display.
          */
-        protected virtual void drawLine(Vector4f vp, float xs, float ys, int color, string s)
+        protected virtual void drawLine(Vector4f vp, float xs, float ys, uint color, string s)
         {
             font.addLine(vp, xs, ys, s, fontHeight, color, fontMesh);
         }
-        protected virtual void drawLine(Vector4i vp, float xs, float ys, int color, string s)
+        protected virtual void drawLine(Vector4i vp, float xs, float ys, uint color, string s)
         {
             font.addLine(vp, xs, ys, s, fontHeight, color, fontMesh);
         }
@@ -194,10 +195,10 @@ namespace Sxta.Render.Scenegraph
 
             ++frames;
             double current = context.getOwner().getOwner().getTime();
-            double delay = (current - start) * 1e-6;
+            double delay = (current - start);// * 1e-6;
             if (delay > 1.0)
             {
-                fps = (int)(frames / delay);
+                fps = (float)(frames / delay);
                 frames = 0;
                 start = current;
             }
@@ -208,15 +209,15 @@ namespace Sxta.Render.Scenegraph
                 frames = 0;
                 start = current;
             }
-            string os = "";
+            string os;
             string val;
             if (!infos.TryGetValue("FPS", out val))
             {
-                os += fps + " FPS";
+                os = fps.ToString("F1", CultureInfo.InvariantCulture) + " FPS";
             }
             else
             {
-                os += val + " FPS";
+                os = val + " FPS";
             }
 
             fontMesh.clear();
@@ -237,14 +238,13 @@ namespace Sxta.Render.Scenegraph
             fb.draw(fontProgram, fontMesh);
 
             fb.setBlend(false);
-
         }
 
 
         /**
          * The current framerate.
          */
-        private int fps;
+        private float fps;
 
         /**
          * The number of frames displayed since #start. This counter is periodically
@@ -305,6 +305,67 @@ namespace Sxta.Render.Scenegraph
              */
             private ShowInfoTask source;
         }
+
+        #region Dispose
+        /// <summary>
+        /// Deletes this ShowInfoTask.
+        /// Releases unmanaged resources and performs other cleanup operations before the 
+        /// <see cref="Sxta.Render.FrameBuffer"/> is reclaimed by garbage collection.
+        /// </summary>
+        ~ShowInfoTask()
+        {
+            // Do not re-create Dispose clean-up code here. 
+            // Calling Dispose(false) is optimal in terms of 
+            // readability and maintainability.
+            Dispose(false);
+        }
+
+        // Track whether Dispose has been called. 
+        private bool disposed = false;
+
+        public void Dispose()
+        {
+            Dispose(true);
+            // This object will be cleaned up by the Dispose method. 
+            // Therefore, you should call GC.SupressFinalize to 
+            // take this object off the finalization queue 
+            // and prevent finalization code for this object 
+            // from executing a second time.
+            GC.SuppressFinalize(this);
+        }
+
+        // Dispose(bool disposing) executes in two distinct scenarios. 
+        // If disposing equals true, the method has been called directly 
+        // or indirectly by a user's code. Managed and unmanaged resources 
+        // can be disposed. 
+        // If disposing equals false, the method has been called by the 
+        // runtime from inside the finalizer and you should not reference 
+        // other objects. Only unmanaged resources can be disposed. 
+        protected virtual void Dispose(bool disposing)
+        {
+            // Check to see if Dispose has already been called. 
+            if (!this.disposed)
+            {
+                // If disposing equals true, dispose all managed 
+                // and unmanaged resources. 
+                if (disposing)
+                {
+                    // Dispose managed resources.
+                }
+
+                // Call the appropriate methods to clean up 
+                // unmanaged resources here. 
+                // If disposing is false, 
+                // only the following code is executed.
+                if (fontMesh != null)
+                    fontMesh.Dispose();
+
+                // Note disposing has been done.
+                disposed = true;
+
+            }
+        }
+        #endregion
 
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
     }

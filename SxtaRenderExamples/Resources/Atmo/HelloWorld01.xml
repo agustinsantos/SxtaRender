@@ -34,9 +34,9 @@
         <foreach var="o" flag="object" culling="true">
             <callMethod name="$o.draw"/>
         </foreach>
-        <!--<foreach var="o" flag="overlay">
+        <foreach var="o" flag="overlay">
             <callMethod name="$o.draw"/>
-        </foreach>-->
+        </foreach>
     </sequence>
 
     <sequence name="sunMethod">
@@ -76,15 +76,15 @@
 
     <texture2D name="sunglare" source="sunglare.png" internalformat="RGB8" min="LINEAR_MIPMAP_LINEAR" mag="LINEAR"/>
 
-    <!--<texture2D name="font" source="text.png" internalformat="R8" min="LINEAR_MIPMAP_LINEAR" mag="LINEAR"/>-->
+    <texture2D name="font" source="text.png" internalformat="R8" min="LINEAR_MIPMAP_LINEAR" mag="LINEAR"/>
 
-    <!--<font name="basicFont" tex="font" nRows="8" nCols="12" minChar="32" maxChar="127" invalidChar="63" charWidths="19"/>-->
+    <font name="basicFont" tex="font" nRows="8" nCols="12" minChar="32" maxChar="127" invalidChar="63" charWidths="19"/>
 
-    <!--<module name="textShader" version="330" source="textShader.glsl"/>-->
+    <module name="textShader" version="330" source="textShader.glsl"/>
 
-    <!--<showInfo name="infoMethod" x="4" y="4" maxLines="4" fontSize="24" font="basicFont" fontProgram="textShader;"/>-->
+    <showInfo name="infoMethod" x="4" y="4" maxLines="4" fontSize="24" font="basicFont" fontProgram="textShader;"/>
 
-    <!--<showLog name="logMethod" x="4" y="-4" maxLines="32" fontSize="16" font="basicFont" fontProgram="textShader;"/>-->
+    <showLog name="logMethod" x="4" y="-4" maxLines="5" fontSize="16" font="basicFont" fontProgram="textShader;"/>
 
     <!--<drawTweakBar name="drawTweakBarMethod"/>-->
 
@@ -107,13 +107,13 @@
 
         <!--<node flags="overlay">
             <method id="draw" value="drawTweakBarMethod"/>
-        </node>
+        </node>-->
         <node flags="overlay">
             <method id="draw" value="logMethod"/>
         </node>
         <node flags="overlay">
             <method id="draw" value="infoMethod"/>
-        </node>-->
+        </node>
     </node>
 
     <basicViewHandler name="viewHandler" viewManager="window"/>

@@ -355,18 +355,9 @@ namespace Sxta.Proland.Ocean
             float h1 = (float)(meanHeight + var * System.Math.Sqrt(heightVariance));
             amplitudeMax = h1 - h0;
 
-            byte[] data = new byte[4 * sizeof(float) * waves.Length];
-            int pos = 0;
-            foreach (var v in waves)
-            {
-                Array.Copy(BitConverter.GetBytes(v.X), 0, data, pos, sizeof(float)); pos += sizeof(float);
-                Array.Copy(BitConverter.GetBytes(v.Y), 0, data, pos, sizeof(float)); pos += sizeof(float);
-                Array.Copy(BitConverter.GetBytes(v.Z), 0, data, pos, sizeof(float)); pos += sizeof(float);
-                Array.Copy(BitConverter.GetBytes(v.W), 0, data, pos, sizeof(float)); pos += sizeof(float);
-            }
             Texture1D wavesTexture = new Texture1D(nbWaves, TextureInternalFormat.RGBA32F, TextureFormat.RGBA,
-                    PixelType.FLOAT, new Texture.Parameters().wrapS(TextureWrap.CLAMP_TO_BORDER).min(TextureFilter.NEAREST).mag(TextureFilter.NEAREST),
-                    new Sxta.Render.Buffer.Parameters(), new CPUBuffer<byte>(data));
+                   PixelType.FLOAT, new Texture.Parameters().wrapS(TextureWrap.CLAMP_TO_BORDER).min(TextureFilter.NEAREST).mag(TextureFilter.NEAREST),
+                   new Sxta.Render.Buffer.Parameters(), new CPUBuffer<Vector4f>(waves));
 
             //delete[] waves;
 

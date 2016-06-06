@@ -1,14 +1,13 @@
-﻿using OpenTK;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System;
+using System.Runtime.InteropServices;
 
 namespace Sxta.Math
 {
     /// <summary>
     /// A 3D bounding box.
     /// </summary>
+    [Serializable]
+    [StructLayout(LayoutKind.Sequential)]
     public class Box3d
     {
 

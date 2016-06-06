@@ -1000,7 +1000,7 @@ namespace Sxta.Render.Scenegraph.XmlResources
         {
             Font f;
             Program p;
-            int c;
+            uint c;
             Vector3i pos;
             float size;
             this.valueC = new ShowInfoTask();
@@ -1009,7 +1009,7 @@ namespace Sxta.Render.Scenegraph.XmlResources
         }
 
         public static void initInfoTask(ResourceManager manager, string name, ResourceDescriptor desc, XmlElement e,
-        out Font f, out Program p, out int c, out float size, out Vector3i pos)
+                                        out Font f, out Program p, out uint c, out float size, out Vector3i pos)
         {
             e = e == null ? desc.descriptor : e;
             checkParameters(desc, e, "name,x,y,maxLines,font,fontSize,fontColor,fontProgram,");
@@ -1057,10 +1057,10 @@ namespace Sxta.Render.Scenegraph.XmlResources
                 fontProgram = e.GetAttribute("fontProgram");
             }
             p = manager.loadResource(fontProgram).get() as Program;
-            c = ((int)(color.X * 255) & 0xFF) << 24;
-            c |= ((int)(color.Y * 255) & 0xFF) << 16;
-            c |= ((int)(color.Z * 255) & 0xFF) << 8;
-            c |= (int)(color.W * 255) & 0xFF;
+            c = ((uint)(color.X * 255) & 0xFF) << 24;
+            c |= ((uint)(color.Y * 255) & 0xFF) << 16;
+            c |= ((uint)(color.Z * 255) & 0xFF) << 8;
+            c |= (uint)(color.W * 255) & 0xFF;
             pos = new Vector3i(x, y, maxLines);
         }
     }
@@ -1077,12 +1077,12 @@ namespace Sxta.Render.Scenegraph.XmlResources
 
             Font f;
             Program p;
-            int c;
+            uint c;
             float fontHeight;
             Vector3i pos;
             this.valueC = new ShowLogTask();
             ShowInfoTaskResource.initInfoTask(manager, name, desc, e, out f, out p, out c, out fontHeight, out pos);
-            this.valueC.init(f, p, fontHeight, pos);
+            this.valueC.init(f, p, fontHeight, pos, pos.Z);
         }
     }
 

@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using OpenTK;
+﻿using OpenTK;
+using System;
+using System.Runtime.InteropServices;
 
 namespace Sxta.Math
 {
+    [Serializable]
+    [StructLayout(LayoutKind.Sequential)]
     public class Box2f
     {
 
