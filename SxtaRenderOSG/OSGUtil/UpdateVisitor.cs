@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sxta.Render.OSGUtil
+namespace Sxta.OSGUtil
 {
     public class UpdateVisitor
     {

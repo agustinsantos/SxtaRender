@@ -1,6 +1,10 @@
 ﻿using Sxta.Math;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
-namespace Sxta.Render.OSG
+namespace Sxta.OSG
 {
     /// <summary>
     /// General purpose bounding sphere class for enclosing nodes/objects/vertices.
@@ -65,7 +69,6 @@ namespace Sxta.Render.OSG
         /// </summary>
         public bool IsValid { get { return _radius >= 0.0f; } }
 
-        /*  */
         /// <summary>
         /// Set the bounding sphere to the given center/radius using floats.
         /// </summary>
@@ -289,14 +292,22 @@ namespace Sxta.Render.OSG
 
 
 
-        /** Returns true if v is within the sphere. */
+        /// <summary>
+        /// Returns true if v is within the sphere.
+        /// </summary>
+        /// <param name="v"></param>
+        /// <returns></returns>
         public bool Contains(Vector3f v)
         {
             return this.IsValid && ((v - _center).LengthSquared <= Radius2);
         }
 
-        /** Returns true if there is a non-empty intersection with the given
-         * bounding sphere. */
+        /// <summary>
+        ///  Returns true if there is a non-empty intersection with the given
+        /// bounding sphere.
+        /// </summary>
+        /// <param name="bs"></param>
+        /// <returns></returns>
         public bool Intersects(BoundingSphere bs)
         {
             return this.IsValid && bs.IsValid &&

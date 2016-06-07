@@ -354,12 +354,13 @@ namespace Sxta.Proland.Ocean
             float h0 = (float)(meanHeight - var * System.Math.Sqrt(heightVariance));
             float h1 = (float)(meanHeight + var * System.Math.Sqrt(heightVariance));
             amplitudeMax = h1 - h0;
-
+            GPUBuffer buff = new GPUBuffer();
+            buff.setData<Vector4f>(Vector4f.SizeInBytes * waves.Length, waves, BufferUsage.STATIC_READ);
             Texture1D wavesTexture = new Texture1D(nbWaves, TextureInternalFormat.RGBA32F, TextureFormat.RGBA,
-                   PixelType.FLOAT, new Texture.Parameters().wrapS(TextureWrap.CLAMP_TO_BORDER).min(TextureFilter.NEAREST).mag(TextureFilter.NEAREST),
-                   new Sxta.Render.Buffer.Parameters(), new CPUBuffer<Vector4f>(waves));
+                               PixelType.FLOAT, new Texture.Parameters().wrapS(TextureWrap.CLAMP_TO_BORDER).min(TextureFilter.NEAREST).mag(TextureFilter.NEAREST),
+                               new Sxta.Render.Buffer.Parameters(), buff);
 
-            //delete[] waves;
+            buff.Dispose();
 
             nbWavesU.set(nbWaves);
             wavesU.set(wavesTexture);
@@ -388,10 +389,10 @@ namespace Sxta.Proland.Ocean
 
             public override bool run()
             {
-                if (log.IsDebugEnabled)
-                {
-                    log.Debug("Run DrawOcean Task");
-                }
+                //if (log.IsDebugEnabled)
+                //{
+                //    log.Debug("Run DrawOcean Task");
+                //}
                 FrameBuffer fb = SceneManager.getCurrentFrameBuffer();
                 Program prog = SceneManager.getCurrentProgram();
 

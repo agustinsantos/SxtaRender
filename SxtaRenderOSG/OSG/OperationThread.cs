@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sxta.Render.OSG
+namespace Sxta.OSG
 {
     /// <summary>
     /// Base class for implementing graphics operations.

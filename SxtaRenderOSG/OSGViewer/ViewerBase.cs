@@ -1,4 +1,4 @@
-﻿using Sxta.Render.OSG;
+﻿using Sxta.OSG;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sxta.Render.OSGViewer
+namespace Sxta.OSGViewer
 {
     public enum ThreadingModel
     {

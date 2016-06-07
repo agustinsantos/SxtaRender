@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
-namespace Sxta.Render.OSG
+namespace Sxta.OSG
 {
     public enum DisplayType
     {
@@ -423,7 +425,6 @@ namespace Sxta.Render.OSG
         public bool _keystoneHint;
         protected List<string> _keystoneFileNames;
         protected List<Object> _keystones;
-
 
     }
 }

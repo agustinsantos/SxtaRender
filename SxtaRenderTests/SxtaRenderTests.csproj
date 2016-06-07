@@ -81,6 +81,7 @@
     <Compile Include="UniformBlockTest.cs" />
     <Compile Include="ImageKTXTest.cs" />
     <Compile Include="FontGenerationTests.cs" />
+    <Compile Include="UnitTest1.cs" />
     <Compile Include="Vector3fTest.cs" />
     <Compile Include="QuaternionTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -93,6 +94,10 @@
     <ProjectReference Include="..\SxtaFont\SxtaFont.csproj">
       <Project>{be26d180-b28b-484d-aa09-9b0e0417ea2c}</Project>
       <Name>SxtaFont</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SxtaRenderOSG\SxtaRenderOSG.csproj">
+      <Project>{574f1baa-61b0-4253-9ec5-b853346dd26d}</Project>
+      <Name>SxtaRenderOSG</Name>
     </ProjectReference>
     <ProjectReference Include="..\SxtaRender\SxtaRender.csproj">
       <Project>{2b803a3e-cc40-477b-a9cf-b1f2abdce6f3}</Project>
