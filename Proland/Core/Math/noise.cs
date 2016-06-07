@@ -195,14 +195,14 @@ namespace proland
             r0 = t - (int)Math.Floor((double)t);
             r1 = r0 - 1.0f;
         }
-        private static float AT2(float rx, float ry, float[] q)
+        private static float AT2(float rx, float ry, float[,] q, int index)
         {
-            return rx * q[0] + ry * q[1];
+            return rx * q[index,0] + ry * q[index,1];
         }
 
-        private static float AT3(float rx, float ry, float rz, float[] q)
+        private static float AT3(float rx, float ry, float rz, float[,] q, int index)
         {
-            return rx * q[0] + ry * q[1] + rz * q[2];
+            return rx * q[index,0] + ry * q[index,1] + rz * q[index,2];
         }
         /**
          * Computes the classic 2D Perlin noise function.
@@ -219,7 +219,6 @@ namespace proland
         {
             int bx0, bx1, by0, by1, b00, b10, b01, b11;
             float rx0, rx1, ry0, ry1, sx, sy, a, b, t, u, v;
-            float[] q = new float[2];
             int i, j;
 
             if (!initialized)
@@ -251,21 +250,18 @@ namespace proland
 
             sx = S_CURVE(rx0);
             sy = S_CURVE(ry0);
-
-            Buffer.BlockCopy(g2, FLOAT_SIZE * 2 * b00, q, 0, FLOAT_SIZE * 2);
+            
             //q = g2[b00];
-            u = AT2(rx0, ry0, q);
-            Buffer.BlockCopy(g2, FLOAT_SIZE * 2 * b10, q, 0, FLOAT_SIZE * 2);
+            u = AT2(rx0, ry0, g2, b00);
             //q = g2[b10];
-            v = AT2(rx1, ry0, q);
+            v = AT2(rx1, ry0, g2, b10);
             a = LERP(sx, u, v);
-
-            Buffer.BlockCopy(g2, FLOAT_SIZE * 2 * b01, q, 0, FLOAT_SIZE * 2);
+            
             //q = g2[b01];
-            u = AT2(rx0, ry1, q);
-            Buffer.BlockCopy(g2, FLOAT_SIZE * 2 * b11, q, 0, FLOAT_SIZE * 2);
+            u = AT2(rx0, ry1, g2, b01);
+
             //q = g2[b11];
-            v = AT2(rx1, ry1, q);
+            v = AT2(rx1, ry1, g2, b11);
             b = LERP(sx, u, v);
 
             return LERP(sy, a, b);
@@ -287,7 +283,6 @@ namespace proland
         {
             int bx0, bx1, by0, by1, bz0, bz1, b00, b10, b01, b11;
             float rx0, rx1, ry0, ry1, rz0, rz1, sy, sz, a, b, c, d, t, u, v;
-            float[] q = new float[3];
             int i, j;
 
             if (!initialized)
@@ -325,38 +320,30 @@ namespace proland
             sy = S_CURVE(ry0);
             sz = S_CURVE(rz0);
 
-            Buffer.BlockCopy(g3, FLOAT_SIZE * 3 *(b00 + bz0), q, 0, FLOAT_SIZE * 3);
             //q = g3[b00 + bz0];
-            u = AT3(rx0, ry0, rz0, q);
-            Buffer.BlockCopy(g3, FLOAT_SIZE * 3 * (b10 + bz0), q, 0, FLOAT_SIZE * 3);
+            u = AT3(rx0, ry0, rz0, g3, b00 + bz0);
             //q = g3[b10 + bz0];
-            v = AT3(rx1, ry0, rz0, q);
+            v = AT3(rx1, ry0, rz0, g3, b10 + bz0);
             a = LERP(t, u, v);
-
-            Buffer.BlockCopy(g3, FLOAT_SIZE * 3 * (b01 + bz0), q, 0, FLOAT_SIZE * 3);
+            
             //q = g3[b01 + bz0];
-            u = AT3(rx0, ry1, rz0, q);
-            Buffer.BlockCopy(g3, FLOAT_SIZE * 3 * (b11 + bz0), q, 0, FLOAT_SIZE * 3);
+            u = AT3(rx0, ry1, rz0, g3, b01 + bz0);
             //q = g3[b11 + bz0];
-            v = AT3(rx1, ry1, rz0, q);
+            v = AT3(rx1, ry1, rz0, g3, b11 + bz0);
             b = LERP(t, u, v);
 
             c = LERP(sy, a, b);
-
-            Buffer.BlockCopy(g3, FLOAT_SIZE * 3 * (b00 + bz1), q, 0, FLOAT_SIZE * 3);
+            
             //q = g3[b00 + bz1];
-            u = AT3(rx0, ry0, rz1, q);
-            Buffer.BlockCopy(g3, FLOAT_SIZE * 3 * (b10 + bz1), q, 0, FLOAT_SIZE * 3);
+            u = AT3(rx0, ry0, rz1, g3, b00 + bz1);
             //q = g3[b10 + bz1];
-            v = AT3(rx1, ry0, rz1, q);
+            v = AT3(rx1, ry0, rz1, g3, b10 + bz1);
             a = LERP(t, u, v);
-
-            Buffer.BlockCopy(g3, FLOAT_SIZE * 3 * (b01 + bz1), q, 0, FLOAT_SIZE * 3);
+            
             //q = g3[b01 + bz1];
-            u = AT3(rx0, ry1, rz1, q);
-            Buffer.BlockCopy(g3, FLOAT_SIZE * 3 * (b11 + bz1), q, 0, FLOAT_SIZE * 3);
+            u = AT3(rx0, ry1, rz1, g3, b01 + bz1);
             //q = g3[b11 + bz1];
-            v = AT3(rx1, ry1, rz1, q);
+            v = AT3(rx1, ry1, rz1, g3, b11 + bz1);
             b = LERP(t, u, v);
 
             d = LERP(sy, a, b);
