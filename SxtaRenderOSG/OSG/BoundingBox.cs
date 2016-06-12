@@ -1,6 +1,10 @@
 ﻿using Sxta.Math;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
-namespace Sxta.Render.OSG
+namespace Sxta.OSG
 {
     /// <summary>
     /// General purpose axis-aligned bounding box class for enclosing objects/vertices.
@@ -84,7 +88,7 @@ namespace Sxta.Render.OSG
         /// </summary>
         /// <param name="min"></param>
         /// <param name="max"></param>
-        public void set(Vector3f min, Vector3f max)
+        public void Set(Vector3f min, Vector3f max)
         {
             _min = min;
             _max = max;
@@ -235,7 +239,7 @@ namespace Sxta.Render.OSG
         /// </summary>
         /// <param name="bb"></param>
         /// <returns></returns>
-        public bool intersects(BoundingBox bb)
+        public bool Intersects(BoundingBox bb)
         {
             return System.Math.Max(xMin, bb.xMin) <= System.Math.Min(xMax, bb.xMax) &&
                    System.Math.Max(yMin, bb.yMin) <= System.Math.Min(yMax, bb.yMax) &&

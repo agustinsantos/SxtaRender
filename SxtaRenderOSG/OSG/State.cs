@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace Sxta.Render.OSG
+namespace Sxta.OSG
 {
     public class State
     {
+        internal uint getContextID()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -1,0 +1,279 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Comment CommentText="Basic functionality related with Objects, like Name, copy operations, clone, and set or get User Data">
+    <Position X="5.188" Y="0.5" Height="0.865" Width="3.481" />
+  </Comment>
+  <Comment CommentText="Tree functionality  (scene graph), like add/remove nodes, group events and visitor pattern">
+    <Position X="5.219" Y="9.396" Height="0.865" Width="3.481" />
+  </Comment>
+  <Comment CommentText="Graphic functionality. ">
+    <Position X="5.583" Y="18.448" Height="0.865" Width="3.481" />
+  </Comment>
+  <Class Name="Sxta.OSG.Group">
+    <Position X="4.5" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAIACAAgIkARADAIkAAAAACYCAABAIABAAAAFADA=</HashCode>
+      <FileName>OSG\Group.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Sxta.OSG.Node">
+    <Position X="2" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIhAAIAAABAAAgAAAAAAAgAAACIAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>OSG\Node.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Sxta.OSG.GroupExtensions">
+    <Position X="6.25" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>OSG\GroupExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Sxta.OSG.GeneralVisitor">
+    <Position X="9" Y="15.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>OSG\GeneralVisitor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Sxta.OSG.ActionVisitor">
+    <Position X="12.25" Y="15.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>OSG\ActionVisitor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Sxta.OSG.Drawable">
+    <Position X="2" Y="20.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>OSG\Drawable.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Sxta.OSG.NodeVisitor">
+    <Position X="10.5" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQIAAAhEAEBAAAAAAAAAAAAACEAEQABAAEAAAAAA=</HashCode>
+      <FileName>OSG\NodeVisitor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Sxta.OSG.BaseObject">
+    <Position X="2" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAQAAEAEACAAAAAAAAAiAQACCAkAAAAAAAAAAAIABA=</HashCode>
+      <FileName>OSG\BaseObject.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Sxta.OSG.UserDataContainer">
+    <Position X="4" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAAAgAAAAAAAAAQAAEAAAABAAAAAQAAAZAAE=</HashCode>
+      <FileName>OSG\UserDataContainer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Sxta.OSG.DefaultUserDataContainer">
+    <Position X="6.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAABAAAAggAAAAAAAAAQAAECAAABAAAAAQAQAZABE=</HashCode>
+      <FileName>OSG\DefaultUserDataContainer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Sxta.OSG.BaseObjectExtensions">
+    <Position X="12" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAE=</HashCode>
+      <FileName>OSG\BaseObjectExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Sxta.OSG.CloneUtil&lt;T&gt;">
+    <Position X="10" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>OSG\CloneUtil.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Sxta.OSG.GraphicsContext">
+    <Position X="5" Y="21" Width="1.5" />
+    <NestedTypes>
+      <Class Name="Sxta.OSG.GraphicsContext.ScreenIdentifier" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>OSG\GraphicsContext.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="Sxta.OSG.GraphicsContext.Traits" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>GraphicsContext.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="Sxta.OSG.GraphicsContext.ScreenSettings" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>GraphicsContext.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="Sxta.OSG.GraphicsContext.WindowingSystemInterface" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>GraphicsContext.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAABAAgAAAAQACAgAICAAAgAAAQAAEAAAABA=</HashCode>
+      <FileName>OSG\GraphicsContext.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Sxta.OSG.Transform">
+    <Position X="8" Y="20.75" Width="1.5" />
+    <NestedTypes>
+      <Enum Name="Sxta.OSG.Transform.ReferenceFrame" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Transform.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAARA=</HashCode>
+      <FileName>OSG\Transform.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Sxta.OSG.CullSettings">
+    <Position X="10.25" Y="21.25" Width="1.5" />
+    <NestedTypes>
+      <Enum Name="Sxta.OSG.CullSettings.VariablesMask" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>CullSettings.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Enum Name="Sxta.OSG.CullSettings.InheritanceMaskActionOnAttributeSetting" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>CullSettings.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Enum Name="Sxta.OSG.CullSettings.ComputeNearFarMode" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>CullSettings.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Enum Name="Sxta.OSG.CullSettings.CullingModeValues" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>CullSettings.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Class Name="Sxta.OSG.CullSettings.ClampProjectionMatrixCallback" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>CullSettings.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>EWBjABIAACwCAIQFGTgAAAQQAICgIhQCDUQGACGhARA=</HashCode>
+      <FileName>OSG\CullSettings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Sxta.OSG.Camera">
+    <Position X="12.25" Y="22" Width="1.5" />
+    <NestedTypes>
+      <Class Name="Sxta.OSG.Camera.DrawCallback" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Camera.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>OSG\Camera.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Sxta.OSG.DisplaySettings">
+    <Position X="12.25" Y="21" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gEJlQSZA7FQ8ZIAAQMADiABCBAxAERQCQgDIBwRg4oQ=</HashCode>
+      <FileName>OSG\DisplaySettings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Sxta.OSG.State">
+    <Position X="15.75" Y="21" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAA=</HashCode>
+      <FileName>OSG\State.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Sxta.OSG.ArgumentParser">
+    <Position X="14" Y="21" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>OSG\ArgumentParser.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Sxta.OSG.GLbitfield">
+    <Position X="15.5" Y="36.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>OSG\GLbitfield.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Sxta.OSG.RenderInfo">
+    <Position X="14" Y="22" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QCAAAAIAAQAAABUAAAAQCIIAARAAAAEgACBBAAAAAAQ=</HashCode>
+      <FileName>OSG\RenderInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Sxta.OSG.View">
+    <Position X="15.75" Y="23.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>OSG\View.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Sxta.OSG.RenderBin">
+    <Position X="15.75" Y="22.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>OSG\RenderBin.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Sxta.OSG.BoundingBox">
+    <Position X="15.75" Y="24.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAAAAAAhAACAAgEAAAgCAgCEAAEEABiAAAYAIA=</HashCode>
+      <FileName>OSG\BoundingBox.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Sxta.OSG.BoundingSphere">
+    <Position X="14" Y="27.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAMAAAAAAAABAAAAAgAAAAAAAACAAAAAAAiAAEYAIA=</HashCode>
+      <FileName>OSG\BoundingSphere.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Sxta.OSG.Stats">
+    <Position X="16" Y="30.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAIAAEAgEAAACAAAAWGAQAAggAAgAAAAAAhAgAAAI=</HashCode>
+      <FileName>OSG\Stats.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="Sxta.OSG.TraversalMode">
+    <Position X="8.5" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEACAAAAAAAAAAAAAAAAQAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>OSG\TraversalMode.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Sxta.OSG.DataVariance">
+    <Position X="4" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAEAAAAAQAAAAAAAAAAAAQAAAAAAAAAAAAA=</HashCode>
+      <FileName>OSG\DataVariance.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Sxta.OSG.CopyOp">
+    <Position X="10" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAACABABAAAICAgAAAAAgCIEAAAAAAAAAAAAAAiA=</HashCode>
+      <FileName>OSG\CopyOp.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

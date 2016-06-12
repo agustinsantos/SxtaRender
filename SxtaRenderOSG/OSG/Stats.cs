@@ -1,14 +1,13 @@
-﻿using System;
+﻿using log4net;
+using Sxta.Core;
+using Sxta.Render.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Sxta.Render.Core;
-using log4net;
 using System.Reflection;
-using Sxta.Core;
+using System.Text;
 
-namespace Sxta.Render.OSG
+namespace Sxta.OSG
 {
     public class Stats
     {
@@ -210,7 +209,7 @@ namespace Sxta.Render.OSG
         //typedef std::map<std::string, double> AttributeMap;
         //typedef std::vector<AttributeMap> AttributeMapList;
 
-        protected List<Dictionary<string, double>> _attributeMapList = new List<Dictionary<string,double>>(); // AttributeMapList
+        protected List<Dictionary<string, double>> _attributeMapList = new List<Dictionary<string, double>>(); // AttributeMapList
         protected IDictionary<string, double> _invalidAttributeMap = new Dictionary<string, double>(); //AttributeMap
 
         protected Dictionary<string, bool> _collectMap; // CollectMap

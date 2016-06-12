@@ -54,16 +54,39 @@
     <Compile Include="OSGUtil\UpdateVisitor.cs" />
     <Compile Include="OSGViewer\Viewer.cs" />
     <Compile Include="OSGViewer\ViewerBase.cs" />
+    <Compile Include="OSG\ActionVisitor.cs" />
+    <Compile Include="OSG\ArgumentParser.cs" />
+    <Compile Include="OSG\BaseObject.cs" />
+    <Compile Include="OSG\BaseObjectExtensions.cs" />
     <Compile Include="OSG\BoundingBox.cs" />
     <Compile Include="OSG\BoundingSphere.cs" />
+    <Compile Include="OSG\Camera.cs" />
+    <Compile Include="OSG\CloneUtil.cs" />
+    <Compile Include="OSG\CopyOp.cs" />
+    <Compile Include="OSG\CullSettings.cs" />
+    <Compile Include="OSG\DataVariance.cs" />
+    <Compile Include="OSG\DefaultUserDataContainer.cs" />
     <Compile Include="OSG\DisplaySettings.cs" />
+    <Compile Include="OSG\Drawable.cs" />
+    <Compile Include="OSG\GeneralVisitor.cs" />
+    <Compile Include="OSG\GLbitfield.cs" />
     <Compile Include="OSG\GraphicsContext.cs" />
     <Compile Include="OSG\GraphicsThread.cs" />
+    <Compile Include="OSG\Group.cs" />
+    <Compile Include="OSG\GroupExtensions.cs" />
+    <Compile Include="OSG\Main.cs" />
     <Compile Include="OSG\Node.cs" />
     <Compile Include="OSG\NodeVisitor.cs" />
     <Compile Include="OSG\OperationThread.cs" />
+    <Compile Include="OSG\OsgNode.cs" />
+    <Compile Include="OSG\RenderBin.cs" />
+    <Compile Include="OSG\RenderInfo.cs" />
     <Compile Include="OSG\State.cs" />
     <Compile Include="OSG\Stats.cs" />
+    <Compile Include="OSG\Transform.cs" />
+    <Compile Include="OSG\TraversalMode.cs" />
+    <Compile Include="OSG\UserDataContainer.cs" />
+    <Compile Include="OSG\View.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -73,6 +96,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="OSG\TreeDiagram.cd" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

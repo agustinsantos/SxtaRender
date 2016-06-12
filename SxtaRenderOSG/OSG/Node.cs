@@ -1,43 +1,115 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿/* OpenSceneGraph - Copyright (C) 1998-2006 Robert Osfield
+ *
+ * This library is open source and may be redistributed and/or modified under
+ * the terms of the OpenSceneGraph Public License (OSGPL) version 0.0 or
+ * (at your option) any later version.  The full license is in LICENSE file
+ * included with this distribution, and on the openscenegraph.org website.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * OpenSceneGraph Public License for more details.
+ *
+ * Ported to C#  by Agustin Santos
+*/
 
-namespace Sxta.Render.OSG
+using System;
+using System.Collections.Generic;
+
+namespace Sxta.OSG
 {
     /// <summary>
-    /// Callback to allow users to override the default computation of bounding volume.
+    /// Base class for all internal nodes in the tree.
     /// </summary>
-    /// <param name="n"></param>
-    /// <returns></returns>
-    public delegate BoundingSphere ComputeBoundDelegate(Node n);
-
-    public class Node
+    public partial class Node : BaseObject
     {
-        public virtual void Ascend(NodeVisitor nv)
+        #region Construction
+
+        /// <summary>
+        /// Construct a node.
+        /// Initialize the parent list to empty, node name to "" and
+        /// bounding sphere dirty flag to true.
+        /// </summary>
+        public Node() { }
+
+        /// <summary>
+        /// Copy constructor using CopyOp to manage deep vs shallow copy.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="copyop"></param>
+        public Node(Node node, CopyOp copyop = CopyOp.SHALLOW_COPY) :
+            base(node, copyop)
         {
-            throw new NotImplementedException();
+            nodeMask = node.nodeMask;
         }
 
-        public virtual void Traverse(NodeVisitor nv)
-        {
-            throw new NotImplementedException();
-        }
+        /// <summary>
+        /// clone an object of the same type as the node.
+        /// </summary>
+        /// <returns></returns>
+        public override BaseObject CloneType() { return new Node(); }
+
+        /// <summary>
+        /// return a clone of a node.
+        /// </summary>
+        /// <param name="copyop"></param>
+        /// <returns></returns>
+        public override BaseObject Clone(CopyOp copyop) { return new Node(this, copyop); }
+
+        #endregion
+
+        public void Apply(Action action) { }
+
+        /// <summary>
+        /// Visitor Pattern : calls the apply method of a NodeVisitor with this node's type.
+        /// </summary>
+        /// <param name="nv"></param>
         public virtual void Accept(NodeVisitor nv)
         {
-            throw new NotImplementedException();
+            if (nv.ValidNodeMask(this))
+            {
+                nv.PushOntoNodePath(this);
+                nv.Apply(this);
+                nv.PopFromNodePath();
+            }
         }
+
+        /// <summary>
+        ///  Traverse upwards : calls parents' accept method with NodeVisitor.
+        /// </summary>
+        /// <param name="nv"></param>
+        protected internal virtual void Ascend(NodeVisitor nv)
+        {
+            foreach (var parent in parents)
+            {
+                parent.Accept(nv);
+            }
+        }
+
+        /// <summary>
+        /// Traverse downwards : calls children's accept method with NodeVisitor.
+        /// </summary>
+        /// <param name="nv"></param>
+        protected internal virtual void Traverse(NodeVisitor nv) { }
+
 
         /// <summary>
         /// Get/Set the node Mask.
         /// </summary>
         public uint NodeMask
         {
-            get { return _nodeMask; }
-            set { _nodeMask = value; }
+            get { return nodeMask; }
+            set { nodeMask = value; }
         }
 
+        internal void AddParent(Group parent)
+        {
+            parents.Add(parent);
+        }
+        internal void RemoveParent(Group parent)
+        {
+            parents.Remove(parent);
+        }
 
         /*
         * This is a set of bits (flags) that represent the Node.
@@ -56,140 +128,11 @@ namespace Sxta.Render.OSG
         * would be processed and child Nodes would be examined.
         */
         //typedef unsigned int NodeMask;
-        protected uint _nodeMask = 0xffffffff;
+        protected uint nodeMask = 0xffffffff;
+
+        /// <summary>
+        /// A list of Group references which is used to store the parent(s) of node.
+        /// </summary>
+        protected List<Group> parents = new List<Group>();
     }
-#if TODO
-    /// <summary>
-    /// Base class for all internal nodes in the scene graph.
-    /// Provides interface for most common node operations (Composite Pattern).
-    /// </summary>
-    public class Node : IVisitorPattern
-    {
-
-        /** Construct a node.
-    Initialize the parent list to empty, node name to "" and
-    bounding sphere dirty flag to true.*/
-        public Node()
-        {
-            _boundingSphereComputed = false;
-#if TODO
-            _nodeMask = 0xffffffff;
-
-            _numChildrenRequiringUpdateTraversal = 0;
-
-            _numChildrenRequiringEventTraversal = 0;
-
-            _cullingActive = true;
-            _numChildrenWithCullingDisabled = 0;
-
-            _numChildrenWithOccluderNodes = 0;
- 
-#endif
-        }
-
-        /** Copy constructor using CopyOp to manage deep vs shallow copy.*/
-        public Node(Node node, CopyFlags copyop = CopyFlags.SHALLOW_COPY)
-        { throw new NotImplementedException(); }
-
-
-
-       
-
-       
-
-        internal void AddParent(Group node)
-        {
-            _parents.Add(node);
-        }
-
-        internal void RemoveParent(Group node)
-        {
-            _parents.Remove(node);
-        }
-
-        /// <summary>
-        /// the initial bounding volume to use when computing the overall bounding volume
-        /// </summary>
-        public BoundingSphere InitialBound
-        {
-            get { return _initialBound; }
-            set { _initialBound = value; DirtyBound(); }
-        }
-
-        /// <summary>
-        ///  Mark this node's bounding sphere dirty.
-        ///  Forcing it to be computed on the next call to getBound()
-        /// </summary>
-        public void DirtyBound()
-        {
-            if (_boundingSphereComputed)
-            {
-                _boundingSphereComputed = false;
-
-                // dirty parent bounding sphere's to ensure that all are valid.
-                if (_parents != null)
-                    foreach (Group parent in _parents)
-                    {
-                        parent.DirtyBound();
-                    }
-
-            }
-        }
-
-        /// <summary>
-        /// Get the bounding sphere of node.
-        /// Using lazy evaluation computes the bounding sphere if it is 'dirty'
-        /// </summary>
-        /// <returns></returns>
-        public BoundingSphere GetBound()
-        {
-            if (!_boundingSphereComputed)
-            {
-                _boundingSphere = _initialBound;
-                if (_computeBoundCallback != null)
-                    _boundingSphere.ExpandBy(_computeBoundCallback(this));
-                else
-                    _boundingSphere.ExpandBy(ComputeBound());
-
-                _boundingSphereComputed = true;
-            }
-            return _boundingSphere;
-        }
-
-
-        /// <summary>
-        /// Compute the bounding sphere around Node's geometry or children.
-        ///  This method is automatically called by getBound() when the bounding
-        /// sphere has been marked dirty via dirtyBound()
-        /// </summary>
-        /// <returns></returns>
-        public virtual BoundingSphere ComputeBound()
-        {
-            return new BoundingSphere();
-        }
-
-
-        /// <summary>
-        /// the compute bound callback to override the default computeBound.
-        /// </summary>
-        public ComputeBoundDelegate ComputeBoundingSphereCallback
-        {
-            get { return _computeBoundCallback; }
-            set { _computeBoundCallback = value; }
-        }
-
-
-
-    #region Protected
-        protected BoundingSphere _initialBound;
-        protected ComputeBoundDelegate _computeBoundCallback;
-        protected BoundingSphere _boundingSphere;
-        protected bool _boundingSphereComputed;
-
-        protected List<Group> _parents;
-
-        
-    #endregion
-    }
-#endif
 }

@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace Sxta.OSGUtil
+namespace Sxta.OSG
 {
-    public class IncrementalCompileOperation
+    public class View
     {
     }
 }

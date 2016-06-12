@@ -390,7 +390,7 @@ void main() {
     vec3 inscatter = inScattering(earthCamera, earthP, oceanSunDir, extinction, 0.0);
     vec3 finalColor = surfaceColor * extinction + inscatter;
 
-    data.rgb = hdr(finalColor);
+    data.rgb = vec3(1.0, 0.0, 0.0)+hdr(finalColor);
     data.a = 1.0;
 }
 
