@@ -79,9 +79,9 @@
   </module>
 
  
-  <module name="upsampleShader" version="330" source="upsampleShader.glsl"/>
+  <module name="upsampleShader" version="330" source="upsampleShaderTest.glsl"/>
 
-  <module name="normalShader" version="330" source="normalShader.glsl"/>
+  <module name="normalShader" version="330" source="normalShaderTest.glsl"/>
 
   <module name="terrainShader" version="330" source="terrainShader.glsl"/>
   
