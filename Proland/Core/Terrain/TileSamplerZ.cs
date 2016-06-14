@@ -163,7 +163,7 @@ void main() {
 
         public override Sxta.Render.Scenegraph.Task update(SceneManager scene, TerrainQuad root)
         {
-            Sxta.Render.Scenegraph.Task result = update(scene, root);
+            Sxta.Render.Scenegraph.Task result = base.update(scene, root);
             uint frameNumber = scene.getFrameNumber();
 
             if ((root.getOwner().getLocalCamera() - oldLocalCamera).Length > 0.1 && cameraQuad != null && cameraQuad.t != null)
@@ -312,7 +312,7 @@ void main() {
             {
                 return true;
             }
-            return needTile(q);
+            return base.needTile(q);
         }
 
         internal override void getTiles(Tree parent, Tree t, TerrainQuad q, TaskGraph result)
@@ -333,7 +333,7 @@ void main() {
                 ((TreeZ)(t)).readbackDate = (t).t.task.getCompletionDate();
             }
 
-            getTiles(parent, t, q, result);
+           base.getTiles(parent, t, q, result);
 
             if (cameraQuad == null && (t).t != null && (t).t.task.isDone())
             {
