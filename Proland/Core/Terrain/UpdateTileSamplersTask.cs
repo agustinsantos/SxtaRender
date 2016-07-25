@@ -72,7 +72,7 @@ namespace proland
             Method N = (Method)context;
             SceneNode n = N.getOwner();
             SceneNode target = terrain.getTarget(n);
-            TerrainNode t = new TerrainNode();
+            TerrainNode t;
             if (target == null)
             {
                 t = n.getOwner().getResourceManager().loadResource(terrain.name).get() as TerrainNode;

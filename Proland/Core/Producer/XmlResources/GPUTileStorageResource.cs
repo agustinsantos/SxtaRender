@@ -74,7 +74,7 @@ namespace Sxta.Proland.Core.Producer.XmlResources
             {
                 useTileMap = e.GetAttribute("tileMap") == "true"; // == 0???
             }
-           this. valueC = new GPUTileStorage(tileSize, nTiles, tf, f, t, _params, useTileMap);
+           this.valueC = new GPUTileStorage(tileSize, nTiles, tf, f, t, _params, useTileMap);
 
         }
     }

@@ -69,7 +69,7 @@ namespace Sxta.Proland.Core.Terrain.XmlResources
                 string[] result = nodes.Split(stringSeparator, StringSplitOptions.RemoveEmptyEntries);
                 foreach (var node in result)
                 {
-                    valueC.addTerrain((TerrainNode)(manager.loadResource(node).get()));
+                    valueC.addTerrain(manager.loadResource(node).get() as TerrainNode);
                 }
             }
             if (e.GetAttribute("storeLeaf") != null && e.GetAttribute("storeLeaf") == "false")

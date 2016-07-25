@@ -769,7 +769,25 @@ namespace proland
          */
         protected void checkUniforms()
         {
-
+            Program p = SceneManager.getCurrentProgram();
+            if (p != lastProgram)
+            {
+                samplerU = p.getUniformSampler(name + ".tilePool");
+                coordsU = p.getUniform3f(name + ".tileCoords");
+                sizeU = p.getUniform3f(name + ".tileSize");
+                tileMapU = p.getUniformSampler(name + ".tileMap");
+                quadInfoU = p.getUniform4f(name + ".quadInfo");
+                poolInfoU = p.getUniform4f(name + ".poolInfo");
+                
+                cameraU.Clear();
+                for (uint i = 0; i < terrains.Count(); ++i)
+                {
+                    string oss = name + ".camera[" + i + "]";
+                    cameraU.Add(p.getUniform4f(oss));
+                }
+               
+                lastProgram = p;
+            }
         }
 
         public virtual void swap(TileSampler p)
@@ -810,7 +828,7 @@ namespace proland
          * Last used GLSL program. Updated each time #setTile or #setTileMap is called with a
          * different Program. Helps to retrieve the correct Uniforms and store them.
          */
-        private Program lastProgram = new Program();
+        private Program lastProgram;
 
         /**
          * The texture sampler to access the proland.GPUTileStorage.

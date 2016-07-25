@@ -48,7 +48,7 @@ namespace proland
             else
             {
                 TerrainNodeResource tr = (TerrainNodeResource)target.getField(terrain.name);
-                t = (TerrainNode)tr.get();
+                t = tr.get() as TerrainNode;
             }
             if (t == null)
             {
@@ -63,7 +63,7 @@ namespace proland
             target = mesh.getTarget(n);
             if (target == null)
             {
-                m = (MeshBuffers)n.getOwner().getResourceManager().loadResource(mesh.name + ".mesh").get();
+                m = n.getOwner().getResourceManager().loadResource(mesh.name + ".mesh").get() as MeshBuffers;
             }
             else
             {

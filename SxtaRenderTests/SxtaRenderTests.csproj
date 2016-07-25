@@ -59,7 +59,6 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="CompileShaderTest.cs" />
     <Compile Include="ImageDDSTest.cs" />
     <Compile Include="TerrainSquareTest.cs" />
     <Compile Include="TextureFormatsTest.cs" />

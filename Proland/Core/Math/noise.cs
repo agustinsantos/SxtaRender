@@ -162,6 +162,7 @@ namespace proland
                 k = p[i];
                 p[i] = p[j = Convert.ToInt16(lrandom(ref seed) % 256)];
                 p[j] = k;
+                i -= 1;
             }
             for (i = 0; i < 256 + 2; ++i)
             {
