@@ -151,7 +151,8 @@ vec4 uv = vec4(xy + vec2(0.25), xy + vec2(0.75)) / float(bufferLayerLevelWidth.w
             /// <param name="l">the layer of the tile in the 2D texture array t.</param>
             public GPUSlot(TileStorage owner, int index, Texture2DArray t, int l) : base(owner)
             {
-                l = 1;
+                l = l;
+                this.t = t;
                 this.index = index;
             }
 
