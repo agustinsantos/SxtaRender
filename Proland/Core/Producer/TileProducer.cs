@@ -883,8 +883,8 @@ namespace proland
                     Debug.Assert((CreateTileTaskGraph)r2 != null);
                     tasks.Add(r2);
                 }
-                return r2;
             }
+            return r2;
         }
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
     }

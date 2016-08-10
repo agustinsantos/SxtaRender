@@ -3452,7 +3452,7 @@ namespace Sxta.Render
                 log.DebugFormat("read {0} pixels", w * h);
 #endif
 
-#if TODO
+
             set();
             dstBuf.bind(BufferTarget.PixelPackBuffer);
             s.set();
@@ -3466,8 +3466,8 @@ namespace Sxta.Render
             s.unset();
             dstBuf.unbind(BufferTarget.PixelPackBuffer);
             Debug.Assert(getError() == ErrorCode.NoError);  
-#endif
-            throw new NotImplementedException();
+
+            //throw new NotImplementedException();
         }
 
 

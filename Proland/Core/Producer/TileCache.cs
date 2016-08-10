@@ -191,7 +191,7 @@ namespace proland
                 {
                     bool deletedTile = false;
                     ++queries;
-                    if (unusedTiles.ContainsKey(id) == false)
+                    if (!unusedTiles.TryGetValue(id, out t))
                     {
                         // the requested tile is not in storage, it must be created
                         TileStorage.Slot data = storage.newSlot();
@@ -265,6 +265,9 @@ namespace proland
                         users = t.users;
                     }
                     t.users += 1;
+                } else
+                {
+                    ;
                 }
                 return t;
             }

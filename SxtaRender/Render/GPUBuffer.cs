@@ -320,7 +320,7 @@ namespace Sxta.Render
             {
 #if OPENTK
                 GL.BindBuffer(BufferTarget.CopyReadBuffer, bufferId);
-                IntPtr mapData = GL.MapBuffer(BufferTarget.CopyReadBuffer, EnumConversion.getBufferAccess(a));
+                mappedData = GL.MapBuffer(BufferTarget.CopyReadBuffer, EnumConversion.getBufferAccess(a));
                 GL.BindBuffer(BufferTarget.CopyReadBuffer, 0);
 #else
                 glBindBuffer(GL_COPY_READ_BUFFER, bufferId);

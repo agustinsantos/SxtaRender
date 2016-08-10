@@ -48,18 +48,19 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace proland
 {
     class TileSamplerZ : TileSampler
     {
-        int MAX_MIPMAP_PER_FRAME = 16;
+        const int MAX_MIPMAP_PER_FRAME = 16;
         const string minmaxShader = @"
 uniform vec4 viewport; // size in pixels and one over size in pixels
 #ifdef _VERTEX_
 layout(location=0) in vec4 vertex;
 void main() {
-    gl_Position = vec4((vertex.xy + vec2(1.0))///viewport.xy - vec2(1.0), 0.0, 1.0);
+    gl_Position = vec4((vertex.xy + vec2(1.0)) * viewport.xy - vec2(1.0), 0.0, 1.0);
 }
 #endif
 #ifdef _FRAGMENT_
@@ -73,7 +74,7 @@ void main() {
     vec2 ij = floor(gl_FragCoord.xy);
     if (sizes.z == 0.0) {
         ivec4 tile = tiles[int(floor(ij.x / sizes.y))];
-        vec4 uv = (tile.z == 0 && tile.w == 0) ? vec4(vec2(2.5) + 4.0///mod(ij, sizes.yy), vec2(sizes.x - 2.5)) : tile.zwzw + vec4(0.5);
+        vec4 uv = (tile.z == 0 && tile.w == 0) ? vec4(vec2(2.5) + 4.0 * mod(ij, sizes.yy), vec2(sizes.x - 2.5)) : tile.zwzw + vec4(0.5);
         vec4 u = min(vec4(uv.x, uv.x + 1.0, uv.x + 2.0, uv.x + 3.0), uv.zzzz) / sizes.x;
         vec4 v = min(vec4(uv.y, uv.y + 1.0, uv.y + 2.0, uv.y + 3.0), uv.wwww) / sizes.x;
         switch (tile.x) {
@@ -120,10 +121,10 @@ void main() {
         }
     } else {
         vec2 tile = floor(ij / sizes.y);
-        vec2 uvmax = vec2(tile///sizes.x + vec2(sizes.x - 0.5));
-        vec2 uv = vec2(0.5) + tile///sizes.x + 4.0///(ij - tile///sizes.y);
-        vec4 u = min(vec4(uv.x, uv.x + 1.0, uv.x + 2.0, uv.x + 3.0), uvmax.xxxx)///viewport.z;
-        vec4 v = min(vec4(uv.y, uv.y + 1.0, uv.y + 2.0, uv.y + 3.0), uvmax.yyyy)///viewport.w;
+        vec2 uvmax = vec2(tile * sizes.x + vec2(sizes.x - 0.5));
+        vec2 uv = vec2(0.5) + tile * sizes.x + 4.0 * (ij - tile * sizes.y);
+        vec4 u = min(vec4(uv.x, uv.x + 1.0, uv.x + 2.0, uv.x + 3.0), uvmax.xxxx) * viewport.z;
+        vec4 v = min(vec4(uv.y, uv.y + 1.0, uv.y + 2.0, uv.y + 3.0), uvmax.yyyy) * viewport.w;
         for (int i = 0; i < 16; ++i) {
             r[i] = textureLod(input_, vec2(u[i/4], v[i%4]), 0.0).xy;
         }
@@ -187,9 +188,14 @@ void main() {
             {
                 return result;
             }
-            state.tileReadback.newFrame();
-            state.lastFrame = frameNumber;
-
+            try {
+                state.tileReadback.newFrame();
+                state.lastFrame = frameNumber;
+            }
+            catch (Exception ex)
+            {
+                ;
+            }
             List<GPUTileStorage.GPUSlot> gpuTiles = new List<GPUTileStorage.GPUSlot>();
             List<TerrainQuad> targets = new List<TerrainQuad>();
             Vector2i camera = new Vector2i(0, 0);
@@ -460,7 +466,8 @@ void main() {
 
             public virtual void dataRead(/**volatile**/ Object data)
             {
-                float[] values = (float[])data;
+                float[] values = new float[targets.Count() * 2];
+                Marshal.Copy((IntPtr)data, values, 0, values.Count());
                 int i = 0;
                 if (camera)
                 {
@@ -508,7 +515,7 @@ void main() {
 
             public Uniform3f sizesU;
 
-            public List<Uniform4i> tileU;
+            public List<Uniform4i> tileU = new List<Uniform4i>();
 
             public UniformSampler inputU;
 
@@ -550,6 +557,48 @@ void main() {
                 this.storage = storage;
                 cameraSlot = null;
                 lastFrame = 0;
+
+                Debug.Assert(storage.getTextureCount() < 8);
+                int tileSize = storage.getTileSize();
+                int h = (tileSize - 4) / 4 + (tileSize % 4 == 0 ? 0 : 1);
+                int w = MAX_MIPMAP_PER_FRAME * h;
+                fbo = new FrameBuffer();
+                fbo.setViewport(new Vector4i(0, 0, w, h));
+                fbo.setTextureBuffer(BufferId.COLOR0, new Texture2D(w, h, TextureInternalFormat.RG32F, TextureFormat.RG, PixelType.FLOAT,
+                        new Texture.Parameters().min(TextureFilter.NEAREST).mag(TextureFilter.NEAREST), new Sxta.Render.Buffer.Parameters(), new CPUBuffer<byte>()), 0);
+                fbo.setTextureBuffer(BufferId.COLOR1, new Texture2D(w, h, TextureInternalFormat.RG32F, TextureFormat.RG, PixelType.FLOAT,
+                        new Texture.Parameters().min(TextureFilter.NEAREST).mag(TextureFilter.NEAREST), new Sxta.Render.Buffer.Parameters(), new CPUBuffer<byte>()), 0);
+                int pass = 0;
+                while (h != 1)
+                {
+                    h = h / 4 + (h % 4 == 0 ? 0 : 1);
+                    pass += 1;
+                }
+                readBuffer = pass % 2 == 0 ? BufferId.COLOR0 : BufferId.COLOR1;
+                fbo.setReadBuffer(readBuffer);
+
+                minmaxProg = new Program(new Module(330, minmaxShader));
+                viewportU = minmaxProg.getUniform4f("viewport");
+                sizesU = minmaxProg.getUniform3f("sizes");
+                inputU = minmaxProg.getUniformSampler("input_");
+                Sampler s = new Sampler(new Sampler.Parameters().min(TextureFilter.NEAREST).mag(TextureFilter.NEAREST));
+                //char buf[256];
+                string buf;
+                for (int i = 0; i < storage.getTextureCount(); ++i)
+                {
+                    //sprintf(buf, "inputs[%d]", i);
+                    buf = string.Format("inputs[{0}]", i);
+                    minmaxProg.getUniformSampler(buf).set(storage.getTexture(i));
+                    minmaxProg.getUniformSampler(buf).setSampler(s);
+                }
+                for (int i = 0; i < MAX_MIPMAP_PER_FRAME; ++i)
+                {
+                    //sprintf(buf, "tiles[%d]", i);
+                    buf = string.Format("tiles[{0}]", i);
+                    tileU.Add(minmaxProg.getUniform4i(buf));
+                }
+
+                tileReadback = new ReadbackManager(1, 3, MAX_MIPMAP_PER_FRAME * 2 * sizeof(float));
             }
         };
 

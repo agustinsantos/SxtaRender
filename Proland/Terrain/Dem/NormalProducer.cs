@@ -183,20 +183,24 @@ namespace Sxta.Proland.Terrain
         protected internal override Render.Scenegraph.Task startCreateTile(int level, int tx, int ty, uint deadline, Render.Scenegraph.Task task, TaskGraph owner)
         {
             TaskGraph result = owner == null ? createTaskGraph(task) : owner;
+            try {
+                if (level > 0)
+                {
+                    TileCache.Tile _t = getTile(level - 1, tx / 2, ty / 2, deadline);
+                    Debug.Assert(_t != null);
+                    result.addTask(_t.task);
+                    result.addDependency(task, _t.task);
+                }
 
-            if (level > 0)
-            {
-                TileCache.Tile _t = getTile(level - 1, tx / 2, ty / 2, deadline);
-                Debug.Assert(_t != null);
-                result.addTask(_t.task);
-                result.addDependency(task, _t.task);
+                TileCache.Tile t = elevationTiles.getTile(level, tx, ty, deadline);
+                Debug.Assert(t != null);
+                result.addTask(t.task);
+                result.addDependency(task, t.task);
             }
-
-            TileCache.Tile t = elevationTiles.getTile(level, tx, ty, deadline);
-            Debug.Assert(t != null);
-            result.addTask(t.task);
-            result.addDependency(task, t.task);
-
+            catch (Exception ex)
+            {
+                ;
+            }
             return result;
         }
 

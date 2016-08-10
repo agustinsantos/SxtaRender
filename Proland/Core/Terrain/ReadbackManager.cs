@@ -38,8 +38,8 @@ namespace proland
             this.bufferSize = bufferSize;
 
             readCount = new int[readbackDelay];
-            GPUBuffer[][] toRead = new GPUBuffer[readbackDelay][];
-            Callback[][] toReadCallbacks = new Callback[readbackDelay][];
+            toRead = new GPUBuffer[readbackDelay][];
+            toReadCallbacks = new Callback[readbackDelay][];
 
             for (int i = 0; i < readbackDelay; ++i)
             {
@@ -132,6 +132,6 @@ namespace proland
         private GPUBuffer[][] toRead;
         private Callback[][] toReadCallbacks;
         private int bufferSize;
-    };
+    }
 }
 

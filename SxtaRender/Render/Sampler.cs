@@ -841,6 +841,8 @@ namespace Sxta.Render
         /// map associates the shared sampler id and the corresponding number of
         /// Sampler object to each possible valueC for the sampler parameters.
 		/// </summary>
-        private static Dictionary<Sampler.Parameters, Tuple<uint, uint>> INSTANCES;
+        private static Dictionary<Sampler.Parameters, Tuple<uint, uint>> INSTANCES = new Dictionary<Sampler.Parameters, Tuple<uint, uint>>();
+
+
     }
 }
