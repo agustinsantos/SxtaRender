@@ -204,7 +204,7 @@ namespace proland
                     //SceneNode.FieldIterator i = n.getFields();
                     foreach (KeyValuePair<string, object> i in n.getFields())
                     {
-                        TileSampler u = i.Value as TileSampler; //TODO Dani to review this casting ?
+                        TileSampler u = ((Resource)i.Value).get() as TileSampler; //TODO Dani to review this casting ?
                         if (u != null)
                         {
                             if (u.getTerrain(0) != null)

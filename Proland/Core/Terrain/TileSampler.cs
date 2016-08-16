@@ -318,6 +318,10 @@ namespace proland
                 tt = tt.parent;
                 Debug.Assert(tt != null);
                 t = tt.t;
+                if (tt == null || tt.t == null)
+                {
+                    ;
+                }
             }
 
             dx = dx * ((s / 2) * 2 - 2 * b) / dd;
@@ -426,8 +430,8 @@ namespace proland
                     int prefetchCount = producer.getCache().getUnusedTiles() + producer.getCache().getStorage().getFreeSlots();
                     prefetch(this.root, root, prefetchCount);
                 }
-                putTiles(this.root, root);
-                getTiles(null, this.root, root, result);
+                putTiles(ref this.root, root);
+                getTiles(null, ref this.root, root, result);
 
                 GPUTileStorage storage = (GPUTileStorage)producer.getCache().getStorage();
                 if (storage.getTileMap() != null)
@@ -593,7 +597,7 @@ namespace proland
          * @param t the internal quadtree node corresponding to q.
          * @param q a quadtree node.
          */
-        internal virtual void putTiles(Tree t, TerrainQuad q)
+        internal virtual void putTiles(ref Tree t, TerrainQuad q)
         {
             if (t == null)
             {
@@ -628,7 +632,7 @@ namespace proland
             {
                 for (int i = 0; i < 4; ++i)
                 {
-                    putTiles(t.children[i], q.children[i]);
+                    putTiles(ref t.children[i], q.children[i]);
                 }
             }
         }
@@ -642,12 +646,16 @@ namespace proland
          * @param q a quadtree node.
          * @param result the task %graph to collect the tile %producer tasks.
          */
-        internal virtual void getTiles(Tree parent, Tree t, TerrainQuad q, TaskGraph result)
+        internal virtual void getTiles(Tree parent, ref Tree t, TerrainQuad q, TaskGraph result)
         {
             if (t == null)
             {
                 t = new Tree(parent);
                 t.needTile = needTile(q);
+                if (t.needTile == false && t.parent == null)
+                {
+                    Debugger.Break();
+                }
                 if (q.level == 0 && producer.getRootQuadSize() == 0.0f)
                 {
                     producer.setRootQuadSize((float)q.l);
@@ -679,6 +687,10 @@ namespace proland
                     else
                     {
                         t.t = producer.getTile(q.level, q.tx, q.ty, 0);
+                        if (t.t == null)
+                        {
+                            Debugger.Break();
+                        }
                         if (t.t == null && log.IsErrorEnabled)
                         {
                             log.Error("Insufficient tile cache size for '" + name + "' uniform");
@@ -695,12 +707,15 @@ namespace proland
                     }
                 }
             }
-
+            if (t.t == null && t.parent == null)
+            {
+                Debugger.Break();
+            }
             if (q.children[0] != null && producer.hasChildren(q.level, q.tx, q.ty))
             {
                 for (int i = 0; i < 4; ++i)
                 {
-                    getTiles(t, t.children[i], q.children[i], result);
+                    getTiles(t, ref t.children[i], q.children[i], result);
                 }
             }
         }

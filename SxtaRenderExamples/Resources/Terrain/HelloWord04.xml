@@ -54,7 +54,7 @@
 
   <module name="cameraShader" version="330" source="camera.glsl"/>
 
-  <terrainNode name="myTerrain" size="30" zmin="-1" zmax="1" splitFactor="2" maxLevel="7"/>
+  <terrainNode name="myTerrain" size="30" zmin="-1" zmax="1" splitFactor="2" maxLevel="2"/>
 
   <sequence name="updateTerrainMethod">
     <updateTerrain name="this.terrain"/>
@@ -81,7 +81,7 @@
 
   <module name="normalShader" version="330" source="normalShader.glsl"/>
 
-  <module name="terrainShader" version="330" source="terrainShader.glsl"/>
+  <module name="terrainShader" version="330" source="terrainShaderEx1.glsl"/>
   
   <node name="scene">
     <node flags="camera">

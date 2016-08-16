@@ -175,6 +175,7 @@ void main() {
 #else
     data = vec4(zf, zc, max(zf, 0.0), 0.0);
 #endif
+
 }
 
 #endif

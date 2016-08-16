@@ -321,12 +321,13 @@ void main() {
             return base.needTile(q);
         }
 
-        internal override void getTiles(Tree parent, Tree t, TerrainQuad q, TaskGraph result)
+        internal override void getTiles(Tree parent, ref Tree t, TerrainQuad q, TaskGraph result)
         {
             if (t == null)
             {
                 t = new TreeZ(parent, q);
-                (t).needTile = needTile(q);
+                t.needTile = needTile(q);
+
                 if (q.level == 0 && get().getRootQuadSize() == 0.0f)
                 {
                     get().setRootQuadSize((float)q.l);
@@ -339,7 +340,7 @@ void main() {
                 ((TreeZ)(t)).readbackDate = (t).t.task.getCompletionDate();
             }
 
-           base.getTiles(parent, t, q, result);
+           base.getTiles(parent, ref t, q, result);
 
             if (cameraQuad == null && (t).t != null && (t).t.task.isDone())
             {

@@ -148,10 +148,10 @@ namespace proland
             float dist = (float)Math.Max(Math.Abs(localCameraPos.Z - localBox.zmax) / distFactor,
                    Math.Max(Math.Min(Math.Abs(localCameraPos.X - localBox.xmin), Math.Abs(localCameraPos.X - localBox.xmax)),
                         Math.Min(Math.Abs(localCameraPos.Y - localBox.ymin), Math.Abs(localCameraPos.Y - localBox.ymax))));
-            if (dist >= 29.9)
+            /**if (dist >= 29.9)
             {
                 Console.WriteLine(Math.Abs(localCameraPos.Y - localBox.ymin) + " + " + Math.Abs(localCameraPos.Y - localBox.ymax));
-            }
+            }**/
             return (float)Math.Max(Math.Abs(localCameraPos.Z - localBox.zmax) / distFactor,
                    Math.Max(Math.Min(Math.Abs(localCameraPos.X - localBox.xmin), Math.Abs(localCameraPos.X - localBox.xmax)),
                         Math.Min(Math.Abs(localCameraPos.Y - localBox.ymin), Math.Abs(localCameraPos.Y - localBox.ymax))));
