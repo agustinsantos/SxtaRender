@@ -253,7 +253,7 @@ namespace Sxta.Proland.Terrain
                     float _dx = (tx % 2) * (tileWidth / 2.0f);
                     float _dy = (ty % 2) * (tileWidth / 2.0f);
                     normalSamplerU.set(parentGpuData.t);
-                    normalOSLU.set(new Vector4f((_dx + 0.25f) / parentGpuData.getWidth(), (_dy + 0.25f) / parentGpuData.getHeight(), 1.0f / parentGpuData.getWidth(), GPUTileStorage.GPUSlot.l));
+                    normalOSLU.set(new Vector4f((_dx + 0.25f) / parentGpuData.getWidth(), (_dy + 0.25f) / parentGpuData.getHeight(), 1.0f / parentGpuData.getWidth(), parentGpuData.l));
                 }
                 else
                 {
@@ -264,7 +264,7 @@ namespace Sxta.Proland.Terrain
             float dx = (elevationTiles.getBorder());
             float dy = (elevationTiles.getBorder());
             elevationSamplerU.set(elevationGpuData.t);
-            elevationOSLU.set(new Vector4f((dx + 0.25f) / elevationGpuData.getWidth(), (dy + 0.25f) / elevationGpuData.getHeight(), 1.0f / elevationGpuData.getWidth(), GPUTileStorage.GPUSlot.l));
+            elevationOSLU.set(new Vector4f((dx + 0.25f) / elevationGpuData.getWidth(), (dy + 0.25f) / elevationGpuData.getHeight(), 1.0f / elevationGpuData.getWidth(), elevationGpuData.l));
 
             if (deform)
             {

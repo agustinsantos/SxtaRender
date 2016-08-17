@@ -327,7 +327,7 @@ namespace proland
             dx = dx * ((s / 2) * 2 - 2 * b) / dd;
             dy = dy * ((s / 2) * 2 - 2 * b) / dd;
 
-            GPUTileStorage mip = (GPUTileStorage)(producer.getCache().getStorage());
+            GPUTileStorage mip = (producer.getCache().getStorage()) as GPUTileStorage;
             mip.generateMipMap();
             GPUTileStorage.GPUSlot gput = (GPUTileStorage.GPUSlot)(t.getData());
             Debug.Assert(gput != null);
@@ -339,11 +339,11 @@ namespace proland
             Vector4f coords;
             if (s % 2 == 0)
             {
-                coords = new Vector4f((dx + b) / w, (dy + b) / h, (float)(GPUTileStorage.GPUSlot.l), ds / w);
+                coords = new Vector4f((dx + b) / w, (dy + b) / h, (float)(gput.l), ds / w);
             }
             else
             {
-                coords = new Vector4f((dx + b + 0.5f) / w, (dy + b + 0.5f) / h, (float)(GPUTileStorage.GPUSlot.l), ds / w);
+                coords = new Vector4f((dx + b + 0.5f) / w, (dy + b + 0.5f) / h, (float)(gput.l), ds / w);
             }
 
             samplerU.set(gput.t);
@@ -368,7 +368,7 @@ namespace proland
             {
                 return;
             }
-            GPUTileStorage storage = (GPUTileStorage)producer.getCache().getStorage();
+            GPUTileStorage storage = producer.getCache().getStorage() as GPUTileStorage;
             if (storage.getTileMap() != null)
             {
                 storage.generateMipMap();
@@ -433,7 +433,7 @@ namespace proland
                 putTiles(ref this.root, root);
                 getTiles(null, ref this.root, root, result);
 
-                GPUTileStorage storage = (GPUTileStorage)producer.getCache().getStorage();
+                GPUTileStorage storage = producer.getCache().getStorage() as GPUTileStorage;
                 if (storage.getTileMap() != null)
                 {
                     TerrainNode n = root.getOwner();
@@ -707,10 +707,10 @@ namespace proland
                     }
                 }
             }
-            if (t.t == null && t.parent == null)
+            /**if (t.t == null && t.parent == null)
             {
                 Debugger.Break();
-            }
+            }*/
             if (q.children[0] != null && producer.hasChildren(q.level, q.tx, q.ty))
             {
                 for (int i = 0; i < 4; ++i)

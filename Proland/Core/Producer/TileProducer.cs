@@ -317,11 +317,11 @@ namespace proland
 
             if (s % 2 == 0)
             {
-                return new Vector4f((dx + b) / w, (dy + b) / h, (float)(GPUTileStorage.GPUSlot.l), ds / w);
+                return new Vector4f((dx + b) / w, (dy + b) / h, (float)(gput.l), ds / w);
             }
             else
             {
-                return new Vector4f((dx + b + 0.5f) / w, (dy + b + 0.5f) / h, (float)(GPUTileStorage.GPUSlot.l), ds / w);
+                return new Vector4f((dx + b + 0.5f) / w, (dy + b + 0.5f) / h, (float)(gput.l), ds / w);
             }
         }
 
@@ -470,7 +470,7 @@ namespace proland
                                 TileStorage.Slot data = t.getData(false);
                                 if (data != null)
                                 {
-                                    gpuData = (GPUTileStorage.GPUSlot)(data);
+                                    gpuData = data as GPUTileStorage.GPUSlot;
                                 }
                                 // hash code key for (level,tx,ty) tile
                                 // TODO hash code key collisions not handled!
@@ -484,8 +484,8 @@ namespace proland
                                 }
                                 else
                                 {
-                                    x = GPUTileStorage.GPUSlot.l % 256;
-                                    y = GPUTileStorage.GPUSlot.l / 256 + 1;
+                                    x = (byte)(gpuData.l % 256);
+                                    y = (byte)(gpuData.l / 256 + 1);
                                 }
                                 if (y != 0 && tileMap[2 * key + 1] != 0)
                                 {
@@ -543,8 +543,8 @@ namespace proland
                             }
                             else
                             {
-                                x = GPUTileStorage.GPUSlot.l % 256;
-                                y = GPUTileStorage.GPUSlot.l / 256 + 1;
+                                x = (byte)(gpuData.l % 256);
+                                y = (byte)(gpuData.l / 256 + 1);
                             }
                             tileMap[2 * n] = x;
                             tileMap[2 * n + 1] = y;
@@ -878,7 +878,7 @@ namespace proland
             lock (mutex)
             {
                 tasks.Add(t);
-                if (r2 != t)
+                if (r2 != t)    //TOSEE Equals???
                 {
                     Debug.Assert((CreateTileTaskGraph)r2 != null);
                     tasks.Add(r2);
@@ -929,7 +929,7 @@ namespace proland
         ///<summary>
         /// Cache last result from getContext.
         ///</summary>
-        public ulong cachedContext;
+        public object cachedContext;
 
         ///<summary>
         /// True is the tiles needed to create this tile have been acquired with
@@ -992,13 +992,13 @@ namespace proland
 
             if (owner != null)
             { // the owner exists
-                cachedContext = ((ulong)owner.GetType().FullName.GetHashCode() + owner.getContext());
+                cachedContext = owner.GetType().FullName + (owner.getContext() != null ? owner.getContext().ToString() : "Null");
                 return cachedContext;
             }
             else
             {
                 // the owner may have been destroyed, this is a workaround
-                Debug.Assert(cachedContext != 0);
+                Debug.Assert(cachedContext != null);
                 return cachedContext; // return last successful result
             }
         }

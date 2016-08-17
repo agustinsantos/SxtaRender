@@ -87,8 +87,27 @@ namespace proland
         {
             init(storage, name, scheduler);
         }
-        // ~TileCache() { Debugger.Break(); }
-      
+        ~TileCache()
+        {
+            //TODO pthread_mutex_destroy((pthread_mutex_t*)mutex);
+            //TODO delete (pthread_mutex_t*) mutex;
+            mutex = null;
+            // The users of a TileCache must release all their tiles with putTile
+            // before they erase their reference to the TileCache. Hence a TileCache
+            // cannot be deleted before all tiles are unused. So usedTiles should be
+            // empty at this point
+            Debug.Assert(usedTiles.Count == 0);
+            unusedTiles.Clear();
+            // releases the storage used by the unused tiles
+            foreach (Tile i in unusedTilesOrder)
+            {
+                storage.deleteSlot(i.data);
+                // TODO delete *i;
+            }
+            unusedTilesOrder.Clear();
+            deletedTiles.Clear();
+        }
+
         /*
         * Returns the storage used to store the actual tiles data.
         */
@@ -186,7 +205,7 @@ namespace proland
             lock (mutex)
             {
                 Tile.TId id = Tile.getTId(producerId, level, tx, ty);
-                Tile t = null;
+                Tile t;
                 if (!usedTiles.TryGetValue(id, out t))
                 {
                     bool deletedTile = false;
@@ -211,12 +230,10 @@ namespace proland
                         else
                         {
                             ++misses;
-                            Task task = null;
+                            Task task;
                             //map<Tile.TId, Task>.iterator i = deletedTiles.find(id);
-                            if (deletedTiles.ContainsKey(id))
+                            if (deletedTiles.TryGetValue(id, out task))
                             {
-                                // if the task for creating this tile still exists, we reuse it
-                                deletedTiles.TryGetValue(id, out task);
                                 deletedTile = true;
                                 deletedTiles.Remove(id);
                             }
@@ -295,9 +312,9 @@ namespace proland
             {
                 Tile.TId id = Tile.getTId(producerId, level, tx, ty);
                 Task task = null;
-                if (usedTiles.ContainsKey(id))
+                if (!usedTiles.ContainsKey(id))
                 {
-                    if (unusedTiles.ContainsKey(id) == true)
+                    if (!unusedTiles.ContainsKey(id))
                     {
                         // the requested tile is not in storage, it must be created
                         TileStorage.Slot data = storage.newSlot();
@@ -310,6 +327,7 @@ namespace proland
                             unusedTiles.Remove(t.getTId());
                             unusedTilesOrder.Remove(t);
                             deletedTiles.Add(t.getTId(), t.task);
+                            //TOSEE delete t
                         }
                         if (data != null)
                         {
@@ -327,7 +345,8 @@ namespace proland
                             task = producers[producerId].createTile(level, tx, ty, data, deadline, task);
                             // creates the requested tile
                             Tile t = new Tile(producerId, level, tx, ty, task, data);
-                            unusedTiles[id] = t;
+                            unusedTilesOrder.Add(t);
+                            unusedTiles[id] = t;    //TOSEE Agustin
                             if (deletedTile)
                             {
                                 // if the tile data was not in storage and if the task to create it
@@ -381,7 +400,7 @@ namespace proland
                     // adds it to the unused tiles list
                     Debug.Assert(unusedTiles.ContainsKey(id));
                     unusedTilesOrder.Add(t);
-                    unusedTiles.Add(id, t);
+                    unusedTiles.Add(id, t); //TOSEE Agustin
                     /*if (Logger.DEBUG_LOGGER != null) {
                         ostringstream oss;
                         oss << "tiles: " << usedTiles.size() << " used, " << unusedTiles.size() << " reusable";

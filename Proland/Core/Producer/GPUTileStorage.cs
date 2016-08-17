@@ -139,7 +139,7 @@ vec4 uv = vec4(xy + vec2(0.25), xy + vec2(0.75)) / float(bufferLayerLevelWidth.w
             /// <summary>
             /// The layer of the tile in the 2D texture array 't'.
             /// </summary>
-            public const int l = 1;
+            public readonly int l = 1;
 
             /// <summary>
             /// Creates a new GPUSlot.
@@ -151,7 +151,7 @@ vec4 uv = vec4(xy + vec2(0.25), xy + vec2(0.75)) / float(bufferLayerLevelWidth.w
             /// <param name="l">the layer of the tile in the 2D texture array t.</param>
             public GPUSlot(TileStorage owner, int index, Texture2DArray t, int l) : base(owner)
             {
-                l = l;
+                this.l = l;
                 this.t = t;
                 this.index = index;
             }
@@ -283,7 +283,7 @@ vec4 uv = vec4(xy + vec2(0.25), xy + vec2(0.75)) / float(bufferLayerLevelWidth.w
                         fbo.setDrawBuffer((BufferId)(1 << n));
                         foreach (GPUSlot s in dirtySlots[n])
                         {
-                            mipmapParams.set(new Sxta.Math.Vector4i(s.index, GPUSlot.l, level - 1, width));
+                            mipmapParams.set(new Sxta.Math.Vector4i(s.index, s.l, level - 1, width));
                             fbo.drawQuad(mipmapProg);
                         }
                     }

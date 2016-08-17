@@ -468,7 +468,7 @@ namespace Sxta.Proland.Terrain
                 float dx = (float)((tx % 2) * (tileSize / 2));
                 float dy = (float)((ty % 2) * (tileSize / 2));
                 coarseLevelSamplerU.set(t);
-                coarseLevelOSLU.set(new Vector4f((dx + 0.5f) / parentGpuData.getWidth(), (dy + 0.5f) / parentGpuData.getHeight(), 1.0f / parentGpuData.getWidth(), GPUTileStorage.GPUSlot.l));
+                coarseLevelOSLU.set(new Vector4f((dx + 0.5f) / parentGpuData.getWidth(), (dy + 0.5f) / parentGpuData.getHeight(), 1.0f / parentGpuData.getWidth(), parentGpuData.l));
             }
             else
             {

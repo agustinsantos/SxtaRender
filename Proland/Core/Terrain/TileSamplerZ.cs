@@ -245,7 +245,7 @@ void main() {
             {
                 state.viewportU.set(new Vector4f(viewportSize.X, viewportSize.Y, viewportSize.X, viewportSize.Y));
                 state.sizesU.set(new Vector3f(parentSize, currentSize, pass));
-                state.tileU[0].set(new Vector4i(gpuTiles[0].getIndex(), GPUTileStorage.GPUSlot.l, camera.X, camera.Y));
+                state.tileU[0].set(new Vector4i(gpuTiles[0].getIndex(), gpuTiles[0].l, camera.X, camera.Y));
                 state.fbo.setDrawBuffer(state.readBuffer);
                 state.fbo.drawQuad(state.minmaxProg);
             }
@@ -257,11 +257,11 @@ void main() {
                 {
                     if (j == 0)
                     {
-                        state.tileU[j].set(new Vector4i(gpuTiles[j].getIndex(), GPUTileStorage.GPUSlot.l, camera.X, camera.Y));
+                        state.tileU[j].set(new Vector4i(gpuTiles[j].getIndex(), gpuTiles[j].l, camera.X, camera.Y));
                     }
                     else
                     {
-                        state.tileU[j].set(new Vector4i(gpuTiles[j].getIndex(), GPUTileStorage.GPUSlot.l, 0, 0));
+                        state.tileU[j].set(new Vector4i(gpuTiles[j].getIndex(), gpuTiles[j].l, 0, 0));
                     }
                 }
                 state.fbo.setDrawBuffer(BufferId.COLOR0);

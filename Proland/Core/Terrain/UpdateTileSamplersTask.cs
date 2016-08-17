@@ -94,7 +94,6 @@ namespace proland
             //while (i.hasNext())
             foreach (KeyValuePair<string, object> i in n.getFields())
             {
-                //TOSEE
                 TileSampler u = ((Resource)i.Value).get() as TileSampler;
                 if (u != null)
                 {
