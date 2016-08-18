@@ -1,6 +1,7 @@
 ﻿using log4net;
 using OpenTK.Graphics.OpenGL;
 using Sxta.Core;
+using Sxta.Render.Core;
 using Sxta.Render.Resources;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,9 @@ namespace Sxta.Render
     /// </summary>
     public class Program : ISwappable<Program>, IDisposable
     {
+#if DEBUG
+        TraceOpenTKDisposableObject traceDisposable;
+#endif
 
         /// <summary>
         /// Creates a new program.
@@ -25,7 +29,7 @@ namespace Sxta.Render
         /// <param name='modules'>
         /// Modules the modules that will compose this program.
         /// </param>
-        public Program(List<Module> modules)
+        public Program(List<Module> modules) : this()
         {
             init(modules);
         }
@@ -38,7 +42,7 @@ namespace Sxta.Render
         /// <param name='module'>
         /// module the single module that will compose this program
         /// </param>
-        public Program(Module module)
+        public Program(Module module) : this()
         {
             List<Module> modules = new List<Module>() { module };
             init(modules);
@@ -759,7 +763,12 @@ namespace Sxta.Render
         /// Creates an unitialized program.
         /// Initializes a new instance of the <see cref="Sxta.Render.Program"/> class.
         /// </summary>
-        public Program() { }
+        public Program()
+        {
+#if DEBUG
+            traceDisposable = new TraceOpenTKDisposableObject();
+#endif
+        }
 
 
         /// <summary>
@@ -1732,6 +1741,10 @@ namespace Sxta.Render
         // other objects. Only unmanaged resources can be disposed. 
         protected virtual void Dispose(bool disposing)
         {
+#if DEBUG
+            traceDisposable.CheckCurrentContext();
+#endif
+
             // Check to see if Dispose has already been called. 
             if (!this.disposed)
             {

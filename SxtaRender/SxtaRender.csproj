@@ -61,6 +61,7 @@
     <Compile Include="Core\Std.cs" />
     <Compile Include="Core\Threads.cs" />
     <Compile Include="Core\Timer.cs" />
+    <Compile Include="Core\TraceOpenTKDisposableObject.cs" />
     <Compile Include="Math\Box2d.cs" />
     <Compile Include="Math\Box2f.cs" />
     <Compile Include="Math\Box2i.cs" />

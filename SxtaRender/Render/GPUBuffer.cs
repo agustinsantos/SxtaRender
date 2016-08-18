@@ -6,6 +6,7 @@
 
 using log4net;
 using OpenTK.Graphics.OpenGL;
+using Sxta.Render.Core;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -20,17 +21,26 @@ namespace Sxta.Render
     /// </summary>
     public class GPUBuffer : Buffer, IDisposable //where T : struct
     {
+#if DEBUG
+        TraceOpenTKDisposableObject traceDisposable;
+#endif
+
+
         // For a tutorial about OpenTK buffers, see
         // http://www.opentk.com/doc/graphics/geometry/vertex-buffer-objects
         //
 
-     
-		/// <summary>
-		/// Creates a new GPU buffer with no associated data.
-		/// Initializes a new instance of the <see cref="Sxta.Render.GPUBuffer"/> class.
-		/// </summary>
+
+        /// <summary>
+        /// Creates a new GPU buffer with no associated data.
+        /// Initializes a new instance of the <see cref="Sxta.Render.GPUBuffer"/> class.
+        /// </summary>
         public GPUBuffer()
         {
+#if DEBUG
+            traceDisposable = new TraceOpenTKDisposableObject();
+#endif
+
             size = 0;
             mappedData = IntPtr.Zero;
             cpuData = null;
@@ -556,6 +566,9 @@ namespace Sxta.Render
         // other objects. Only unmanaged resources can be disposed. 
         protected virtual void Dispose(bool disposing)
         {
+#if DEBUG
+            traceDisposable.CheckCurrentContext();
+#endif
             // Check to see if Dispose has already been called. 
             if (!this.disposed)
             {
@@ -573,7 +586,8 @@ namespace Sxta.Render
 
                 UNIFORM_BUFFER_MANAGER.unbind(this);
 #if OPENTK
-                GL.DeleteBuffers(1, ref bufferId);
+                if (GL.IsBuffer(bufferId))
+                    GL.DeleteBuffers(1, ref bufferId);
 #else
                 glDeleteBuffers(1, &bufferId);
 #endif

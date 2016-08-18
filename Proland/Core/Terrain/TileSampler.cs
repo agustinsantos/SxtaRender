@@ -652,10 +652,6 @@ namespace proland
             {
                 t = new Tree(parent);
                 t.needTile = needTile(q);
-                if (t.needTile == false && t.parent == null)
-                {
-                    Debugger.Break();
-                }
                 if (q.level == 0 && producer.getRootQuadSize() == 0.0f)
                 {
                     producer.setRootQuadSize((float)q.l);

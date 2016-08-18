@@ -2,6 +2,7 @@
 using OpenTK.Graphics.OpenGL;
 using Sxta.Core;
 using Sxta.Math;
+using Sxta.Render.Core;
 using Sxta.Render.Resources;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,9 @@ namespace Sxta.Render
     /// </summary>
     public class MeshBuffers : ISwappable<MeshBuffers>, IDisposable
     {
+#if DEBUG
+        TraceOpenTKDisposableObject traceDisposable;
+#endif
 
 
         /// <summary>
@@ -64,6 +68,9 @@ namespace Sxta.Render
         /// </summary>
         public MeshBuffers()
         {
+#if DEBUG
+            traceDisposable = new TraceOpenTKDisposableObject();
+#endif
             mode = MeshMode.POINTS;
             nvertices = 0;
             nindices = 0;
@@ -1052,6 +1059,9 @@ namespace Sxta.Render
         // other objects. Only unmanaged resources can be disposed. 
         protected virtual void Dispose(bool disposing)
         {
+#if DEBUG
+            traceDisposable.CheckCurrentContext();
+#endif
             // Check to see if Dispose has already been called. 
             if (!this.disposed)
             {
@@ -1071,7 +1081,7 @@ namespace Sxta.Render
                     unbind();
                     CURRENT = null;
                 }
-                Debug.Assert(FrameBuffer.getError() == ErrorCode.NoError);
+                //Debug.Assert(FrameBuffer.getError() == ErrorCode.NoError);
 
                 // Note disposing has been done.
                 disposed = true;

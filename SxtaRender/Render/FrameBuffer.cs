@@ -3465,7 +3465,7 @@ namespace Sxta.Render
 #endif
             s.unset();
             dstBuf.unbind(BufferTarget.PixelPackBuffer);
-            Debug.Assert(getError() == ErrorCode.NoError);  
+            Debug.Assert(getError() == ErrorCode.NoError);
 
             //throw new NotImplementedException();
         }
@@ -3869,6 +3869,16 @@ namespace Sxta.Render
         /// </returns>
         public static ErrorCode getError()
         {
+#if DEBUG
+            // This situation usually occurs when the GraphicsContext is disposed and there are still some OpenGL objects
+            // pending to be disposed. Usually the error is due to a wrong dispose policy. Make sure that every OpenGL object
+            // is disposed before you end your main program (close your window and therefore the GraphicsContext associated with it)
+            // OpenGL only works with an active graphics context.
+            if (GraphicsContext.CurrentContext == null || 
+                GraphicsContext.CurrentContext.IsDisposed || 
+                !GraphicsContext.CurrentContext.IsCurrent)
+                Debugger.Break();
+#endif
             ErrorCode error = GL.GetError();
             if (error != ErrorCode.NoError && log.IsErrorEnabled)
             {
