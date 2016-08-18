@@ -398,7 +398,7 @@ namespace proland
                     Debug.Assert(usedTiles.ContainsKey(id) && i == t);
                     usedTiles.Remove(id);
                     // adds it to the unused tiles list
-                    Debug.Assert(unusedTiles.ContainsKey(id));
+                    Debug.Assert(!unusedTiles.ContainsKey(id));
                     unusedTilesOrder.Add(t);
                     unusedTiles.Add(id, t); //TOSEE Agustin
                     /*if (Logger.DEBUG_LOGGER != null) {

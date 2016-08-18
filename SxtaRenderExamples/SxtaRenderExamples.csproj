@@ -59,6 +59,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssertDebugListener.cs" />
     <Compile Include="SGCamera.cs" />
     <Compile Include="FirstPersonCamera2.cs" />
     <Compile Include="FirstPersonCamera.cs" />

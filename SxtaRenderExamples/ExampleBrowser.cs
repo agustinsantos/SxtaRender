@@ -84,6 +84,9 @@ namespace Examples
             // image list when cross-compiling on Mono.
             imageListSampleCategories.Images.Add("Core", Resources.OpenGLWrapper);
 
+#if DEBUG
+            Debug.Listeners.Add(new AssertDebugListener("debug.log"));
+#endif
             Trace.Listeners.Add(new TextBoxTraceListener(textBoxOutput));
             treeViewSamples.TreeViewNodeSorter = new SamplesTreeViewSorter();
 
