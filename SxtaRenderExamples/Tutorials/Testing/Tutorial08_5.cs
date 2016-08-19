@@ -61,7 +61,7 @@ namespace Examples.Tutorials
             fb = FrameBuffer.getDefault();
 
             camera = new SGCamera(this);
-            camera.Position = new Vector3d(0, 0, 10);
+            camera.Position = new Vector3d(0, 0, 80);
         }
 
         protected override void OnUnload(EventArgs e)

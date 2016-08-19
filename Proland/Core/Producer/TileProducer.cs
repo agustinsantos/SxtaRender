@@ -1082,7 +1082,7 @@ namespace proland
                 changes = owner.doCreateTile(level, tx, ty, data);
 
                 //data.id = TileCache.Tile.getTId(owner.getId(), level, tx, ty);
-                data.id = Tuple.Create(owner.getId(), Tuple.Create(level, Tuple.Create(tx, ty)));
+                data.id = TileCache.Tile.getTId(owner.getId(), level, tx, ty);
             }
             data.lock_(false);
             return changes;

@@ -1122,7 +1122,7 @@ namespace Sxta.Render.Scenegraph
                 key = new taskKey() { first = deadline, context = null };
                 if (s.TryGetValue(key, out j))
                 {
-                    Debug.Assert(j.Count > 1);
+                    Debug.Assert(j.Count >= 1);
                     return j.First();
                 }
             }

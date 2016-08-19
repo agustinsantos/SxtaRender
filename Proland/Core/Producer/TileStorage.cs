@@ -73,7 +73,7 @@ namespace proland
             /// <summary>
             /// The id of the tile currently stored in this slot.
             /// </summary>
-            public Tuple<int, Tuple<int, Tuple<int, int>>> id;
+            public TileCache.Tile.TId id;
 
             /*
              * The task that is responsible for producing the data for the tile

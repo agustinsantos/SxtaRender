@@ -60,11 +60,6 @@
     <Compile Include="Scenegraph\Controller\CameraViewController.cs" />
     <Compile Include="Scenegraph\Controller\ViewController.cs" />
     <Compile Include="Scenegraph\Controller\ViewManager.cs" />
-    <Compile Include="Producer\GPUTileStorage.cs" />
-    <Compile Include="Producer\TileCache.cs" />
-    <Compile Include="Producer\TileLayer.cs" />
-    <Compile Include="Producer\TileProducer.cs" />
-    <Compile Include="Producer\TileStorage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scenegraph\AbstractTask.cs" />
     <Compile Include="Scenegraph\CallMethodTask.cs" />

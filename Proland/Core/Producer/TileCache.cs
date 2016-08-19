@@ -699,10 +699,6 @@ namespace proland
             // typedef std.pair<int, Id> TId;
             public class TId : Tuple<int, Id>
             {
-                public int producerId;
-                public int level;
-                public int tx;
-                public int ty;
 
                 public TId(int producerId, int level, int tx, int ty)
                 : base(producerId, new Id(level, tx, ty))
@@ -712,15 +708,32 @@ namespace proland
                 : base(producerId, id)
                 {
                 }
-
-                public bool EqualsTuple(Tuple<int, Tuple<int, Tuple<int, int>>> TId)
+                // override object.Equals
+                public override bool Equals(object obj)
                 {
+
+                    if (obj == null || GetType() != obj.GetType())
+                    {
+                        return false;
+                    }
+
+                    TId other = obj as TId;
+
+                    // TODO: write your implementation of Equals() here
                     return
-                        producerId == TId.Item1 &&
-                        level == TId.Item2.Item1 &&
-                        tx == TId.Item2.Item2.Item1 &&
-                        ty == TId.Item2.Item2.Item2;
+                        this.Item1 == other.Item1 &&
+                        this.Item2.Item1 == other.Item2.Item1 &&
+                        this.Item2.Item2.Item1 == other.Item2.Item2.Item1 &&
+                        this.Item2.Item2.Item2 == other.Item2.Item2.Item2;
                 }
+
+                // override object.GetHashCode
+                public override int GetHashCode()
+                {
+                    // TODO: write your implementation of GetHashCode() here
+                    return this.Item1^(this.Item2.Item1);
+                }
+
             }
 
             /*
@@ -794,7 +807,7 @@ namespace proland
                 bool isDone = task.isDone();
                 Debug.Assert(isDone || !check);
                 //TODO
-                Debug.Assert(Tuple.Create(getId().Item1, Tuple.Create(level, Tuple.Create(tx, ty))) == data.id || !check);
+                Debug.Assert(data.id.Equals(getTId()) || !check);
                 return isDone ? data : null;
             }
 
