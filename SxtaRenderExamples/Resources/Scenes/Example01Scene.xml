@@ -4,7 +4,9 @@
     <method id="draw" value="Example01Camera"/>
   </node>
   <node flags="object">
+    <!--<mesh id="geometry" value="quadEx2.mesh"/>-->
     <mesh id="geometry" value="quad2.mesh"/>
+    <!--<mesh id="geometry" value="quad2indexes.mesh"/>-->
     <module id="material" value="basic"/>
   </node>
 </node>

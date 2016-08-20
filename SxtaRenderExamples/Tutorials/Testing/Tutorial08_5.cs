@@ -80,7 +80,7 @@ namespace Examples.Tutorials
         /// <remarks>There is no need to call the base implementation.</remarks>
         protected override void OnResize(EventArgs e)
         {
-            FrameBuffer fb = FrameBuffer.getDefault();
+            //FrameBuffer fb = FrameBuffer.getDefault();
             fb.setViewport(new Vector4i(0, 0, Width, Height));
 
             camera.Resize(Width, Height);

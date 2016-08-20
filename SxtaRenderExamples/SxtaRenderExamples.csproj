@@ -271,6 +271,12 @@
     <None Include="Resources\Meshes\plane.mesh">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Resources\Meshes\quad2indexes.mesh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\Meshes\quadEx2.mesh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Resources\Meshes\quadEx1.mesh">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

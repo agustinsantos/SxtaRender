@@ -245,56 +245,73 @@ namespace Sxta.Render.Resources.XmlResources
                         AttributeType type;
                         if (vertexCount < 256)
                         {
-                            indiceSize = 1;
+                            indiceSize = 1; //sizeof(byte)
                             type = AttributeType.A8UI;
                         }
                         else if (vertexCount < 65536)
                         {
-                            indiceSize = 2;
+                            indiceSize = 2; // sizeof(ushort)
                             type = AttributeType.A16UI;
                         }
                         else
                         {
-                            indiceSize = 4;
+                            indiceSize = 4; // sizeof(uint)
                             type = AttributeType.A32UI;
                         }
 
-                        byte[] indiceBuffer = new byte[indiceCount * indiceSize];
+                        gpubindex = new GPUBuffer();
                         offset = 0;
+
+                        line = reader.ReadLine();
+                        string[] vals = line.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                        int cnt = 0;
 
                         if (indiceSize == 1)
                         {
+                            byte[] indiceBuffer = new byte[indiceCount];
                             for (int i = 0; i < indiceCount; ++i)
                             {
-                                byte ic;
-                                ic = byte.Parse(line);
-                                vertexBuffer[offset] = ic;
-                                offset += sizeof(byte);
+                                while (cnt > vals.Length - 1)
+                                {
+                                    line = reader.ReadLine();
+                                    vals = line.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                                    cnt = 0;
+                                }
+                                indiceBuffer[i] = byte.Parse(vals[cnt++], CultureInfo.InvariantCulture);
                             }
+                            gpubindex.setData(indiceCount * indiceSize, indiceBuffer, BufferUsage.STATIC_DRAW);
                         }
                         else if (indiceSize == 2)
                         {
+                            ushort[] indiceBuffer = new ushort[indiceCount];
                             for (int i = 0; i < indiceCount; ++i)
                             {
-                                ushort ic;
-                                ic = ushort.Parse(line);
-                                Array.Copy(BitConverter.GetBytes(ic), 0, vertexBuffer, offset, sizeof(ushort));
-                                offset += sizeof(ushort);
+                                while (cnt > vals.Length - 1)
+                                {
+                                    line = reader.ReadLine();
+                                    vals = line.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                                    cnt = 0;
+                                }
+                                indiceBuffer[i] = ushort.Parse(vals[cnt++], CultureInfo.InvariantCulture);
                             }
+                            gpubindex.setData(indiceCount * indiceSize, indiceBuffer, BufferUsage.STATIC_DRAW);
                         }
                         else
                         {
+                            uint[] indiceBuffer = new uint[indiceCount];
                             for (int i = 0; i < indiceCount; ++i)
                             {
-                                uint ic;
-                                ic = uint.Parse(line);
-                                Array.Copy(BitConverter.GetBytes(ic), 0, vertexBuffer, offset, sizeof(uint));
-                                offset += sizeof(uint);
+                                while (cnt > vals.Length - 1)
+                                {
+                                    line = reader.ReadLine();
+                                    vals = line.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                                    cnt = 0;
+                                }
+                                indiceBuffer[i] = uint.Parse(vals[cnt++], CultureInfo.InvariantCulture);
                             }
+                            gpubindex.setData(indiceCount * indiceSize, indiceBuffer, BufferUsage.STATIC_DRAW);
                         }
-
-                        gpub.setData(indiceCount * indiceSize, indiceBuffer, BufferUsage.STATIC_DRAW);
-                        this.valueC.setIndicesBuffer(new AttributeBuffer(0, 1, type, false, gpub));
+                        this.valueC.setIndicesBuffer(new AttributeBuffer(0, 1, type, false, gpubindex));
                     }
                 }
                 desc.clearData();
@@ -305,13 +322,16 @@ namespace Sxta.Render.Resources.XmlResources
                 throw ex;
             }
         }
-
+        
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
-            if (gpub != null && gpub is IDisposable)
-                ((IDisposable)gpub).Dispose();
+            if (gpub != null)
+                gpub.Dispose();
+            if (gpubindex != null)
+                gpubindex.Dispose();
         }
         GPUBuffer gpub;
+        GPUBuffer gpubindex;
     }
 }
