@@ -2,13 +2,9 @@
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Sxta.Render.OpenGLExt
 {
@@ -28,6 +24,29 @@ namespace Sxta.Render.OpenGLExt
 
             bmp.RotateFlip(RotateFlipType.RotateNoneFlipY);
             return bmp;
+        }
+
+        public static Bitmap GetScreenshot(int Width, int Height, PixelFormat pf = PixelFormat.Bgr)
+        {
+            Bitmap bmp = new Bitmap(Width, Height);
+            System.Drawing.Imaging.BitmapData data =
+                bmp.LockBits(new Rectangle(0, 0, Width, Height), System.Drawing.Imaging.ImageLockMode.WriteOnly, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+            GL.ReadPixels(0, 0, Width, Height, pf, OpenTK.Graphics.OpenGL.PixelType.UnsignedByte, data.Scan0);
+            bmp.UnlockBits(data);
+            bmp.RotateFlip(RotateFlipType.RotateNoneFlipY);
+
+            return bmp;
+        }
+        public static string SaveFrameBuffer(int width, int height, string filename = null)
+        {
+            if (string.IsNullOrWhiteSpace(filename))
+            {
+                filename = "Screenshot.bmp";
+            }
+            CheckFileVersion(".", ref filename);
+            Bitmap bmp = GetScreenshot(width, height, PixelFormat.Bgr);
+            bmp.Save(filename);
+            return filename;
         }
 
         public static string SaveScreenShot(Size clientSize, Rectangle clientRectangle, string filename = null)

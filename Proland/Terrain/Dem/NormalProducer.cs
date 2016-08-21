@@ -45,13 +45,13 @@ using proland;
 using Sxta.Core;
 using Sxta.Math;
 using Sxta.Render;
+using Sxta.Render.OpenGLExt;
 using Sxta.Render.Resources;
 using Sxta.Render.Scenegraph;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
-using System.Xml;
 
 namespace Sxta.Proland.Terrain
 {
@@ -350,7 +350,9 @@ namespace Sxta.Proland.Terrain
 
             frameBuffer.drawQuad(normals);
             gpuData.copyPixels(frameBuffer, 0, 0, tileWidth, tileWidth);
-
+#if DEBUG
+            ScreenShot.SaveFrameBuffer(tileWidth, tileWidth, string.Format("NormalProducer-{0}-{1}-{2}-.bmp", level, tx, ty));
+#endif
             return true;
         }
 

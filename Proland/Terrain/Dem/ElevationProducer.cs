@@ -45,6 +45,7 @@ using proland;
 using Sxta.Core;
 using Sxta.Math;
 using Sxta.Render;
+using Sxta.Render.OpenGLExt;
 using Sxta.Render.Resources;
 using Sxta.Render.Scenegraph;
 using System;
@@ -685,7 +686,9 @@ namespace Sxta.Proland.Terrain
             {
                 gpuData.copyPixels(frameBuffer, 0, 0, tileWidth, tileWidth);
             }
-
+#if DEBUG
+            ScreenShot.SaveFrameBuffer(tileWidth, tileWidth, string.Format("ElevationProducer-{0}-{1}-{2}-.bmp", level, tx, ty));
+#endif
             return true;
         }
 
@@ -749,7 +752,6 @@ namespace Sxta.Proland.Terrain
             Std.Swap(ref blendScaleU, ref p.blendScaleU);
         }
 
-
         /// <summary>
         /// The amplitude of the noise to be added for each level (one amplitude per level).
         /// </summary>
@@ -797,42 +799,4 @@ namespace Sxta.Proland.Terrain
 
         private FrameBuffer old;
     }
-#if TODO
-    class ElevationProducerResource : ResourceTemplate<ElevationProducer>
-    {
-        public ElevationProducerResource(ResourceManager manager, string name, ResourceDescriptor desc, XmlElement e = null) :
-                base(40, manager, name, desc)
-        {
-            e = e == null ? desc.descriptor : e;
-            checkParameters(desc, e, "name,cache,residuals,face,upsampleProg,blendProg,gridSize,noise,flip,");
-            valueC.init(manager, this, name, desc, e);
-        }
-
-        public override bool prepareUpdate()
-        {
-
-
-                if (dynamic_cast<Resource*>(upsample.get())->changed()) {
-                    invalidateTiles();
-                } else if (blend != NULL && dynamic_cast<Resource*>(blend.get())->changed()) {
-                    invalidateTiles();
-                }
-                return ResourceTemplate<40, ElevationProducer>::prepareUpdate();
-
-
-            if ((Resource)(valueC.upsample).changed())
-            {
-                valueC.invalidateTiles();
-            }
-            else if (valueC.blend != null && ((Resource)(valueC.blend)).get.changed())
-            {
-                valueC.invalidateTiles();
-            }
-            return new ResourceTemplate <ElevationProducer>(40,null,null,null).prepareUpdate();
-
-            throw new NotImplementedException();
-
-        }
-    }
-#endif
 }

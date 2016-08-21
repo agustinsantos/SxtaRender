@@ -61,7 +61,7 @@ void main() { gl_Position = vertex; }
 #ifdef _GEOMETRY_
 #extension GL_EXT_geometry_shader4 : enable
 layout(triangles) in;
-layout(triangle_strip, max_vertices= 3) out;n
+layout(triangle_strip, max_vertices= 3) out;
 void main() { gl_Layer = bufferLayerLevelWidth.y; gl_Position = gl_PositionIn[0]; EmitVertex(); gl_Position = gl_PositionIn[1]; EmitVertex(); gl_Position = gl_PositionIn[2]; EmitVertex(); EndPrimitive(); }
 #endif
 #ifdef _FRAGMENT_
@@ -139,7 +139,7 @@ vec4 uv = vec4(xy + vec2(0.25), xy + vec2(0.75)) / float(bufferLayerLevelWidth.w
             /// <summary>
             /// The layer of the tile in the 2D texture array 't'.
             /// </summary>
-            public readonly int l = 1;
+            public readonly int l;
 
             /// <summary>
             /// Creates a new GPUSlot.
@@ -173,42 +173,39 @@ vec4 uv = vec4(xy + vec2(0.25), xy + vec2(0.75)) / float(bufferLayerLevelWidth.w
             /// <summary>
             /// Copies a region of the given frame buffer into this slot. 
             /// </summary>
-            /* 
-            * @param fb a frame buffer.
-            * @param x lower left corner of the area where the pixels must be read.
-            * @param y lower left corner of the area where the pixels must be read.
-            * @param w width of the area where the pixels must be read.
-            * @param h height of the area where the pixels must be read.
-            */
+            /// <param name="fb">a frame buffer.</param>
+            /// <param name="x">lower left corner of the area where the pixels must be read.</param>
+            /// <param name="y">lower left corner of the area where the pixels must be read.</param>
+            /// <param name="w">width of the area where the pixels must be read.</param>
+            /// <param name="h">height of the area where the pixels must be read.</param>
             public virtual void copyPixels(FrameBuffer fb, int x, int y, int w, int h)
             {
-                fb.copyPixels(0, 0, 1, x, y, w, h, t, 0);
+                fb.copyPixels(0, 0, l, x, y, w, h, t, 0);
             }
+
+
 
             /// <summary>
             /// Copies a region of the given pixel buffer into this slot. The region
             /// Coordinates are relative to the lower left corner of the slot. 
             /// </summary>
-            /*
-            *@param x lower left corner of the part to be replaced in this slot.
-            * @param y lower left corner of the part to be replaced in this slot.
-            * @param w the width of the part to be replaced in this slot.
-            * @param h the height of the part to be replaced in this slot.
-            * @param f the texture components in 'pixels'.
-            * @param t the type of each component in 'pixels'.
-            * @param pixels the pixels to be copied into this slot.
-            */
+            /// <param name="x">lower left corner of the part to be replaced in this slot.</param>
+            /// <param name="y">lower left corner of the part to be replaced in this slot.</param>
+            /// <param name="w">the width of the part to be replaced in this slot.</param>
+            /// <param name="h">the height of the part to be replaced in this slot.</param>
+            /// <param name="f">the texture components in 'pixels'.</param>
+            /// <param name="t">the type of each component in 'pixels'.</param>
+            /// <param name="s"></param>
+            /// <param name="pixels">the pixels to be copied into this slot.</param>
             public virtual void setSubImage(int x, int y, int w, int h, TextureFormat f, PixelType t, Sxta.Render.Buffer.Parameters s, Sxta.Render.Buffer pixels)
             {
-                this.t.setSubImage(0, x, y, 1, w, h, 1, f, t, s, pixels);
+                this.t.setSubImage(0, x, y, l, w, h, 1, f, t, s, pixels);
             }
+
             /// <summary>
             /// The index of 't' in the list of textures managed by the tile storage.
             /// </summary>
             internal int index;
-
-
-
         }
 
         /// <summary>
@@ -238,6 +235,7 @@ vec4 uv = vec4(xy + vec2(0.25), xy + vec2(0.75)) / float(bufferLayerLevelWidth.w
         {
             return textures.Count();
         }
+
         /// <summary>
         /// Returns the tile map that stores the mapping between logical tile coordinates(level, tx, ty)
         /// and storage tile coordinates in this storage.This mapping texture can be used as an indirection
@@ -248,6 +246,7 @@ vec4 uv = vec4(xy + vec2(0.25), xy + vec2(0.75)) / float(bufferLayerLevelWidth.w
         {
             return tileMap;
         }
+
         /// <summary>
         /// Notifies this manager that the content of the given slot has changed.
         /// </summary>
@@ -260,6 +259,7 @@ vec4 uv = vec4(xy + vec2(0.25), xy + vec2(0.75)) / float(bufferLayerLevelWidth.w
                 changes = true;
             }
         }
+
         /// <summary>
         /// Generates the mipmap levels of the storage textures. This method only
         /// updates the textures whose content has changed since the last call to

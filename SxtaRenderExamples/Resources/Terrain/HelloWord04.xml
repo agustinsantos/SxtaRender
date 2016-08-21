@@ -98,7 +98,7 @@
       <tileSampler id="fnormal" sampler="fragmentNormalSampler" producer="groundNormals1" storeParent="false" storeInvisible="false"/>
       
       
-      <mesh id="grid" value="quad2.mesh"/>
+      <mesh id="grid" value="quadEx1.mesh"/>
       <method id="update" value="updateTerrainMethod"/>
       <method id="draw" value="drawTerrainMethod"/>
       <module id="material" value="terrainShader"/>
