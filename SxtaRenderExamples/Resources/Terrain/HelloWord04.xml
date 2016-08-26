@@ -54,7 +54,7 @@
 
   <module name="cameraShader" version="330" source="camera.glsl"/>
 
-  <terrainNode name="myTerrain" size="30" zmin="-1" zmax="1" splitFactor="2" maxLevel="2"/>
+  <terrainNode name="myTerrain" size="50000" zmin="0" zmax="5000" splitFactor="2" maxLevel="16"/>
 
   <sequence name="updateTerrainMethod">
     <updateTerrain name="this.terrain"/>
@@ -69,12 +69,6 @@
     <setTransforms localToScreen="localToScreen" localToWorld="localToWorld"/>
     <drawTerrain name="this.terrain" mesh="this.grid" culling="true"/>
   </sequence>
-
-
-
-  <module name="perspectiveShader" version="330" source="perspective.glsl">
-    <uniformSampler name="sampler" texture="checker"/>
-  </module>
 
  
   <module name="upsampleShader" version="330" source="upsampleShader.glsl"/>

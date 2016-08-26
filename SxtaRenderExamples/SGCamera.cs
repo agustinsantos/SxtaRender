@@ -21,7 +21,7 @@ namespace Examples.Tutorials
         private readonly OpenTK.GameWindow parentWindow;
         private Vector2f mouseMove;
         private float mouseSensitivity = 0.05f;
-        private float moveSpeed = 0.5f;
+        private float moveSpeed = 3.5f;
 
         public Matrix4d ViewMatrix { get; internal set; }
 

@@ -71,9 +71,6 @@ void main() {
     vec2 nf = normalize(cross(p1 - p0, p3 - p2)).xy;
 
     data = vec4(nf.xy * 0.5, 0.0, 0.0) + vec4(0.5);
-	data.r = data.x + data.y;
-	data = data * 0.02;
 }
 
 #endif
-
