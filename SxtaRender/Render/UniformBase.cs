@@ -1,11 +1,10 @@
 ﻿using OpenTK.Graphics.OpenGL;
 using Sxta.Core;
+using Sxta.Render.Core;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 
 namespace Sxta.Render
 {
@@ -354,7 +353,16 @@ namespace Sxta.Render
     /// </summary>
     public class UniformBlock : IDisposable
     {
+//#if DEBUG
+//        TraceOpenTKDisposableObject traceDisposable;
+//#endif
 
+        public UniformBlock()
+        {
+//#if DEBUG
+//            traceDisposable = new TraceOpenTKDisposableObject();
+//#endif
+        }
 
         /// <summary>
         /// Deletes this uniform block.
@@ -1075,7 +1083,7 @@ namespace Sxta.Render
         public void set<T>(T[] data, BufferUsage u = BufferUsage.DYNAMIC_DRAW) where T : struct
         {
             Debug.Assert(this.size == Marshal.SizeOf(data[0]));
-            this.buffer.setData<T>(this.size*data.Length, data, u);
+            this.buffer.setData<T>(this.size * data.Length, data, u);
         }
 
         public void set<T>(T[] data, int nelements, BufferUsage u = BufferUsage.DYNAMIC_DRAW) where T : struct
@@ -1163,7 +1171,7 @@ namespace Sxta.Render
         /// <param name='size'>
         /// Sizethe minimum buffer size to store the uniforms of this block.
         /// </param>
-        internal UniformBlock(Program program, string name, int index, int size)
+        internal UniformBlock(Program program, string name, int index, int size) : this()
         {
             this.program = program;
             this.name = name;
@@ -1252,6 +1260,9 @@ namespace Sxta.Render
             // Check to see if Dispose has already been called. 
             if (!this.disposed)
             {
+//#if DEBUG
+//                traceDisposable.CheckDispose();
+//#endif
                 // If disposing equals true, dispose all managed 
                 // and unmanaged resources. 
                 if (disposing)

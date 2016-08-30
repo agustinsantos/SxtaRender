@@ -84,9 +84,9 @@ namespace Examples
             // image list when cross-compiling on Mono.
             imageListSampleCategories.Images.Add("Core", Resources.OpenGLWrapper);
 
-#if DEBUG
-            Debug.Listeners.Add(new AssertDebugListener("debug.log"));
-#endif
+            //#if DEBUG
+            //            Debug.Listeners.Add(new AssertDebugListener("debug.log"));
+            //#endif
             Trace.Listeners.Add(new TextBoxTraceListener(textBoxOutput));
             treeViewSamples.TreeViewNodeSorter = new SamplesTreeViewSorter();
 
@@ -293,7 +293,7 @@ namespace Examples
                             if (!treeViewSamples.Nodes.ContainsKey(example.Category.ToString()))
                             {
                                 int category_index = GetImageIndexForSample(imageListSampleCategories, example.Category.ToString(), String.Empty);
-                                treeViewSamples.Nodes.Add(example.Category.ToString(), String.Format("{0} samples", example.Category),
+                                treeViewSamples.Nodes.Add(example.Category.ToString(), String.Format("{0} {1} samples", (int)example.Category, example.Category),
                                     category_index, category_index);
                             }
 

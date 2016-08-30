@@ -1,12 +1,11 @@
 ﻿using log4net;
 using OpenTK.Graphics.OpenGL;
+using Sxta.Render.Core;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Text;
 
 namespace Sxta.Render
 {
@@ -14,6 +13,9 @@ namespace Sxta.Render
         where vertex : struct
         where index : struct
     {
+//#if DEBUG
+//        TraceOpenTKDisposableObject traceDisposable;
+//#endif
 
 
         /// <summary>
@@ -39,7 +41,9 @@ namespace Sxta.Render
             : this(vertexsize, 0, m, usage, vertexCount, indiceCount)
         {
         }
+
         public Mesh(int vertexsize, int indexSize, MeshMode m, MeshUsage usage, int vertexCount = 4, int indiceCount = 4)
+             : this()
         {
             Debug.Assert(Marshal.SizeOf(typeof(vertex)) == vertexsize, "vertexsize sould be equals to sizeof(" + typeof(vertex).Name + ")");
             this.vertexSize = vertexsize;
@@ -86,6 +90,7 @@ namespace Sxta.Render
         /// Indice count the initial capacity of the indice array.
         /// </param>
         public Mesh(int vertexsize, MeshBuffers target, MeshMode m, MeshUsage usage, int vertexCount = 4, int indiceCount = 4)
+            : this()
         {
             this.vertexSize = vertexsize;
             this.usage = usage;
@@ -106,6 +111,12 @@ namespace Sxta.Render
             indexDataHasChanged = true;
         }
 
+        private Mesh()
+        {
+//#if DEBUG
+//            traceDisposable = new TraceOpenTKDisposableObject();
+//#endif
+        }
 
         /// <summary>
         /// Deletes this mesh.
@@ -769,6 +780,9 @@ namespace Sxta.Render
             // Check to see if Dispose has already been called. 
             if (!this.disposed)
             {
+//#if DEBUG
+//            traceDisposable.CheckDispose();
+//#endif
                 // If disposing equals true, dispose all managed 
                 // and unmanaged resources. 
                 if (disposing)

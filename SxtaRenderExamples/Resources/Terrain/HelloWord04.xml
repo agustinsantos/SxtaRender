@@ -40,11 +40,11 @@
   <normalProducer name="groundNormals1" cache="groundNormals" elevations="groundElevations1"/>
 
   <sequence name="cameraMethod">
-    <setState clearColor="true" clearStencil="false" clearDepth="true">
+    <!--<setState clearColor="true" clearStencil="false" clearDepth="true">
       <depth enable="true" value="LESS"/>
     </setState>
-    <setTransforms module="this.material" localToScreen="localToScreen"/>
-    <foreach var="o" flag="dynamic" parallel="true">
+    <setTransforms module="this.material" localToScreen="localToScreen"/>-->
+    <foreach var="o" flag="dynamic" parallel="false">
       <callMethod name="$o.update"/>
     </foreach>
     <foreach var="o" flag="object" culling="true">
@@ -52,9 +52,9 @@
     </foreach>
   </sequence>
 
-  <module name="cameraShader" version="330" source="camera.glsl"/>
+  <!--<module name="cameraShader" version="330" source="camera.glsl"/>-->
 
-  <terrainNode name="myTerrain" size="30" zmin="-1" zmax="1" splitFactor="2" maxLevel="2"/>
+  <terrainNode name="myTerrain" size="50000" zmin="0" zmax="5000" splitFactor="2" maxLevel="0"/>
 
   <sequence name="updateTerrainMethod">
     <updateTerrain name="this.terrain"/>
@@ -64,17 +64,17 @@
   <sequence name="drawTerrainMethod">
     <setProgram>
       <module name="this.material"/>
-      <module name="camera.material"/>
+      <!--<module name="camera.material"/>-->
     </setProgram>
-    <setTransforms localToScreen="localToScreen" localToWorld="localToWorld"/>
+    <!--<setTransforms localToScreen="localToScreen" localToWorld="localToWorld"/>-->
     <drawTerrain name="this.terrain" mesh="this.grid" culling="true"/>
   </sequence>
 
 
 
-  <module name="perspectiveShader" version="330" source="perspective.glsl">
+  <!--<module name="perspectiveShader" version="330" source="perspective.glsl">
     <uniformSampler name="sampler" texture="checker"/>
-  </module>
+  </module>-->
 
  
   <module name="upsampleShader" version="330" source="upsampleShader.glsl"/>
@@ -85,7 +85,7 @@
   
   <node name="scene">
     <node flags="camera">
-      <module id="material" value="cameraShader"/>
+      <!--<module id="material" value="cameraShader"/>-->
       <method id="draw" value="cameraMethod"/>
     </node>
     

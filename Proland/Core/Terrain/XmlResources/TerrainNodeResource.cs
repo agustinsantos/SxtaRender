@@ -31,11 +31,11 @@ namespace Sxta.Proland.Core.Terrain.XmlResources
             getFloatParameter(desc, e, "zmin", out zmin);
             getFloatParameter(desc, e, "zmax", out zmax);
             string deformAttr = e.GetAttribute("deform");
-            if (deformAttr != null && deformAttr == "sphere")
+            if (deformAttr == "sphere")
             {
                 deform = new SphericalDeformation(size);
             }
-            if (deformAttr != null && deformAttr == "cylinder")
+            if (deformAttr == "cylinder")
             {
                 float radius;
                 getFloatParameter(desc, e, "radius", out radius);

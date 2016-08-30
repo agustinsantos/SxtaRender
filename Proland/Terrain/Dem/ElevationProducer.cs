@@ -425,22 +425,15 @@ namespace Sxta.Proland.Terrain
             }
             if (!string.IsNullOrWhiteSpace(e.GetAttribute("noise")))
             {
-                string noiseAmps = e.GetAttribute("noise") + ",";
-                string[] stringSeparator = new string[] { "," };
-                string[] result = noiseAmps.Split(stringSeparator, StringSplitOptions.RemoveEmptyEntries);
+                string noiseAmps = e.GetAttribute("noise");
+                string[] result = noiseAmps.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (var node in result)
-                //while ((index = noiseAmps.find(',', start)) != string::npos)
-                {
-                    //float value;
-                    //sscanf(node.c_str(), "%f", value);
-                    noiseAmp.Add((float)Convert.ToDouble(node, CultureInfo.InvariantCulture));
+                 {
+                    noiseAmp.Add(Single.Parse(node, CultureInfo.InvariantCulture));
                 }
             }
-            string attr = e.GetAttribute("flip");
-            if (!string.IsNullOrWhiteSpace(attr) && attr == "false")
-            {
-                flip = true;
-            }
+            string attr = e.GetAttribute("flip").ToLowerInvariant();
+            bool.TryParse(attr, out flip);
             if (!string.IsNullOrWhiteSpace(e.GetAttribute("face")))
             {
                 Resource.getIntParameter(desc, e, "face", out face);
@@ -686,9 +679,9 @@ namespace Sxta.Proland.Terrain
             {
                 gpuData.copyPixels(frameBuffer, 0, 0, tileWidth, tileWidth);
             }
-#if DEBUG
-            ScreenShot.SaveFrameBuffer(tileWidth, tileWidth, string.Format("ElevationProducer-{0}-{1}-{2}-.bmp", level, tx, ty));
-#endif
+//#if DEBUG
+//            ScreenShot.SaveFrameBuffer(tileWidth, tileWidth, string.Format("ElevationProducer-{0}-{1}-{2}-.bmp", level, tx, ty));
+//#endif
             return true;
         }
 

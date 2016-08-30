@@ -8,16 +8,18 @@ using Sxta.Render.Scenegraph;
 using System;
 using Matrix4d = Sxta.Math.Matrix4d;
 using MathHelper = Sxta.Math.MathHelper;
+using Sxta.Render.OpenGLExt;
+using System.Drawing;
 
 namespace Examples.Tutorials
 {
     /// <summary>
     /// Drawing a plane using Scenegraphs
     /// </summary>
-    [Example("Example 8.03: Quadtree Subdivision using TerrainNode", ExampleCategory.Testing, "08. Proland", 1, Source = "Tutorial08_3", Documentation = "Tutorial-TODO")]
-    public class Tutorial08_3 : GameWindow
+    [Example("Example 1.02: Quadtree Subdivision using TerrainNode", ExampleCategory.Proland, "01. Proland Core", 1, Source = "Tutorial01_2", Documentation = "Tutorial01_2")]
+    public class TutorialProland01_2 : GameWindow
     {
-        public Tutorial08_3(string wd) : base(600, 600)
+        public TutorialProland01_2(string wd) : base(600, 600)
         {
             if (!string.IsNullOrWhiteSpace(wd))
                 dir = wd;
@@ -40,18 +42,19 @@ namespace Examples.Tutorials
                     this.WindowState = WindowState.Normal;
                 else
                     this.WindowState = WindowState.Fullscreen;
+
+            if (e.Key == Key.F12)
+            {
+                ScreenShot.SaveScreenShot(this.ClientSize, this.ClientRectangle, "Screenshot" + this.GetType().Name + ".bmp");
+            }
         }
 
         protected override void OnLoad(EventArgs e)
         {
             RegisterResourceReader.RegisterResources();
             resLoader = new XMLResourceLoader();
-            resLoader.addPath(dir + "/Textures");
-            resLoader.addPath(dir + "/Shaders");
-            resLoader.addPath(dir + "/Meshes");
-            resLoader.addPath(dir + "/Methods");
-            resLoader.addPath(dir + "/Scenes");
-            resLoader.addArchive(dir + "/Terrain/HelloWord02.xml");
+            resLoader.addPath(dir + "/Proland/Core/Example1");
+            resLoader.addArchive(dir + "/Proland/Core/Example1/HelloWord.xml");
             resManager = new ResourceManager(resLoader);
             manager = new SceneManager();
             manager.setResourceManager(resManager);
@@ -61,7 +64,13 @@ namespace Examples.Tutorials
             manager.setCameraNode("camera");
             manager.setCameraMethod("draw");
 
+            camera = new SGCamera(this);
+            camera.Position = new Sxta.Math.Vector3d(0, 0, 2500);
+            camera.MoveSpeed = 50f;
+
             fb = FrameBuffer.getDefault();
+            fb.setClearColor(Color.Black);
+            fb.setDepthTest(true, Function.LESS);
         }
 
         protected override void OnUnload(EventArgs e)
@@ -80,15 +89,10 @@ namespace Examples.Tutorials
         /// <remarks>There is no need to call the base implementation.</remarks>
         protected override void OnResize(EventArgs e)
         {
-            FrameBuffer fb = FrameBuffer.getDefault();
             fb.setViewport(new Vector4i(0, 0, Width, Height));
-            fb.setDepthTest(true, Function.LESS);
 
-            float fov = 60;
-
-            double vfov = 2 * Math.Atan((float)Height / (float)Width * Math.Tan(MathHelper.ToRadians(fov / 2)));
-            Matrix4d projection = Matrix4d.CreatePerspectiveFieldOfView(vfov, (float)Width / (float)Height, 0.01f, 1000.0f);
-            manager.setCameraToScreen(projection);
+            camera.Resize(Width, Height);
+            manager.setCameraToScreen(camera.ProjectionMatrix);
         }
 
 
@@ -99,12 +103,15 @@ namespace Examples.Tutorials
         /// <remarks>There is no need to call the base implementation.</remarks>
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
-            manager.update(e.Time / 100000); // from Seconds to microseconds;
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)
         {
+            camera.Update((float)e.Time);
+            manager.getCameraNode().setLocalToParent(camera.ViewMatrix);
+
             fb.clear(true, false, true);
+            manager.update(e.Time / 100000); // from Seconds to microseconds);
             manager.draw();
             this.SwapBuffers();
         }
@@ -114,13 +121,14 @@ namespace Examples.Tutorials
         ResourceManager resManager;
         SceneManager manager;
         FrameBuffer fb;
+        private SGCamera camera;
 
         [STAThread]
         public static void Main()
         {
-            using (Tutorial08_3 example = new Tutorial08_3("Resources"))
+            using (TutorialProland01_2 example = new TutorialProland01_2("Resources"))
             {
-                example.Run(30.0, 10.0);
+                example.Run(60.0);
             }
         }
     }

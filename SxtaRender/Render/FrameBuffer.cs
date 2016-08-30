@@ -3,12 +3,11 @@ using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using Sxta.Core;
 using Sxta.Math;
+using Sxta.Render.Core;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 
 namespace Sxta.Render
 {
@@ -19,6 +18,9 @@ namespace Sxta.Render
     /// </summary>
     public class FrameBuffer : IDisposable
     {
+//#if DEBUG
+//        TraceOpenTKDisposableObject traceDisposable;
+//#endif
 
         /// <summary>
         /// The state of a FrameBuffer.
@@ -1026,6 +1028,9 @@ namespace Sxta.Render
         /// </summary>
         public FrameBuffer()
         {
+//#if DEBUG
+//            traceDisposable = new TraceOpenTKDisposableObject();
+//#endif
             attachmentsChanged = false;
             readDrawChanged = false;
             parametersChanged = false;
@@ -1058,6 +1063,9 @@ namespace Sxta.Render
         /// </param>
         public FrameBuffer(bool main)
         {
+//#if DEBUG
+//            traceDisposable = new TraceOpenTKDisposableObject();
+//#endif
             attachmentsChanged = false;
             readDrawChanged = false;
             parametersChanged = false;
@@ -4478,6 +4486,9 @@ namespace Sxta.Render
             // Check to see if Dispose has already been called. 
             if (!this.disposed)
             {
+//#if DEBUG
+//                traceDisposable.CheckDispose();
+//#endif
                 // If disposing equals true, dispose all managed 
                 // and unmanaged resources. 
                 if (disposing)

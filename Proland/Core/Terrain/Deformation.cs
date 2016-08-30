@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using log4net;
 using Sxta.Math;
-using System.Diagnostics;
-using Sxta.OpenGL;
 using Sxta.Render;
 using Sxta.Render.Scenegraph;
+using System;
+using System.Reflection;
 
 namespace proland
 {
     public class Deformation// : Object
     {
+        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
         /// <summary>
         /// Creates a new Deformation.
         /// </summary>
@@ -51,6 +49,7 @@ namespace proland
         {
             return Matrix4d.CreateTranslation(localPt.X, localPt.Y, 0.0);
         }
+
         /// <summary>
         /// Returns the local point corresponding to the given source point.
         /// </summary>
@@ -118,9 +117,18 @@ namespace proland
                 blendingU.set(new Vector2f(d1, d2 - d1));
             }
             cameraToScreen = (Matrix4f)context.getOwner().getCameraToScreen();
-            localToScreen = context.getOwner().getCameraToScreen() * context.getLocalToCamera();
+            Matrix4d cameraToScreenTmp = context.getOwner().getCameraToScreen();
+            Matrix4d localToCameraTmp = context.getLocalToCamera();
+            // original localToScreen = context.getOwner().getCameraToScreen() * context.getLocalToCamera();
+            localToScreen = cameraToScreenTmp * localToCameraTmp;
+            Vector4d p2 = localToScreen * new Vector4d(101.0, 60.0, 140, 1.0);
+
             if (localToScreenU != null)
             {
+                if (log.IsDebugEnabled)
+                {
+                    log.DebugFormat("Deformation.setUniforms. localToScreenU:{0}", localToScreen);
+                }
                 localToScreenU.setMatrix((Matrix4f)localToScreen);
             }
             if (tileToTangentU != null)
@@ -162,7 +170,10 @@ namespace proland
 
             if (offsetU != null)
             {
-                //TODO Define operator VECTOR4F
+                if (log.IsDebugEnabled)
+                {
+                    log.DebugFormat("Deformation.setUniforms. offsetU:{0}, {1}, {2}, {3}", (float)q.ox, (float)q.oy, (float)q.l, q.level);
+                }
                 offsetU.set(new Vector4f((float)q.ox, (float)q.oy, (float)q.l, q.level));
             }
             if (cameraU != null)

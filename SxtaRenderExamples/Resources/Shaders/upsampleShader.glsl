@@ -116,7 +116,7 @@ void main() {
 
     vec2 residual_uv = p_uv * residualOSH.z + residualOSH.xy;
     float zf = residualOSH.w * textureLod(residualSampler, residual_uv, 0.0).x;
-
+ 
     vec2 offset = (p_uv - fract(p_uv) + vec2(0.5)) * coarseLevelOSL.z + coarseLevelOSL.xy;
     mat4 cz = mat4(
         textureLod(coarseLevelSampler, vec3(offset + vec2(0.0, 0.0) * coarseLevelOSL.z, coarseLevelOSL.w), 0.0).x,
@@ -175,7 +175,8 @@ void main() {
 #else
     data = vec4(zf, zc, max(zf, 0.0), 0.0);
 #endif
-
+	//data = vec4(zf, zc, clamp(zf, 0.0, 0.9), 0.0);
+	//data = data * 0.01 + textureLod(noiseSampler, vec3(uvs[int(noiseUVLH.x)], uvs[int(noiseUVLH.y)], noiseUVLH.z), 0.0);
 }
 
 #endif

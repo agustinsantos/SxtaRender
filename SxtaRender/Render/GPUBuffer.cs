@@ -21,9 +21,9 @@ namespace Sxta.Render
     /// </summary>
     public class GPUBuffer : Buffer, IDisposable //where T : struct
     {
-#if DEBUG
-        TraceOpenTKDisposableObject traceDisposable;
-#endif
+//#if DEBUG
+//        TraceOpenTKDisposableObject traceDisposable;
+//#endif
 
 
         // For a tutorial about OpenTK buffers, see
@@ -37,9 +37,9 @@ namespace Sxta.Render
         /// </summary>
         public GPUBuffer()
         {
-#if DEBUG
-            traceDisposable = new TraceOpenTKDisposableObject();
-#endif
+//#if DEBUG
+//            traceDisposable = new TraceOpenTKDisposableObject();
+//#endif
 
             size = 0;
             mappedData = IntPtr.Zero;
@@ -566,12 +566,12 @@ namespace Sxta.Render
         // other objects. Only unmanaged resources can be disposed. 
         protected virtual void Dispose(bool disposing)
         {
-#if DEBUG
-            traceDisposable.CheckCurrentContext();
-#endif
             // Check to see if Dispose has already been called. 
             if (!this.disposed)
             {
+//#if DEBUG
+//                traceDisposable.CheckDispose();
+//#endif
                 // If disposing equals true, dispose all managed 
                 // and unmanaged resources. 
                 if (disposing)

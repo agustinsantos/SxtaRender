@@ -3,6 +3,7 @@ using OpenTK.Input;
 using Sxta.Math;
 using Sxta.Proland.Core.XmlResources;
 using Sxta.Render;
+using Sxta.Render.OpenGLExt;
 using Sxta.Render.Resources;
 using Sxta.Render.Scenegraph;
 using System;
@@ -37,6 +38,11 @@ namespace Examples.Tutorials
                     this.WindowState = WindowState.Normal;
                 else
                     this.WindowState = WindowState.Fullscreen;
+
+            if (e.Key == Key.F12)
+            {
+                ScreenShot.SaveScreenShot(this.ClientSize, this.ClientRectangle);
+            }
         }
 
         protected override void OnLoad(EventArgs e)
@@ -61,7 +67,7 @@ namespace Examples.Tutorials
             fb = FrameBuffer.getDefault();
 
             camera = new SGCamera(this);
-            camera.Position = new Vector3d(0, 0, 80);
+            camera.Position = new Vector3d(0, 0, 1000);
         }
 
         protected override void OnUnload(EventArgs e)

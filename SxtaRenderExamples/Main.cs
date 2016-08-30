@@ -64,7 +64,7 @@ namespace Examples
                     Debug.Listeners.Add(new ConsoleTraceListener());
 
                     Trace.Listeners.Clear();
-                    Trace.Listeners.Add(new TextWriterTraceListener("debug.log"));
+                    Trace.Listeners.Add(new TextWriterTraceListener("trace.log"));
                     Trace.Listeners.Add(new ConsoleTraceListener());
 
                     Application.Run(browser);

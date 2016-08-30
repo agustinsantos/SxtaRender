@@ -43,6 +43,7 @@
 using Sxta.Core;
 using Sxta.Math;
 using Sxta.Render;
+using Sxta.Render.OpenGLExt;
 using Sxta.Render.Scenegraph;
 using System;
 using System.Collections.Generic;

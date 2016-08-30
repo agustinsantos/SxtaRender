@@ -27,7 +27,7 @@
   <multithreadScheduler name="defaultScheduler" nthreads="1" fps="0"/>
 
   <sequence name="cameraMethod">
-    <foreach var="o" flag="dynamic" parallel="false">
+    <foreach var="o" flag="dynamic" parallel="true">
       <callMethod name="$o.update"/>
     </foreach>
     <foreach var="o" flag="object" culling="true">
@@ -35,7 +35,7 @@
     </foreach>
   </sequence>
 
-  <terrainNode name="myTerrain" size="500" zmin="-1" zmax="1" splitFactor="2" maxLevel="0"/>
+  <terrainNode name="myTerrain" size="500" zmin="-1" zmax="1" splitFactor="2" maxLevel="7"/>
 
   <sequence name="updateTerrainMethod">
     <updateTerrain name="this.terrain"/>

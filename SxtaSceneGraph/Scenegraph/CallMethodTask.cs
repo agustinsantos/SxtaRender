@@ -58,7 +58,7 @@ namespace Sxta.Render.Scenegraph
             {
                 log.Error("CallMethod: cannot find method '" + method.target + "." + method.name + "'");
             }
-            throw new Exception();
+            throw new Exception("CallMethod: cannot find method '" + method.target + "." + method.name + "'");
         }
 
 

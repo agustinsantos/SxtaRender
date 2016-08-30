@@ -350,9 +350,9 @@ namespace Sxta.Proland.Terrain
 
             frameBuffer.drawQuad(normals);
             gpuData.copyPixels(frameBuffer, 0, 0, tileWidth, tileWidth);
-#if DEBUG
-            ScreenShot.SaveFrameBuffer(tileWidth, tileWidth, string.Format("NormalProducer-{0}-{1}-{2}-.bmp", level, tx, ty));
-#endif
+//#if DEBUG
+//            ScreenShot.SaveFrameBuffer(tileWidth, tileWidth, string.Format("NormalProducer-{0}-{1}-{2}-.bmp", level, tx, ty));
+//#endif
             return true;
         }
 

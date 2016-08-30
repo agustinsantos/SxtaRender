@@ -54,6 +54,7 @@ namespace Examples
         Learning = 0,
         Resource,
         SceneGraph,
+        Proland,
         GUI,
         Custom,
         Testing,

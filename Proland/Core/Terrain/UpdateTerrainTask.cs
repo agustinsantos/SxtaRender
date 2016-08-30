@@ -55,7 +55,7 @@ namespace proland
             Method N = (Method)context;
             SceneNode n = N.getOwner();
             SceneNode target = terrain.getTarget(n);
-            TerrainNode t;// = new TerrainNode();
+            TerrainNode t = null;
             if (target == null)
             {
                 t = n.getOwner().getResourceManager().loadResource(terrain.name).get() as TerrainNode;
@@ -63,7 +63,7 @@ namespace proland
             else
             {
                 TerrainNodeResource tr = (TerrainNodeResource)target.getField(terrain.name);
-                t =  tr.get() as TerrainNode;
+                t = tr.get() as TerrainNode;
             }
             if (t == null)
             {
@@ -73,16 +73,23 @@ namespace proland
                 }
                 throw new Exception("UpdateTerrain : cannot find terrain '" + terrain.target + "." + terrain.name + "'");
             }
-            if (log.IsDebugEnabled)
+            //if (log.IsDebugEnabled)
+            //{
+            //    log.Debug("UpdateTerrain: '" + terrain.target + "." + terrain.name + "'");
+            //}
+            try
             {
-                log.Debug("UpdateTerrain");
+                t.update(n);
             }
-            t.update(n);
+            catch (Exception e)
+            {
+                log.ErrorFormat("UpdateTerrain. Exception {0}.", e);
+            }
             return new TaskGraph();
         }
 
         /// <summary>
-        /// The %terrain whose quadtree must be updated. The first part of this "node.name"
+        /// The terrain whose quadtree must be updated. The first part of this "node.name"
         /// qualified name specifies the scene node containing the TerrainNode
         /// field.The second part specifies the name of this TerrainNode field.
         /// </summary>

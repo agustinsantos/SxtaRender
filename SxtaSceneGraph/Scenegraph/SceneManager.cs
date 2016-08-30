@@ -1,4 +1,5 @@
-﻿using SD.Tools.Algorithmia.GeneralDataStructures;
+﻿using log4net;
+using SD.Tools.Algorithmia.GeneralDataStructures;
 using Sxta.Math;
 using Sxta.Render.Resources;
 using Sxta.Render.Scenegraph.XmlResources;
@@ -6,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using System.Reflection;
 using Matrix4d = Sxta.Math.Matrix4d;
 using Vector3d = Sxta.Math.Vector3d;
 using Vector4d = Sxta.Math.Vector4d;
@@ -17,6 +19,8 @@ namespace Sxta.Render.Scenegraph
     /// </summary>
     public class SceneManager : IDisposable
     {
+        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
         /// <summary>
         /// The visibility of a bounding box in a frustum.
         /// </summary>
@@ -386,17 +390,27 @@ namespace Sxta.Render.Scenegraph
                     {
                         newTask = m.getTask();
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
+                        log.ErrorFormat("SceneManager. Exception {0}.", e);
                     }
-                    if (newTask != null)
+                    try
                     {
-                        scheduler.run(newTask);
-                        currentTask = newTask;
+                        if (newTask != null)
+                        {
+                            scheduler.run(newTask);
+                            currentTask = newTask;
+                        }
+                        else if (currentTask != null)
+                        {
+
+                            scheduler.run(currentTask);
+
+                        }
                     }
-                    else if (currentTask != null)
+                    catch (Exception e)
                     {
-                        scheduler.run(currentTask);
+                        log.ErrorFormat("SceneManager. Exception {0}.", e);
                     }
                 }
             }

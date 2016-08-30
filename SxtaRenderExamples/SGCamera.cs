@@ -192,9 +192,9 @@ namespace Examples.Tutorials
             this.Update();
         }
 
-        public void Resize(int width, int height, float fov = MathHelper.PiOver4)
+        public void Resize(int width, int height, float nearplane = 0.1f, float farplane = 10000, float fov = MathHelper.PiOver4)
         {
-            ProjectionMatrix = Matrix4d.CreatePerspectiveFieldOfView(fov, (double)width / (double)height, 0.1, 1000);
+            ProjectionMatrix = Matrix4d.CreatePerspectiveFieldOfView(fov, (double)width / (double)height, nearplane, farplane);
         }
 
         public float MouseSensitivity

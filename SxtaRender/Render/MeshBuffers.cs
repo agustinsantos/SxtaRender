@@ -22,9 +22,9 @@ namespace Sxta.Render
     /// </summary>
     public class MeshBuffers : ISwappable<MeshBuffers>, IDisposable
     {
-#if DEBUG
-        TraceOpenTKDisposableObject traceDisposable;
-#endif
+//#if DEBUG
+//        TraceOpenTKDisposableObject traceDisposable;
+//#endif
 
 
         /// <summary>
@@ -68,9 +68,9 @@ namespace Sxta.Render
         /// </summary>
         public MeshBuffers()
         {
-#if DEBUG
-            traceDisposable = new TraceOpenTKDisposableObject();
-#endif
+//#if DEBUG
+//            traceDisposable = new TraceOpenTKDisposableObject();
+//#endif
             mode = MeshMode.POINTS;
             nvertices = 0;
             nindices = 0;
@@ -1059,12 +1059,12 @@ namespace Sxta.Render
         // other objects. Only unmanaged resources can be disposed. 
         protected virtual void Dispose(bool disposing)
         {
-#if DEBUG
-            traceDisposable.CheckCurrentContext();
-#endif
             // Check to see if Dispose has already been called. 
             if (!this.disposed)
             {
+//#if DEBUG
+//                traceDisposable.CheckDispose();
+//#endif
                 // If disposing equals true, dispose all managed 
                 // and unmanaged resources. 
                 if (disposing)

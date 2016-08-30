@@ -18,9 +18,9 @@ namespace Sxta.Render
     /// </summary>
     public class Program : ISwappable<Program>, IDisposable
     {
-#if DEBUG
-        TraceOpenTKDisposableObject traceDisposable;
-#endif
+//#if DEBUG
+//        TraceOpenTKDisposableObject traceDisposable;
+//#endif
 
         /// <summary>
         /// Creates a new program.
@@ -765,9 +765,9 @@ namespace Sxta.Render
         /// </summary>
         public Program()
         {
-#if DEBUG
-            traceDisposable = new TraceOpenTKDisposableObject();
-#endif
+//#if DEBUG
+//            traceDisposable = new TraceOpenTKDisposableObject();
+//#endif
         }
 
 
@@ -877,12 +877,12 @@ namespace Sxta.Render
 #if OPENTK
             int linked;
             GL.LinkProgram(programId);
-            GL.GetProgram(programId, ProgramParameter.LinkStatus, out linked);
+            GL.GetProgram(programId, GetProgramParameterName.LinkStatus, out linked);
             if (linked == 0)
             {
                 // if a link error occured ...
                 int logLength;
-                GL.GetProgram(programId, ProgramParameter.InfoLogLength, out logLength);
+                GL.GetProgram(programId, GetProgramParameterName.InfoLogLength, out logLength);
                 if (logLength > 0)
                 {
                     int length;
@@ -897,9 +897,9 @@ namespace Sxta.Render
             }
             int maxNameLength;
             int maxBlockNameLength = 0;
-            GL.GetProgram(programId, ProgramParameter.ActiveUniformMaxLength, out maxNameLength);
+            GL.GetProgram(programId, GetProgramParameterName.ActiveUniformMaxLength, out maxNameLength);
             Debug.Assert(FrameBuffer.getError() == ErrorCode.NoError);
-            GL.GetProgram(programId, ProgramParameter.ActiveUniformBlockMaxNameLength, out maxBlockNameLength);
+            GL.GetProgram(programId, GetProgramParameterName.ActiveUniformBlockMaxNameLength, out maxBlockNameLength);
 #if DEBUG
             ErrorCode error = FrameBuffer.getError();
             if (error != ErrorCode.NoError)
@@ -910,7 +910,7 @@ namespace Sxta.Render
             StringBuilder buf = new StringBuilder(); // = new char[maxNameLength];
 
             int nUniforms = 0;
-            GL.GetProgram(programId, ProgramParameter.ActiveUniforms, out nUniforms);
+            GL.GetProgram(programId, GetProgramParameterName.ActiveUniforms, out nUniforms);
 #else
             
             int linked;
@@ -1741,13 +1741,13 @@ namespace Sxta.Render
         // other objects. Only unmanaged resources can be disposed. 
         protected virtual void Dispose(bool disposing)
         {
-#if DEBUG
-            traceDisposable.CheckCurrentContext();
-#endif
-
             // Check to see if Dispose has already been called. 
             if (!this.disposed)
             {
+//#if DEBUG
+//                traceDisposable.CheckDispose();
+//#endif
+
                 // If disposing equals true, dispose all managed 
                 // and unmanaged resources. 
                 if (disposing)

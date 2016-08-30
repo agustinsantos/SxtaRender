@@ -992,7 +992,7 @@ namespace proland
 
             if (owner != null)
             { // the owner exists
-                cachedContext = owner.GetType().FullName + (owner.getContext() != null ? owner.getContext().ToString() : "Null");
+                cachedContext = owner.GetType().FullName + owner.getContext().ToString();
                 return cachedContext;
             }
             else

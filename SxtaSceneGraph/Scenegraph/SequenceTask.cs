@@ -1,32 +1,30 @@
-﻿using Sxta.Core;
+﻿using log4net;
+using Sxta.Core;
 using Sxta.Render.Resources;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reflection;
 
 namespace Sxta.Render.Scenegraph
 {
-    /**
-     * An AbstractTask to compose a list of tasks in a sequence.
-     * @ingroup scenegraph
-     */
+     /// <summary>
+    /// An AbstractTask to compose a list of tasks in a sequence.
+    /// </summary>
     public class SequenceTask : AbstractTask, ISwappable<SequenceTask>
     {
+        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        /**
-         * Creates a SequenceTask with the given list of tasks.
-         *
-         * @param subtasks the tasks that must be composed into a sequence.
-         */
+        /// <summary>
+        ///  Creates a SequenceTask with the given list of tasks.
+        /// </summary>
+        /// <param name="subtasks">the tasks that must be composed into a sequence.</param>
         public SequenceTask(List<TaskFactory> subtasks)
             : base("SequenceTask")
         {
             init(subtasks);
         }
 
-        /**
+        /*
          * Deletes this SequenceTask.
          */
         // ~SequenceTask(){}
@@ -58,27 +56,25 @@ namespace Sxta.Render.Scenegraph
                     }
                     catch (Exception ex)
                     {
-                        ;
+                        log.ErrorFormat("SequenceTask. Exception {0}.", ex);
                     }
                 }
                 return result;
             }
         }
 
-
-        /**
-         * Creates an empty SequenceTask.
-         */
+        /// <summary>
+        /// Creates an empty SequenceTask.
+        /// </summary>
         public SequenceTask()
             : base("SequenceTask")
         {
         }
 
-        /**
-         * Initializes this SequenceTask with the given list of tasks.
-         *
-         * @param subtasks the tasks that must be composed into a sequence.
-         */
+        /// <summary>
+        /// Initializes this SequenceTask with the given list of tasks.
+        /// </summary>
+        /// <param name="subtasks">the tasks that must be composed into a sequence.</param>
         public void init(List<TaskFactory> subtasks)
         {
             this.subtasks = subtasks;

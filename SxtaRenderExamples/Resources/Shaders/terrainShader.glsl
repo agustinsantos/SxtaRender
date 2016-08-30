@@ -11,7 +11,9 @@ layout(location=0) in vec3 vertex;
 out vec4 p;
 
 void main() {
+	//vec4 offset = vec4(0,0, 250,2);
     p = vec4(vertex.xy * deformation.offset.z + deformation.offset.xy, -10.0, 1.0);
+    //p = p*0.0001 + vec4(vertex.xy * offset.z + offset.xy, -10.0, 1.0);
     gl_Position = deformation.localToScreen * p;
 }
 

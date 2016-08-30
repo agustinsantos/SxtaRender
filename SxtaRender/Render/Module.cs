@@ -1,6 +1,7 @@
 ﻿using log4net;
 using OpenTK.Graphics.OpenGL;
 using Sxta.Core;
+using Sxta.Render.Core;
 using Sxta.Render.Resources;
 using System;
 using System.Collections.Generic;
@@ -38,6 +39,9 @@ namespace Sxta.Render
     /// </summary>
     public class Module : IDisposable, ISwappable<Module>
     {
+//#if DEBUG
+//        TraceOpenTKDisposableObject traceDisposable;
+//#endif
 
         /// <summary>
         /// Creates a new module whose parts are all grouped in a single compilation
@@ -50,7 +54,7 @@ namespace Sxta.Render
         /// <param name='source'>
         /// Source.
         /// </param>
-        public Module(int version, string source)
+        public Module(int version, string source):this()
         {
             init(version, source);
         }
@@ -68,7 +72,7 @@ namespace Sxta.Render
         /// <param name='fragment'>
         /// Fragment the fragment shader source code (maybe null)
         /// </param>
-        public Module(int version, string vertex, string fragment)
+        public Module(int version, string vertex, string fragment) : this()
         {
             init(version, null, vertex, null, null, null, null, null, null, null, fragment);
         }
@@ -90,7 +94,7 @@ namespace Sxta.Render
         /// <param name='fragment'>
         /// Fragment shader source code (maybe null).
         /// </param>
-        public Module(int version, string vertex, string geometry, string fragment)
+        public Module(int version, string vertex, string geometry, string fragment) : this()
         {
             init(version, null, vertex, null, null, null, null, null, geometry, null, fragment);
         }
@@ -119,7 +123,7 @@ namespace Sxta.Render
         /// Fragment  the fragment shader source code (maybe null).
         /// </param>
         public Module(int version, string vertex, string tessControl,
-            string tessEvaluation, string geometry, string fragment)
+            string tessEvaluation, string geometry, string fragment) : this()
         {
             init(version, null, vertex, null, tessControl, null, tessEvaluation, null, geometry, null, fragment);
         }
@@ -270,7 +274,12 @@ namespace Sxta.Render
         /// Creates an uninitialized module.
         /// Initializes a new instance of the <see cref="Sxta.Render.Module"/> class.
         /// </summary>
-        public Module() { }
+        public Module()
+        {
+//#if DEBUG
+//            traceDisposable = new TraceOpenTKDisposableObject();
+//#endif
+        }
 
 
         /// <summary>
@@ -842,6 +851,9 @@ namespace Sxta.Render
             // Check to see if Dispose has already been called. 
             if (!this.disposed)
             {
+//#if DEBUG
+//                traceDisposable.CheckDispose();
+//#endif
                 // If disposing equals true, dispose all managed 
                 // and unmanaged resources. 
                 if (disposing)

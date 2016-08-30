@@ -12,6 +12,7 @@ namespace Sxta.Render.Core
         public TraceOpenTKDisposableObject()
         {
             stactTraceAtConstructor = GetPartialStackTrace();
+            log.DebugFormat("This object {0} was created{1}.", this.GetHashCode(), stactTraceAtConstructor);
             CheckCurrentContext();
         }
 
@@ -35,10 +36,18 @@ namespace Sxta.Render.Core
                 !GraphicsContext.CurrentContext.IsCurrent)
             {
                 string actualStackTrace = GetPartialStackTrace();
-                log.FatalFormat("An object is trying to use OpenGl but there is no active graphics context. Stack Trace = {0}", actualStackTrace);
-                log.FatalFormat("This object was created at {0}", stactTraceAtConstructor);
+                log.FatalFormat("An object is trying to use OpenGl but there is no active graphics context. Stack Trace ={0}", actualStackTrace);
+                log.FatalFormat("This object was created{0}", stactTraceAtConstructor);
                 Debugger.Break();
             }
+        }
+
+
+        public void CheckDispose()
+        {
+            string actualStackTrace = GetPartialStackTrace();
+            log.DebugFormat("This object {0} was disposed{1}.", this.GetHashCode(), actualStackTrace);
+            CheckCurrentContext();
         }
     }
 }

@@ -100,12 +100,14 @@ namespace proland
         {
             init(deform, root, splitFactor, maxLevel);
         }
+
         /// <summary>
         /// Creates an uninitialized TerrainNode.
         /// </summary>
         public TerrainNode() : base()
         {
         }
+
         /// <summary>
         /// Returns the current viewer frustum planes in the deformed #terrain
         /// space(see #deform). These planes are updated by the #update method.
@@ -144,17 +146,10 @@ namespace proland
         /// <returns></returns>
         public float getCameraDist(Box3d localBox)
         {
-            //Console.WriteLine(Math.Abs(localCameraPos.Y - localBox.ymin) + " + " + Math.Abs(localCameraPos.Y - localBox.ymax));
             float dist = (float)Math.Max(Math.Abs(localCameraPos.Z - localBox.zmax) / distFactor,
-                   Math.Max(Math.Min(Math.Abs(localCameraPos.X - localBox.xmin), Math.Abs(localCameraPos.X - localBox.xmax)),
-                        Math.Min(Math.Abs(localCameraPos.Y - localBox.ymin), Math.Abs(localCameraPos.Y - localBox.ymax))));
-            /**if (dist >= 29.9)
-            {
-                Console.WriteLine(Math.Abs(localCameraPos.Y - localBox.ymin) + " + " + Math.Abs(localCameraPos.Y - localBox.ymax));
-            }**/
-            return (float)Math.Max(Math.Abs(localCameraPos.Z - localBox.zmax) / distFactor,
-                   Math.Max(Math.Min(Math.Abs(localCameraPos.X - localBox.xmin), Math.Abs(localCameraPos.X - localBox.xmax)),
-                        Math.Min(Math.Abs(localCameraPos.Y - localBox.ymin), Math.Abs(localCameraPos.Y - localBox.ymax))));
+                                Math.Max(Math.Min(Math.Abs(localCameraPos.X - localBox.xmin), Math.Abs(localCameraPos.X - localBox.xmax)),
+                                Math.Min(Math.Abs(localCameraPos.Y - localBox.ymin), Math.Abs(localCameraPos.Y - localBox.ymax))));
+            return dist;
         }
 
         /// <summary>
@@ -178,6 +173,8 @@ namespace proland
         public float getSplitDistance()
         {
             Debug.Assert(float.IsInfinity(splitDist) == false);
+            if (splitDist <= 1.0f)
+                Debugger.Break();
             Debug.Assert(splitDist > 1.0f);
             return splitDist;
         }
@@ -228,7 +225,7 @@ namespace proland
             }
             float fov = (float)Math.Acos(x);
             splitDist = (float)(splitFactor * fb.getViewport().Z / 1024.0f * Math.Tan(40.0f / 180.0f * Math.PI) / Math.Tan(fov / 2.0f));
-            if (splitDist < 1.1f || !(float.IsInfinity(splitDist) == false))
+            if (splitDist < 1.1f ||  float.IsInfinity(splitDist))
             {
                 splitDist = 1.1f;
             }
@@ -244,8 +241,7 @@ namespace proland
                 localCameraDir = new Matrix2f((float)localDir.Y, (float)-localDir.X, (float)-localDir.X, (float)-localDir.Y);
                 for (int i = 0; i < HORIZON_SIZE; ++i)
                 {
-                    //TOSEE INFINITY
-                    horizon[i] = (float)Double.NegativeInfinity;
+                    horizon[i] = Single.NegativeInfinity;
                 }
             }
 
@@ -358,16 +354,13 @@ namespace proland
             return imax >= imin;
         }
 
-        /**
-         * Initializes this TerrainNode.
-         *
-         * @param deform the %terrain deformation.
-         * @param root the root of the %terrain quadtree.
-         * @param splitFactor how the %terrain quadtree must be subdivided (see
-         *      #splitFactor).
-         * @param maxLevel the maximum level at which the %terrain quadtree must be
-         *      subdivided (inclusive).
-         */
+        /// <summary>
+        /// Initializes this TerrainNode.
+        /// </summary>
+        /// <param name="deform">the %terrain deformation.</param>
+        /// <param name="root">the root of the %terrain quadtree.</param>
+        /// <param name="splitFactor">how the %terrain quadtree must be subdivided (see splitFactor).</param>
+        /// <param name="maxLevel">the maximum level at which the %terrain quadtree must be subdivided(inclusive).</param>
         public void init(Deformation deform, TerrainQuad root, float splitFactor, int maxLevel)
         {
             this.deform = deform;

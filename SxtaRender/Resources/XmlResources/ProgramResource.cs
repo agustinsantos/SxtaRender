@@ -59,7 +59,6 @@ namespace Sxta.Render.Resources.XmlResources
                 }
             }
             this.valueC.init(modules);
-
         }
 
         public override bool prepareUpdate()
