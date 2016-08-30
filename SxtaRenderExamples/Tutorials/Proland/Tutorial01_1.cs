@@ -66,17 +66,17 @@ namespace Examples.Tutorials
             uMVMatrix = p.getUniformMatrix4f("deformation.uMVMatrix");
             uOffset = p.getUniform4f("deformation.offset");
 
-            mesh = new Mesh<Vertex_V3f, uint>(Vertex_V3f.SizeInBytes, sizeof(uint), MeshMode.TRIANGLES, MeshUsage.GPU_STATIC);
-            mesh.addAttributeType(0, 3, AttributeType.A32F, false);
+        mesh = new Mesh<Vertex_V3f, uint>(Vertex_V3f.SizeInBytes, sizeof(uint), MeshMode.TRIANGLES, MeshUsage.GPU_STATIC);
+        mesh.addAttributeType(0, 3, AttributeType.A32F, false);
 
-            mesh.addVertex(new Vertex_V3f() { Position = new Vector3f(-1, -1, 0) });
-            mesh.addVertex(new Vertex_V3f() { Position = new Vector3f(1, -1, 0) });
-            mesh.addVertex(new Vertex_V3f() { Position = new Vector3f(1, 1, 0) });
-            mesh.addVertex(new Vertex_V3f() { Position = new Vector3f(-1, 1, 0) });
-            mesh.addIndices(new uint[] {
-                               0,1,2,
-                               0,2,3,
-                            });
+        mesh.addVertex(new Vertex_V3f() { Position = new Vector3f(-1, -1, 0) });
+        mesh.addVertex(new Vertex_V3f() { Position = new Vector3f(1, -1, 0) });
+        mesh.addVertex(new Vertex_V3f() { Position = new Vector3f(1, 1, 0) });
+        mesh.addVertex(new Vertex_V3f() { Position = new Vector3f(-1, 1, 0) });
+        mesh.addIndices(new uint[] {
+                            0,1,2,
+                            0,2,3,
+                        });
 
         }
 
