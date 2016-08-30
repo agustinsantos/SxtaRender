@@ -51,17 +51,16 @@ uniform samplerTile fragmentNormalSampler;
 
 layout(location=0) in vec3 vertex;
 out vec2 uv;
-out vec4 zfc;
 
 void main() {
-    zfc = textureTile(elevationSampler, vertex.xy);
+    vec4 zfc = textureTile(elevationSampler, vertex.xy); // Se encarga de las Z
 
     vec2 v = abs(deformation.camera.xy - vertex.xy);
     float d = max(max(v.x, v.y), deformation.camera.z);
-    float blend = clamp((d - deformation.blending.x) / deformation.blending.y, 0.0, 1.0);
+    float blend = clamp((d - deformation.blending.x) / deformation.blending.y, 0.0, 1.0); // Coeficiente de Blending cuando se hace zoom y evita popping
 
     float h = zfc.z * (1.0 - blend) + zfc.y * blend;
-    vec3 p = vec3(vertex.xy * deformation.offset.z + deformation.offset.xy, h);
+    vec3 p = vec3(vertex.xy * deformation.offset.z + deformation.offset.xy, h); // Posición relativa de la camara? p = position
 
     gl_Position = deformation.localToScreen * vec4(p, 1.0);
     uv = vertex.xy;
@@ -71,26 +70,25 @@ void main() {
 
 #ifdef _FRAGMENT_
 
-in vec4 zfc;
 in vec2 uv;
 layout(location=0) out vec4 data;
 
 void main() {
     float h = textureTile(elevationSampler, uv).x;
     if (h < 0.1) {
-        data = vec4(0.0, 0.0, 0.5, 1.0);
+        data = vec4(0.0, 0.0, 0.5, 1.0);	// Nivel del mar (Color azul)
     } else {
-        data = vec4(0.0, 0.5, 0.0, 1.0);
+        data = vec4(0.0, 0.5, 0.0, 1.0);	// Montañas (Color verde)
     }
 
-    vec3 n = vec3(textureTile(fragmentNormalSampler, uv).xy * 2.0 - 1.0, 0.0);
+	vec4 temp1 = textureTile(fragmentNormalSampler, uv); // Colores?
+    vec3 n = vec3(temp1.xy * 2.0 - 1.0, 0.0);	// Las normales dan las iluminaciones
     n.z = sqrt(max(0.0, 1.0 - dot(n.xy, n.xy)));
 
-    float light = dot(n, normalize(vec3(1.0)));
+    float light = dot(n, normalize(vec3(1.0)));	// Iluminaciones
     data.rgb *= light;
 
-    data.g += mod(dot(floor(deformation.offset.xy / deformation.offset.z + 0.5), vec2(1.0)), 2.0);
-	data = data + zfc;
+    data.r += mod(dot(floor(deformation.offset.xy / deformation.offset.z + 0.5), vec2(1.0)), 2.0);	//Colores de los tiles
 }
 
 #endif

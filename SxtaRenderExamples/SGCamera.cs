@@ -1,9 +1,5 @@
 ﻿using Sxta.Math;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Examples.Tutorials
 {
@@ -21,7 +17,7 @@ namespace Examples.Tutorials
         private readonly OpenTK.GameWindow parentWindow;
         private Vector2f mouseMove;
         private float mouseSensitivity = 0.05f;
-        private float moveSpeed = 0.5f;
+        private float moveSpeed = 3.5f;
 
         public Matrix4d ViewMatrix { get; internal set; }
 

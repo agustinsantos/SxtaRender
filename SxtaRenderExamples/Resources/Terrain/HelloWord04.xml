@@ -25,8 +25,8 @@
 -->
 <archive>
   <multithreadScheduler name="defaultScheduler" nthreads="0" fps="0"/>
-  
-   <tileCache name="groundElevations" scheduler="defaultScheduler">
+
+  <tileCache name="groundElevations" scheduler="defaultScheduler">
     <gpuTileStorage tileSize="101" nTiles="512"
         internalformat="RGB32F" format="RGB" type="FLOAT" min="LINEAR" mag="LINEAR"/>
   </tileCache>
@@ -54,7 +54,7 @@
 
   <!--<module name="cameraShader" version="330" source="camera.glsl"/>-->
 
-  <terrainNode name="myTerrain" size="50000" zmin="0" zmax="5000" splitFactor="2" maxLevel="0"/>
+  <terrainNode name="myTerrain" size="50000" zmin="0" zmax="5000" splitFactor="2" maxLevel="16"/>
 
   <sequence name="updateTerrainMethod">
     <updateTerrain name="this.terrain"/>
@@ -71,38 +71,36 @@
   </sequence>
 
 
-
   <!--<module name="perspectiveShader" version="330" source="perspective.glsl">
     <uniformSampler name="sampler" texture="checker"/>
   </module>-->
 
- 
   <module name="upsampleShader" version="330" source="upsampleShader.glsl"/>
 
   <module name="normalShader" version="330" source="normalShader.glsl"/>
 
   <module name="terrainShader" version="330" source="terrainShaderEx1.glsl"/>
-  
+
   <node name="scene">
     <node flags="camera">
       <!--<module id="material" value="cameraShader"/>-->
       <method id="draw" value="cameraMethod"/>
     </node>
-    
-    
+
+
     <node name="terrainNode" flags="object,dynamic">
       <bounds xmin="-50000" xmax="50000" ymin="-50000" ymax="50000" zmin="0" zmax="5000"/>
 
       <field id="terrain" value="myTerrain"/>
       <tileSamplerZ id="elevation" sampler="elevationSampler" producer="groundElevations1" storeInvisible="false"/>
       <tileSampler id="fnormal" sampler="fragmentNormalSampler" producer="groundNormals1" storeParent="false" storeInvisible="false"/>
-      
-      
+
+
       <mesh id="grid" value="quadEx1.mesh"/>
       <method id="update" value="updateTerrainMethod"/>
       <method id="draw" value="drawTerrainMethod"/>
       <module id="material" value="terrainShader"/>
     </node>
   </node>
-  
+
 </archive>
