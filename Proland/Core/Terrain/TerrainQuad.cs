@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Sxta.Render;
+﻿using Sxta.Math;
 using Sxta.Render.Scenegraph;
-using Sxta.Math;
-using Sxta.Core;
-using System.Diagnostics;
+using System;
 
 namespace proland
 {

@@ -1,7 +1,6 @@
 ﻿using log4net;
 using OpenTK.Graphics.OpenGL;
 using Sxta.Core;
-using Sxta.Render.Core;
 using Sxta.Render.Resources;
 using System;
 using System.Collections.Generic;
@@ -18,9 +17,9 @@ namespace Sxta.Render
     /// </summary>
     public class Program : ISwappable<Program>, IDisposable
     {
-//#if DEBUG
-//        TraceOpenTKDisposableObject traceDisposable;
-//#endif
+        //#if DEBUG
+        //        TraceOpenTKDisposableObject traceDisposable;
+        //#endif
 
         /// <summary>
         /// Creates a new program.
@@ -765,9 +764,9 @@ namespace Sxta.Render
         /// </summary>
         public Program()
         {
-//#if DEBUG
-//            traceDisposable = new TraceOpenTKDisposableObject();
-//#endif
+            //#if DEBUG
+            //            traceDisposable = new TraceOpenTKDisposableObject();
+            //#endif
         }
 
 
@@ -907,7 +906,7 @@ namespace Sxta.Render
 #endif
             maxNameLength = System.Math.Max(maxNameLength, maxBlockNameLength);
 
-            StringBuilder buf = new StringBuilder(); // = new char[maxNameLength];
+            StringBuilder buf = new StringBuilder(2 * maxNameLength); // Multiply by 2 because of truncated strings on Mono
 
             int nUniforms = 0;
             GL.GetProgram(programId, GetProgramParameterName.ActiveUniforms, out nUniforms);
@@ -962,6 +961,7 @@ namespace Sxta.Render
                 int matrixStride;
                 int isRowMajor;
 #if OPENTK
+                buf.Clear();
                 GL.GetActiveUniformName(programId, i, maxNameLength, out length, buf);
                 GL.GetActiveUniforms(programId, 1, ref i, ActiveUniformParameter.UniformType, out type);
                 GL.GetActiveUniforms(programId, 1, ref i, ActiveUniformParameter.UniformSize, out size);
@@ -1002,6 +1002,7 @@ namespace Sxta.Render
                 if (blockIndex != -1)
                 {
 #if OPENTK
+                    buf.Clear();
                     GL.GetActiveUniformBlockName(programId, blockIndex, maxNameLength, out length, buf);
                     string blockName = buf.ToString();
 
@@ -1744,9 +1745,9 @@ namespace Sxta.Render
             // Check to see if Dispose has already been called. 
             if (!this.disposed)
             {
-//#if DEBUG
-//                traceDisposable.CheckDispose();
-//#endif
+                //#if DEBUG
+                //                traceDisposable.CheckDispose();
+                //#endif
 
                 // If disposing equals true, dispose all managed 
                 // and unmanaged resources. 
