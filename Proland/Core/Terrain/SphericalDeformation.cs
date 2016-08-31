@@ -6,20 +6,24 @@ using System.Diagnostics;
 
 namespace proland
 {
+    /// <summary>
+    /// A Deformation of space transforming planes to spheres. This deformation
+    /// transforms the plane z=0 into a sphere of radius R centered at(0,0,-R).
+    /// The plane z = h is transformed into the sphere of radius R+h.The
+    /// deformation of p = (x, y, z) in local space is q=(R+z) P /\norm P\norm,
+    /// where P=(x,y,R).
+    /// </summary>
     public class SphericalDeformation : Deformation
     {
-
-        /**
-         * The radius of the sphere into which the plane z=0 must be deformed.
-         */
+        /// <summary>
+        /// The radius of the sphere into which the plane z=0 must be deformed.
+        /// </summary>
         public float R;
 
-        /**
-         * Creates a new SphericalDeformation.
-         *
-         * @param R the radius of the sphere into which the plane z=0 must be
-         *      deformed.
-         */
+        /// <summary>
+        /// Creates a new SphericalDeformation.
+        /// </summary>
+        /// <param name="R">the radius of the sphere into which the plane z=0 must be deformed.</param>
         public SphericalDeformation(float R) : base()
         {
             this.R = R;
@@ -32,7 +36,9 @@ namespace proland
 
         public override Vector3d localToDeformed(Vector3d localPt)
         {
-            return Vector3d.Multiply(new Vector3d(localPt.X, localPt.Y, R), localPt.Z + R);
+            Vector3d rst = new Vector3d(localPt.X, localPt.Y, R);
+            rst.Normalize(localPt.Z + R);
+            return rst;
         }
 
         public override Matrix4d localToDeformedDifferential(Vector3d localPt, bool clamp = false)
@@ -85,7 +91,7 @@ namespace proland
             {
                 return new Vector3d((-2.0 - deformedPt.Z / deformedPt.X) * R, -deformedPt.Y / deformedPt.X * R, l - R);
             }
-            Debug.Assert(false);
+            Debug.Assert(false, "SphericalDeformation.deformedToLocal");
             return Vector3d.Zero;
         }
 
@@ -131,12 +137,12 @@ namespace proland
             Ux.Normalize();
             Vector3d Uy = Vector3d.Cross(Uz, Ux);//Uz.crossProduct(Ux);
             return new Matrix4d(Ux.X, Ux.Y, Ux.Z, 0.0,
-                Uy.X, Uy.Y, Uy.Z, 0.0,
-                Uz.X, Uz.Y, Uz.Z, -R,
-                0.0, 0.0, 0.0, 1.0);
+                                Uy.X, Uy.Y, Uy.Z, 0.0,
+                                Uz.X, Uz.Y, Uz.Z, -R,
+                                0.0, 0.0, 0.0, 1.0);
         }
 
-        public virtual void _setUniforms(SceneNode context, TerrainNode n, Program prog)
+        public override void setUniforms(SceneNode context, TerrainNode n, Program prog)
         {
             if (lastNodeProg != prog)
             {
@@ -144,7 +150,7 @@ namespace proland
                 localToWorldU = prog.getUniformMatrix3f("deformation.localToWorld");
             }
 
-            setUniforms(context, n, prog);
+            base.setUniforms(context, n, prog);
 
             if (localToWorldU != null)
             {
@@ -161,14 +167,14 @@ namespace proland
             }
         }
 
-        public void _setUniforms(SceneNode context, TerrainQuad q, Program prog)
+        public override void setUniforms(SceneNode context, TerrainQuad q, Program prog)
         {
             if (lastQuadProg != prog)
             {
                 screenQuadCornerNormsU = prog.getUniform4f("deformation.screenQuadCornerNorms");
                 tangentFrameToWorldU = prog.getUniformMatrix3f("deformation.tangentFrameToWorld");
             }
-            setUniforms(context, q, prog);
+            base.setUniforms(context, q, prog);
         }
 
         public override SceneManager.visibility getVisibility(TerrainNode t, Box3d localBox)
@@ -237,30 +243,82 @@ namespace proland
 
         protected override void setScreenUniforms(SceneNode context, TerrainQuad q, Program prog)
         {
+            Vector3d p0 = new Vector3d(q.ox, q.oy, R);
+            Vector3d p1 = new Vector3d(q.ox + q.l, q.oy, R);
+            Vector3d p2 = new Vector3d(q.ox, q.oy + q.l, R);
+            Vector3d p3 = new Vector3d(q.ox + q.l, q.oy + q.l, R);
+            Vector3d pc = (p0 + p3) * 0.5;
+            double l0 = p0.Length, l1 = p1.Length, l2 = p2.Length, l3 = p3.Length;
+            Vector3d v0 = p0; v0.Normalize();
+            Vector3d v1 = p1; v1.Normalize();
+            Vector3d v2 = p2; v2.Normalize();
+            Vector3d v3 = p3; v3.Normalize();
 
+            if (screenQuadCornersU != null)
+            {
+                Matrix4d deformedCorners = new Matrix4d(
+                    v0.X * R, v1.X * R, v2.X * R, v3.X * R,
+                    v0.Y * R, v1.Y * R, v2.Y * R, v3.Y * R,
+                    v0.Z * R, v1.Z * R, v2.Z * R, v3.Z * R,
+                    1.0, 1.0, 1.0, 1.0);
+                screenQuadCornersU.setMatrix((Matrix4f)(localToScreen * deformedCorners));
+            }
+
+            if (screenQuadVerticalsU != null)
+            {
+                Matrix4d deformedVerticals = new Matrix4d(
+                    v0.X, v1.X, v2.X, v3.X,
+                    v0.Y, v1.Y, v2.Y, v3.Y,
+                    v0.Z, v1.Z, v2.Z, v3.Z,
+                    0.0, 0.0, 0.0, 0.0);
+                screenQuadVerticalsU.setMatrix((Matrix4f)(localToScreen * deformedVerticals));
+            }
+
+            if (screenQuadCornerNormsU != null)
+            {
+                screenQuadCornerNormsU.set(new Vector4f((float)l0, (float)l1, (float)l2, (float)l3));
+            }
+            if (tangentFrameToWorldU != null)
+            {
+                Vector3d uz = pc;
+                uz.Normalize();
+                Vector3d ux = Vector3d.Cross(Vector3d.UnitY, uz);
+                ux.Normalize();
+                Vector3d uy = Vector3d.Cross(uz, ux);
+
+                Matrix4d ltow = context.getLocalToWorld();
+                Matrix3d tangentFrameToWorld = new Matrix3d(
+                    ltow.R0C0, ltow.R0C1, ltow.R0C2,
+                    ltow.R1C0, ltow.R1C1, ltow.R1C2,
+                    ltow.R2C0, ltow.R2C1, ltow.R2C2) *
+                new Matrix3d(
+                    ux.X, uy.X, uz.X,
+                    ux.Y, uy.Y, uz.Y,
+                    ux.Z, uy.Z, uz.Z);
+                tangentFrameToWorldU.setMatrix((Matrix3f)tangentFrameToWorld);
+            }
         }
 
-
-        /**
-         * The radius of the deformation.
-         */
+        /// <summary>
+        /// The radius of the deformation.
+        /// </summary>
         private Uniform1f radiusU;
 
-        /**
-         * The transformation from local space to world space.
-         */
+        /// <summary>
+        /// The transformation from local space to world space.
+        /// </summary>
         private UniformMatrix3f localToWorldU;
 
-        /**
-         * The norms of the (x,y,R) vectors corresponding to
-         * the corners of a quad.
-         */
+        /// <summary>
+        /// The norms of the (x,y,R) vectors corresponding to
+        /// the corners of a quad.
+        /// </summary>
         private Uniform4f screenQuadCornerNormsU;
 
-        /**
-         * The transformation from the tangent space at a quad's center to
-         * world space.
-         */
+        /// <summary>
+        /// The transformation from the tangent space at a quad's center to
+        /// world space.
+        /// </summary>
         private UniformMatrix3f tangentFrameToWorldU;
 
         private static SceneManager.visibility getVisibility(Vector4d clip, Vector3d[] b, double f)
