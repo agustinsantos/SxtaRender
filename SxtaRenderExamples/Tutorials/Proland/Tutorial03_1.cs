@@ -4,7 +4,7 @@
 using OpenTK;
 using OpenTK.Input;
 using Sxta.Math;
-using Sxta.Proland.XmlResources;
+using Sxta.Proland.Core.XmlResources;
 using Sxta.Render;
 using Sxta.Render.Resources;
 using Sxta.Render.Scenegraph;
@@ -15,16 +15,21 @@ using Vector3d = Sxta.Math.Vector3d;
 using Sxta.Proland.Atmo;
 using Sxta.Render.Scenegraph.Controller;
 using proland;
+using log4net;
+using System.Reflection;
+using Sxta.Render.OpenGLExt;
 
 namespace Examples.Tutorials
 {
     /// <summary>
     /// Demonstrates the GameWindow class.
     /// </summary>
-    [Example("Example 9.2: Ocean01", ExampleCategory.Testing, "09. Atmo", 1, Source = "Tutorial09_2", Documentation = "Tutorial-TODO")]
-    public class Tutorial09_2 : GameWindow
+    [Example("Example 3.1: Atmo", ExampleCategory.Proland, "03. Proland Atmo", 1, Source = "Tutorial03_1", Documentation = "Tutorial-TODO")]
+    public class TutorialProland03_1 : GameWindow
     {
-        public Tutorial09_2(string wd)
+        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
+        public TutorialProland03_1(string wd)
             : base(1024, 768)
         {
             if (!string.IsNullOrWhiteSpace(wd))
@@ -44,11 +49,27 @@ namespace Examples.Tutorials
             if (e.Key == Key.Escape)
                 this.Exit();
 
+            if (e.Key == Key.F10)
+            {
+                ShowLogTask showLogTask = resManager.loadResource("logMethod").get() as ShowLogTask;
+                if (showLogTask != null)
+                    showLogTask.Enabled = !showLogTask.Enabled;
+            }
+            else
             if (e.Key == Key.F11)
+            {
                 if (this.WindowState == WindowState.Fullscreen)
                     this.WindowState = WindowState.Normal;
                 else
                     this.WindowState = WindowState.Fullscreen;
+            }
+            else
+            if (e.Key == Key.F12)
+            {
+                string filename = "Screenshot" + this.GetType().Name + ".bmp";
+                ScreenShot.SaveScreenShot(this.ClientSize, this.ClientRectangle, filename);
+                log.Debug("Saved screenshot with name " + filename);
+            }
         }
 
         #endregion
@@ -61,13 +82,14 @@ namespace Examples.Tutorials
         /// <param name="e">Not used.</param>
         protected override void OnLoad(EventArgs e)
         {
-            PreprocessAtmo.PreprocessAtmosphereParameters(new AtmoParameters(), dir + "/Ocean/Ocean01");
+            PreprocessAtmo.PreprocessAtmosphereParameters(new AtmoParameters(), dir + "/Proland/Atmo");
 
             RegisterResourceReader.RegisterResources();
             resLoader = new XMLResourceLoader();
-            resLoader.addPath(dir + "/Ocean/Ocean01");
-            resLoader.addArchive(dir + "/Ocean/Ocean01/helloworld.xml");
+            resLoader.addPath(dir + "/Proland/Atmo");
+            resLoader.addArchive(dir + "/Proland/Atmo/HelloWorld01.xml");
             resManager = new ResourceManager(resLoader);
+
             manager = new SceneManager();
             manager.setResourceManager(resManager);
             manager.setScheduler(new MultithreadScheduler());
@@ -162,9 +184,9 @@ namespace Examples.Tutorials
         [STAThread]
         public static void Main()
         {
-            using (Tutorial09_2 example = new Tutorial09_2("Resources"))
+            using (TutorialProland03_1 example = new TutorialProland03_1("Resources"))
             {
-                example.Run(60.0, 0.0);
+                example.Run(60.0);
             }
         }
 

@@ -316,8 +316,7 @@ namespace Sxta.Proland.Atmo
                     break;
                 case 10:
                     {
-                        Thread.Sleep(1000);
-                        // TODO FrameBuffer.Finish();
+                        FrameBuffer.Finish();
 
                         uint[] trailerTrans = new uint[5];
                         // A raw file must end with five 32 bits integers, the first one being 0xCAFEBABE, the others the width, height, depth and components per pixel.
