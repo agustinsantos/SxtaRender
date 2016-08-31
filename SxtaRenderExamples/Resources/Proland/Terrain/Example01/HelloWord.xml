@@ -1,0 +1,55 @@
+<?xml version="1.0" ?>
+<!--
+ * Author: Agustin Santos, based on examples written by Eric Bruneton, Antoine Begault, Guillaume Piolat.
+-->
+<archive>
+  <multithreadScheduler name="defaultScheduler" nthreads="1" fps="0"/>
+
+  <tileCache name="groundElevations" scheduler="defaultScheduler">
+    <gpuTileStorage tileSize="101" nTiles="512" internalformat="RGB32F" format="RGB" type="FLOAT" min="LINEAR" mag="LINEAR"/>
+  </tileCache>
+
+  <elevationProducer name="groundElevations1" cache="groundElevations" noise="-140,-100,-15,-8,5,2.5,1.5,1,0.5,0.25,0.1,0.05"/>
+
+  <sequence name="cameraMethod">
+    <foreach var="o" flag="dynamic" parallel="true">
+      <callMethod name="$o.update"/>
+    </foreach>
+    <foreach var="o" flag="object" culling="true">
+      <callMethod name="$o.draw"/>
+    </foreach>
+  </sequence>
+
+  <terrainNode name="myTerrain" size="500" zmin="-1" zmax="1" splitFactor="2" maxLevel="7"/>
+
+  <sequence name="updateTerrainMethod">
+    <updateTerrain name="this.terrain"/>
+    <updateTileSamplers name="this.terrain"/>
+  </sequence>
+
+  <sequence name="drawTerrainMethod">
+    <setProgram>
+      <module name="this.material"/>
+    </setProgram>
+    <drawTerrain name="this.terrain" mesh="this.grid" culling="true"/>
+  </sequence>
+
+  <module name="upsampleShader" version="330" source="upsampleShader.glsl"/>
+  <module name="terrainShader" version="330" source="terrainShader.glsl"/>
+
+  <node name="scene">
+    <node flags="camera">
+      <method id="draw" value="cameraMethod"/>
+    </node>
+
+    <node name="terrainNode" flags="object,dynamic">
+      <bounds xmin="-500" xmax="500" ymin="-500" ymax="500" zmin="-1" zmax="1"/>
+      <field id="terrain" value="myTerrain"/>
+      <tileSampler id="elevation" sampler="elevationSampler" producer="groundElevations1" storeInvisible="false"/>
+      <mesh id="grid" value="quad.mesh"/>
+      <method id="update" value="updateTerrainMethod"/>
+      <method id="draw" value="drawTerrainMethod"/>
+      <module id="material" value="terrainShader"/>
+    </node>
+  </node>
+</archive>

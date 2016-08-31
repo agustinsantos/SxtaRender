@@ -37,7 +37,7 @@
  */
 /*
  * Main authors: Eric Bruneton, Antoine Begault, Guillaume Piolat.
-* Modified and ported to C# and Sxta Engine by Agustin Santos and Daniel Olmedo 2015-2016
+ * Modified and ported to C# and Sxta Engine by Agustin Santos and Daniel Olmedo 2015-2016
 */
 
 using log4net;
@@ -77,11 +77,12 @@ namespace proland
             producer.updateTileMap(splitDistance, camera, depth);
             return true;
         }
-    };
+    }
+
     public class TileSampler : ISwappable<TileSampler>
     {
-
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
         /// <summary>
         /// A filter to decide whether a texture tile must be produced or not
         /// for a given quad.
@@ -120,11 +121,11 @@ namespace proland
             return producer;
         }
 
-        /**
-         * Returns a %terrain associated with this uniform. Only used with #setTileMap.
-         *
-         * @param a %terrain index.
-         */
+        /// <summary>
+        /// Returns a terrain associated with this uniform. Only used with setTileMap.
+        /// </summary>
+        /// <param name="i">a terrain index.</param>
+        /// <returns></returns>
         public TerrainNode getTerrain(int i)
         {
             return i < (int)(terrains.Count()) ? terrains[i] : null;
@@ -351,12 +352,12 @@ namespace proland
             sizeU.set(new Vector3f(coords.W, coords.W, (s / 2) * 2.0f - 2.0f * b));
         }
 
-        /**
-         * Sets the GLSL uniforms necessary to access the texture tiles for
-         * arbitrary quads on GPU. This method does nothing if terrains have
-         * not been associated with this uniform. These terrains must be all
-         * the terrains for which the tile map may be used on GPU.
-         */
+        /// <summary>
+        /// Sets the GLSL uniforms necessary to access the texture tiles for
+        /// arbitrary quads on GPU.This method does nothing if terrains have
+        /// not been associated with this uniform.These terrains must be all
+        /// the terrains for which the tile map may be used on GPU.
+        /// </summary>
         public void setTileMap()
         {
             if (terrains.Count() == 0)
@@ -405,16 +406,16 @@ namespace proland
             }
         }
 
-        /**
-         * Returns the task %graph necessary to create new texture tiles for
-         * newly created quads in the given %terrain quadtree (and to release
-         * tiles for destroyed quads). This method returns an empty task %graph
-         * if terrains have been associated with this uniform (uniform intended
-         * to be used with #setTileMap).
-         *
-         * @param scene the scene manager.
-         * @param root the root of a %terrain quadtree.
-         */
+        /// <summary>
+        /// Returns the task graph necessary to create new texture tiles for
+        /// newly created quads in the given %terrain quadtree(and to release
+        /// tiles for destroyed quads). This method returns an empty task graph
+        /// if terrains have been associated with this uniform (uniform intended
+        /// to be used with #setTileMap).
+        /// </summary>
+        /// <param name="scene">the scene manager.</param>
+        /// <param name="root">the root of a terrain quadtree.</param>
+        /// <returns></returns>
         public virtual Sxta.Render.Scenegraph.Task update(SceneManager scene, TerrainQuad root)
         {
             TaskGraph result = new TaskGraph();
@@ -456,11 +457,10 @@ namespace proland
             return result;
         }
 
-
-        /**
-         * An internal quadtree to store the texture tile associated with each
-         * %terrain quad.
-         */
+        /// <summary>
+        /// An internal quadtree to store the texture tile associated with each
+        /// terrain quad.
+        /// </summary>
         internal class Tree
         {
 
@@ -468,24 +468,25 @@ namespace proland
 
             public bool needTile;
 
-            /**
-             * The parent quad of this quad.
-             */
+            /// <summary>
+            /// The parent quad of this quad.
+            /// </summary>
             public Tree parent;
 
-            /**
-             * The texture tile associated with this quad.
-             */
+            /// <summary>
+            /// The texture tile associated with this quad.
+            /// </summary>
             public TileCache.Tile t;
 
-            /**
-             * The subquads of this quad.
-             */
+            /// <summary>
+            /// The subquads of this quad.
+            /// </summary>
             public Tree[] children = new Tree[4];
 
-            /**
-             * Creates a new Tree.
-             */
+            /// <summary>
+            /// Creates a new Tree.
+            /// </summary>
+            /// <param name="parent">The parent quad of this quad.</param>
             public Tree(Tree parent)
             {
                 children[0] = null;
@@ -498,10 +499,11 @@ namespace proland
                 t = null;
             }
 
-            /**
-             * Deletes this Tree and all its subelements. Releases
-             * all the corresponding texture tiles #t.
-             */
+            /// <summary>
+            /// Deletes this Tree and all its subelements. Releases
+            /// all the corresponding texture tiles #t.
+            /// </summary>
+            /// <param name="owner"></param>
             public virtual void recursiveDelete(TileSampler owner)
             {
                 if (t != null)
@@ -520,14 +522,14 @@ namespace proland
             }
         };
 
-        /**
-         * An internal quadtree to store the texture tiles associated with each quad.
-         */
+        /// <summary>
+        /// An internal quadtree to store the texture tiles associated with each quad.
+        /// </summary>
         internal Tree root;
 
-        /**
-         * Creates an uninitialized TileSampler.
-         */
+        /// <summary>
+        /// Creates an uninitialized TileSampler.
+        /// </summary>
         protected TileSampler()// : base("TileSampler")
         {
 
@@ -789,14 +791,14 @@ namespace proland
                 tileMapU = p.getUniformSampler(name + ".tileMap");
                 quadInfoU = p.getUniform4f(name + ".quadInfo");
                 poolInfoU = p.getUniform4f(name + ".poolInfo");
-                
+
                 cameraU.Clear();
                 for (uint i = 0; i < terrains.Count(); ++i)
                 {
                     string oss = name + ".camera[" + i + "]";
                     cameraU.Add(p.getUniform4f(oss));
                 }
-               
+
                 lastProgram = p;
             }
         }
@@ -825,90 +827,90 @@ namespace proland
 
         private string name;
 
-        /**
-         * The %producer to be used to create texture tiles for newly created quads.
-         */
+        /// <summary>
+        /// The producer to be used to create texture tiles for newly created quads.
+        /// </summary>
         private TileProducer producer;
 
-        /**
+        /* 
          * The terrains associated with this uniform. Only used with #setTileMap.
          */
         private List<TerrainNode> terrains = new List<TerrainNode>();
 
-        /**
+        /* 
          * Last used GLSL program. Updated each time #setTile or #setTileMap is called with a
          * different Program. Helps to retrieve the correct Uniforms and store them.
          */
         private Program lastProgram;
 
-        /**
+        /* 
          * The texture sampler to access the proland.GPUTileStorage.
          */
         private UniformSampler samplerU;
 
-        /**
+        /* 
          * The coordinates of a tile in the proland.GPUTileStorage.
          */
         private Uniform3f coordsU;
 
-        /**
+        /* 
          * The relative size of a tile in the proland.GPUTileStorage.
          */
         private Uniform3f sizeU;
 
-        /**
+        /* 
          * The texture sampler to access the proland.GPUTileStorage
          * tile map (an indirection structure to get the storage coordinate of
          * a tile from its logical coordinates).
          */
         private UniformSampler tileMapU;
 
-        /**
+        /* 
          * rootTileSize, splitDistance, k=ceil(splitDistance), 4*k+2.
          */
         private Uniform4f quadInfoU;
 
-        /**
+        /* 
          * Tile size in pixels including borders, border in pixels, tilePool 1/w, 1/h.
          */
         private Uniform4f poolInfoU;
 
-        /**
+        /* 
          * The current camera position in local space for each %terrain associated
          * with this uniform (only used with #setTileMap).
          */
         private List<Uniform4f> cameraU = new List<Uniform4f>();
 
-        /**
+        /* 
          * True to store texture tiles for leaf quads.
          */
         private bool storeLeaf;
 
-        /**
+        /* 
          * True to store texture tiles for non leaf quads.
          */
         private bool storeParent;
 
-        /**
+        /* 
          * True to store texture tiles for invisible quads.
          */
         private bool storeInvisible;
 
-        /**
+        /* 
          * A set of filters to decide whether a texture tile must be stored
          * for a given quad. A texture is stored if at least one filter returns
          * true.
          */
         private List<TileFilter> storeFilters = new List<TileFilter>();
 
-        /**
+        /*
          * True if tiles must be loaded in an asynchronous way, using prefetching.
          */
         private bool async;
 
-        /**
-         * True if a parent tile can be used instead of the tile itself for rendering.
-         */
+        /// <summary>
+        /// True if a parent tile can be used instead of the tile itself for rendering.
+        /// </summary>
         private bool mipmap;
     }
 }

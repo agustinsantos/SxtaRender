@@ -53,11 +53,9 @@ using System.Reflection;
 namespace proland
 {
     /// <summary>
-    /// 
     /// An abstract %producer of tiles.
     /// Note that several TileProducer can share the same TileCache, and hence the
     /// same TileStorage.
-    /// @authors Eric Bruneton, Antoine Begault, Guillaume Piolat
     /// </summary>
     public class TileProducer
     {
@@ -98,7 +96,8 @@ namespace proland
            layers.Clear();
            if (tileMap != null)
            {
-               //TODO delete[] tileMap;
+                tileMap = null;
+               //delete[] tileMap;
            }
            //pthread_mutex_destroy((pthread_mutex_t*)mutex);
            //delete (pthread_mutex_t*) mutex;
@@ -112,6 +111,7 @@ namespace proland
         {
             return rootQuadSize;
         }
+
         /// <summary>
         /// Sets the size in meters of the root quad produced by this %producer.
         /// </summary>
@@ -125,6 +125,7 @@ namespace proland
                 layers[i].setTileSize(cache.getStorage().getTileSize(), getBorder(), getRootQuadSize());
             }
         }
+
         /// <summary>
         /// Returns the id of this %producer. This id is local to the TileCache used by
         /// this %producer, and is used to distinguish all the producers that use this

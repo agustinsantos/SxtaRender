@@ -3,19 +3,23 @@ using OpenTK.Input;
 using Sxta.Math;
 using Sxta.Proland.Core.XmlResources;
 using Sxta.Render;
-using Sxta.Render.OpenGLExt;
 using Sxta.Render.Resources;
 using Sxta.Render.Scenegraph;
 using System;
-using System.Diagnostics;
-using Vector3d = Sxta.Math.Vector3d;
+using Matrix4d = Sxta.Math.Matrix4d;
+using MathHelper = Sxta.Math.MathHelper;
+using Sxta.Render.OpenGLExt;
+using System.Drawing;
 
 namespace Examples.Tutorials
 {
-    [Example("Example 8.05: TerrainSampler for elevation implementation", ExampleCategory.Testing, "08. Proland", 1, Source = "Tutorial08_5", Documentation = "Tutorial-TODO")]
-    class Tutorial08_5 : GameWindow
+    /// <summary>
+    /// Drawing a plane using Proland Terrain
+    /// </summary>
+    [Example("Example 2.01: Noise Generation", ExampleCategory.Proland, "02. Proland Terrain", 1, Source = "Tutorial03_1", Documentation = "Tutorial01_3")]
+    public class TutorialProland02_1 : GameWindow
     {
-        public Tutorial08_5(string wd) : base(600, 600)
+        public TutorialProland02_1(string wd) : base(600, 600)
         {
             if (!string.IsNullOrWhiteSpace(wd))
                 dir = wd;
@@ -41,7 +45,7 @@ namespace Examples.Tutorials
 
             if (e.Key == Key.F12)
             {
-                ScreenShot.SaveScreenShot(this.ClientSize, this.ClientRectangle);
+                ScreenShot.SaveScreenShot(this.ClientSize, this.ClientRectangle, "Screenshot" + this.GetType().Name + ".bmp");
             }
         }
 
@@ -49,12 +53,8 @@ namespace Examples.Tutorials
         {
             RegisterResourceReader.RegisterResources();
             resLoader = new XMLResourceLoader();
-            resLoader.addPath(dir + "/Textures");
-            resLoader.addPath(dir + "/Shaders");
-            resLoader.addPath(dir + "/Meshes");
-            resLoader.addPath(dir + "/Methods");
-            resLoader.addPath(dir + "/Scenes");
-            resLoader.addArchive(dir + "/Terrain/HelloWord04.xml");
+            resLoader.addPath(dir + "/Proland/Terrain/Example01");
+            resLoader.addArchive(dir + "/Proland/Terrain/Example01/HelloWord.xml");
             resManager = new ResourceManager(resLoader);
             manager = new SceneManager();
             manager.setResourceManager(resManager);
@@ -64,10 +64,13 @@ namespace Examples.Tutorials
             manager.setCameraNode("camera");
             manager.setCameraMethod("draw");
 
-            fb = FrameBuffer.getDefault();
-
             camera = new SGCamera(this);
-            camera.Position = new Vector3d(0, 0, 1000);
+            camera.Position = new Sxta.Math.Vector3d(0, 0, 2500);
+            camera.MoveSpeed = 50f;
+
+            fb = FrameBuffer.getDefault();
+            fb.setClearColor(Color.Black);
+            fb.setDepthTest(true, Function.LESS);
         }
 
         protected override void OnUnload(EventArgs e)
@@ -86,7 +89,6 @@ namespace Examples.Tutorials
         /// <remarks>There is no need to call the base implementation.</remarks>
         protected override void OnResize(EventArgs e)
         {
-            //FrameBuffer fb = FrameBuffer.getDefault();
             fb.setViewport(new Vector4i(0, 0, Width, Height));
 
             camera.Resize(Width, Height);
@@ -101,13 +103,14 @@ namespace Examples.Tutorials
         /// <remarks>There is no need to call the base implementation.</remarks>
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
-            camera.Update((float)e.Time);
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)
         {
+            camera.Update((float)e.Time);
             manager.getCameraNode().setLocalToParent(camera.ViewMatrix);
 
+            fb.clear(true, false, true);
             manager.update(e.Time / 100000); // from Seconds to microseconds);
             manager.draw();
             this.SwapBuffers();
@@ -123,10 +126,12 @@ namespace Examples.Tutorials
         [STAThread]
         public static void Main()
         {
-            using (Tutorial08_5 example = new Tutorial08_5("Resources"))
+            using (TutorialProland02_1 example = new TutorialProland02_1("Resources"))
             {
                 example.Run(60.0);
             }
         }
     }
 }
+
+
