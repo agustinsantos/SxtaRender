@@ -82,6 +82,7 @@
     <Compile Include="ImageKTXTest.cs" />
     <Compile Include="FontGenerationTests.cs" />
     <Compile Include="UnitTest1.cs" />
+    <Compile Include="NoiseTest.cs" />
     <Compile Include="Vector3fTest.cs" />
     <Compile Include="QuaternionTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -90,6 +91,10 @@
     <ProjectReference Include="..\NanoVG\NanoVG.csproj">
       <Project>{37f92520-6b40-44c5-8294-d588f74683d7}</Project>
       <Name>NanoVG</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Proland\Proland.csproj">
+      <Project>{a2033fea-1c1a-4afb-9c88-53df36ff53e0}</Project>
+      <Name>Proland</Name>
     </ProjectReference>
     <ProjectReference Include="..\SxtaFont\SxtaFont.csproj">
       <Project>{be26d180-b28b-484d-aa09-9b0e0417ea2c}</Project>

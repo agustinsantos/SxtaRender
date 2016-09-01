@@ -24,7 +24,7 @@ namespace Examples.Tutorials
     /// <summary>
     /// Demonstrates the GameWindow class.
     /// </summary>
-    [Example("Example 3.1: Atmo", ExampleCategory.Proland, "03. Proland Atmo", 1, Source = "Tutorial03_1", Documentation = "Tutorial-TODO")]
+    [Example("Example 3.1: Atmo", ExampleCategory.Proland, "03. Proland Atmo", 1, Source = "Tutorial03_1", Documentation = "Tutorial03_1")]
     public class TutorialProland03_1 : GameWindow
     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);

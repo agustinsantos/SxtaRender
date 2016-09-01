@@ -41,9 +41,15 @@ uniform samplerTile elevationSampler;
 	layout(location=0) out vec4 color;
 	void main() {
 		//vec2 p =  uv * deformation.offset.z + deformation.offset.xy;
-		color = textureTile(elevationSampler, uv);
+		float h = textureTile(elevationSampler, uv).x;
+		if (h < 0.1) {
+			color = vec4(0.0, 0.0, 0.5, 1.0);
+		} else {
+			color = vec4(0.0, h, 0.0, 1.0);
+		}
+		//color = textureTile(elevationSampler, uv);
 		color = normalize(color);// * 0.6 + 0.4* vec4(vec3(0.2 + 0.2 * sin(0.1 * length(p))), 1.0);
-		color.r += mod(dot(floor(deformation.offset.xy / deformation.offset.z + 0.5), vec2(1.0)), 2.0);
+		color.r += 0.4*mod(dot(floor(deformation.offset.xy / deformation.offset.z + 0.5), vec2(1.0)), 2.0);
 	}
 
 #endif

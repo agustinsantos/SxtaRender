@@ -51,6 +51,7 @@ using Sxta.Render.Scenegraph;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -62,23 +63,20 @@ namespace Sxta.Proland.Terrain
     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        /**
         private void SetNoise(float[] n, int tileIndex, int tileWidth, int x, int y, float v)
         {
             n[tileIndex + (x) + (y) * tileWidth] = v;
         }
-        */
+
         private static Texture2DArray createDemNoise(int tileWidth)
         {
 
             int[] layers = new int[6] { 0, 1, 3, 5, 7, 15 };
             float[] noiseArray = new float[6 * tileWidth * tileWidth];
-            long rand = 1234567;
+            int rand = 1234567;
             for (int nl = 0; nl < 6; ++nl)
             {
                 int n = nl * tileWidth * tileWidth;
-
-                float val = noiseArray[n];
                 int l = layers[nl];
                 // corners
                 for (int j = 0; j < tileWidth; ++j)
@@ -89,22 +87,22 @@ namespace Sxta.Proland.Terrain
                         //SetNoise(noiseArray, n, tileWidth, i, j, 0.0f);
                     }
                 }
-                long brand;
+                int brand;
                 // bottom border
                 brand = (l & 1) == 0 ? 7654321 : 5647381;
                 for (int h = 5; h <= tileWidth / 2; ++h)
                 {
-                    float N = Noise.frandom(ref rand) * 2.0f - 1.0f;
+                    float N = Noise.frandom(ref brand) * 2.0f - 1.0f;
                     noiseArray[n + (h) + (2) * tileWidth] = N;
                     //SetNoise(noiseArray, n, tileWidth, h, 2, N);
-                    noiseArray[n + (tileWidth - 1) + (2) * tileWidth] = N;
+                    noiseArray[n + (tileWidth - 1 - h) + (2) * tileWidth] = N;
                     //SetNoise(noiseArray, n, tileWidth, tileWidth - 1 - h, 2, N);
                 }
                 for (int v = 3; v < 5; ++v)
                 {
                     for (int h = 5; h < tileWidth - 5; ++h)
                     {
-                        float N = Noise.frandom(ref rand) * 2.0f - 1.0f;
+                        float N = Noise.frandom(ref brand) * 2.0f - 1.0f;
                         noiseArray[n + (h) + (v) * tileWidth] = N;
                         //SetNoise(noiseArray, n, tileWidth, h, v, N);
                         noiseArray[n + (tileWidth - 1 - h) + (4 - v) * tileWidth] = N;
@@ -115,7 +113,7 @@ namespace Sxta.Proland.Terrain
                 brand = (l & 2) == 0 ? 7654321 : 5647381;
                 for (int v = 5; v <= tileWidth / 2; ++v)
                 {
-                    float N = Noise.frandom(ref rand) * 2.0f - 1.0f;
+                    float N = Noise.frandom(ref brand) * 2.0f - 1.0f;
                     noiseArray[n + (tileWidth - 3) + (v) * tileWidth] = N;
                     //SetNoise(noiseArray, n, tileWidth, tileWidth - 3, v, N);
                     noiseArray[n + (tileWidth - 3) + (tileWidth - 1 - v) * tileWidth] = N;
@@ -125,7 +123,7 @@ namespace Sxta.Proland.Terrain
                 {
                     for (int v = 5; v < tileWidth - 5; ++v)
                     {
-                        float N = Noise.frandom(ref rand) * 2.0f - 1.0f;
+                        float N = Noise.frandom(ref brand) * 2.0f - 1.0f;
                         noiseArray[n + (h) + (v) * tileWidth] = N;
                         //SetNoise(noiseArray, n, tileWidth, h, v, N);
                         noiseArray[n + (2 * tileWidth - 6 - h) + (tileWidth - 1 - v) * tileWidth] = N;
@@ -136,7 +134,7 @@ namespace Sxta.Proland.Terrain
                 brand = (l & 4) == 0 ? 7654321 : 5647381;
                 for (int h = 5; h <= tileWidth / 2; ++h)
                 {
-                    float N = Noise.frandom(ref rand) * 2.0f - 1.0f;
+                    float N = Noise.frandom(ref brand) * 2.0f - 1.0f;
                     noiseArray[n + (h) + (tileWidth - 3) * tileWidth] = N;
                     //SetNoise(noiseArray, n, tileWidth, h, tileWidth - 3, N);
                     noiseArray[n + (tileWidth - 1 - h) + (tileWidth - 3) * tileWidth] = N;
@@ -146,7 +144,7 @@ namespace Sxta.Proland.Terrain
                 {
                     for (int h = 5; h < tileWidth - 5; ++h)
                     {
-                        float N = Noise.frandom(ref rand) * 2.0f - 1.0f;
+                        float N = Noise.frandom(ref brand) * 2.0f - 1.0f;
                         noiseArray[n + (h) + (v) * tileWidth] = N;
                         //SetNoise(noiseArray, n, tileWidth, h, v, N);
                         noiseArray[n + (tileWidth - 1 - h) + (2 * tileWidth - 6 - v) * tileWidth] = N;
@@ -157,7 +155,7 @@ namespace Sxta.Proland.Terrain
                 brand = (l & 8) == 0 ? 7654321 : 5647381;
                 for (int v = 5; v <= tileWidth / 2; ++v)
                 {
-                    float N = Noise.frandom(ref rand) * 2.0f - 1.0f;
+                    float N = Noise.frandom(ref brand) * 2.0f - 1.0f;
                     noiseArray[n + (2) + (v) * tileWidth] = N;
                     //SetNoise(noiseArray, n, tileWidth, 2, v, N);
                     noiseArray[n + (2) + (tileWidth - 1 - v) * tileWidth] = N;
@@ -167,7 +165,7 @@ namespace Sxta.Proland.Terrain
                 {
                     for (int v = 5; v < tileWidth - 5; ++v)
                     {
-                        float N = Noise.frandom(ref rand) * 2.0f - 1.0f;
+                        float N = Noise.frandom(ref brand) * 2.0f - 1.0f;
                         noiseArray[n + (h) + (v) * tileWidth] = N;
                         //SetNoise(noiseArray, n, tileWidth, h, v, N);
                         noiseArray[n + (4 - h) + (tileWidth - 1 - v) * tileWidth] = N;
@@ -184,11 +182,36 @@ namespace Sxta.Proland.Terrain
                     }
                 }
             }
+            //DumpNoiseTexture(noiseArray, tileWidth, tileWidth, 6);
             Texture2DArray noiseTexture = new Texture2DArray(tileWidth, tileWidth, 6, TextureInternalFormat.R16F, TextureFormat.RED, PixelType.FLOAT,
                 new Texture.Parameters().wrapS(TextureWrap.REPEAT).wrapT(TextureWrap.REPEAT).min(TextureFilter.NEAREST).mag(TextureFilter.NEAREST),
                 new Sxta.Render.Buffer.Parameters(), new CPUBuffer<float>(noiseArray));
             return noiseTexture;
         }
+
+#if DEBUG
+        private static void DumpNoiseTexture(float[] noise, int width, int height, int faces)
+        {
+            for (int i = 0; i < faces; i++)
+            {
+                // Create a Bitmap object
+                Bitmap bitmap = new Bitmap(width, height);
+
+                int n = i * width * height;
+
+                // Set each pixel in bitmap to noise value.
+                for (int x = 0; x < width; x++)
+                {
+                    for (int y = 0; y < height; y++)
+                    {
+                        bitmap.SetPixel(x, y, System.Drawing.Color.FromArgb((int)(255 * (1 + noise[n + x + y * width]) / 2), 0, 0));
+                    }
+                }
+                //bitmap.RotateFlip(RotateFlipType.Rotate180FlipX);
+                bitmap.Save(String.Format("ElevationProducerFace{0}.jpg", i));
+            }
+        }
+#endif
 
         //FACTORIES
         Factory<int, Texture2DArray> demNoiseFactory = new Factory<int, Texture2DArray>(createDemNoise);
@@ -428,7 +451,7 @@ namespace Sxta.Proland.Terrain
                 string noiseAmps = e.GetAttribute("noise");
                 string[] result = noiseAmps.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (var node in result)
-                 {
+                {
                     noiseAmp.Add(Single.Parse(node, CultureInfo.InvariantCulture));
                 }
             }

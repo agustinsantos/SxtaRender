@@ -16,7 +16,7 @@ namespace Examples.Tutorials
     /// <summary>
     /// Drawing a plane using Proland Terrain
     /// </summary>
-    [Example("Example 2.01: Noise Generation", ExampleCategory.Proland, "02. Proland Terrain", 1, Source = "Tutorial03_1", Documentation = "Tutorial01_3")]
+    [Example("Example 2.01: Noise Generation", ExampleCategory.Proland, "02. Proland Terrain", 1, Source = "Tutorial03_1", Documentation = "Tutorial02_1")]
     public class TutorialProland02_1 : GameWindow
     {
         public TutorialProland02_1(string wd) : base(600, 600)

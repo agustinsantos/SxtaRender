@@ -474,6 +474,9 @@
     <None Include="Tutorials\Learning\Tutorial06_1.rtf" />
     <None Include="Tutorials\Learning\Tutorial05_7.rtf" />
     <None Include="Tutorials\Learning\Tutorial05_6.rtf" />
+    <None Include="Tutorials\Proland\Tutorial04_1.rtf" />
+    <None Include="Tutorials\Proland\Tutorial03_1.rtf" />
+    <None Include="Tutorials\Proland\Tutorial02_1.rtf" />
     <None Include="Tutorials\Proland\Tutorial01_3.rtf" />
     <None Include="Tutorials\Proland\Tutorial01_2.rtf" />
     <None Include="Tutorials\Proland\Tutorial01_1.rtf" />

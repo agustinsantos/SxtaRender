@@ -56,30 +56,23 @@ namespace proland
 
         static int[] p = new int[2 * 256 + 2];
         static float[] g1 = new float[2 * 256 + 2];
-        static float[,] g2 = new float[2 * 256 + 2,2];
-        static float[,] g3 = new float[2 * 256 + 2,3];
+        static float[,] g2 = new float[2 * 256 + 2, 2];
+        static float[,] g3 = new float[2 * 256 + 2, 3];
 
-        /**
-         * @defgroup proland_math math
-         * Provides utility math functions.
-         * @ingroup proland
-         */
-
-        /**
-         * Returns a pseudo random integer in the range 0-2147483647.
-         * @ingroup proland_math
-         *
-         * @param the seed used by this pseudo random generator. It is modified each
-         *      time this function is called.
-         * @return a peudo random integer in the range 0-2147483647.
-         */
-        public static long lrandom(ref long seed)
+        /// <summary>
+        /// Returns a pseudo random integer in the range 0-2147483647.
+        /// </summary>
+        /// <param name="seed">the seed used by this pseudo random generator. It is modified each
+        /// time this function is called.
+        /// </param>
+        /// <returns> A pseudo random integer in the range 0-2147483647.</returns>
+        public static int lrandom(ref int seed)
         {
             seed = (seed * 1103515245 + 12345) & 0x7FFFFFFF;
             return seed;
         }
 
-        /**
+        /* 
          * Returns a pseudo random float number in the range 0-1.
          * @ingroup proland_math
          *
@@ -87,9 +80,16 @@ namespace proland
          *      time this function is called.
          * @return a pseudo random float number in the range 0-1.
          */
-        public static float frandom(ref long seed)
+        /// <summary>
+        /// Returns a pseudo random float number in the range 0-1.
+        /// </summary>
+        /// <param name="seed">the seed used by this pseudo random generator. It is modified each
+        /// time this function is called.
+        /// </param>
+        /// <returns> A pseudo random integer in the range 0-1.</returns>
+        public static float frandom(ref int seed)
         {
-            long r = lrandom(ref seed) >> (31 - 24);
+            int r = lrandom(ref seed) >> (31 - 24);
             return r / (float)(1 << 24);
         }
 
@@ -105,7 +105,7 @@ namespace proland
          * @return a pseudo random float number with the given Gaussian distribution.
          */
         static float y2;
-        public static float grandom(float mean, float stdDeviation, ref long seed)
+        public static float grandom(float mean, float stdDeviation, ref int seed)
         {
             float x1, x2, w, y1;
 
@@ -136,31 +136,31 @@ namespace proland
         static void init()
         {
             int i, j, k;
-            long seed = 12345;
+            int seed = 12345;
             for (i = 0; i < 256; ++i)
             {
                 p[i] = i;
                 g1[i] = (float)((lrandom(ref seed) % (2 * 256)) - 256) / 256;
                 for (j = 0; j < 2; ++j)
                 {
-                    g2[i,j] = (float)((lrandom(ref seed) % (2 * 256)) - 256) / 256;
+                    g2[i, j] = (float)((lrandom(ref seed) % (2 * 256)) - 256) / 256;
                 }
-                float l = Convert.ToSingle(Math.Sqrt(g2[i,0] * g2[i,0] + g2[i,1] * g2[i,1]));
-                g2[i,0] /= l;
-                g2[i,1] /= l;
+                float l = (float)(Math.Sqrt(g2[i, 0] * g2[i, 0] + g2[i, 1] * g2[i, 1]));
+                g2[i, 0] /= l;
+                g2[i, 1] /= l;
                 for (j = 0; j < 3; ++j)
                 {
-                    g3[i,j] = (float)((lrandom(ref seed) % (2 * 256)) - 256) / 256;
+                    g3[i, j] = (float)((lrandom(ref seed) % (2 * 256)) - 256) / 256;
                 }
-                l = Convert.ToSingle(Math.Sqrt(g3[i,0] * g3[i,0] + g3[i,1] * g3[i,1] + g3[i,2] * g3[i,2]));
-                g3[i,0] /= l;
-                g3[i,1] /= l;
-                g3[i,2] /= l;
+                l = (float)(Math.Sqrt(g3[i, 0] * g3[i, 0] + g3[i, 1] * g3[i, 1] + g3[i, 2] * g3[i, 2]));
+                g3[i, 0] /= l;
+                g3[i, 1] /= l;
+                g3[i, 2] /= l;
             }
             while (i >= 1)
             {
                 k = p[i];
-                p[i] = p[j = Convert.ToInt16(lrandom(ref seed) % 256)];
+                p[i] = p[j = lrandom(ref seed) % 256];
                 p[j] = k;
                 i -= 1;
             }
@@ -170,11 +170,11 @@ namespace proland
                 g1[256 + i] = g1[i];
                 for (j = 0; j < 2; ++j)
                 {
-                    g2[256 + i,j] = g2[i,j];
+                    g2[256 + i, j] = g2[i, j];
                 }
                 for (j = 0; j < 3; ++j)
                 {
-                    g3[256 + i,j] = g3[i,j];
+                    g3[256 + i, j] = g3[i, j];
                 }
             }
         }
@@ -190,20 +190,21 @@ namespace proland
         }
         private static void SETUP(float x, out int b0, out int b1, out float r0, out float r1)
         {
-            int t = (int)x + 0x1000;
-            b0 = (t) & 0xFF;
+            float t = x + 0x1000;
+            b0 = ((int)t) & 0xFF;
             b1 = (b0 + 1) & 0xFF;
-            r0 = t - (int)Math.Floor((double)t);
+            r0 = t - (int)Math.Floor(t);
             r1 = r0 - 1.0f;
         }
+
         private static float AT2(float rx, float ry, float[,] q, int index)
         {
-            return rx * q[index,0] + ry * q[index,1];
+            return rx * q[index, 0] + ry * q[index, 1];
         }
 
         private static float AT3(float rx, float ry, float rz, float[,] q, int index)
         {
-            return rx * q[index,0] + ry * q[index,1] + rz * q[index,2];
+            return rx * q[index, 0] + ry * q[index, 1] + rz * q[index, 2];
         }
         /**
          * Computes the classic 2D Perlin noise function.
@@ -251,13 +252,13 @@ namespace proland
 
             sx = S_CURVE(rx0);
             sy = S_CURVE(ry0);
-            
+
             //q = g2[b00];
             u = AT2(rx0, ry0, g2, b00);
             //q = g2[b10];
             v = AT2(rx1, ry0, g2, b10);
             a = LERP(sx, u, v);
-            
+
             //q = g2[b01];
             u = AT2(rx0, ry1, g2, b01);
 
@@ -326,7 +327,7 @@ namespace proland
             //q = g3[b10 + bz0];
             v = AT3(rx1, ry0, rz0, g3, b10 + bz0);
             a = LERP(t, u, v);
-            
+
             //q = g3[b01 + bz0];
             u = AT3(rx0, ry1, rz0, g3, b01 + bz0);
             //q = g3[b11 + bz0];
@@ -334,13 +335,13 @@ namespace proland
             b = LERP(t, u, v);
 
             c = LERP(sy, a, b);
-            
+
             //q = g3[b00 + bz1];
             u = AT3(rx0, ry0, rz1, g3, b00 + bz1);
             //q = g3[b10 + bz1];
             v = AT3(rx1, ry0, rz1, g3, b10 + bz1);
             a = LERP(t, u, v);
-            
+
             //q = g3[b01 + bz1];
             u = AT3(rx0, ry1, rz1, g3, b01 + bz1);
             //q = g3[b11 + bz1];

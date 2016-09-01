@@ -260,13 +260,13 @@ namespace Sxta.Proland.Ocean
         {
             return (float)(1.5 / (nbAngles / 2));
         }
-        public static float srnd(long seed)
+        public static float srnd(int seed)
         {
             return (2 * Noise.frandom(ref seed) - 1);
         }
         private void generateWaves()
         {
-            long seed = 1234567;
+            int seed = 1234567;
             float min = (float)(System.Math.Log(lambdaMin) / System.Math.Log(2.0f));
             float max = (float)(System.Math.Log(lambdaMax) / System.Math.Log(2.0f));
 

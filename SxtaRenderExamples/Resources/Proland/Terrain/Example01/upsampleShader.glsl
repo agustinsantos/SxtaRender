@@ -79,10 +79,11 @@ float mdot(mat4 a, mat4 b) {
 }
 
 void main() {
-     vec2 p_uv = floor(st) * 0.5;
+    vec2 p_uv = floor(st) * 0.5;
 
     vec2 residual_uv = p_uv * residualOSH.z + residualOSH.xy;
     float zf = residualOSH.w * textureLod(residualSampler, residual_uv, 0.0).x;
+
     vec2 offset = (p_uv - fract(p_uv) + vec2(0.5)) * coarseLevelOSL.z + coarseLevelOSL.xy;
     mat4 cz = mat4(
         textureLod(coarseLevelSampler, vec3(offset + vec2(0.0, 0.0) * coarseLevelOSL.z, coarseLevelOSL.w), 0.0).x,
@@ -101,24 +102,7 @@ void main() {
         textureLod(coarseLevelSampler, vec3(offset + vec2(1.0, 3.0) * coarseLevelOSL.z, coarseLevelOSL.w), 0.0).x,
         textureLod(coarseLevelSampler, vec3(offset + vec2(2.0, 3.0) * coarseLevelOSL.z, coarseLevelOSL.w), 0.0).x,
         textureLod(coarseLevelSampler, vec3(offset + vec2(3.0, 3.0) * coarseLevelOSL.z, coarseLevelOSL.w), 0.0).x
-    );	
-
-
-	/**
-	The produced elevation data has 3 components per pixel, noted (zf,zc,zm) - if no layers are used you don't need
-	to store the third component. The first component is the elevation, as produced by the above upsampling and add 
-	procedure. The second component is a coarse elevation, i.e., the elevation of the parent tile at the same point 
-	(the goal is to perform an interpolation between zf and zc at rendering, to avoid popping when quads are 
-	suddenly subdivided - see sec-quadblend). The third component is a modified elevation. By default it is equal 
-	to zf, but the layers can modify its value.
-
-	The elevations zf are computed from the unmodified elevations zf of the parent tile, using the upsampling 
-	filter described in the previous section. But the coarse elevations zc are computed from the modified elevations
-	zm of the parent tile, using linear interpolation. Indeed zc is intended to give the elevation of the parent mesh,
-	made of planar triangles (hence the linear interpolation). For this we need to know which mesh will be used to 
-	render each terrain quad. Indeed elevation tiles can be rendered with meshes of several sizes, provided the 
-	elevation tile size is a multiple of the mesh size
-	*/
+    );
 
     vec2 nuv = (floor(st) + vec2(0.5)) / tileWSDF.x;
     vec4 uvs = vec4(nuv, vec2(1.0) - nuv);
@@ -128,7 +112,7 @@ void main() {
     float zc = zf;
     if (coarseLevelOSL.x != -1.0) {
         int i = int(dot(fract(p_uv), vec2(2.0, 4.0)));
-        zf = zf + mdot(cz, upsampleMatrix[i]);	//Se aplica el filtro de upsamplematrix
+        zf = zf + mdot(cz, upsampleMatrix[i]);
 
         vec2 ij = floor(st - vec2(BORDER));
         vec4 uvc = vec4(BORDER + 0.5) + tileWSDF.z * floor((ij / (2.0 * tileWSDF.z)).xyxy + vec4(0.5, 0.0, 0.0, 0.5));

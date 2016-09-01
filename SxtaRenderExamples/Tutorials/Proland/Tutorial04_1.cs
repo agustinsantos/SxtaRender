@@ -22,7 +22,7 @@ namespace Examples.Tutorials
     /// <summary>
     /// Demonstrates the GameWindow class.
     /// </summary>
-    [Example("Example 4.1: Ocean", ExampleCategory.Proland, "04. Proland Ocean", 1, Source = "Tutorial04_1", Documentation = "Tutorial-TODO")]
+    [Example("Example 4.1: Ocean", ExampleCategory.Proland, "04. Proland Ocean", 1, Source = "Tutorial04_1", Documentation = "Tutorial04_1")]
     public class TutorialProland04_1 : GameWindow
     {
         public TutorialProland04_1(string wd)
