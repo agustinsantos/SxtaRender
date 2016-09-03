@@ -58,6 +58,12 @@ namespace Sxta.UI.XmlResources
         {
             return valueC;
         }
+        public override void clearValue(bool dispose)
+        {
+            if (dispose && valueC != null && valueC is IDisposable)
+                ((IDisposable)valueC).Dispose();
+            valueC = default(C);
+        }
 
         /*
          * Creates a new %resource of class C.

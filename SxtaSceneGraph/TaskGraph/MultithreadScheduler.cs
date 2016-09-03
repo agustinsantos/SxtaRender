@@ -13,6 +13,7 @@
 //#define BUSY_WAITING
 
 using log4net;
+using Sxta.Render.Core;
 using Sxta.Render.Resources;
 using System;
 using System.Collections.Generic;
@@ -35,8 +36,11 @@ namespace Sxta.Render.Scenegraph
     /// Otherwise, if several threads are used, prefetching of cpu tasks is supported,
     /// but not prefetching of gpu tasks.
     /// </summary>
-    public class MultithreadScheduler : Scheduler, ISwappable<MultithreadScheduler>
+    public class MultithreadScheduler : Scheduler, IDisposable, ISwappable<MultithreadScheduler>
     {
+//#if DEBUG
+//        TraceOpenTKDisposableObject traceDisposable;
+//#endif
 
         /*
          * Creates a new multithread scheduler.
@@ -61,6 +65,9 @@ namespace Sxta.Render.Scenegraph
         public MultithreadScheduler(int prefetchRate = 0, int prefetchQueue = 0, float frameRate = 0.0f, int nThreads = 0) :
             base("MultithreadScheduler")
         {
+//#if DEBUG
+//            traceDisposable = new TraceOpenTKDisposableObject();
+//#endif
             init(prefetchRate, prefetchQueue, frameRate, nThreads);
         }
 
@@ -69,38 +76,68 @@ namespace Sxta.Render.Scenegraph
          */
         ~MultithreadScheduler()
         {
-            // we first set the #stop flag to true and signals execution threads to wake
-            // them up if they were waiting for tasks to execute; they will then
-            // eventually terminate
-            lock (cpuTasksCond)
-            {
-                stop = true;
-                Monitor.PulseAll(cpuTasksCond); //pthread_cond_broadcast( cpuTasksCond);
-            }
-            // we then wait until all threads terminate, and we delete them
-            for (int i = 0; i < threads.Count; ++i)
-            {
-                threads[i].Join();//pthread_join(*((pthread_t*)threads[i]), null);
-                //delete (pthread_t*) threads[i];
-            }
-            // we can then delete the mutex and the conditions
-            //TODO pthread_mutex_destroy( mutex);
-            //delete   mutex;
-            //TODO pthread_cond_destroy( cpuTasksCond);
-            //delete   cpuTasksCond;
-            //TODO pthread_cond_destroy( allTasksCond);
-            //delete   allTasksCond;
-            threads.Clear();
-            if (bufferedFrames > 0)
-            {
-                clearBufferedFrames();
-            }
-            if (statisticsFile != null)
-            {
-                statisticsFile.Close();
-            }
-
+            Dispose(false);
         }
+
+        #region IDisposable implementation
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected bool m_Disposed = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!m_Disposed)
+            {
+                if (disposing)
+                {
+//#if DEBUG
+//                    traceDisposable.CheckDispose();
+//#endif
+                    //Debugger.Break();
+                    // we first set the #stop flag to true and signals execution threads to wake
+                    // them up if they were waiting for tasks to execute; they will then
+                    // eventually terminate
+                    lock (cpuTasksCond)
+                    {
+                        stop = true;
+                        Monitor.PulseAll(cpuTasksCond); //pthread_cond_broadcast( cpuTasksCond);
+                    }
+                    // we then wait until all threads terminate, and we delete them
+                    for (int i = 0; i < threads.Count; ++i)
+                    {
+                        threads[i].Join();//pthread_join(*((pthread_t*)threads[i]), null);
+                                          //delete (pthread_t*) threads[i];
+                    }
+                    // we can then delete the mutex and the conditions
+                    //TODO pthread_mutex_destroy( mutex);
+                    //delete   mutex;
+                    //TODO pthread_cond_destroy( cpuTasksCond);
+                    //delete   cpuTasksCond;
+                    //TODO pthread_cond_destroy( allTasksCond);
+                    //delete   allTasksCond;
+                    threads.Clear();
+                    if (bufferedFrames > 0)
+                    {
+                        clearBufferedFrames();
+                    }
+                    if (statisticsFile != null)
+                    {
+                        statisticsFile.Close();
+                    }
+
+                    // Unmanaged resources are released here.
+
+                    m_Disposed = true;
+                }
+            }
+        }
+        #endregion
+
 
         /*
          * Returns true if the prefetch rate or the fixed frame rate is not null,
@@ -145,7 +182,7 @@ namespace Sxta.Render.Scenegraph
                         Monitor.PulseAll(cpuTasksCond); //pthread_cond_broadcast( cpuTasksCond);
                     }
                 }
-                Debug.Assert(allReadyTasks.Count > 0);
+                Debug.Assert(allReadyTasks.Count > 0, "MultithreadScheduler allReadyTasks.Count > 0");
             }
         }
 
@@ -220,7 +257,7 @@ namespace Sxta.Render.Scenegraph
             {
                 // first step: find or wait for a task ready to be executed
                 Task t = null;
-                lock (mutex)
+                Monitor.Enter(mutex);
                 {
                     if (immediateTasks.Count == 0 && framePeriod > 0.0)
                     {
@@ -243,7 +280,7 @@ namespace Sxta.Render.Scenegraph
                             // so we wait for a ready CPU or GPU task,
                             // and stop when the deadline is passed
                             //pthread_cond_timedwait(  allTasksCond,   mutex, &deadlinespec);
-                            lock (mutex)
+                            lock (allTasksCond)
                             {
                                 Monitor.Wait(allTasksCond, deadlinespec.Millisecond);
                             }
@@ -262,7 +299,9 @@ namespace Sxta.Render.Scenegraph
                             //pthread_cond_wait(  allTasksCond,   mutex);
                             lock (allTasksCond)
                             {
+                                Monitor.Enter(mutex);
                                 Monitor.Wait(allTasksCond);
+                                Monitor.Exit(mutex);
                             }
                         }
                     }
@@ -279,7 +318,7 @@ namespace Sxta.Render.Scenegraph
                             // if this task is for the next frames, then all tasks for the
                             // current frame should now be completed (tasks are sorted in
                             // such a way that tasks for the current frame are executed first)
-                            Debug.Assert(immediateTasks.Count == 0);
+                            Debug.Assert(immediateTasks.Count == 0, "MultithreadScheduler immediateTasks.Count == 0");
                             // if we do not have executed the required minimum number of
                             // prefetching tasks per frame, we execute this available
                             // prefetching task
@@ -311,6 +350,7 @@ namespace Sxta.Render.Scenegraph
                     // task t cannot be seleted by another thread, since it has been removed
                     // from the task sets.
                 }
+                Monitor.Exit(mutex);
                 //pthread_mutex_unlock(mutex);
 
                 if (t == null)
@@ -474,7 +514,7 @@ namespace Sxta.Render.Scenegraph
             framePeriod = frameRate == 0.0f ? 0.0f : 1e6f / frameRate;
             if (prefetchRate > 0 || frameRate > 0.0f)
             {
-                Debug.Assert(prefetchQueueSize > 0);
+                Debug.Assert(prefetchQueueSize > 0, "MultithreadScheduler prefetchQueueSize > 0");
             }
             lastFrame = 0;
             time = 2;
@@ -833,7 +873,7 @@ namespace Sxta.Render.Scenegraph
                         inverseDependencies.Add(dst, srcSet);
                     }
                     setDeadline(dst, src.getDeadline(), visited);
-                    Debug.Assert(src.getDeadline() >= dst.getDeadline());
+                    Debug.Assert(src.getDeadline() >= dst.getDeadline(), "MultithreadScheduler src.getDeadline() >= dst.getDeadline()");
                 }
             }
         }
@@ -876,7 +916,7 @@ namespace Sxta.Render.Scenegraph
                 }
                 if (b2)
                 {
-                    Debug.Assert(!t.isGpuTask());
+                    Debug.Assert(!t.isGpuTask(), "MultithreadScheduler !t.isGpuTask()");
 #if STRICT_PREFETCH
                     if (t.getDeadline() > 0)
                     {
@@ -920,7 +960,7 @@ namespace Sxta.Render.Scenegraph
                     {
                         // the predecessors of r should not be empty, and should contain t
                         ISet<Task> k;
-                        Debug.Assert(dependencies.TryGetValue(r, out k));
+                        Debug.Assert(dependencies.TryGetValue(r, out k), "MultithreadScheduler dependencies.TryGetValue(r, out k)");
                         // we then remove t from the predecessors of r
                         k.Remove(t);
                         // if t was the only remaining predecessor of r,
@@ -976,7 +1016,7 @@ namespace Sxta.Render.Scenegraph
                 while (!stop)
                 {
                     Task t = null;
-                    lock (mutex)
+                    Monitor.Enter(mutex);
                     {
                         // wait until we have a CPU task ready to be executed (the additional
                         // threads cannot execute GPU tasks, because OpenGL supports only one
@@ -985,7 +1025,9 @@ namespace Sxta.Render.Scenegraph
                         {
                             lock (cpuTasksCond)
                             {
+                                Monitor.Exit(mutex);
                                 Monitor.Wait(cpuTasksCond);
+                                Monitor.Enter(mutex);
                                 //pthread_cond_wait(cpuTasksCond, mutex);
                             }
                         }
@@ -998,7 +1040,7 @@ namespace Sxta.Render.Scenegraph
                             t = readyCpuTasks.First().Value.First();
                             //t = *(i.second.begin());
 #if STRICT_PREFETCH
-                            Debug.Assert(t.getDeadline() > 0);
+                            Debug.Assert(t.getDeadline() > 0, "MultithreadScheduler t.getDeadline() > 0");
 #endif
                             // and removes it from the task sets,
                             // so that other threads will not select it again
@@ -1010,7 +1052,7 @@ namespace Sxta.Render.Scenegraph
                             removeTask(readyCpuTasks, t);
                         }
                     }
-
+                    Monitor.Exit(mutex);
                     if (!stop)
                     {
                         Debug.Assert(!t.isGpuTask());
@@ -1100,7 +1142,7 @@ namespace Sxta.Render.Scenegraph
         {
             var i = s.First();
             // the task set should contain at least one task
-            Debug.Assert(s.Count >= 1);
+            Debug.Assert(s.Count >= 1, "MultithreadScheduler s.Count >= 1");
             // we compute the deadline of the first task, i.e., since the tasks are
             // sorted by deadline first, the minimum deadline of the tasks in the set
             uint deadline = i.Key.first;
@@ -1110,7 +1152,7 @@ namespace Sxta.Render.Scenegraph
             if (s.TryGetValue(key, out j))
             {
                 // if we find one we return it, this will avoid a context switch
-                Debug.Assert(j.Count >= 1);
+                Debug.Assert(j.Count >= 1, "MultithreadScheduler j.Count >= 1");
                 return j.First();
             }
             if (previousContext != null)
@@ -1122,7 +1164,7 @@ namespace Sxta.Render.Scenegraph
                 key = new taskKey() { first = deadline, context = null };
                 if (s.TryGetValue(key, out j))
                 {
-                    Debug.Assert(j.Count >= 1);
+                    Debug.Assert(j.Count >= 1, "MultithreadScheduler j.Count >= 1");
                     return j.First();
                 }
             }

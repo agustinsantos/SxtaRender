@@ -59,65 +59,96 @@ namespace proland
     /// keeps track of which slots in the pool are currently associated with a
     /// tile (i.e., store the data of a tile), and which are not. The first ones are
     /// called allocated slots, the others free slots.
-    /// @ingroup producer
-    /// @authors Eric Bruneton, Antoine Begault
     /// </summary>
-    public class TileStorage
+    public class TileStorage : IDisposable
     {
         /// <summary>
         ///  A slot managed by a TileStorage. Concrete sub classes of this class must
         ///  provide a reference to the actual tile data.
         /// </summary>
-        public class Slot
+        public class Slot : IDisposable
         {
             /// <summary>
             /// The id of the tile currently stored in this slot.
             /// </summary>
             public TileCache.Tile.TId id;
 
-            /*
-             * The task that is responsible for producing the data for the tile
-             * stored in this slot.
-             */
+            /// <summary>
+            /// The task that is responsible for producing the data for the tile
+            /// stored in this slot.
+            /// </summary>
             public object producerTask;
 
-            /*
-             * Creates a new TileStorage::Slot.
-             *
-             * @param owner the TileStorage that will manage this slot.
-             */
+            /// <summary>
+            /// Creates a new TileStorage.Slot.
+            /// </summary>
+            /// <param name="owner">the TileStorage that will manage this slot.</param>
             public Slot(TileStorage owner)
             {
                 this.owner = owner;
             }
 
-            /*
-             * Deletes this TileStorage::Slot. This destroys the data of the tile
-             * stored in this slot, if any.
-             */
-            ~Slot() {
-                if (isLocked) {
-                    Debugger.Break();
-                    System.Threading.Monitor.Exit(mutex);
+            /// <summary>
+            /// Deletes this TileStorage.Slot. This destroys the data of the tile
+            /// stored in this slot, if any.
+            /// </summary>
+            ~Slot()
+            {
+                Dispose(false);
+            }
+
+            #region IDisposable implementation
+
+            /// <summary>
+            /// Deletes this TileStorage.Slot. This destroys the data of the tile
+            /// stored in this slot, if any.
+            /// </summary>
+            public void Dispose()
+            {
+                Dispose(true);
+                GC.SuppressFinalize(this);
+            }
+
+            protected bool m_Disposed = false;
+
+            protected virtual void Dispose(bool disposing)
+            {
+                if (!m_Disposed)
+                {
+                    if (disposing)
+                    {
+                        //#if DEBUG
+                        //                    traceDisposable.CheckDispose();
+                        //#endif
+                        if (isLocked)
+                        {
+                            Debugger.Break();
+                            System.Threading.Monitor.Exit(mutex);
+                        }
+                    }
+
+                    m_Disposed = true;
                 }
             }
 
-            /*
-             * Returns the TileStorage that manages this slot.
-             */
+            #endregion
+
+            /// <summary>
+            /// Returns the TileStorage that manages this slot.
+            /// </summary>
+            /// <returns></returns>
             public TileStorage getOwner()
             {
                 return owner;
             }
 
-            /*
-             * Locks or unlocks this slots. Slots can be accessed by several threads
-             * simultaneously. This lock can be used to serialize these accesses.
-             * In particular it is used to change the #producerTask, when a slot is
-             * reused to store new data.
-             *
-             * @param lock true to lock the slot, false to unlock it.
-             */
+            /// <summary>
+            /// Locks or unlocks this slots. Slots can be accessed by several threads
+            /// simultaneously.This lock can be used to serialize these accesses.
+            /// In particular it is used to change the #producerTask, when a slot is
+            /// reused to store new data.
+            /// </summary>
+            /// <param name="lock_">true to lock the slot, false to unlock it.</param>
             public void lock_(bool lock_)
             {
                 if (lock_)
@@ -136,15 +167,14 @@ namespace proland
                 }
             }
 
-
-            /*
-             * The TileStorage that manages this slot.
-             */
+            /// <summary>
+            /// The TileStorage that manages this slot.
+            /// </summary>
             private TileStorage owner;
 
-            /*
-             * A mutex used to serialize parallel accesses to this slot.
-             */
+            /// <summary>
+            ///  A mutex used to serialize parallel accesses to this slot.
+            /// </summary>
             private object mutex = new object();
             private bool isLocked = false;
         }
@@ -163,11 +193,50 @@ namespace proland
             init(tileSize, capacity);
         }
 
-        /*
-         * Deletes this TileStorage. This deletes the data associated with all the
-         * slots managed by this tile storage.
-         */
-        //public virtual ~TileStorage();
+        /// <summary>
+        /// Deletes this TileStorage. This deletes the data associated with all the
+        /// slots managed by this tile storage.
+        /// </summary>
+        ~TileStorage()
+        {
+            Dispose(false);
+        }
+
+        #region IDisposable implementation
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected bool m_Disposed = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!m_Disposed)
+            {
+                if (disposing)
+                {
+                    //#if DEBUG
+                    //                    traceDisposable.CheckDispose();
+                    //#endif
+                    if (freeSlots != null)
+                    {
+                        foreach (Slot slot in freeSlots)
+                        {
+                            slot.Dispose();
+                        }
+                        freeSlots.Clear();
+                    }
+                    m_Disposed = true;
+                }
+            }
+        }
+
+        #endregion
+
+
 
         /*
          * Returns a free slot in the pool of slots managed by this TileStorage.
@@ -203,69 +272,70 @@ namespace proland
             freeSlots.Remove(t);
         }
 
-        /*
-         * Returns the size of each tile. For tiles made of raster data, this size
-         * is the tile width in pixels (the tile height is supposed equal to the
-         * tile width).
-         */
+        /// <summary>
+        /// Returns the size of each tile. For tiles made of raster data, this size
+        /// is the tile width in pixels(the tile height is supposed equal to the
+        /// tile width).
+        /// </summary>
+        /// <returns></returns>
         public int getTileSize()
         {
             return tileSize;
         }
 
-        /*
-         * Returns the total number of slots managed by this TileStorage. This
-         * includes both unused and used tiles.
-         */
+        /// <summary>
+        /// Returns the total number of slots managed by this TileStorage. This
+        /// includes both unused and used tiles.
+        /// </summary>
+        /// <returns></returns>
         public int getCapacity()
         {
             return capacity;
         }
 
-        /*
-         * Returns the number of slots in this TileStorage that are currently unused.
-         */
+        /// <summary>
+        /// Returns the number of slots in this TileStorage that are currently unused.
+        /// </summary>
+        /// <returns></returns>
         public int getFreeSlots()
         {
             return freeSlots.Count();
         }
 
-
-        /*
-         * The size of each tile. For tiles made of raster data, this size is the
-         * tile width in pixels (the tile height is supposed equal to the tile
-         * width).
-         */
+        /// <summary>
+        /// The size of each tile. For tiles made of raster data, this size is the
+        /// tile width in pixels(the tile height is supposed equal to the tile
+        /// width).
+        /// </summary>
         protected int tileSize;
 
-        /*
-         * The total number of slots managed by this TileStorage. This includes both
-         * unused and used tiles.
-         */
+        /// <summary>
+        /// The total number of slots managed by this TileStorage. This includes both
+        /// unused and used tiles.
+        /// </summary>
         protected int capacity;
 
-        /*
-         * The currently free slots.
-         */
+        /// <summary>
+        /// The currently free slots.
+        /// </summary>
         protected List<Slot> freeSlots = new List<Slot>();
 
-        /*
-         * Creates a new uninitialized TileStorage.
-         */
+        /// <summary>
+        /// Creates a new uninitialized TileStorage.
+        /// </summary>
         internal TileStorage()
         {
 
         }
 
-        /*
-         * Initializes this TileStorage.
-         *
-         * @param tileSize the size of each tile. For tiles made of raster data,
-         *      this size is the tile width in pixels (the tile height is supposed
-         *      equal to the tile width).
-         * @param capacity the number of slots allocated and managed by this tile
-         *      storage. This capacity is fixed and cannot change with time.
-         */
+        /// <summary>
+        /// Initializes this TileStorage.
+        /// </summary>
+        /// <param name="tileSize">the size of each tile. For tiles made of raster data,
+        ///  this size is the tile width in pixels(the tile height is supposed
+        ///  equal to the tile width).</param>
+        /// <param name="capacity">the number of slots allocated and managed by this tile
+        ///  storage.This capacity is fixed and cannot change with time.</param>
         protected void init(int tileSize, int capacity)
         {
             this.tileSize = tileSize;

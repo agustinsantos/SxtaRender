@@ -68,7 +68,7 @@ namespace Sxta.Proland.Core.Producer.XmlResources
             if (!string.IsNullOrWhiteSpace(e.GetAttribute("storage")))
             {
                 string _id = getParameter(desc, e, "storage");
-                storage =  manager.loadResource(_id).get() as TileStorage;
+                storage = manager.loadResource(_id).get() as TileStorage;
             }
             else
             {
@@ -82,10 +82,12 @@ namespace Sxta.Proland.Core.Producer.XmlResources
                     throw new Exception("Missing storage attribute or subelement");
                 }
                 XmlElement f = n as XmlElement;
-                storage = ResourceFactory.getInstance().create(manager, f.Name, desc, f).get() as TileStorage;
+                Resource tileStorageResource = ResourceFactory.getInstance().create(manager, f.Name, desc, f);
+                storage = tileStorageResource.get() as TileStorage;
+                tileStorageResource.clearValue(false);
             }
             string id = getParameter(desc, e, "scheduler");
-            scheduler =  manager.loadResource(id).get() as Scheduler;
+            scheduler = manager.loadResource(id).get() as Scheduler;
             this.valueC = new TileCache(storage, name, scheduler);
         }
     }

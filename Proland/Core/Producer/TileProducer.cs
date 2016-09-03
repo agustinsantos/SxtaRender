@@ -57,7 +57,7 @@ namespace proland
     /// Note that several TileProducer can share the same TileCache, and hence the
     /// same TileStorage.
     /// </summary>
-    public class TileProducer
+    public class TileProducer : IDisposable
     {
         /// <summary>
         /// Creates a new TileProducer.
@@ -72,36 +72,64 @@ namespace proland
             init(cache, gpuProducer);
         }
 
+        #region IDisposable implementation
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected bool m_Disposed = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!m_Disposed)
+            {
+                if (disposing)
+                {
+                    //Debugger.Break();
+                    Debug.Assert(cache != null);
+                    Debug.Assert(cache.producers.ContainsKey(id));
+                    cache.producers.Remove(id);
+                    for (int i = 0; i < tasks.Count; i++)
+                    {
+                        CreateTile t = tasks[i] as CreateTile;
+                        if (t != null)
+                        {
+                            t.Dispose();
+                            //t.owner = null;
+                        }
+                        else
+                        {
+                            ((CreateTileTaskGraph)tasks[i]).Dispose();
+                            //((CreateTileTaskGraph)tasks[i]).owner = null;
+                        }
+                        
+                    }
+                    layers.Clear();
+                    if (tileMap != null)
+                    {
+                        tileMap = null;
+                        //delete[] tileMap;
+                    }
+                    //pthread_mutex_destroy((pthread_mutex_t*)mutex);
+                    //delete (pthread_mutex_t*) mutex;                }
+
+                    cache.Dispose();
+                    // Unmanaged resources are released here.
+
+                    m_Disposed = true;
+                }
+            }
+        }
+        #endregion
 
         /// Deletes this TileProducer.
-
         ~TileProducer()
-       {
-           //Debugger.Break();
-           Debug.Assert(cache != null);
-           Debug.Assert(cache.producers.ContainsKey(id));
-           cache.producers.Remove(id);
-           for (int i = 0; i < tasks.Count; i++)
-           {
-               CreateTile t = (CreateTile)(tasks[i]);
-               if (t != null)
-               {
-                   t.owner = null;
-               }
-               else
-               {
-                   ((CreateTileTaskGraph)tasks[i]).owner = null;
-               }
-           }
-           layers.Clear();
-           if (tileMap != null)
-           {
-                tileMap = null;
-               //delete[] tileMap;
-           }
-           //pthread_mutex_destroy((pthread_mutex_t*)mutex);
-           //delete (pthread_mutex_t*) mutex;
-       }
+        {
+            Dispose(false);
+        }
 
         /// <summary>
         /// 
@@ -893,7 +921,7 @@ namespace proland
     ///<summary>
     /// The Task that produces the tiles for a TileProducer.
     ///</summary>
-    public class CreateTile : Task
+    public class CreateTile : Task, IDisposable
     {
 
         ///<summary>
@@ -958,27 +986,54 @@ namespace proland
             data.lock_(false);
         }
 
-        ~CreateTile()
+        #region IDisposable implementation
+
+        public void Dispose()
         {
-            // releases the tiles used to create this tile, if necessary
-            stop();
-            if (owner != null)
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private bool m_Disposed = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!m_Disposed)
             {
-                owner.removeCreateTile(this);
-                if (owner.cache != null)
+                if (disposing)
                 {
-                    // cache is null if the owner producer is being deleted
-                    // in this case it is not necessary to update the cache
-                    owner.cache.createTileTaskDeleted(owner.getId(), level, tx, ty);
+                    // releases the tiles used to create this tile, if necessary
+                    stop();
+                    if (owner != null)
+                    {
+                        owner.removeCreateTile(this);
+                        if (owner.cache != null)
+                        {
+                            // cache is null if the owner producer is being deleted
+                            // in this case it is not necessary to update the cache
+                            owner.cache.createTileTaskDeleted(owner.getId(), level, tx, ty);
+                        }
+                        owner = null;
+                    }
+                    if (parent != null)
+                    {
+                        // this object can not be deleted if 'parent' is still referenced (because
+                        // then it has itself references to this object). Hence we now that 'parent'
+                        // is no longer referenced at this point, and can be deleted.
+                        parent = null;
+                    }                  
+                    // Unmanaged resources are released here.
+
+                    m_Disposed = true;
                 }
             }
-            if (parent != null)
-            {
-                // this object can not be deleted if 'parent' is still referenced (because
-                // then it has itself references to this object). Hence we now that 'parent'
-                // is no longer referenced at this point, and can be deleted.
-                //delete parent;
-            }
+        }
+        #endregion
+
+
+        ~CreateTile()
+        {
+            Dispose(false);
         }
 
         ///<summary>
@@ -1162,7 +1217,7 @@ namespace proland
      * this task graph is not deleted before its internal root sub task
      * of type CreateTile.
      */
-    public class CreateTileTaskGraph : TaskGraph
+    public class CreateTileTaskGraph : TaskGraph, IDisposable
     {
 
         ///<summary>
@@ -1187,12 +1242,38 @@ namespace proland
             this.owner = owner;
         }
 
+        #region IDisposable implementation
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private bool m_Disposed = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!m_Disposed)
+            {
+                if (disposing)
+                {
+                    if (owner != null)
+                    {
+                        owner.removeCreateTile(this);
+                        owner.Dispose();
+                        owner = null;
+                    }
+
+                    m_Disposed = true;
+                }
+            }
+        }
+        #endregion
+
         ~CreateTileTaskGraph()
         {
-            if (owner != null)
-            {
-                owner.removeCreateTile(this);
-            }
+            Dispose(false);
         }
 
         public virtual void doRelease()

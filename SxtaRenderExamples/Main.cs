@@ -56,7 +56,7 @@ namespace Examples
                     }
                     catch (Exception expt)
                     {
-                        MessageBox.Show("Could not access debug.log", expt.ToString());
+                        MessageBox.Show("Could not access log files (debug, trace)", expt.ToString());
                     }
 
                     Debug.Listeners.Clear();
@@ -75,6 +75,11 @@ namespace Examples
                 MessageBox.Show("The Example Launcher failed to start, due to insufficient permissions. This may happen if you execute the application from a network share.", "OpenTK Example Launcher failed to start.",
                                 MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 Trace.WriteLine(e.ToString());
+            }
+            finally
+            {
+                Debug.Flush();
+                Trace.Flush();
             }
         }
     }

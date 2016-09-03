@@ -53,6 +53,12 @@ namespace Sxta.Render.Resources
         {
             return updateorder;
         }
+        public override void clearValue(bool dispose)
+        {
+            if (dispose && valueC != null && valueC is IDisposable)
+                ((IDisposable)valueC).Dispose();
+            valueC = default(C);
+        }
 
         /*
          * If the descriptor of this method has not changed, does nothing and
@@ -144,8 +150,7 @@ namespace Sxta.Render.Resources
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
-            if (valueC is IDisposable)
-                ((IDisposable)valueC).Dispose();
+            clearValue(true);
         }
 
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);

@@ -39,6 +39,7 @@ namespace Sxta.Render.Resources
         }
 
         public abstract object get();
+        public abstract void clearValue(bool dispose);
 
         /*
          * Returns the name of this %resource.

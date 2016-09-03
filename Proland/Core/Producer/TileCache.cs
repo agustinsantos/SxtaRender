@@ -67,46 +67,76 @@ namespace proland
     /// incremented and decremented by #getTile and #putTile, respectively). The
     /// tiles that are needed to render the current frame should be declared in use,
     /// so that they are not evicted between their creation and their actual
-    ///rendering.
-    /// @authors Eric Bruneton, Antoine Begault, Guillaume Piolat
+    /// rendering.
     /// </summary>
-    public class TileCache : ISwappable<TileCache>
+    public class TileCache : IDisposable, ISwappable<TileCache>
     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        //#if TODO
-        /*
-        * Creates a new TileCache.
-        *
-        * @param storage the tile storage to store the actual tiles data.
-        * @param name name of this cache, for logging.
-        * @param scheduler an optional scheduler to schedule the creation of
-        *      prefetched tiles. If no scheduler is specified, prefetch is
-        *      disabled.
-        */
+
+        /// <summary>
+        /// Creates a new TileCache.
+        /// </summary>
+        /// <param name="storage">the tile storage to store the actual tiles data.</param>
+        /// <param name="name">name of this cache, for logging.</param>
+        /// <param name="scheduler">
+        /// an optional scheduler to schedule the creation of
+        /// prefetched tiles. If no scheduler is specified, prefetch is
+        /// disabled.
+        /// </param>
         public TileCache(TileStorage storage, string name, Scheduler scheduler = null)
         {
             init(storage, name, scheduler);
         }
+
         ~TileCache()
         {
-            //TODO pthread_mutex_destroy((pthread_mutex_t*)mutex);
-            //TODO delete (pthread_mutex_t*) mutex;
-            mutex = null;
-            // The users of a TileCache must release all their tiles with putTile
-            // before they erase their reference to the TileCache. Hence a TileCache
-            // cannot be deleted before all tiles are unused. So usedTiles should be
-            // empty at this point
-            Debug.Assert(usedTiles.Count == 0);
-            unusedTiles.Clear();
-            // releases the storage used by the unused tiles
-            foreach (Tile i in unusedTilesOrder)
-            {
-                storage.deleteSlot(i.data);
-                // TODO delete *i;
-            }
-            unusedTilesOrder.Clear();
-            deletedTiles.Clear();
+            Dispose(false);
         }
+
+        #region IDisposable implementation
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected bool m_Disposed = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!m_Disposed)
+            {
+                //#if DEBUG
+                //                    traceDisposable.CheckDispose();
+                //#endif
+                if (disposing)
+                {
+                    //TODO pthread_mutex_destroy((pthread_mutex_t*)mutex);
+                    //TODO delete (pthread_mutex_t*) mutex;
+                    //TODO mutex = null;
+                    // The users of a TileCache must release all their tiles with putTile
+                    // before they erase their reference to the TileCache. Hence a TileCache
+                    // cannot be deleted before all tiles are unused. So usedTiles should be
+                    // empty at this point
+                    Debug.Assert(usedTiles.Count == 0, "TileCache, usedTiles.Count == 0");
+                    unusedTiles.Clear();
+                    // releases the storage used by the unused tiles
+                    foreach (Tile i in unusedTilesOrder)
+                    {
+                        storage.deleteSlot(i.data);
+                        // TODO delete *i;
+                    }
+
+                    unusedTilesOrder.Clear();
+                    deletedTiles.Clear();
+                    storage.Dispose();
+                    m_Disposed = true;
+                }
+            }
+        }
+
+        #endregion
 
         /*
         * Returns the storage used to store the actual tiles data.
@@ -154,7 +184,7 @@ namespace proland
         */
         public Tile findTile(int producerId, int level, int tx, int ty, bool includeCache = false)
         {
-            Debug.Assert(producers.ContainsKey(producerId) == true);
+            Debug.Assert(producers.ContainsKey(producerId) == true, "TileCache, 1");
             //pthread_mutex_lock((pthread_mutex_t*) mutex);
             lock (mutex)
             {
@@ -164,7 +194,7 @@ namespace proland
                 // looks for the requested tile in the used tiles list
                 if (t != null)
                 {
-                    Debug.Assert(t.producerId == producerId && t.level == level && t.tx == tx && t.ty == ty);
+                    Debug.Assert(t.producerId == producerId && t.level == level && t.tx == tx && t.ty == ty, "TileCache, 2");
                 }
                 // looks for the requested tile in the unused tiles list (if includeCache is true)
 
@@ -173,7 +203,7 @@ namespace proland
                     unusedTiles.TryGetValue(id, out t);
                     if (t != null)
                     {
-                        Debug.Assert(t.producerId == producerId && t.level == level && t.tx == tx && t.ty == ty);
+                        Debug.Assert(t.producerId == producerId && t.level == level && t.tx == tx && t.ty == ty, "TileCache, 3");
                     }
                 }
                 //pthread_mutex_unlock((pthread_mutex_t*) mutex);
@@ -201,7 +231,7 @@ namespace proland
         */
         public Tile getTile(int producerId, int level, int tx, int ty, uint deadline, int users = 0)
         {
-            Debug.Assert(producers.ContainsKey(producerId) == true);
+            Debug.Assert(producers.ContainsKey(producerId) == true, "TileCache, 4");
             lock (mutex)
             {
                 Tile.TId id = Tile.getTId(producerId, level, tx, ty);
@@ -273,7 +303,7 @@ namespace proland
                 else
                 {
                     // requested tile found in used tiles list . nothing to do
-                    Debug.Assert(t.producerId == producerId && t.level == level && t.tx == tx && t.ty == ty);
+                    Debug.Assert(t.producerId == producerId && t.level == level && t.tx == tx && t.ty == ty, "TileCache, 5");
                 }
                 if (t != null)
                 {
@@ -282,7 +312,8 @@ namespace proland
                         users = t.users;
                     }
                     t.users += 1;
-                } else
+                }
+                else
                 {
                     ;
                 }
@@ -307,7 +338,7 @@ namespace proland
         */
         public Task prefetchTile(int producerId, int level, int tx, int ty)
         {
-            Debug.Assert(producers.ContainsKey(producerId) == true);
+            Debug.Assert(producers.ContainsKey(producerId) == true, "TileCache, 6");
             lock (mutex)
             {
                 Tile.TId id = Tile.getTId(producerId, level, tx, ty);
@@ -323,7 +354,7 @@ namespace proland
                             // evict least recently used tile to reuse its data storage
                             Tile t = unusedTilesOrder.First();
                             data = t.data;
-                            Debug.Assert(data != null);
+                            Debug.Assert(data != null, "TileCache, 7");
                             unusedTiles.Remove(t.getTId());
                             unusedTilesOrder.Remove(t);
                             deletedTiles.Add(t.getTId(), t.task);
@@ -395,10 +426,10 @@ namespace proland
                     //map<Tile.TId, Tile>.iterator i = usedTiles.find(id);
                     Tile i;
                     usedTiles.TryGetValue(id, out i);
-                    Debug.Assert(usedTiles.ContainsKey(id) && i == t);
+                    Debug.Assert(usedTiles.ContainsKey(id) && i == t, "TileCache, 8");
                     usedTiles.Remove(id);
                     // adds it to the unused tiles list
-                    Debug.Assert(!unusedTiles.ContainsKey(id));
+                    Debug.Assert(!unusedTiles.ContainsKey(id), "TileCache, 9");
                     unusedTilesOrder.Add(t);
                     unusedTiles.Add(id, t); //TOSEE Agustin
                     /*if (Logger.DEBUG_LOGGER != null) {
@@ -663,10 +694,10 @@ namespace proland
         internal void createTileTaskDeleted(int producerId, int level, int tx, int ty)
         {
             Tile.TId id = Tile.getTId(producerId, level, tx, ty);
-            Debug.Assert(mutex != null);
+            Debug.Assert(mutex != null, "TileCache, mutex != null");
             lock (mutex)
             {
-                Debug.Assert(deletedTiles.ContainsKey(id));
+                Debug.Assert(deletedTiles.ContainsKey(id), "TileCache, deletedTiles.ContainsKey(id)");
                 deletedTiles.Remove(id);
             }
         }
@@ -731,7 +762,7 @@ namespace proland
                 public override int GetHashCode()
                 {
                     // TODO: write your implementation of GetHashCode() here
-                    return this.Item1^(this.Item2.Item1);
+                    return this.Item1 ^ (this.Item2.Item1);
                 }
 
             }
@@ -784,7 +815,7 @@ namespace proland
                 this.data = data;
                 this.users = 0;
 
-                Debug.Assert(data != null);
+                Debug.Assert(data != null, "TileCache, 817");
             }
 
             /*
@@ -805,9 +836,9 @@ namespace proland
             {
 
                 bool isDone = task.isDone();
-                Debug.Assert(isDone || !check);
+                Debug.Assert(isDone || !check, "TileCache, 838");
                 //TODO
-                Debug.Assert(data.id.Equals(getTId()) || !check);
+                Debug.Assert(data.id.Equals(getTId()) || !check, "TileCache, 840");
                 return isDone ? data : null;
             }
 

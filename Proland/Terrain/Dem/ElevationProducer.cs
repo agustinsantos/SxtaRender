@@ -291,6 +291,32 @@ namespace Sxta.Proland.Terrain
         }
 
         //~ElevationProducer() { Debugger.Break(); }
+        protected override void Dispose(bool disposing)
+        {
+            if (!m_Disposed)
+            {
+                if (disposing)
+                {
+                    base.Dispose(disposing);
+                    if (frameBuffer != null)
+                        frameBuffer.Dispose();
+                    if (upsample != null)
+                        upsample.Dispose();
+                    if (blend != null)
+                        blend.Dispose();
+                    if (demTexture != null)
+                        demTexture.Dispose();
+                    if (residualTexture != null)
+                        residualTexture.Dispose();
+                    if (layerTexture != null)
+                        layerTexture.Dispose();
+                    if (noiseTexture != null)
+                        noiseTexture.Dispose();
+                }
+
+            }
+        }
+
 
         public override void getReferencedProducers(List<TileProducer> producers)
         {
@@ -431,10 +457,14 @@ namespace Sxta.Proland.Terrain
             int gridSize = 24;
             List<float> noiseAmp = new List<float>();
             bool flip = false;
-            TileCache cache = manager.loadResource(Resource.getParameter(desc, e, "cache")).get() as TileCache;
+            Resource cacheResource = manager.loadResource(Resource.getParameter(desc, e, "cache"));
+            TileCache cache = cacheResource.get() as TileCache;
+            cacheResource.clearValue(false);
             if (!string.IsNullOrWhiteSpace(e.GetAttribute("residuals")))
             {
-                residuals = (TileProducer)(manager.loadResource(Resource.getParameter(desc, e, "residuals")).get());
+                Resource residualsResource = manager.loadResource(Resource.getParameter(desc, e, "residuals"));
+                residuals = residualsResource.get() as TileProducer;
+                residualsResource.clearValue(false);
             }
             string upsample = "upsampleShader;";
             if (!string.IsNullOrWhiteSpace(e.GetAttribute("upsampleProg")))
@@ -702,9 +732,9 @@ namespace Sxta.Proland.Terrain
             {
                 gpuData.copyPixels(frameBuffer, 0, 0, tileWidth, tileWidth);
             }
-//#if DEBUG
-//            ScreenShot.SaveFrameBuffer(tileWidth, tileWidth, string.Format("ElevationProducer-{0}-{1}-{2}-.bmp", level, tx, ty));
-//#endif
+            //#if DEBUG
+            //            ScreenShot.SaveFrameBuffer(tileWidth, tileWidth, string.Format("ElevationProducer-{0}-{1}-{2}-.bmp", level, tx, ty));
+            //#endif
             return true;
         }
 

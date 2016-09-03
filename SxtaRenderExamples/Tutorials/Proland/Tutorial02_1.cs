@@ -58,7 +58,8 @@ namespace Examples.Tutorials
             resManager = new ResourceManager(resLoader);
             manager = new SceneManager();
             manager.setResourceManager(resManager);
-            manager.setScheduler(new MultithreadScheduler());
+            // manager.setScheduler(new MultithreadScheduler());
+            manager.setScheduler(resManager.loadResource("defaultScheduler").get() as Scheduler);
 
             manager.setRoot(resManager.loadResource("scene").get() as SceneNode);
             manager.setCameraNode("camera");

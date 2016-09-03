@@ -1,13 +1,12 @@
 ﻿using log4net;
 using OpenTK.Graphics.OpenGL;
 using Sxta.Core;
+using Sxta.Render.Core;
 using Sxta.Render.Resources;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 
 namespace Sxta.Render
 {
@@ -16,6 +15,9 @@ namespace Sxta.Render
     /// </summary>
     public abstract class Texture : ISwappable<Texture>, IDisposable
     {
+//#if DEBUG
+//        TraceOpenTKDisposableObject traceDisposable;
+//#endif
         // conservative estimation of the true maximum number of texture units,
         // used to allocate static arrays for storing texture unit states
         public const int MAX_TEXTURE_UNITS = 64;
@@ -565,7 +567,7 @@ namespace Sxta.Render
         /// <param name='pixels'>
         /// Pixels pixels the returned data.
         /// </param>
-        public void getImage(int level, TextureFormat f, PixelType t,   byte[] pixels)
+        public void getImage(int level, TextureFormat f, PixelType t, byte[] pixels)
         {
             bindToTextureUnit();
 #if OPENTK
@@ -645,7 +647,7 @@ namespace Sxta.Render
         /// <param name='target'>
         /// Target. a texture type (1D, 2D, 3D, etc).
         /// </param>
-        protected Texture(string type, TextureTarget target)
+        protected Texture(string type, TextureTarget target) : this()
         {
             textureTarget = target;
         }
@@ -656,6 +658,9 @@ namespace Sxta.Render
         /// </summary>
         protected Texture()
         {
+//#if DEBUG
+//            traceDisposable = new TraceOpenTKDisposableObject();
+//#endif
         }
 
         /// <summary>
@@ -1043,6 +1048,9 @@ namespace Sxta.Render
             // Check to see if Dispose has already been called. 
             if (!this.disposed)
             {
+//#if DEBUG
+//                    traceDisposable.CheckDispose();
+//#endif
                 // If disposing equals true, dispose all managed 
                 // and unmanaged resources. 
                 if (disposing)

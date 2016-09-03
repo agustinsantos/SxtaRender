@@ -40,6 +40,7 @@
 * Modified and ported to C# and Sxta Engine by Agustin Santos and Daniel Olmedo 2015-2016
 */
 using Sxta.Render;
+using Sxta.Render.Core;
 using Sxta.Render.Resources;
 using System;
 using System.Collections.Generic;
@@ -51,6 +52,9 @@ namespace proland
 {
     public class GPUTileStorage : TileStorage, ISwappable<GPUTileStorage>
     {
+//#if DEBUG
+//        TraceOpenTKDisposableObject traceDisposable;
+//#endif
 
         const string mipmapShader = @"
 uniform ivec4 bufferLayerLevelWidth;
@@ -213,11 +217,67 @@ vec4 uv = vec4(xy + vec2(0.25), xy + vec2(0.75)) / float(bufferLayerLevelWidth.w
         /// </summary>
         public GPUTileStorage(int tileSize, int nTiles, TextureInternalFormat internalf, TextureFormat f, PixelType t, Texture.Parameters _params, bool useTileMap = false) : base(tileSize, nTiles)
         {
+//#if DEBUG
+//            traceDisposable = new TraceOpenTKDisposableObject();
+//#endif
+
             init(tileSize, nTiles, internalf, f, t, _params, useTileMap);
         }
 
-        //~GPUTileStorage() { Debugger.Break(); }
+        ~GPUTileStorage()
+        {
+            //Debugger.Break();
+            Dispose(false);
+        }
 
+        #region IDisposable implementation
+
+        protected override void Dispose(bool disposing)
+        {
+            if (!m_Disposed)
+            {
+//#if DEBUG
+//                traceDisposable.CheckDispose();
+//#endif
+                if (disposing)
+                {
+                    base.Dispose(disposing);
+                    if (dirtySlots != null)
+                        foreach (SortedSet<GPUSlot> set in dirtySlots)
+                        {
+                            if (set != null)
+                            {
+                                foreach (GPUSlot slot in set)
+                                {
+                                    slot.Dispose();
+                                }
+                                set.Clear();
+                            }
+                        }
+                    dirtySlots = null;
+
+
+                    if (textures != null)
+                        foreach (Texture tex in textures)
+                        {
+                            if (tex != null)
+                                tex.Dispose();
+                        }
+                    textures.Clear();
+                    textures = null;
+
+                    if (fbo != null)
+                        fbo.Dispose();
+                    if (mipmapProg != null)
+                        mipmapProg.Dispose();
+                    if (tileMap != null)
+                        tileMap.Dispose();
+                    m_Disposed = true;
+                }
+            }
+        }
+
+        #endregion
         /// <summary>
         /// Returns the texture storage whose index is given.
         /// </summary>
@@ -320,7 +380,7 @@ vec4 uv = vec4(xy + vec2(0.25), xy + vec2(0.75)) / float(bufferLayerLevelWidth.w
 
             if (needMipmaps)
             {
-                Debug.Assert(nTextures <= 8);
+                Debug.Assert(nTextures <= 8, "GPUTileStorage");
                 dirtySlots = new SortedSet<GPUSlot>[nTextures];
                 fbo = new FrameBuffer();
                 fbo.setReadBuffer(BufferId.DEFAULT);
@@ -342,7 +402,7 @@ vec4 uv = vec4(xy + vec2(0.25), xy + vec2(0.75)) / float(bufferLayerLevelWidth.w
             changes = false;
             if (useTileMap)
             {
-                Debug.Assert(nTextures == 1);
+                Debug.Assert(nTextures == 1, "GPUTileStorage");
                 tileMap = new Texture2D(4096, 8, TextureInternalFormat.RG8, TextureFormat.RG, PixelType.UNSIGNED_BYTE,
                     new Texture.Parameters().wrapS(TextureWrap.CLAMP_TO_EDGE).wrapT(TextureWrap.CLAMP_TO_EDGE).min(TextureFilter.NEAREST).mag(TextureFilter.NEAREST),
                     new Sxta.Render.Buffer.Parameters(), new CPUBuffer<byte>());
@@ -351,7 +411,7 @@ vec4 uv = vec4(xy + vec2(0.25), xy + vec2(0.75)) / float(bufferLayerLevelWidth.w
 
         public void swap(GPUTileStorage s)
         {
-            Debug.Assert(false);
+            Debug.Assert(false, "GPUTileStorage");
         }
 
         /// <summary>
