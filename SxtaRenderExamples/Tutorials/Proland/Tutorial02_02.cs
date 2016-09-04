@@ -65,8 +65,8 @@ namespace Examples.Tutorials
             manager.setCameraMethod("draw");
 
             camera = new SGCamera(this);
-            camera.Position = new Sxta.Math.Vector3d(0, 0, 2500);
-            camera.MoveSpeed = 50f;
+            camera.Position = new Sxta.Math.Vector3d(0, 0, 7000);
+            camera.MoveSpeed = 300f;
 
             fb = FrameBuffer.getDefault();
             fb.setClearColor(Color.Black);
@@ -91,7 +91,7 @@ namespace Examples.Tutorials
         {
             fb.setViewport(new Vector4i(0, 0, Width, Height));
 
-            camera.Resize(Width, Height);
+            camera.Resize(Width, Height, 1, 100000);
             manager.setCameraToScreen(camera.ProjectionMatrix);
         }
 
