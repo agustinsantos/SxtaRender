@@ -54,7 +54,7 @@ namespace Examples.Tutorials
             RegisterResourceReader.RegisterResources();
             resLoader = new XMLResourceLoader();
             resLoader.addPath(dir + "/Proland/Core/Example2");
-            resLoader.addArchive(dir + "/Proland/Core/Example2/HelloWordPlanet.xml");
+            resLoader.addArchive(dir + "/Proland/Core/Example2/HelloWordPlanet2.xml");
             resManager = new ResourceManager(resLoader);
             manager = new SceneManager();
             manager.setResourceManager(resManager);

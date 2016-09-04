@@ -95,7 +95,8 @@
     <Compile Include="Tutorials\Learning\Tutorial04_2.cs" />
     <Compile Include="Tutorials\Learning\Tutorial04_1.cs" />
     <Compile Include="Tutorials\Proland\Tutorial01_4.cs" />
-    <Compile Include="Tutorials\Proland\Tutorial02_1.cs" />
+    <Compile Include="Tutorials\Proland\Tutorial02_02.cs" />
+    <Compile Include="Tutorials\Proland\Tutorial02_01.cs" />
     <Compile Include="Tutorials\Proland\Tutorial01_3.cs" />
     <Compile Include="Tutorials\Proland\Tutorial01_2.cs" />
     <Compile Include="Tutorials\SceneGraph\TutorialSG01_5.cs" />
@@ -388,6 +389,18 @@
     <None Include="Resources\Proland\Terrain\Example01\upsampleShader.glsl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Resources\Proland\Terrain\Example02\normalShader.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\Proland\Terrain\Example02\quad.mesh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\Proland\Terrain\Example02\terrainShader.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\Proland\Terrain\Example02\upsampleShader.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Resources\Shaders\basicModuleTest.glsl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -475,9 +488,10 @@
     <None Include="Tutorials\Learning\Tutorial06_1.rtf" />
     <None Include="Tutorials\Learning\Tutorial05_7.rtf" />
     <None Include="Tutorials\Learning\Tutorial05_6.rtf" />
+    <None Include="Tutorials\Proland\Tutorial02_02.rtf" />
     <None Include="Tutorials\Proland\Tutorial04_1.rtf" />
     <None Include="Tutorials\Proland\Tutorial03_1.rtf" />
-    <None Include="Tutorials\Proland\Tutorial02_1.rtf" />
+    <None Include="Tutorials\Proland\Tutorial02_01.rtf" />
     <None Include="Tutorials\Proland\Tutorial01_3.rtf" />
     <None Include="Tutorials\Proland\Tutorial01_2.rtf" />
     <None Include="Tutorials\Proland\Tutorial01_1.rtf" />
@@ -556,7 +570,7 @@
     <Content Include="Resources\Proland\Atmo\text.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\Proland\Core\Example2\HelloWordPlanet.xml">
+    <Content Include="Resources\Proland\Core\Example2\HelloWordPlanet2.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -601,8 +615,11 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\Proland\Terrain\Example01\HelloWord.xml">
+    <Content Include="Resources\Proland\Terrain\Example01\HelloWorld.xml">
       <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Proland\Terrain\Example02\HelloWorld.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\Shaders\upsampleShader.xml" />
