@@ -94,6 +94,7 @@
     <Compile Include="Tutorials\Learning\Tutorial04_3.cs" />
     <Compile Include="Tutorials\Learning\Tutorial04_2.cs" />
     <Compile Include="Tutorials\Learning\Tutorial04_1.cs" />
+    <Compile Include="Tutorials\Proland\Tutorial01_4.cs" />
     <Compile Include="Tutorials\Proland\Tutorial02_1.cs" />
     <Compile Include="Tutorials\Proland\Tutorial01_3.cs" />
     <Compile Include="Tutorials\Proland\Tutorial01_2.cs" />
@@ -553,6 +554,10 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\Proland\Atmo\text.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Proland\Core\Example2\HelloWordPlanet.xml">
+      <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\Proland\Forest\basictree.png">
