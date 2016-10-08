@@ -103,6 +103,24 @@ namespace proland
             }
             set { this.groundHeight = value; }
         }
+        
+        /**
+         * Returns the %terrain elevation below the camera.
+         */
+        public float getGroundHeight()
+        {
+            return groundHeight;
+        }
+        /**
+         * Sets the %terrain elevation below the camera. This elevation is used
+         * to adjust the camera position so that it is not below the ground.
+         *
+         * @param groundHeight the %terrain elevation below the camera.
+         */
+        public void setGroundHeight(float groundHeight)
+        {
+            this.groundHeight = groundHeight;
+        }
 
         /*
          * Returns the height of the camera above the z=0 surface.

@@ -8,6 +8,7 @@ using Sxta.Render.Resources;
 using Sxta.Render.Scenegraph;
 using System;
 using System.Diagnostics;
+using System.Drawing;
 using Vector3d = Sxta.Math.Vector3d;
 
 namespace Examples.Tutorials
@@ -65,6 +66,7 @@ namespace Examples.Tutorials
             manager.setCameraMethod("draw");
 
             fb = FrameBuffer.getDefault();
+            fb.setClearColor(Color.Black);
 
             camera = new SGCamera(this);
             camera.Position = new Vector3d(0, 0, 1000);
@@ -107,7 +109,7 @@ namespace Examples.Tutorials
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             manager.getCameraNode().setLocalToParent(camera.ViewMatrix);
-
+            fb.clear(true, false, true);
             manager.update(e.Time / 100000); // from Seconds to microseconds);
             manager.draw();
             this.SwapBuffers();

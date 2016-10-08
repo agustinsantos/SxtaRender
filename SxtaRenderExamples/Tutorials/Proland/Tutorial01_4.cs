@@ -10,6 +10,8 @@ using Matrix4d = Sxta.Math.Matrix4d;
 using MathHelper = Sxta.Math.MathHelper;
 using Sxta.Render.OpenGLExt;
 using System.Drawing;
+using proland;
+using Sxta.Render.Scenegraph.Controller;
 
 namespace Examples.Tutorials
 {
@@ -19,6 +21,8 @@ namespace Examples.Tutorials
     [Example("Example 1.04: Planet Subdivision using spherical TerrainNode", ExampleCategory.Proland, "01. Proland Core", 1, Source = "Tutorial01_3", Documentation = "Tutorial01_3")]
     public class TutorialProland01_4 : GameWindow
     {
+        public TerrainViewController controller;
+
         public TutorialProland01_4(string wd) : base(600, 600)
         {
             if (!string.IsNullOrWhiteSpace(wd))
@@ -51,6 +55,7 @@ namespace Examples.Tutorials
 
         protected override void OnLoad(EventArgs e)
         {
+
             RegisterResourceReader.RegisterResources();
             resLoader = new XMLResourceLoader();
             resLoader.addPath(dir + "/Proland/Core/Example2");
@@ -64,12 +69,16 @@ namespace Examples.Tutorials
             manager.setCameraNode("camera");
             manager.setCameraMethod("draw");
 
-            camera = new SGCamera(this);
-            camera.Position = new Sxta.Math.Vector3d(0, 0, 19000000);
-            camera.MoveSpeed = 50000f;
+            view = resManager.loadResource("viewHandler").get() as BasicViewHandler;
+            view.GameWindow = this;
+            ViewManager viewManager = new ViewManager() { SceneManager = manager, ViewController = new TerrainViewController(manager.getCameraNode(), 11000000) };
+            view.ViewManager = viewManager;
+            //camera = new SGCamera(this);
+            //camera.Position = new Sxta.Math.Vector3d(0, 0, 19000000);
+            //camera.MoveSpeed = 50000f;
 
             fb = FrameBuffer.getDefault();
-            fb.setClearColor(Color.Black);
+            fb.setClearColor(System.Drawing.Color.Black);
             fb.setDepthTest(true, Function.LESS);
         }
 
@@ -91,8 +100,8 @@ namespace Examples.Tutorials
         {
             fb.setViewport(new Vector4i(0, 0, Width, Height));
 
-            camera.Resize(Width, Height, 100, 20000000);
-            manager.setCameraToScreen(camera.ProjectionMatrix);
+            //camera.Resize(Width, Height, 100, 20000000);
+            //manager.setCameraToScreen(camera.ProjectionMatrix);
         }
 
 
@@ -103,17 +112,21 @@ namespace Examples.Tutorials
         /// <remarks>There is no need to call the base implementation.</remarks>
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
+            view.OnUpdateFrame(e.Time);
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)
         {
-            camera.Update((float)e.Time);
+            view.OnRenderFrame(e.Time, e.Time);
+            this.SwapBuffers();
+
+            /**camera.Update((float)e.Time);
             manager.getCameraNode().setLocalToParent(camera.ViewMatrix);
 
             fb.clear(true, false, true);
             manager.update(e.Time / 100000); // from Seconds to microseconds);
             manager.draw();
-            this.SwapBuffers();
+            this.SwapBuffers();*/
         }
 
         string dir = ".";
@@ -121,7 +134,8 @@ namespace Examples.Tutorials
         ResourceManager resManager;
         SceneManager manager;
         FrameBuffer fb;
-        private SGCamera camera;
+        BasicViewHandler view;
+        //private SGCamera camera;
 
         [STAThread]
         public static void Main()
