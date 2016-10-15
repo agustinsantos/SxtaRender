@@ -18,12 +18,12 @@ namespace Examples.Tutorials
     /// <summary>
     /// Drawing a plane using Scenegraphs
     /// </summary>
-    [Example("Example 1.04: Planet Subdivision using spherical TerrainNode", ExampleCategory.Proland, "01. Proland Core", 1, Source = "Tutorial01_3", Documentation = "Tutorial01_3")]
-    public class TutorialProland01_4 : GameWindow
+    [Example("Example 2.03: Elevation and Normal Producer with Planet Example", ExampleCategory.Proland, "02. Proland Terrain", 1, Source = "Tutorial02_03", Documentation = "Tutorial02_03")]
+    public class TutorialProland02_03 : GameWindow
     {
         public TerrainViewController controller;
 
-        public TutorialProland01_4(string wd) : base(600, 600)
+        public TutorialProland02_03(string wd) : base(600, 600)
         {
             if (!string.IsNullOrWhiteSpace(wd))
                 dir = wd;
@@ -58,8 +58,8 @@ namespace Examples.Tutorials
 
             RegisterResourceReader.RegisterResources();
             resLoader = new XMLResourceLoader();
-            resLoader.addPath(dir + "/Proland/Core/Example3");
-            resLoader.addArchive(dir + "/Proland/Core/Example3/HelloWordPlanet2.xml");
+            resLoader.addPath(dir);
+            resLoader.addArchive(dir + "/HelloWorld.xml");
             resManager = new ResourceManager(resLoader);
             manager = new SceneManager();
             manager.setResourceManager(resManager);
@@ -140,7 +140,7 @@ namespace Examples.Tutorials
         [STAThread]
         public static void Main()
         {
-            using (TutorialProland01_4 example = new TutorialProland01_4("Resources"))
+            using (TutorialProland02_03 example = new TutorialProland02_03("Resources/Proland/Terrain/Example03"))
             {
                 example.Run(60.0);
             }

@@ -56,7 +56,7 @@ void main() {
 	float k = min(length(P) / dot(alpha, L) * 1.0000003, 1.0);
     float hPrime = (R * (1.0 - k)) / k; // REDONDEA CADA TILE
 
-	gl_Position = (C + hPrime * N) * alphaPrime;
+    gl_Position = (C + hPrime * N) * alphaPrime;
     p = deformation.radius * normalize(deformation.localToWorld * P);
 }
 
